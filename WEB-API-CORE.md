@@ -1,4 +1,4 @@
-**Table of Contents**
+# Table of Contents
 - [Introduction](#introduction)
 - [Section 1: Purpose](#section-1-purpose)
 - [Section 2: Specification](#section-2-specification)
