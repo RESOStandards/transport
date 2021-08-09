@@ -1,0 +1,63 @@
+REAL ESTATE STANDARDS ORGANIZATION 
+CERTIFICATION TERMS AND CONDITIONS
+
+By proceeding with RESO certification you agree on behalf your company ("You") to the following terms (the "Terms"). This is a legally binding contract between You and RESO. You should consult an attorney if you do not understand it. These Terms limit your legal remedies and RESO's liabilities to You.
+
+1. Process and pricing. You agree to the certification process as outlined in the RESO Certification Guidelines and the fees for certification in RESO's current certification fee schedule. The RESO certification fee schedule is subject to change from time to time in RESO's sole discretion.
+
+2. No guarantee; retesting; loss of certification. 
+  (a) RESO makes no guarantees that by paying fees and participating in RESO certification, that your product will become RESO certified. The product must pass certification. Additional fees for repeating certification or re-certification may apply. 
+  (b) You agree that RESO may retain credentials to re-test your product for certification, and that RESO may re-test your product in RESO's reasonable discretion. If the credentials have expired, You agree to provide RESO new credentials to re-test your product. 
+  (c) Additionally, RESO reserves the right to revoke certification for products that initially pass certification, but are subsequently no longer compliant with a given RESO standard. RESO may also revoke certification if You do not provide RESO reasonable assistance to re-confirm certification.
+
+3. License. You grant to RESO and its contractors a limited, non-exclusive, world-wide, non-transferable, royalty-free (other than costs associated with certification, if applicable), revocable right to access, copy, and use Your systems and data to which You provide access ("Your Data") so RESO may conduct certification testing as detailed in the RESO Certification Guidelines or otherwise communicated by RESO or intended by You and RESO for certification testing. You further grant RESO and its contractors an unlimited, non-exclusive, world-wide, non-transferable, royalty-free (other than costs associated with certification, if applicable), irrevocable, perpetual right and license to create and maintain aggregated information about You and Your Data for RESO internal business purposes and public reporting purposes ("RESO Derivative"). Following each instance of certification testing, RESO will expunge copies of Your Data, but RESO may maintain RESO Derivatives indefinitely in RESO's discretion.
+
+4. Ownership. As between RESO and You, all rights, title and interest in all information in any medium now known or hereafter discovered including, but not limited to, screens, texts, user names, passwords, web pages, or other materials comprising the certification process are the exclusive property of RESO. As between RESO and You, all rights, title and interest in all information in any medium now known or hereafter discovered in Your Data shall remain Your exclusive property.
+
+5. Limitation of Liability/Exclusion of Warranties. YOU ASSUME RESPONSIBILITY FOR ANY AND ALL LOSSES OR DAMAGES THAT ARISE OUT OF YOUR PARTICIPATION IN RESO CERTIFICATION. IN NO EVENT SHALL RESO BE LIABLE TO YOU FOR ANY INDIRECT, SPECIAL, INCIDENTAL, CONSEQUENTIAL OR PUNITIVE DAMAGES OF ANY KIND WHATSOEVER ARISING FROM ANY BREACH OF THESE TERMS, EVEN IF RESO HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES; YOUR SOLE REMEDY AGAINST RESO HEREUNDER SHALL BE DIRECT DAMAGES NOT IN EXCESS OF $100, OR THE AMOUNT SPENT ON CERTIFICATION, WHICHEVER IS LESS. RESO PROVIDES THE CERTIFICATION ON AN "AS IS" BASIS AND DISCLAIMS ALL REPRESENTATIONS AND WARRANTIES EXCEPT THOSE EXPRESSLY SET FORTH IN THESE TERMS. THIS PARAGRAPH SETS OUT YOUR EXCLUSIVE REMEDIES, AND UNDER NO CIRCUMSTANCES SHALL YOU BE ENTITLED TO EQUITABLE REMEDIES. RESO MAKES NO WARRANTIES, INCLUDING THOSE OF TITLE, AVAILABILITY, OR NON-INFRINGEMENT, REGARDING THE CERTIFICATION PROCESS OR THAT THE PROCESS WILL NECESSARILY BE FROM ERRORS, INTERUPTION, BUGS, VIRUSES, WORMS, "TROJAN HORSES" OR OTHER MALICIOUS CODE OR HARMFUL FEATURES FORM THIRD PARTIES OR WILL MEET YOUR REQUIREMENTS.
+
+6. Warranties. You warrant that: 
+  (a) You have the authority to enter into this agreement on behalf of your company;
+  (b) You have the right to provide the licenses granted under this Agreement;
+  (c) You will not provide false, inaccurate, misleading, infringing, or defamatory content to RESO as part of Your Data or otherwise;
+  (d) You will not violate any laws or third party rights;
+  (e) You will not transfer your user account to any other person or entity, or provide your user ID and password to anyone else without RESO's written permission;
+  (f) You will not gather, or attempt to gather, by any automated means, including but not limited to "screen scraping" or "database scraping," any software or content from this site; and 
+  (g) You will not "hack" or to transmit or otherwise make available to RESO or another party any computer code, file, program or other element (including any virus, worm, or other harmful malware of any nature) that would interrupt, destroy, interfere with or otherwise cause any other effect that might reasonably be considered undesirable.
+
+7. Indemnification. You shall defend and indemnify RESO, RESO members, and all their respective employees, directors, agents, and authorized successors and assigns, against any and all losses, damages, and costs (including reasonable attorneys' fees) arising from any third party claim 
+  (a) related to Your breach of any provision of these Terms and 
+  (b) based on Your participation in the certification process. RESO shall (x) promptly notify You in writing of any claim and give You the opportunity to defend or negotiate a settlement of any such claim at Your expense, and (y) cooperate fully with the You, at Your expense, in defending or settling any such claim. RESO shall be entitled to engage its own counsel at its expense.
+
+8. Attorney's Fees. If RESO prevails in any action to enforce or interpret these Terms or any provision hereof, it shall be entitled to its reasonable attorney's fees and costs for such legal action.
+
+9. Dispute resolution. The laws of the State of Minnesota shall govern these Terms and their interpretation. Any action to enforce or interpret these Terms shall have venue in Hennepin County, Minnesota, and the parties hereby submit to personal jurisdiction in that venue.
+
+10. Severability. Each provision of these Terms is severable from the whole, and if one provision is declared invalid, the other provisions shall remain in full force and effect. In the event a court having jurisdiction over the parties holds any provision of these Terms invalid or unenforceable, the parties shall negotiate in good faith to replace the invalid or unenforceable provision, if possible, with a valid provision that most closely approximates the intent and economic effect of the invalid provision. If any provision of the limitation of liability or exclusion of warranty is held invalid or unenforceable, these Terms shall immediately terminate unless the parties agree to the contrary.
+
+11. Entire Agreement. These Terms contain the full and complete understanding of the parties regarding the subject matter of these Terms and supersedes all prior representations and understandings, whether oral or written, relating to the same subject matter.
+
+12. No third party beneficiaries. There are no third party beneficiaries of these Terms.
+
+13. Relationship of the Parties. The relationship of RESO to you is that of an independent contractor. No party shall be deemed to be the agent, partner, joint venturer, franchisor or franchisee, or employee of RESO or have any authority to make any agreements or representations on the behalf of RESO.
+
+14. No waiver. Failure of RESO to enforce any provision of these Terms shall not be deemed a waiver of future enforcement of that or any other provision.
+
+15. Communication. All communications related to these Terms or the certification process shall be mailed or electronically mailed to the parties at their respective addresses. RESO shall use the postal address and email address associated with your account for notices provided to You. RESO's contact information for communications regarding these Terms and the certification process is below and subject to change upon notice to You.
+
+
+DECLARATION OF USE OF RESO STANDARDS
+
+Certification on a RESO standard indicates that a given company or product has implemented a RESO standard and that content is available to permitted parties via that certified standard.
+
+To maintain certification, RESO requires certified companies or products to provide content to permitted recipients via the standard for which the company or product is certified.
+
+You understand that RESO reserves the right to revoke certification if RESO determines in its reasonable discretion that your company or product is not providing content to permitted recipients via a RESO standard for which the company or product is certified.
+
+ 
+
+Attn:     Sam DeBord, Chief Executive Officer
+Address:  P.O. Box 10824
+          Raleigh, NC 27605
+Phone:    206.658.3225
+Email:    sam@reso.org
