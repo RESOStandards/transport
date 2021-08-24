@@ -1,3 +1,7 @@
+# RESO Web API Core Specification
+**Version 2.0.0**
+
+
 # Table of Contents
 - [Introduction](#introduction)
 - [Section 1: Purpose](#section-1-purpose)
