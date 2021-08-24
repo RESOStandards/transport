@@ -20,12 +20,12 @@
       - [2.5.1 Metadata Request](#251-metadata-request)
       - [2.5.2 Service Document Request](#252-service-document-request)
       - [2.5.3 Fetch by Key](#253-fetch-by-key)
-      - [2.5.4 $select Operator](#254-$select-operator)
-      - [2.5.5 $top Operator](#255-$top-operator)
-      - [2.5.6 $count Operator](#256-$count-operator)
-      - [2.5.7 $skip Operator](#257-$skip-operator)
-      - [2.5.8 $orderby Operator](#258-$orderby-operator)
-      - [2.5.9 $filter-Operator](#259-$filter-operator)
+      - [2.5.4 $select Operator](254-select-operator)
+      - [2.5.5 $top Operator](#255-top-operator)
+      - [2.5.6 $count Operator](#256-count-operator)
+      - [2.5.7 $skip Operator](#257-skip-operator)
+      - [2.5.8 $orderby Operator](#258-orderby-operator)
+      - [2.5.9 $filter-Operator](#259-filter-operator)
         - [2.5.9.1 OData Primitive Types](#2591-odata-primitive-types)
         - [2.5.9.2 Equals](#2592-equals)
         - [2.5.9.3 Not Equals](#2593-not-equals)
@@ -34,7 +34,7 @@
         - [2.5.9.6 Less Than](#2596-less-than)
         - [2.5.9.7 Less Than or Equal](#2597-less-than-or-equal)
         - [2.5.9.8 Single Enumerations](#2598-single-enumerations)
-        - [2.5.9.9 Multiple Enumerations](#2598-mulitple-enumerations)
+        - [2.5.9.9 Multiple Enumerations](#2599-multiple-enumerations)
   - [2.6 Response Message Bodies]()
   - [2.7 Standard Resources]()
   - [2.8 Core Query Examples]()
@@ -427,7 +427,7 @@ RESO validates that the service document request can be made and that it produce
 **Example**
 Assuming the metadata in [section 2.5.1](#251-metadata-request),
 
-```json
+```xml
 GET https://api.reso.org/$metadata?$format=application/xml
 HTTP/2 200 OK
 
@@ -890,7 +890,7 @@ GET https://api.reso.org/Property?$filter=ListingContractDate lt 2021-01-01
 HTTP/2 200 OK
 
 {
-  "@odata.context": "https://api.reso.org/Property?$filter=ListingContractDate lt 2021-01-01
+  "@odata.context": "https://api.reso.org/Property?$filter=ListingContractDate lt 2021-01-01",
   "value": [
     {
       "ListingKey": "a5",
@@ -924,7 +924,7 @@ GET https://api.reso.org/Property?$filter=ListingContractDate le 2020-12-31
 HTTP/2 200 OK
 
 {
-  "@odata.context": "https://api.reso.org/Property?$filter=ListingContractDate le 2020-12-31
+  "@odata.context": "https://api.reso.org/Property?$filter=ListingContractDate le 2020-12-31",
   "value": [
     {
       "ListingKey": "a5",
