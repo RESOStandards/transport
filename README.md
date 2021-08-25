@@ -36,5 +36,5 @@ The following documents may also be helpful:
 - [ ] Improve the information in the Web API 2.0.0 landing (this) page.
 - [ ] Link existing RCPs from RCP center to this document, and add authors to contributors if they’re aren’t already.
 - [ ] Add overview to the Proposal section, if needed.
-- [ ] Provide normative reference for the Service Document request.
+- [x] Provide normative reference for the Service Document request.
 - [ ] Update language in “Standard Resources” and subsections.
