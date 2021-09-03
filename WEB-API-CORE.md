@@ -35,7 +35,8 @@
         - [2.5.9.7 Less Than or Equal](#2597-less-than-or-equal)
         - [2.5.9.8 Single Enumerations](#2598-single-enumerations)
         - [2.5.9.9 Multiple Enumerations](#2599-multiple-enumerations)
-  - [2.6 Response Message Bodies]()
+  - [2.6 Response Message Bodies](#26-message-response-bodies)
+      - [2.6.1 HTTP Response Codes](#260-http-response-codes)
   - [2.7 Standard Resources]()
   - [2.8 Core Query Examples]()
   - [2.9 Security]()
@@ -45,7 +46,7 @@
 - [Section 6: Revision List]()
 
 # Introduction
-The Web API Core Endorsement provides a subset of functionality from the OASIS OData specification relevant to those who need to perform live queries or replicate data using the RESO Web API. This includes the ability to express metadata and provide query support for primitive OData types and enumerations. This document offers normative examples of what these items should look like, both in the metadata and payload. 
+The Web API Core Endorsement provides a subset of functionality from the OASIS OData specification relevant to those who need to perform live queries or replicate data using the RESO Web API. This includes the ability to express metadata and provide query support for primitive OData types and enumerations. This document offers normative examples of what these items should look like, both in the metadata and payload.
 
 ---
 
@@ -65,13 +66,13 @@ The Web API uses the [Open Data Protocol (OData)](https://www.odata.org/document
 * Provides extensibility to handle industry-specific use cases, as needed.
 
 
-Compatible RESO OData Transport client and server applications MUST be implemented according to versions "4.0" or "4.01" of the OData specification. 
+Compatible RESO OData Transport client and server applications MUST be implemented according to versions "4.0" or "4.01" of the OData specification.
 
 All references to the OData specification contained within this document assume version 4.0 of the OData specification by default, unless otherwise specified.
 
 Compatible server and client applications MUST support OData XML Metadata for schema representation and MUST use the JSON response format for non-metadata payloads.
 
-In keeping with OData, both the client and server applications will use standard HTTP methods to perform the operations outlined by this document. RESO will follow the OData standard and extend it, as needed, to fulfill additional industry needs in OData compliant ways. 
+In keeping with OData, both the client and server applications will use standard HTTP methods to perform the operations outlined by this document. RESO will follow the OData standard and extend it, as needed, to fulfill additional industry needs in OData compliant ways.
 
 RESO Web API servers MUST conform to OData conventions with respect to metadata, query, and response formats as well as HTTP, TLS, and OAuth2 for application layer protocol, transport security, and authorization requirements.
 
@@ -85,7 +86,7 @@ The OData specification is divided into three main sections:
 * [URL Conventions](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part2-url-conventions.html)
 * [Common Schema Definition Language (CSDL)](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part3-csdl.html)
 
-While there is currently no official RESO reference server at this time, reference servers have been provided by vendors and have been certified with RESO’s new testing tools. 
+While there is currently no official RESO reference server at this time, reference servers have been provided by vendors and have been certified with RESO’s new testing tools.
 
 There is also reference material that should be helpful for developers implementing the Web API Core specification:
 * [Data Dictionary 1.7 Reference XML Metadata](https://github.com/RESOStandards/web-api-commander/blob/master/src/main/resources/RESODataDictionary-1.7.xml)
@@ -119,13 +120,13 @@ The following terminology is used within this specification:
 ---
 
 ## 2.2 HTTP Protocol
-A compatible RESO Web API server MUST use HTTPS as the protocol declared by the server URL. 
+A compatible RESO Web API server MUST use HTTPS as the protocol declared by the server URL.
 
-The version MUST be [HTTP/1.1](https://datatracker.ietf.org/doc/html/rfc2616) or above, which includes [HTTP/2](https://en.wikipedia.org/wiki/HTTP/2) at the time of writing. 
+The version MUST be [HTTP/1.1](https://datatracker.ietf.org/doc/html/rfc2616) or above, which includes [HTTP/2](https://en.wikipedia.org/wiki/HTTP/2) at the time of writing.
 
 While OData supports HTTP/1.0, there are many limitations in the HTTP/1.0 specification that we want to avoid. Therefore, we are limiting compatible implementations to HTTP/1.1 or above. For specific HTTP references, please see the references section.
 
-Since the RESO Web API requires that [HTTPS](https://en.wikipedia.org/wiki/HTTPS) and the [OAuth2](https://oauth.net/2/) protocols are used, all server implementations MUST implement [Transport Layer Security (TLS)](https://en.wikipedia.org/wiki/Transport_Layer_Security). 
+Since the RESO Web API requires that [HTTPS](https://en.wikipedia.org/wiki/HTTPS) and the [OAuth2](https://oauth.net/2/) protocols are used, all server implementations MUST implement [Transport Layer Security (TLS)](https://en.wikipedia.org/wiki/Transport_Layer_Security).
 
 ---
 
@@ -145,9 +146,9 @@ Examples
 `OData-Version: 4.01`
 
 
-From [MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers): 
+From [MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers):
 
-> HTTP headers let the client and the server pass additional information with an HTTP request or response. An HTTP header consists of its case-insensitive name followed by a colon (`:`), then by its value. 
+> HTTP headers let the client and the server pass additional information with an HTTP request or response. An HTTP header consists of its case-insensitive name followed by a colon (`:`), then by its value.
 > [Whitespace before the value is ignored](https://developer.mozilla.org/en-US/docs/Glossary/Whitespace).
 
 
@@ -184,8 +185,8 @@ The OData transport protocol defines a few standardized URL formatting requireme
 
 ---
 
-### 2.3.1 Hostname 
-The hostname of the URL is arbitrary and no naming convention is required. 
+### 2.3.1 Hostname
+The hostname of the URL is arbitrary and no naming convention is required.
 
 The following example protocol and hostname are used in the examples in this document. HTTPS is required.
 
@@ -202,7 +203,7 @@ The OData transport protocol defines the following URI conventions:
 | **Resource Path** | `https://api.reso.org/reso/odata/Resource` |
 | **Service Root** | `https://api.reso.org/reso/odata/` |
 | **Singleton Resource Path (String Key)** | `https://api.reso.org/reso/odata/Resource('ID')` |
-| **Singleton Resource Path (Numeric Key)** | `https://api.reso.org/reso/odata/Resource(123)` 
+| **Singleton Resource Path (Numeric Key)** | `https://api.reso.org/reso/odata/Resource(123)`
 
 RESO uses **TitleCase** for Resources, Fields, OData Lookup Values, and Navigation Properties.
 
@@ -223,7 +224,7 @@ The metadata document MUST be located at `https://api.reso.org/$metadata`
 
 **Example**
 
-Service root definitions MUST not overlap, meaning that one service root cannot be nested in another.  A request to https://api.reso.org/systemA/$metadata would fail if used in conjunction with the service root definition above. 
+Service root definitions MUST not overlap, meaning that one service root cannot be nested in another.  A request to https://api.reso.org/systemA/$metadata would fail if used in conjunction with the service root definition above.
 
 Vendors who offer multiple endpoints should structure their services accordingly. If there are two systems, systemA and systemB, their service roots would be:
 
@@ -234,7 +235,7 @@ Vendors who offer multiple endpoints should structure their services accordingly
 ---
 
 ### 2.3.4 Resource Endpoint
-Resources are defined by the server’s XML Metadata document, which also defines the URLs used to query those resources. 
+Resources are defined by the server’s XML Metadata document, which also defines the URLs used to query those resources.
 
 In the language of OData, resource definitions use the `EntityType` tag.
 
@@ -326,17 +327,17 @@ GET https://api.reso.org/Property?$filter=ListPrice gt 100000.00
 
 ### 2.4 Data Types
 
-This section outlines the standard data types supported by the  Web API Core specification. 
+This section outlines the standard data types supported by the  Web API Core specification.
 
 **Data Type Mappings**
 
 The following mappings exist between the RESO Data Dictionary and OData data types, as outlined in RCP-031:
 
-| **Data Dictionary 1.6+** | **Web API 1.0.2+** | **Notes** | 
+| **Data Dictionary 1.6+** | **Web API 1.0.2+** | **Notes** |
 | --- | --- | --- |
 | Boolean | [Edm.Bool](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Boolean) | MUST be one of the literals `true` or `false` (case-sensitive). |
 | Collection | [Edm.Collection](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752651) | Only supported for Edm.EnumType in Web API Core, and only for those using Collection(Edm.EnumType) to represent lookups. Vendors MAY use collection data types for their own resources. RESO also has defined standard [NavigationProperty](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Element_edm:NavigationProperty) definitions, which allow expansion between related resources. See [RESO’s reference metadata](https://raw.githubusercontent.com/RESOStandards/web-api-commander/main/src/main/resources/RESODataDictionary-1.7.xml) and search for “NavigationProperty” for normative XML Metadata references. |
-| Date | [Edm.Date](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752636) | MUST be in YYYY-MM-DD format according to the [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date format. | 
+| Date | [Edm.Date](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752636) | MUST be in YYYY-MM-DD format according to the [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date format. |
 | Number | [Edm.Decimal](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752638) OR [Edm.Double](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part3-csdl.html#_Toc453752517) for decimal values; [Edm.Int64](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part3-csdl.html#_Toc453752517) OR [Edm.Int32](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part3-csdl.html#_Toc453752517) OR [Edm.Int16](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part3-csdl.html#_Toc453752517) for integers. | Numbers that require decimal precision MUST use Edm.Decimal or Edm.Double, whose query and payload semantics are the same. Integers MAY be sized accordingly to support the data in a given field. |
 | String | [Edm.String](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752644) | MUST be case-sensitive by the OData specification. Field names are also case sensitive when used in the `$select`, `$filter`, and `$orderby` query operators and clients MUST respect case sensitivity defined in the resource metadata. |
 | String List, Single | [Edm.EnumType](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_8.1_The_edm:EnumType) OR [Edm.String](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752644) with the [Lookup Resource (RCP-032)](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275152879/RCP+-+WEBAPI-032+Lookup+and+RelatedLookup+Resources+for+Lookup+Metadata) | RESO supports either `Edm.EnumType` OR `Edm.String` lookups. The former MUST conform to OData SimpleIdentifier conventions, which essentially means they begin with a letter or underscore, followed by at most 127 letters, underscores or digits. Deprecation Notice applies. See Notes. |
@@ -345,13 +346,13 @@ The following mappings exist between the RESO Data Dictionary and OData data typ
 
 Notes
 * A server MAY return HTTP 413 - Request Entity Too Large if the `$filter` or `$orderby` expressions are too large or complex for the server to process.
-* **Deprecation Notice**: OData `Edm.EnumType` definitions will soon be deprecated within RESO standards due to the fact that the `Edm.EnumType` portion usually requires additional knowledge or discovery of vendor-specific namespaces, and human-friendly lookup names are not allowed. RESO is currently migrating to `Edm.String` lookups, and new implementations should use this approach. Please contact RESO with further questions. 
-* **Deprecation Notice**: Similar to (2), OData `Edm.EnumType` definitions with `IsFlags=true` will soon be deprecated within RESO standards, with `Collection(Edm.EnumType)` being the current default. However, RESO is currently migrating to `Collection(Edm.String)` for these lookups, which new implementations should use instead. Please contact RESO with further questions. 
+* **Deprecation Notice**: OData `Edm.EnumType` definitions will soon be deprecated within RESO standards due to the fact that the `Edm.EnumType` portion usually requires additional knowledge or discovery of vendor-specific namespaces, and human-friendly lookup names are not allowed. RESO is currently migrating to `Edm.String` lookups, and new implementations should use this approach. Please contact RESO with further questions.
+* **Deprecation Notice**: Similar to (2), OData `Edm.EnumType` definitions with `IsFlags=true` will soon be deprecated within RESO standards, with `Collection(Edm.EnumType)` being the current default. However, RESO is currently migrating to `Collection(Edm.String)` for these lookups, which new implementations should use instead. Please contact RESO with further questions.
 
 ---
 
 ### 2.5 Query Support
-Each OData data type supports query operators relevant to its type. For instance, dates, timestamps, and numbers allow for greater than and less than comparisons. 
+Each OData data type supports query operators relevant to its type. For instance, dates, timestamps, and numbers allow for greater than and less than comparisons.
 
 Specifics regarding data types and query operators are outlined in the sections that follow.
 
@@ -362,11 +363,11 @@ _The query operators shown in this section are MUST requirements for the Web API
 ---
 
 #### 2.5.1 Metadata Request
-OData supports both XML and JSON metadata formats. 
+OData supports both XML and JSON metadata formats.
 
-Servers MAY support JSON metadata, but RESO requires they MUST support the XML metadata format. 
+Servers MAY support JSON metadata, but RESO requires they MUST support the XML metadata format.
 
-The [OData format parameter](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#_Toc31361046) allows clients to request a specific format, such as `$format=application/xml` for XML Metadata. 
+The [OData format parameter](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#_Toc31361046) allows clients to request a specific format, such as `$format=application/xml` for XML Metadata.
 
 If no `$format` parameter is passed, the server MUST return the `application/xml` format of the metadata when a request is made to the `/$metadata` endpoint.
 
@@ -407,7 +408,7 @@ HTTP/2 200 OK
 * Each EntityType definition MUST define a Key. [More information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752555).
 * A schema is identified by a [namespace](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Namespace). All `edm:Schema` elements MUST have a namespace defined through a Namespace attribute which MUST be unique within the document, and SHOULD be globally unique. A schema cannot span more than one document. [More information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752522).
 * OData EntityType, Property, and EnumType Member elements MUST conform to OData’s [SimpleIdentifier](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_SimpleIdentifier) naming conventions.
-* OASIS publishes [XML Metadata XSD definitions](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/schemas/) that can be used to validate the syntax of an XML Metadata document. 
+* OASIS publishes [XML Metadata XSD definitions](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/schemas/) that can be used to validate the syntax of an XML Metadata document.
 * RESO offers [reference metadata in XML format](https://raw.githubusercontent.com/RESOStandards/web-api-commander/main/src/main/resources/RESODataDictionary-1.7.xml) which can be used as a guide, and corresponds to RESO Data Dictionary 1.7.
 * The above example does not demonstrate the use of annotations, which are outlined in the [reference XML Metadata document](https://raw.githubusercontent.com/RESOStandards/web-api-commander/main/src/main/resources/RESODataDictionary-1.7.xml).
 
@@ -417,9 +418,9 @@ HTTP/2 200 OK
 Servers MUST support a service document request, according to the OData Minimal Conformance Rules.
 
 > The service root URL identifies the root of an OData service. A GET request to this URL returns the format-specific service document, see [OData-JSON](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#ODataJSONRef).
-> 
+>
 > The service root URL MUST terminate in a forward slash.
-> 
+>
 > The service document enables simple hypermedia-driven clients to enumerate and explore the resources published by the OData service.
 
 RESO validates that the service document request can be made and that it produces a valid JSON response, but does not have any additional requirements about what the document must contain. Data providers may choose which entities they want advertise in their service document according to their business needs.
@@ -472,11 +473,11 @@ HTTP/2 200 OK
 ```
 
 #### 2.5.3 Fetch by Key
-OData provides a way to access a single record by its key, called a singleton record. 
+OData provides a way to access a single record by its key, called a singleton record.
 
-How the key is referenced depends on its type. 
+How the key is referenced depends on its type.
 
-The following examples assume that a resource called Property is defined. 
+The following examples assume that a resource called Property is defined.
 
 Note: unlike requests that return a collection of items in a value array, singleton requests return a instance of the requested type at the top level if a given record exists.
 
@@ -576,7 +577,7 @@ RESO Web API Core servers MUST support the `$top` operator.
 
 #### 2.5.6 `$count` Operator
 
-The [`$count` system query option](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_SystemQueryOptioncount) allows clients to request a count of the matching resources included with the resources in the response. 
+The [`$count` system query option](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_SystemQueryOptioncount) allows clients to request a count of the matching resources included with the resources in the response.
 
 The `$count` query option has a Boolean value of `true` or `false`.
 
@@ -659,7 +660,7 @@ RESO Web API Core servers MUST support the `$orderby` operator.
 
 #### 2.5.9 `$filter` Operator
 
-OData `$filter` expressions provide query support for boolean search expressions. 
+OData `$filter` expressions provide query support for boolean search expressions.
 
 This includes logical operators such as AND, OR, and NOT, as well as greater than, greater than or equal, less than, less than or equal, and not equals for OData primitive types, and query support for enumerations.
 
@@ -675,11 +676,11 @@ The RESO Web API Core specification includes $filter support for the following [
 
 **Enumerations**
 
-Enumerations define the allowed values in a given lookup field. 
+Enumerations define the allowed values in a given lookup field.
 
-They can either be single enumerations, where only one value is provided, or multiple enumerations, in which case there is a list of values. 
+They can either be single enumerations, where only one value is provided, or multiple enumerations, in which case there is a list of values.
 
-The standard values used in transport are determined by a given lookup field’s underlying [data type](#24-data-types). 
+The standard values used in transport are determined by a given lookup field’s underlying [data type](#24-data-types).
 
 At this document’s time of writing, implementations use Edm.EnumType enumerations since they’ve historically been the only supported lookup data type. As such, the single and multiple enumeration examples contained in this document use `Edm.EnumType` and `Collection(Edm.EnumType)`, respectively.
 
@@ -714,13 +715,13 @@ Enumerations are also shown in the sample payloads. Queries for enumerations are
 
 [OData Documentation](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_Equals)
 > The `eq` operator returns true if the left operand is equal to the right operand, otherwise it returns `false`.
-> 
+>
 > When applied to operands of entity types, the `eq` operator returns `true` if both operands represent the same entity, or both operands represent `null`.
-> 
+>
 > When applied to operands of complex types, the `eq` operator returns `true` if both operands have the same structure and same values, or both operands represent `null`.
-> 
+>
 > When applied to ordered collections, the `eq` operator returns `true` if both operands have the same cardinality and each member of the left operand is equal to the corresponding member of the right operand.
-> 
+>
 > For services that support comparing unordered collections, the `eq` operator returns `true` if both operands are equal after applying the same ordering on both collections.
 >
 >Each of the special values `null`, `-INF`, and `INF` is equal to itself, and only to itself.
@@ -756,19 +757,19 @@ HTTP/2 200 OK
 
 [OData Documentation](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_NotEquals)
 > The `ne` operator returns `true` if the left operand is not equal to the right operand, otherwise it returns `false`.
-> 
+>
 > When applied to operands of entity types, the `ne` operator returns `true` if the two operands do not represent the same entity.
 >
 > When applied to operands of complex types, the `ne` operator returns `true` if the operands do not have the same structure and same values.
-> 
+>
 > When applied to ordered collections, the `ne` operator returns `true` if both operands do not have the same cardinality or any member of the left operand is not equal to the corresponding member of the right operand.
-> 
+>
 > For services that support comparing unordered collections, the `ne` operator returns `true` if both operands do not have the same cardinality or do not contain the same members, in any order.
-> 
+>
 > Each of the special values `null`, `-INF`, and `INF` is not equal to any value but itself.
-> 
+>
 > The special value `NaN` is not equal to anything, even to itself.
-> 
+>
 > The `null` value is not equal to any value but itself.
 
 **Example**
@@ -840,7 +841,7 @@ HTTP/2 200 OK
 
 [OData Documentation](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_GreaterThanorEqual)
 > The `ge` operator returns `true` if the left operand is greater than or equal to the right operand, otherwise it returns `false`.
-> 
+>
 > See rules for `gt` and `eq` for details.
 
 **Example**
@@ -874,9 +875,9 @@ HTTP/2 200 OK
 
 [OData Documentation](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_LessThan)
 > The `lt` operator returns `true` if the left operand is less than the right operand, otherwise it returns `false`.
-> 
+>
 > The special value `-INF` is less than any number, and any number is less than `INF`.
-> 
+>
 > The Boolean value `false` is less than `true`.
 >
 >If any operand is `null`, the operator returns `false`.
@@ -950,7 +951,7 @@ There are two ways to express single enumerations in the RESO Web API Core speci
 * Edm.EnumType
 * Edm.String, as outlined in [RCP-032](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275152879)
 
-`Edm.EnumType` enumerations are the most prevalent at the time of writing. 
+`Edm.EnumType` enumerations are the most prevalent at the time of writing.
 
 RESO is transitioning to `Edm.String` enumerations and new implementations should follow that path.
 
@@ -959,9 +960,9 @@ RESO is transitioning to `Edm.String` enumerations and new implementations shoul
 ###### 2.5.9.8.1 `Edm.EnumType` Enumerations
 OData provides the `Edm.EnumType` data type to express enumerations. [More information](https://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_EnumerationType).
 
-The `Edm.EnumType` data type supports `has`, `eq`, and `ne` queries. 
+The `Edm.EnumType` data type supports `has`, `eq`, and `ne` queries.
 
-The StandardStatus field is used in the examples in this section. 
+The StandardStatus field is used in the examples in this section.
 
 Assume given server has the following XML Metadata:
 
@@ -997,7 +998,7 @@ Assume given server has the following XML Metadata:
 The [OData has operator](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#_Toc31360967) is defined for items of `Edm.EnumType` as follows:
 
 > The `has` operator returns `true` if the right operand is an enumeration value whose flag(s) are set on the left operand.
-> 
+>
 > The `null` value is treated as unknown, so if one operand evaluates to `null`, the has operator returns `null`.
 
 **Example**
@@ -1105,7 +1106,7 @@ The Web API Core specification currently offers three ways to express multiple e
 * [`Collection(Edm.EnumType)`](#TODO)
 * [Collection(Edm.String)](#TODO)
 
-The `IsFlags=true` method is not recommended for current implementations due to size limitations of the underlying data type and will be deprecated in future versions of the Web API. 
+The `IsFlags=true` method is not recommended for current implementations due to size limitations of the underlying data type and will be deprecated in future versions of the Web API.
 
 Currently, [RESO’s reference XML metadata](https://raw.githubusercontent.com/RESOStandards/web-api-commander/main/src/main/resources/RESODataDictionary-1.7.xml) uses `Collection(Edm.EnumType)` for normative examples of multiple enumerations.
 
@@ -1120,7 +1121,7 @@ In the past, it was common for implementations to use OData IsFlags enumerations
 
 The current [RESO XML reference metadata](https://raw.githubusercontent.com/RESOStandards/web-api-commander/main/src/main/resources/RESODataDictionary-1.7.xml) uses `Collection(Edm.EnumType)`.
 
-One of the main reasons the `IsFlags=true` approach is being deprecated is that if the OData specification were followed strictly, it limits the total number of possible values to 64. 
+One of the main reasons the `IsFlags=true` approach is being deprecated is that if the OData specification were followed strictly, it limits the total number of possible values to 64.
 
 To understand why this is the case, OData uses an underlying type of at most `Edm.Int64` to represent flag based enumerations. The design of the `IsFlags=true` lookup suggests that bitwise comparisons across multiple entries should be possible using this approach, meaning that if each item in the list is mutually exclusive there are only 64 choices.
 
@@ -1147,7 +1148,7 @@ Notice how Red has a value of 1 (2<sup>0</sup>), Blue has a value of 2 (2<sup>1<
 
 The underlying value in the payload from the example above would be 19, the `Edm.Int64` representation of the value defined in the lookup. This MUST match what’s defined in the server metadata.
 
-RESO does not explicitly validate bitmapped values to ensure that lookup choices do not overlap. 
+RESO does not explicitly validate bitmapped values to ensure that lookup choices do not overlap.
 
 
 **`has` Operator**
@@ -1155,7 +1156,7 @@ RESO does not explicitly validate bitmapped values to ensure that lookup choices
 The [OData `has` operator](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#_Toc31360967) is defined for items of `Edm.EnumType` as follows:
 
 > The `has` operator returns true if the right operand is an enumeration value whose flag(s) are set on the left operand.
-> 
+>
 > The `null` value is treated as unknown, so if one operand evaluates to `null`, the has operator returns  `null`.
 
 **Example**
@@ -1189,7 +1190,7 @@ HTTP/2 200 OK
 
 ###### 2.5.9.9.2 Collection of `Edm.EnumType`
 
-The RESO Web API Core specification allows for multiple enumerations to be defined in terms of collections of OData `Edm.EnumType` definitions. 
+The RESO Web API Core specification allows for multiple enumerations to be defined in terms of collections of OData `Edm.EnumType` definitions.
 
 While this approach is not well documented in OData reference material, it is nonetheless valid and was previously offered in order to overcome the [64-value limitation of IsFlags enumerations](#TODO).
 
@@ -1221,20 +1222,20 @@ Similar to other `Edm.EnumType` definitions, queries rely on namespaces being pr
 From the [OData specification](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#_Toc31361024):
 
 > OData defines two operators that evaluate a Boolean expression on a collection. Both must be prepended with a navigation path that identifies a collection.
-> 
+>
 > 4.01 Services MUST support case-insensitive lambda operator names. Clients that want to work with 4.0 services MUST use lower case lambda operator names.
-> 
+>
 > The argument of a lambda operator is a case-sensitive lambda variable name followed by a colon (:) and a Boolean expression that uses the lambda variable name to refer to properties of members of the collection identified by the navigation path.
-> 
+>
 > If the name chosen for the lambda variable matches a property name of the current resource referenced by the resource path, the lambda variable takes precedence. Clients can prefix properties of the current resource referenced by the resource path with [`$it`](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_it).
-> 
+>
 > Other path expressions in the Boolean expression neither prefixed with the lambda variable nor $it are evaluated in the scope of the collection instances at the origin of the navigation path prepended to the lambda operator.
 
 
 **`any()` Operator**
 
 > The any operator applies a Boolean expression to each member of a collection and returns `true` if and only if the expression is true for any member of the collection, otherwise it returns `false`. This implies that the any operator always returns `false` for an empty collection.
-> 
+>
 > The `any` operator can be used without an argument expression. This short form returns `false` if and only if the collection is empty.
 
 **Example**
@@ -1265,7 +1266,7 @@ HTTP/2 200 OK
 **`all()` Operator**
 
 > The `all` operator applies a Boolean expression to each member of a collection and returns `true` if the expression is true for all members of the collection, otherwise it returns `false`. This implies that the `all` operator always returns `true` for an empty collection.
-> 
+>
 > The `all` operator cannot be used without an argument expression.
 
 **Example**
@@ -1304,6 +1305,13 @@ This resource is still in DRAFT status. Please [contact RESO](mailto:dev@reso.or
 ---
 
 ### 2.6 Response Message Bodies
+---
+
+#### 2.6.1 HTTP Response codes
+A compatible server implementation MUST return a valid HTTP status code for each request indicating the status of the request.
+
+If the response was not successful the server MAY include an [error message](https://reso.atlassian.net/wiki/spaces/WebAPI2/pages/8163003779) in the body of the HTTP response. There is a defined response body for JSON but there is no explicit requirement in the OData standard.
+
 
 TODO
 
@@ -1350,7 +1358,3 @@ TODO
 TODO
 
 ---
-
-
-
-
