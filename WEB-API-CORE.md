@@ -35,7 +35,7 @@
         - [2.5.9.7 Less Than or Equal](#2597-less-than-or-equal)
         - [2.5.9.8 Single Enumerations](#2598-single-enumerations)
         - [2.5.9.9 Multiple Enumerations](#2599-multiple-enumerations)
-  - [2.6 Response Message Bodies](#26-message-response-bodies)
+    - [2.6 Response Message Bodies](#26-response-message-bodies)
       - [2.6.1 HTTP Response Codes](#260-http-response-codes)
   - [2.7 Standard Resources]()
   - [2.8 Core Query Examples]()
@@ -1305,15 +1305,24 @@ This resource is still in DRAFT status. Please [contact RESO](mailto:dev@reso.or
 ---
 
 ### 2.6 Response Message Bodies
----
 
 #### 2.6.1 HTTP Response codes
 A compatible server implementation MUST return a valid HTTP status code for each request indicating the status of the request.
 
 If the response was not successful the server MAY include an [error message](https://reso.atlassian.net/wiki/spaces/WebAPI2/pages/8163003779) in the body of the HTTP response. There is a defined response body for JSON but there is no explicit requirement in the OData standard.
 
-
-TODO
+| Code | Short Description | Detail |
+| ---- | ----------------- | ------ |
+| 200 | OK | Returned by GET method when retrieving a record or records. If no records are found an empty result set is returned. |
+| 202 | Accepted | Returned by GET method to indicate that the server received the request but that it may take time to fulfill a response. |
+| 400 | Bad Request | Returned by GET method calls when the data fails validation and more detail on the error may be found in the body of the response. |
+| 403 | Forbidden | Returned when the selected Authentication mechanism is not successful. |
+| 404 | Not Found | Returned when a GET cannot find a resource or collection. |
+| 413 | Request Entity Too Large | Returned at the discretion of the server. Used to indicate when the server cannot handle the complexity of the specific request. |
+| 415 | Unsupported Media | Returned when a media format requested is not supported by the system. |
+| 429 | Too Many Requests | Returned at the discretion of the server. Used to indicate that the user / licensee has met or exceeded their allowed usage (transactions per second, per day, per month, etc. |
+| 500 | Internal Server Error | Returned when an unexpected error is encountered and more detail may be provided in the response body. |
+| 501 | Not Implemented | Returned when the requested method is not available. |
 
 ---
 
