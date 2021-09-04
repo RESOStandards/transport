@@ -37,6 +37,7 @@
         - [2.5.9.9 Multiple Enumerations](#2599-multiple-enumerations)
     - [2.6 Response Message Bodies](#26-response-message-bodies)
       - [2.6.1 HTTP Response Codes](#260-http-response-codes)
+      - [2.6.2 Error Message Bodies](#261-error-message-bodies)
   - [2.7 Standard Resources]()
   - [2.8 Core Query Examples]()
   - [2.9 Security]()
@@ -1306,7 +1307,7 @@ This resource is still in DRAFT status. Please [contact RESO](mailto:dev@reso.or
 
 ### 2.6 Response Message Bodies
 
-#### 2.6.1 HTTP Response codes
+#### 2.6.1 HTTP Response Codes
 A compatible server implementation MUST return a valid HTTP status code for each request indicating the status of the request.
 
 If the response was not successful the server MAY include an [error message](https://reso.atlassian.net/wiki/spaces/WebAPI2/pages/8163003779) in the body of the HTTP response. There is a defined response body for JSON but there is no explicit requirement in the OData standard.
@@ -1323,6 +1324,44 @@ If the response was not successful the server MAY include an [error message](htt
 | 429 | Too Many Requests | Returned at the discretion of the server. Used to indicate that the user / licensee has met or exceeded their allowed usage (transactions per second, per day, per month, etc. |
 | 500 | Internal Server Error | Returned when an unexpected error is encountered and more detail may be provided in the response body. |
 | 501 | Not Implemented | Returned when the requested method is not available. |
+
+---
+
+#### 2.6.2 Error Message Bodies
+When the client makes a request which cannot be satisfied or produces an error condition, a compliant server MUST follow the OData error handling guidelines.
+
+Full details of this mechanism may be found in the [JSON Error Response](http://docs.oasis-open.org/odata/odata-json-format/v4.0/errata03/os/odata-json-format-v4.0-errata03-os-complete.html#_Toc453766668) section of the OData specification.
+
+The following example includes a client request and a compliant server error response for reference.
+
+**Example Client Request**
+
+```JSON
+GET https://api.reso.org/reso/odata/Member?$orderby=ModificationTimestamp&$top=5&$skip=5
+HTTP/2 200 OK
+```
+
+**Example Server Response**
+```JSON
+{
+  "error": {
+    "code": "501",
+    "message": "Unsupported functionality",
+    "target": "query",
+    "details": [
+      {
+       "code": "301",
+       "target": "$skip", 
+       "message": "Resource does not support the $skip parameter"
+      }
+    ],
+    "innererror": {
+      "trace": [...],
+      "context": {...}
+    }
+  }
+}
+```
 
 ---
 
