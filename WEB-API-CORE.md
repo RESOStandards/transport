@@ -34,13 +34,13 @@
         - [2.5.9.6 Less Than](#2596-less-than)
         - [2.5.9.7 Less Than or Equal](#2597-less-than-or-equal)
         - [2.5.9.8 Single Enumerations](#2598-single-enumerations)
-        - [2.5.9.9 Multiple Enumerations](#2599-multiple-enumerations)
-    - [2.6 Response Message Bodies](#26-response-message-bodies)
+        - [2.5.9.9 Multiple Enumerations](#2599-multiple-enumeraions)
+  - [2.6 Response Message Bodies](#26-response-message-bodies)t
       - [2.6.1 HTTP Response Codes](#260-http-response-codes)
       - [2.6.2 Error Message Bodies](#261-error-message-bodies)
   - [2.7 Standard Resources]()
-  - [2.8 Core Query Examples]()
-  - [2.9 Security]()
+  - [2.8 Core Query Examples](#28-core-query-examples)
+  - [2.9 Security](#29-security)
 - [Section 3: Authors]()
 - [Section 4: References]()
 - [Section 5: Appendices]()
@@ -1358,7 +1358,7 @@ HTTP/2 200 OK
     "innererror": {
       "trace": [...],
       "context": {...}
-    }
+    } 
   }
 }
 ```
@@ -1373,14 +1373,126 @@ TODO
 
 ### 2.8 Core Query Examples
 
-TODO
+**Get Properties Listed in December of 2020**
+```https://api.reso.org/Property?$filter=ListingContractDate ge 2020-12-01 and ListingContractDate lt 2021-01-01```
+
+**Get Properties Listed in a Given Year**
+```https://api.reso.org/Property?$filter=ListingContractDate ge 2020-01-01 and ListingContractDate lt 2021-01-01```
+
+**Get Active Members with First Name 'James' or 'Adam'**
+```https://api.reso.org/Member?$filter=(MemberStatus eq 'Active' and (MemberFirstName eq 'James' or MemberFirstName eq 'Adam'))```
+
+**Query on Boolean Field to Find Short Sales**
+```https://api.reso.org/Property?$filter=ShortSale eq true```
+
+**Combine Multiple Criteria in a Listing Search**
+```https://api.reso.org/Property?$filter=ListPrice gt 250000 and ListPrice lt 500000```
+
+**Get Properties with a Listing Price Greater Than $300K**
+```https://api.reso.org/Property?$filter=ListPrice gt 300000```
+
+**Get Properties with a Listing Price of $300K**
+```https://api.reso.org/Property?$filter=ListPrice eq 300000```
+
+**Retrieve Records in a Specific Order**
+```https://api.reso.org/Property?$filter=ListPrice lt 300000&$orderby=ListPrice desc```
+
+**Get a Count of Property Records**
+```https://api.reso.org/Property?$filter=ListPrice lt 300000&```
+
+**Filter by Field Value**
+```https://api.reso.org/Member?$filter=(MemberLastName eq 'Smith')```
+
+Note: All names in the $filter option are case sensitive to match the names of elements provided by the resource.
+
+**Get the Next Five Members**
+```https://api.reso.org//Member?$top=5&$skip=5```
+
+Note: The implementation of $top and $orderby is defined by the server and may restrict what values may be used in either option. A compliant client SHOULD use the $orderby query to sustain consistency between requests, however a compliant server is not required to guarantee consistent results between requests.
+
+**Get the First Five Members**
+```https://api.reso.org/Member?$top=5```
+
+**Get Top Ten Residential Properties**
+```https://api.reso.org/Property?$filter=PropertyType eq 'Residential'&$top=10```
+
+**Get Properties with a Listing Price of Less than $300K**
+```https://api.reso.org/Property?$filter=ListPrice lt 300000```
+
+**Get Properties with a Price Range of $250k to $500k**
+```https://api.reso.org/Property?$filter=ListPrice gt 250000 and ListPrice lt 500000``
+
+**Select Specific Field Values**
+```https://api.reso.org/Member?$select=MemberLastName,MemberFirstName,MemberID```
+
+Note: All names in the $select option are case-sensitive to match the names of elements provided by the resource.
+
+**Get Most Recent ListingKey and ModificationTimestamp in Descending Order**
+```https://api.reso.org/Property?$select=ListingKey,ModificationTimestamp&$orderby=ModificationTimestamp desc```
+
+**Get a Single Property**
+```https://api.reso.org/Property('ListingId3')?$format=atom```
+
+Here is a truncated example response for the request above. 
+
+```Sample 9 - Get Single Property return ATOM XML```
+
+The client may change this to JSON as well as follows: 
+```https://api.reso.org/Property('ListingId3')?$format=json```
+
+This will return the following example result again truncated for brevity.
+
+```JSON
+{
+
+    "odata.metadata": "http://odata.reso.org/Properties.svc/$metadata#Properties/@Element",
+
+    "ID": "ListingId3",
+
+    "AboveGradeFinishedArea": 3,
+
+    "AboveGradeFinishedAreaSpecified": false,
+
+    "AboveGradeFinishedAreaSource": "AboveGradeFinishedAreaSource3",
+
+    "AboveGradeFinishedAreaUnits": "AboveGradeFinishedAreaUnits3",
+
+    "AccessibilityFeatures":
+
+        ["AccessibilityFeatures1",
+
+        "AccessibilityFeatures2",
+
+        "AccessibilityFeatures3"],
+
+    "AdditionalParcelsDescription": "AdditionalParcelsDescription3",
+
+    "AdditionalParcelsYN": "AdditionalParcelsYN3",
+
+    "ApprovalStatus": "ApprovalStatus3",
+
+    "ArchitecturalStyle": "ArchitecturalStyle3",
+
+...etc...
+```
+**Filter by Multiple Field Values**
+
+```https://api.reso.org/Member?$filter=(MemberFirstName eq 'Joe' and MemberLastName eq 'Smith')```
+
+Note: Query strings MUST be URL encoded where appropriate by a compliant client.
 
 ---
 
 ### 2.9 Security
 
-TODO
+Authentication and authorization are not covered in this document.
 
+Servers MUST implement one of the following [OAuth2](https://oauth.net/2/) authentication methods to be compliant with the RESO Web API specification:
+
+[Bearer Tokens](https://oauth.net/2/bearer-tokens/)
+[Client Credentials](https://oauth.net/2/grant-types/client-credentials/)
+
+Note: The [Open ID Connect](https://openid.net/connect/) layer was previously supported by the RESO Web API. As of Web API 1.0.2, RESO only supports Bearer tokens and Client Credentials during Certification.
 ---
 
 ## Section 3: Authors
