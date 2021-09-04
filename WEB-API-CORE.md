@@ -1342,7 +1342,7 @@ HTTP/2 200 OK
 ```
 
 **Example Server Response**
-```JSON
+```xml
 {
   "error": {
     "code": "501",
@@ -1461,7 +1461,7 @@ The client may change this to JSON as well as follows:
 
 This will return the following example result again truncated for brevity.
 
-```JSON
+```xml
 {
 
     "odata.metadata": "http://odata.reso.org/Properties.svc/$metadata#Properties/@Element",
