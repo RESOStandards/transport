@@ -1435,7 +1435,7 @@ Note: The implementation of $top and $orderby is defined by the server and may r
 
 **Get Properties with a Price Range of $250k to $500k**
 
-```https://api.reso.org/Property?$filter=ListPrice gt 250000 and ListPrice lt 500000``
+```https://api.reso.org/Property?$filter=ListPrice gt 250000 and ListPrice lt 500000```
 
 **Select Specific Field Values**
 
