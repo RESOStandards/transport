@@ -35,7 +35,7 @@
         - [2.5.9.7 Less Than or Equal](#2597-less-than-or-equal)
         - [2.5.9.8 Single Enumerations](#2598-single-enumerations)
         - [2.5.9.9 Multiple Enumerations](#2599-multiple-enumeraions)
-  - [2.6 Response Message Bodies](#26-response-message-bodies)t
+  - [2.6 Response Message Bodies](#26-response-message-bodies)
       - [2.6.1 HTTP Response Codes](#260-http-response-codes)
       - [2.6.2 Error Message Bodies](#261-error-message-bodies)
   - [2.7 Standard Resources]()
