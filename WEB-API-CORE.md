@@ -43,8 +43,6 @@
   - [2.9 Security](#29-security)
 - [Section 3: Authors](#section-3-authors)
 - [Section 4: References](#section-4-references)
-- [Section 5: Appendices](#section-5-appendices)
-- [Section 6: Revision List]()
 
 # Introduction
 The Web API Core Endorsement provides a subset of functionality from the OASIS OData specification relevant to those who need to perform live queries or replicate data using the RESO Web API. This includes the ability to express metadata and provide query support for primitive OData types and enumerations. This document offers normative examples of what these items should look like, both in the metadata and payload.
