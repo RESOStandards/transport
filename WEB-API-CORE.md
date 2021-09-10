@@ -41,7 +41,7 @@
   - [2.7 Standard Resources]()
   - [2.8 Core Query Examples](#28-core-query-examples)
   - [2.9 Security](#29-security)
-- [Section 3: Authors]()
+- [Section 3: Authors](#section-3-authors)
 - [Section 4: References]()
 - [Section 5: Appendices]()
 - [Section 6: Revision List]()
@@ -1518,7 +1518,18 @@ Note: The [Open ID Connect](https://openid.net/connect/) layer was previously su
 
 ## Section 3: Authors
 
-TODO
+| Author | Company |
+| ------ | ------- |
+| Paul Stusiak | Falcon Technologies Corp. |
+| Sergio Del Rio | Templates for Business, Inc. |
+| Joshua Darnell | kurotek, LLC |
+| Cody Gustafson | FBS Data Systems |
+| Chris Lambrou | MetroMLS |
+| Scott Petronis | Onboard Informatics |
+| Matthew McGuire | Corelogic |
+| Fred Larsen | UtahRealEstate.com
+| James McDaniel | UtahRealEstate.com |
+| Robert Gottesman | RESO |
 
 ---
 
