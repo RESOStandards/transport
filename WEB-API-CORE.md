@@ -1546,7 +1546,7 @@ Note: The [Open ID Connect](https://openid.net/connect/) layer was previously su
 **Table 4 - Document References**
 
 | Description | Link |
-| ----------- | ---- |
+| ------------------------- | ---- |
 | REST | [Representational State Transfer](https://en.wikipedia.org/wiki/Representational_state_transfer) |
 | Open Data Protocol or “OData” | [OData - the Best Way to REST](https://www.odata.org/) |
 | OData “4.0” | [Documentation · OData - the Best Way to REST](https://www.odata.org/documentation/) |
@@ -1555,7 +1555,7 @@ Note: The [Open ID Connect](https://openid.net/connect/) layer was previously su
 | OData “4.0” - Part 3 - Common Schema Definition Language | [OData Version 4.0. Part 3: Common Schema Definition Language (CSDL) Plus Errata 03](http://docs.oasis-open.org/odata/odata/v4.0/errata03/odata-v4.0-errata03-part3-csdl-complete.html) |
 | Geospatial Support in OData | [Geospatial data support in OData · OData - the Best Way to REST](http://www.odata.org/blog/geospatial-data-support-in-odata/) |
 | HTTP/1.1 Protocol | [Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing](https://tools.ietf.org/html/rfc7230) [Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content](https://tools.ietf.org/html/rfc7231) [Hypertext Transfer Protocol (HTTP/1.1): Conditional Requests](https://tools.ietf.org/html/rfc7232) [Hypertext Transfer Protocol (HTTP/1.1): Range Requests](https://tools.ietf.org/html/rfc7233) [Hypertext Transfer Protocol (HTTP/1.1): Caching](https://tools.ietf.org/html/rfc7234) [Hypertext Transfer Protocol (HTTP/1.1): Authentication](https://tools.ietf.org/html/rfc7235)   |
-| HTTP/2.0 Protocol | [Hypertext Transfer Protocol Version 2 (HTTP/2)](https://tools.ietf.org/html/rfc7540) [HPACK: Header Compression for HTTP/2](https://tools.ietf.org/html/rfc7541)  |
+| HTTP/2.0 Protocol | [Hypertext Transfer Protocol Version 2 (HTTP/2)](https://tools.ietf.org/html/rfc7540) <br /> [HPACK: Header Compression for HTTP/2](https://tools.ietf.org/html/rfc7541)  |
 | Transport Layer Security (TLS) (Encryption for HTTP support) | [The Transport Layer Security (TLS) Protocol Version 1.2](https://www.ietf.org/rfc/rfc5246.txt) [Recommendations for Secure Use of Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS)](https://tools.ietf.org/html/rfc7525) [OWASP TLS implementation guide](https://www.owasp.org/index.php/Transport_Layer_Protection_Cheat_Sheet) [SSL Labs TLS Deployment Best Practices](https://www.ssllabs.com/downloads/SSL_TLS_Deployment_Best_Practices.pdf) |
 ---
 
