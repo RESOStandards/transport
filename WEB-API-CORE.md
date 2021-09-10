@@ -1380,7 +1380,7 @@ HTTP/2 200 OK
   "@odata.context": "https://api.reso.org/Property?$filter=ListingContractDate ge 2020-12-01 and ListingContractDate lt 2021-01-01"
   "value": [
     {
-      "ListingKey": "a5",
+      "ListingKey": "a1",
       "BedroomsTotal": 4,
       "ListPrice": 100000.01,
       "StreetName": "1st",
@@ -1402,10 +1402,10 @@ HTTP/2 200 OK
   "@odata.context": "https://api.reso.org/Property?$filter=ListingContractDate ge 2020-01-01 and ListingContractDate le 2020-12-31"
   "value": [
     {
-      "ListingKey": "a1",
+      "ListingKey": "a2",
       "BedroomsTotal": 3,
-      "ListPrice": 100000,
-      "StreetName": "1st",
+      "ListPrice": 200000,
+      "StreetName": "2nd",
       "ModificationTimestamp": "2020-12-31T00:01:01.01.007Z",
       "ListingContractDate": "2020-12-31",
       "StandardStatus": "Closed",
@@ -1424,7 +1424,7 @@ HTTP/2 200 OK
   "@odata.context": "https://api.reso.org/Member?$filter=(MemberFirstName eq 'James' or MemberFirstName eq 'Adam'))"
   "value": [
     {
-      "MemberKey": "a2",
+      "MemberKey": "a1",
       "MemberStatus: "Active",
       "MemberFirstName": "James",
       "MemberLastName": "Doe",
@@ -1447,7 +1447,7 @@ HTTP/2 200 OK
       "ListingKey": "a3",
       "BedroomsTotal": 3,
       "ListPrice": 200000,
-      "StreetName": "elm",
+      "StreetName": "3rd",
       "ModificationTimestamp": "2021-09-05T00:01:01.01.007Z",
       "StandardStatus": "Active",
       "AccessibilityFeatures": []
@@ -1469,7 +1469,7 @@ HTTP/2 200 OK
       "ListingKey": "a4",
       "BedroomsTotal": 4,
       "ListPrice": 350000,
-      "StreetName": "5th",
+      "StreetName": "4th",
       "ModificationTimestamp": "2021-08-25T00:01:01.01.007Z",
       "StandardStatus": "Active",
       "AccessibilityFeatures": []
@@ -1487,10 +1487,10 @@ HTTP/2 200 OK
   "@odata.context": "https://api.reso.org/Property?$filter=ListPrice gt 300000"
   "value": [
     {
-      "ListingKey": "a6",
+      "ListingKey": "a5",
       "BedroomsTotal": 4,
       "ListPrice": 320000,
-      "StreetName": "6th",
+      "StreetName": "5th",
       "ModificationTimestamp": "2021-08-15T00:01:01.01.007Z",
       "StandardStatus": "Active Under Contract",
       "AccessibilityFeatures": []
@@ -1508,10 +1508,10 @@ HTTP/2 200 OK
   "@odata.context": "https://api.reso.org/Property?$filter=ListPrice eq 300000"
   "value": [
     {
-      "ListingKey": "a7",
+      "ListingKey": "a6",
       "BedroomsTotal": 4,
       "ListPrice": 300000,
-      "StreetName": "7th",
+      "StreetName": "6th",
       "ModificationTimestamp": "2021-07-15T00:01:01.01.007Z",
       "StandardStatus": "Active",
       "AccessibilityFeatures": []
@@ -1529,7 +1529,7 @@ HTTP/2 200 OK
   "@odata.context": "https://api.reso.org/Property?$filter=ListPrice lt 500000&$orderby=ListPrice desc"
   "value": [
     {
-      "ListingKey": "a8",
+      "ListingKey": "a7",
       "BedroomsTotal": 5,
       "ListPrice": 500000,
       "StreetName": "7th",
