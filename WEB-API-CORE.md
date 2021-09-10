@@ -1555,7 +1555,7 @@ Note: The [Open ID Connect](https://openid.net/connect/) layer was previously su
 | OData “4.0” - Part 3 - Common Schema Definition Language | [OData Version 4.0. Part 3: Common Schema Definition Language (CSDL) Plus Errata 03](http://docs.oasis-open.org/odata/odata/v4.0/errata03/odata-v4.0-errata03-part3-csdl-complete.html) |
 | Geospatial Support in OData | [Geospatial data support in OData · OData - the Best Way to REST](http://www.odata.org/blog/geospatial-data-support-in-odata/) |
 | HTTP/1.1 Protocol | [Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing](https://tools.ietf.org/html/rfc7230) |
-| HTTP/2.0 Protocol | [Hypertext Transfer Protocol Version 2 (HTTP/2)](https://tools.ietf.org/html/rfc7540) |
+| HTTP/2.0 Protocol | [Hypertext Transfer Protocol Version 2 (HTTP/2)](https://tools.ietf.org/html/rfc7540) and [Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content](https://tools.ietf.org/html/rfc7231) |
 
 ---
 
