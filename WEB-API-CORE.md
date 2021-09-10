@@ -1372,7 +1372,7 @@ TODO
 ### 2.8 Core Query Examples
 
 **Get Properties Listed in December of 2020**
-```json
+```xml
 GET https://api.reso.org/Property?$filter=ListingContractDate ge 2020-12-01 and ListingContractDate lt 2021-01-01
 HTTP/2 200 OK
 
@@ -1394,8 +1394,9 @@ HTTP/2 200 OK
 ```
 
 **Get Properties Listed in a Given Year**
-```json
+```xml
 GET https://api.reso.org/Property?$filter=ListingContractDate ge 2020-01-01 and ListingContractDate le 2020-12-31
+HTTP/2 200 OK
 
 {
   "@odata.context": "https://api.reso.org/Property?$filter=ListingContractDate ge 2020-01-01 and ListingContractDate le 2020-12-31"
@@ -1403,7 +1404,7 @@ GET https://api.reso.org/Property?$filter=ListingContractDate ge 2020-01-01 and 
     {
       "ListingKey": "a1",
       "BedroomsTotal": 3,
-      "ListPrice": 100000.01,
+      "ListPrice": 100000,
       "StreetName": "1st",
       "ModificationTimestamp": "2020-12-31T00:01:01.01.007Z",
       "ListingContractDate": "2020-12-31",
@@ -1414,10 +1415,46 @@ GET https://api.reso.org/Property?$filter=ListingContractDate ge 2020-01-01 and 
 }
 ```
 **Get Active Members with First Name 'James' or 'Adam'**
+```xml
+GET https://api.reso.org/Member?$filter=(MemberStatus eq 'Active' and (MemberFirstName eq 'James' or MemberFirstName eq 'Adam'))
+HTTP/2 200 OK
 
-```https://api.reso.org/Member?$filter=(MemberStatus eq 'Active' and (MemberFirstName eq 'James' or MemberFirstName eq 'Adam'))```
+{
+  "@odata.context": "https://api.reso.org/Member?$filter=(MemberFirstName eq 'James' or MemberFirstName eq 'Adam'))"
+  "value": [
+    {
+      "MemberKey": "a2",
+      "MemberStatus: "Active",
+      "MemberFirstName": "James",
+      "MemberLastName": "Doe",
+      "MemberEmail": "james@jamesdoe.com",
+      "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z",
+    }
+  ]
+}
+```
 
 **Query on Boolean Field to Find Short Sales**
+```xml
+GET https://api.reso.org/Property?$filter=ShortSale eq true
+HTTP/2 200 OK
+{
+  "@odata.context": "https://api.reso.org/Property?$filter=ShortSale eq true"
+  "value": [
+    {
+      "ListingKey": "a3",
+      "BedroomsTotal": 3,
+      "ListPrice": 200000,
+      "StreetName": "3st",
+      "ModificationTimestamp": "2021-09-05T00:01:01.01.007Z",
+      "StandardStatus": "Active",
+      "AccessibilityFeatures": []
+    }
+  ]
+}
+
+
+```
 
 ```https://api.reso.org/Property?$filter=ShortSale eq true```
 
