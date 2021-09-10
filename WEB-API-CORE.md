@@ -1530,6 +1530,14 @@ Note: The [Open ID Connect](https://openid.net/connect/) layer was previously su
 | Fred Larsen | UtahRealEstate.com
 | James McDaniel | UtahRealEstate.com |
 | Robert Gottesman | RESO |
+| Rob Larson |  |
+| Paul Hethmon | Corelogic |
+| Rick Trevino | MetroList |
+| Pace Davis | Zillow Group |
+| Michael Watt | Zillow Group |
+| Geoff Rispin | Templates 4 Business, Inc. |
+| Maria Dalarcao | MLSListings, Inc. |
+| Jeremy Crawford | RESO |
 
 ---
 
