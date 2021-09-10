@@ -1562,6 +1562,7 @@ Note: The [Open ID Connect](https://openid.net/connect/) layer was previously su
 ## Section 5: Appendices
 
 **Annotations**
+
 The metadata returned from a server may have Annotations as specified in the [OData Common Schema Definition Language](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part3-csdl.html).
 
 Note that Annotations are a useful way to provide more context to data and are also used in the RESO implementation to build out [Multi-Valued Lookups](https://reso.atlassian.net/wiki/spaces/WebAPI2/pages/8163003727) that have more than 64 items in them.
@@ -1569,6 +1570,7 @@ Note that Annotations are a useful way to provide more context to data and are a
 A very useful function of Annotations is that they can be used to get around limitations in Edm.EnumType that require only certain characters in the Name field.  The following example illustrates how we use Annotations to provide meaningful names for enumerations:
 
 **Define the StandardName Annotation**
+
 ```xml
  <edmx:Edmx Version="4.0">
  <edmx:Reference Uri="http://standards.reso.org/transport/odata/v0.1/RESO.OData.Metadata.xml">
@@ -1591,8 +1593,7 @@ A very useful function of Annotations is that they can be used to get around lim
 
 The above annotation declares the term 'StandardName' so it can be used to describe an EntityType, Property, EnumType or enumeration Member as needed.
 
-ementing 'Nice' names for EnumType Members****Impl
-
+**Implementing 'Nice' names for EnumType Members**
 ```xml
  <?xml version="1.0" encoding="utf-8"?>
 <edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
@@ -1655,9 +1656,6 @@ Notice that in the above example, we can have nice StandardNames in many differe
 **Approved Change Proposals**
 
 TODO-RCP links to be migrated
-
-
-
 
 ---
 
