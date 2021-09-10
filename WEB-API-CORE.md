@@ -1415,6 +1415,7 @@ HTTP/2 200 OK
 }
 ```
 **Get Active Members with First Name 'James' or 'Adam'**
+
 ```xml
 GET https://api.reso.org/Member?$filter=(MemberStatus eq 'Active' and (MemberFirstName eq 'James' or MemberFirstName eq 'Adam'))
 HTTP/2 200 OK
@@ -1433,8 +1434,8 @@ HTTP/2 200 OK
   ]
 }
 ```
-
 **Query on Boolean Field to Find Short Sales**
+
 ```xml
 GET https://api.reso.org/Property?$filter=ShortSale eq true
 HTTP/2 200 OK
@@ -1453,36 +1454,117 @@ HTTP/2 200 OK
     }
   ]
 }
-
-
 ```
-
-```https://api.reso.org/Property?$filter=ShortSale eq true```
 
 **Combine Multiple Criteria in a Listing Search**
 
-```https://api.reso.org/Property?$filter=ListPrice gt 250000 and ListPrice lt 500000```
+```xml
+GET https://api.reso.org/Property?$filter=ListPrice gt 250000 and ListPrice lt 500000
+HTTP/2 200 OK
 
+{
+  "@odata.context": "https://api.reso.org/Property?$filter=ListPrice gt 250000 and ListPrice lt 500000"
+  "value": [
+    {
+      "ListingKey": "a4",
+      "BedroomsTotal": 4,
+      "ListPrice": 350000,
+      "StreetName": "5th",
+      "ModificationTimestamp": "2021-08-25T00:01:01.01.007Z",
+      "StandardStatus": "Active",
+      "AccessibilityFeatures": []
+    }
+  ]
+}
+```
 **Get Properties with a Listing Price Greater Than $300K**
 
-```https://api.reso.org/Property?$filter=ListPrice gt 300000```
+```xml
+GET https://api.reso.org/Property?$filter=ListPrice gt 300000
+HTTP/2 200 OK
 
+{
+  "@odata.context": "https://api.reso.org/Property?$filter=ListPrice gt 300000"
+  "value": [
+    {
+      "ListingKey": "a6",
+      "BedroomsTotal": 4,
+      "ListPrice": 320000,
+      "StreetName": "6th",
+      "ModificationTimestamp": "2021-08-15T00:01:01.01.007Z",
+      "StandardStatus": "Active Under Contract",
+      "AccessibilityFeatures": []
+    }
+  ]
+}
+```
 **Get Properties with a Listing Price of $300K**
 
-```https://api.reso.org/Property?$filter=ListPrice eq 300000```
+```xml
+GET https://api.reso.org/Property?$filter=ListPrice eq 300000
+HTTP/2 200 OK
 
+{
+  "@odata.context": "https://api.reso.org/Property?$filter=ListPrice eq 300000"
+  "value": [
+    {
+      "ListingKey": "a7",
+      "BedroomsTotal": 4,
+      "ListPrice": 300000,
+      "StreetName": "7th",
+      "ModificationTimestamp": "2021-07-15T00:01:01.01.007Z",
+      "StandardStatus": "Active",
+      "AccessibilityFeatures": []
+    }
+  ]
+}
+```
 **Retrieve Records in a Specific Order**
 
-```https://api.reso.org/Property?$filter=ListPrice lt 300000&$orderby=ListPrice desc```
+```xml
+GET https://api.reso.org/Property?$filter=ListPrice lt 500000&$orderby=ListPrice desc
+HTTP/2 200 OK
 
+{
+  "@odata.context": "https://api.reso.org/Property?$filter=ListPrice lt 500000&$orderby=ListPrice desc"
+  "value": [
+    {
+      "ListingKey": "a8",
+      "BedroomsTotal": 5,
+      "ListPrice": 500000,
+      "StreetName": "7th",
+      "ModificationTimestamp": "2021-06-25T00:01:01.01.007Z",
+      "StandardStatus": "Active",
+      "AccessibilityFeatures": []
+    }
+  ]
+}
+```
 **Get a Count of Property Records**
 
 ```https://api.reso.org/Property?$filter=ListPrice lt 300000&```
 
+
 **Filter by Field Value**
 
-```https://api.reso.org/Member?$filter=(MemberLastName eq 'Smith')```
+```xml
+GET https://api.reso.org/Member?$filter=(MemberLastName eq 'Smith')
+HTTP/2 200 OK
 
+{
+  "@odata.context": "https://api.reso.org/Member?$filter=(MemberLastName eq 'Smith')"
+  "value": [
+    {
+      "MemberKey": "a1",
+      "MemberStatus: "Active",
+      "MemberFirstName": "Kevin",
+      "MemberLastName": "Smith",
+      "MemberEmail": "kevin@kevinsmith.com",
+      "ModificationTimestamp": "2020-02-21T00:01:01.01.007Z",
+    }
+  ]
+}
+```
 Note: All names in the $filter option are case sensitive to match the names of elements provided by the resource.
 
 **Get the Next Five Members**
