@@ -1438,6 +1438,7 @@ HTTP/2 200 OK
 ```xml
 GET https://api.reso.org/Property?$filter=ShortSale eq true
 HTTP/2 200 OK
+
 {
   "@odata.context": "https://api.reso.org/Property?$filter=ShortSale eq true"
   "value": [
@@ -1445,7 +1446,7 @@ HTTP/2 200 OK
       "ListingKey": "a3",
       "BedroomsTotal": 3,
       "ListPrice": 200000,
-      "StreetName": "3st",
+      "StreetName": "elm",
       "ModificationTimestamp": "2021-09-05T00:01:01.01.007Z",
       "StandardStatus": "Active",
       "AccessibilityFeatures": []
