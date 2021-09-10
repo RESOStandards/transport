@@ -1372,13 +1372,47 @@ TODO
 ### 2.8 Core Query Examples
 
 **Get Properties Listed in December of 2020**
+```json
+GET https://api.reso.org/Property?$filter=ListingContractDate ge 2020-12-01 and ListingContractDate lt 2021-01-01
+HTTP/2 200 OK
 
-```https://api.reso.org/Property?$filter=ListingContractDate ge 2020-12-01 and ListingContractDate lt 2021-01-01```
+{
+  "@odata.context": "https://api.reso.org/Property?$filter=ListingContractDate ge 2020-12-01 and ListingContractDate lt 2021-01-01"
+  "value": [
+    {
+      "ListingKey": "a5",
+      "BedroomsTotal": 4,
+      "ListPrice": 100000.01,
+      "StreetName": "1st",
+      "ModificationTimestamp": "2020-12-31T00:01:01.01.007Z",
+      "ListingContractDate": "2020-12-31",
+      "StandardStatus": "Closed",
+      "AccessibilityFeatures": []
+    }
+  ]
+}
+```
 
 **Get Properties Listed in a Given Year**
+```json
+GET https://api.reso.org/Property?$filter=ListingContractDate ge 2020-01-01 and ListingContractDate le 2020-12-31
 
-```https://api.reso.org/Property?$filter=ListingContractDate ge 2020-01-01 and ListingContractDate lt 2021-01-01```
-
+{
+  "@odata.context": "https://api.reso.org/Property?$filter=ListingContractDate ge 2020-01-01 and ListingContractDate le 2020-12-31"
+  "value": [
+    {
+      "ListingKey": "a1",
+      "BedroomsTotal": 3,
+      "ListPrice": 100000.01,
+      "StreetName": "1st",
+      "ModificationTimestamp": "2020-12-31T00:01:01.01.007Z",
+      "ListingContractDate": "2020-12-31",
+      "StandardStatus": "Closed",
+      "AccessibilityFeatures": []
+    }
+  ]
+}
+```
 **Get Active Members with First Name 'James' or 'Adam'**
 
 ```https://api.reso.org/Member?$filter=(MemberStatus eq 'Active' and (MemberFirstName eq 'James' or MemberFirstName eq 'Adam'))```
