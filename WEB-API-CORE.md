@@ -1376,7 +1376,7 @@ GET https://api.reso.org/Property?$filter=ListingContractDate ge 2020-12-01 and 
 HTTP/2 200 OK
 
 {
-  "@odata.context": "https://api.reso.org/Property?$filter=ListingContractDate ge 2020-12-01 and ListingContractDate lt 2021-01-01"
+  "@odata.context": "https://api.reso.org/Property?$filter=ListingContractDate ge 2020-12-01 and ListingContractDate lt 2021-01-01",
   "value": [
     {
       "ListingKey": "a1",
@@ -1398,7 +1398,7 @@ GET https://api.reso.org/Property?$filter=ListingContractDate ge 2020-01-01 and 
 HTTP/2 200 OK
 
 {
-  "@odata.context": "https://api.reso.org/Property?$filter=ListingContractDate ge 2020-01-01 and ListingContractDate le 2020-12-31"
+  "@odata.context": "https://api.reso.org/Property?$filter=ListingContractDate ge 2020-01-01 and ListingContractDate le 2020-12-31",
   "value": [
     {
       "ListingKey": "a2",
@@ -1420,7 +1420,7 @@ GET https://api.reso.org/Member?$filter=(MemberStatus eq 'Active' and (MemberFir
 HTTP/2 200 OK
 
 {
-  "@odata.context": "https://api.reso.org/Member?$filter=(MemberFirstName eq 'James' or MemberFirstName eq 'Adam'))"
+  "@odata.context": "https://api.reso.org/Member?$filter=(MemberFirstName eq 'James' or MemberFirstName eq 'Adam'))",
   "value": [
     {
       "MemberKey": "a1",
@@ -1440,7 +1440,7 @@ GET https://api.reso.org/Property?$filter=ShortSale eq true
 HTTP/2 200 OK
 
 {
-  "@odata.context": "https://api.reso.org/Property?$filter=ShortSale eq true"
+  "@odata.context": "https://api.reso.org/Property?$filter=ShortSale eq true",
   "value": [
     {
       "ListingKey": "a3",
@@ -1461,7 +1461,7 @@ GET https://api.reso.org/Property?$filter=ListPrice gt 250000 and ListPrice lt 5
 HTTP/2 200 OK
 
 {
-  "@odata.context": "https://api.reso.org/Property?$filter=ListPrice gt 250000 and ListPrice lt 500000"
+  "@odata.context": "https://api.reso.org/Property?$filter=ListPrice gt 250000 and ListPrice lt 500000",
   "value": [
     {
       "ListingKey": "a4",
@@ -1482,7 +1482,7 @@ GET https://api.reso.org/Property?$filter=ListPrice gt 300000
 HTTP/2 200 OK
 
 {
-  "@odata.context": "https://api.reso.org/Property?$filter=ListPrice gt 300000"
+  "@odata.context": "https://api.reso.org/Property?$filter=ListPrice gt 300000",
   "value": [
     {
       "ListingKey": "a5",
@@ -1503,7 +1503,7 @@ GET https://api.reso.org/Property?$filter=ListPrice eq 300000
 HTTP/2 200 OK
 
 {
-  "@odata.context": "https://api.reso.org/Property?$filter=ListPrice eq 300000"
+  "@odata.context": "https://api.reso.org/Property?$filter=ListPrice eq 300000",
   "value": [
     {
       "ListingKey": "a6",
@@ -1524,7 +1524,7 @@ GET https://api.reso.org/Property?$filter=ListPrice lt 500000&$orderby=ListPrice
 HTTP/2 200 OK
 
 {
-  "@odata.context": "https://api.reso.org/Property?$filter=ListPrice lt 500000&$orderby=ListPrice desc"
+  "@odata.context": "https://api.reso.org/Property?$filter=ListPrice lt 500000&$orderby=ListPrice desc",
   "value": [
     {
       "ListingKey": "a7",
@@ -1563,7 +1563,7 @@ GET https://api.reso.org/Member?$filter=(MemberLastName eq 'Doe')
 HTTP/2 200 OK
 
 {
-  "@odata.context": "https://api.reso.org/Member?$filter=(MemberLastName eq 'Doe')"
+  "@odata.context": "https://api.reso.org/Member?$filter=(MemberLastName eq 'Doe')",
   "value": [
     {
       "MemberKey": "a1",
