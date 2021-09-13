@@ -1529,8 +1529,17 @@ HTTP/2 200 OK
     {
       "ListingKey": "a7",
       "BedroomsTotal": 5,
-      "ListPrice": 500000,
+      "ListPrice": 499999,
       "StreetName": "7th",
+      "ModificationTimestamp": "2021-06-25T00:01:01.01.007Z",
+      "StandardStatus": "Active",
+      "AccessibilityFeatures": []
+    }
+    {
+      "ListingKey": "a25",
+      "BedroomsTotal": 5,
+      "ListPrice": 489000,
+      "StreetName": "elm tree",
       "ModificationTimestamp": "2021-06-25T00:01:01.01.007Z",
       "StandardStatus": "Active",
       "AccessibilityFeatures": []
@@ -1539,13 +1548,12 @@ HTTP/2 200 OK
 }
 ```
 **Get a Count of Property Records**
-
 ```json
-GET https://api.reso.org/Property?$select=ListingKey,ModificationTimestamp&$top=0&$count=true
+GET https://api.reso.org/Property?$select=ListingKey,ModificationTimestamp&$top=1&$count=true
 HTTP/2 200 OK
 
 {
-  "@odata.context": "https://api.reso.org/Property?$select=ListingKey,ModificationTimestamp&$top=0&$count=true",
+  "@odata.context": "https://api.reso.org/Property?$select=ListingKey,ModificationTimestamp&$top=1&$count=true",
   "@odata.count": 2,
   "value": [
     {
