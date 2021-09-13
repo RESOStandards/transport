@@ -1686,9 +1686,9 @@ HTTP/2 200 OK
 
 **Get a Single Property**
 ```json
-GET 
+GET https://api.reso.org/Property('ListingId3')?$format=atom
 HTTP/2 200 OK
-https://api.reso.org/Property('ListingId3')?$format=atom
+
 {
   "@odata.context": "https://api.reso.org/Property('ListingId3')?$format=atom",
   "value": [
@@ -1704,7 +1704,6 @@ https://api.reso.org/Property('ListingId3')?$format=atom
   ]
 }
 ```
-
 Here is a truncated example response for the request above. 
 
 ```Sample 9 - Get Single Property return ATOM XML```
@@ -1749,9 +1748,24 @@ This will return the following example result again truncated for brevity.
 ...etc...
 ```
 **Filter by Multiple Field Values**
+```json
+GET https://api.reso.org/Member?$filter=(MemberFirstName eq 'Joe' and MemberLastName eq 'Smith')
+HTTP/2 200 OK
 
-```https://api.reso.org/Member?$filter=(MemberFirstName eq 'Joe' and MemberLastName eq 'Smith')```
-
+{
+  "@odata.context": "https://api.reso.org/Member?$filter=(MemberFirstName eq 'Joe' and MemberLastName eq 'Smith')",
+  "value": [
+    {
+      "MemberKey": "a16",
+      "MemberStatus": "Active",
+      "MemberFirstName": "Joe",
+      "MemberLastName": "Smith",
+      "MemberEmail": "joe@joesmith.com",
+      "ModificationTimestamp": "2020-02-21T00:01:01.01.007Z",
+    }
+  ]
+}
+```
 Note: Query strings MUST be URL encoded where appropriate by a compliant client.
 
 ---
