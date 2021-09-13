@@ -1333,7 +1333,6 @@ Full details of this mechanism may be found in the [JSON Error Response](http://
 The following example includes a client request and a compliant server error response for reference.
 
 **Example Client Request**
-
 ```JSON
 GET https://api.reso.org/reso/odata/Member?$orderby=ModificationTimestamp&$top=5&$skip=5
 HTTP/2 200 OK
@@ -1415,7 +1414,6 @@ HTTP/2 200 OK
 }
 ```
 **Get Active Members with First Name 'James' or 'Adam'**
-
 ```xml
 GET https://api.reso.org/Member?$filter=(MemberStatus eq 'Active' and (MemberFirstName eq 'James' or MemberFirstName eq 'Adam'))
 HTTP/2 200 OK
@@ -1435,7 +1433,6 @@ HTTP/2 200 OK
 }
 ```
 **Query on Boolean Field to Find Short Sales**
-
 ```xml
 GET https://api.reso.org/Property?$filter=ShortSale eq true
 HTTP/2 200 OK
@@ -1457,7 +1454,6 @@ HTTP/2 200 OK
 ```
 
 **Combine Multiple Criteria in a Listing Search**
-
 ```xml
 GET https://api.reso.org/Property?$filter=ListPrice gt 250000 and ListPrice lt 500000
 HTTP/2 200 OK
@@ -1478,7 +1474,6 @@ HTTP/2 200 OK
 }
 ```
 **Get Properties with a Listing Price Greater Than $300K**
-
 ```xml
 GET https://api.reso.org/Property?$filter=ListPrice gt 300000
 HTTP/2 200 OK
@@ -1542,24 +1537,37 @@ HTTP/2 200 OK
 ```
 **Get a Count of Property Records**
 
-```https://api.reso.org/Property?$filter=ListPrice lt 300000&```
-
-
-**Filter by Field Value**
-
 ```xml
-GET https://api.reso.org/Member?$filter=(MemberLastName eq 'Smith')
+GET https://api.reso.org/Property?$select=ListingKey,ModificationTimestamp&$top=0&$count=true
 HTTP/2 200 OK
 
 {
-  "@odata.context": "https://api.reso.org/Member?$filter=(MemberLastName eq 'Smith')"
+  "@odata.context": "https://api.reso.org/Property?$select=ListingKey,ModificationTimestamp&$top=0&$count=true",
+  "@odata.count": 2,
+  "value": [
+    {
+      "ListingKey": "abc123",
+      "ModificationTimestamp": "2020-04-02T02:02:02.02Z"
+    }
+  ]
+}
+```
+
+
+**Filter by Field Value**
+```xml
+GET https://api.reso.org/Member?$filter=(MemberLastName eq 'Doe')
+HTTP/2 200 OK
+
+{
+  "@odata.context": "https://api.reso.org/Member?$filter=(MemberLastName eq 'Doe')"
   "value": [
     {
       "MemberKey": "a1",
       "MemberStatus: "Active",
-      "MemberFirstName": "Kevin",
-      "MemberLastName": "Smith",
-      "MemberEmail": "kevin@kevinsmith.com",
+      "MemberFirstName": "John",
+      "MemberLastName": "Doe",
+      "MemberEmail": "john@johndoe.com",
       "ModificationTimestamp": "2020-02-21T00:01:01.01.007Z",
     }
   ]
@@ -1568,18 +1576,62 @@ HTTP/2 200 OK
 Note: All names in the $filter option are case sensitive to match the names of elements provided by the resource.
 
 **Get the Next Five Members**
+```xml
+GET https://api.reso.org//Member?$top=5&$skip=5
+HTTP/2 200 OK
 
-```https://api.reso.org//Member?$top=5&$skip=5```
+{
+  "@odata.context": "https://api.reso.org//Member?$top=5&$skip=5",
+  "@odata.count": 2,
+  "value": [
+    {
+      "ListingKey": "bcd234",
+      "ModificationTimestamp": "2020-04-02T02:02:02.007Z"
+    }
+  ]
+}
 
-Note: The implementation of $top and $orderby is defined by the server and may restrict what values may be used in either option. A compliant client SHOULD use the $orderby query to sustain consistency between requests, however a compliant server is not required to guarantee consistent results between requests.
+```
+**Note:** The implementation of $top and $orderby is defined by the server and may restrict what values may be used in either option. A compliant client SHOULD use the $orderby query to sustain consistency between requests, however a compliant server is not required to guarantee consistent results between requests.
 
 **Get the First Five Members**
+```xml
+GET https://api.reso.org/Member?$top=5
+HTTP/2 200 OK
 
-```https://api.reso.org/Member?$top=5```
+{
+  "@odata.context": "https://api.reso.org/Member?$top=5,
+  "value": [
+    {
+      "MemberKey": "abc123",
+      "ModificationTimestamp": "2020-04-02T02:02:02.02Z"
+    }
+    {
+      "MemberKey": "def123",
+      "ModificationTimestamp": "2020-05-10T02:02:02.02Z"
+    }
+    ...etc...
+  ]
+}
+
+```
 
 **Get Top Ten Residential Properties**
+```xml
+GET https://api.reso.org/Property?$filter=PropertyType eq 'Residential'&$top=10
+HTTP/2 200 OK
 
-```https://api.reso.org/Property?$filter=PropertyType eq 'Residential'&$top=10```
+{
+  "@odata.context": "https://api.reso.org/Property?$filter=PropertyType eq 'Residential'&$top=10",
+  "value": [
+    {
+      "ListingKey": "abc123",
+      "ModificationTimestamp": "2020-04-02T02:02:02.02Z"
+    }
+  ]
+}
+
+```
 
 **Get Properties with a Listing Price of Less than $300K**
 
