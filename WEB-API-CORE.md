@@ -1585,11 +1585,14 @@ HTTP/2 200 OK
 
 {
   "@odata.context": "https://api.reso.org//Member?$top=5&$skip=5",
-  "@odata.count": 2,
   "value": [
     {
       "ListingKey": "bcd234",
       "ModificationTimestamp": "2020-04-02T02:02:02.007Z"
+    }
+    {
+    "ListingKey": "def567",
+    "ModificationTimestamp": "2020-04-02T02:02:02.007Z"  
     }
   ]
 }
