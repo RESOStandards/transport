@@ -1638,30 +1638,72 @@ HTTP/2 200 OK
 
 **Select Specific Field Values**
 ```json
-https://api.reso.org/Member?$select=MemberLastName,MemberFirstName,MemberID
+GET https://api.reso.org/Member?$select=MemberLastName,MemberFirstName,MemberID
 HTTP/2 200 OK
 
 {
   "@odata.context": "https://api.reso.org/Member?$select=MemberLastName,MemberFirstName,MemberID",
   "value": [
     {
-      "MemberLastName": "Simpson",
-      "MemberFirstName": "James",
-      "MemberID": "JSIMPSON"
+      "MemberLastName": "Doe",
+      "MemberFirstName": "John",
+      "MemberID": "JDOE"
     }
   ]
 }
 ```
-
 Note: All names in the $select option are case-sensitive to match the names of elements provided by the resource.
 
 **Get Most Recent ListingKey and ModificationTimestamp in Descending Order**
+```json
+GET https://api.reso.org/Property?$select=ListingKey,ModificationTimestamp&$orderby=ModificationTimestamp desc
+HTTP/2 200 OK
 
-```https://api.reso.org/Property?$select=ListingKey,ModificationTimestamp&$orderby=ModificationTimestamp desc```
+{
+  "@odata.context": "https://api.reso.org/Member?$select=MemberLastName,MemberFirstName,MemberID",
+  "value": [
+    {
+      "ListingKey": "a13",
+      "BedroomsTotal": 4,
+      "ListPrice": 400000,
+      "StreetName": "12th",
+      "ModificationTimestamp": "2021-09-13T00:01:01.01.007Z",
+      "StandardStatus": "Active",
+      "AccessibilityFeatures": []
+    }
+    {
+      "ListingKey": "a12",
+      "BedroomsTotal": 3,
+      "ListPrice": 350000,
+      "StreetName": "12th",
+      "ModificationTimestamp": "2021-09-12T00:01:01.01.007Z",
+      "StandardStatus": "Active",
+      "AccessibilityFeatures": []
+    }
+  [
+{
+```
 
 **Get a Single Property**
-
-```https://api.reso.org/Property('ListingId3')?$format=atom```
+```json
+GET 
+HTTP/2 200 OK
+https://api.reso.org/Property('ListingId3')?$format=atom
+{
+  "@odata.context": "https://api.reso.org/Property('ListingId3')?$format=atom",
+  "value": [
+    {
+      "ListingKey": "a3",
+      "BedroomsTotal": 3,
+      "ListPrice": 200000,
+      "StreetName": "3rd",
+      "ModificationTimestamp": "2021-09-12T00:01:01.01.007Z",
+      "StandardStatus": "Active",
+      "AccessibilityFeatures": []
+    }
+  ]
+}
+```
 
 Here is a truncated example response for the request above. 
 
