@@ -1555,8 +1555,6 @@ HTTP/2 200 OK
   ]
 }
 ```
-
-
 **Filter by Field Value**
 ```json
 GET https://api.reso.org/Member?$filter=(MemberLastName eq 'Doe')
@@ -1582,20 +1580,6 @@ HTTP/2 200 OK
 ```json
 GET https://api.reso.org//Member?$top=5&$skip=5
 HTTP/2 200 OK
-
-{
-  "@odata.context": "https://api.reso.org//Member?$top=5&$skip=5",
-  "value": [
-    {
-      "ListingKey": "bcd234",
-      "ModificationTimestamp": "2020-04-02T02:02:02.007Z"
-    }
-    {
-    "ListingKey": "def567",
-    "ModificationTimestamp": "2020-04-02T02:02:02.007Z"  
-    }
-  ]
-}
 ```
 **Note:** The implementation of $top and $orderby is defined by the server and may restrict what values may be used in either option. A compliant client SHOULD use the $orderby query to sustain consistency between requests, however a compliant server is not required to guarantee consistent results between requests.
 
@@ -1603,49 +1587,71 @@ HTTP/2 200 OK
 ```json
 GET https://api.reso.org/Member?$top=5
 HTTP/2 200 OK
-
-{
-  "@odata.context": "https://api.reso.org/Member?$top=5",
-  "value": [
-    {
-      "MemberKey": "abc123",
-      "ModificationTimestamp": "2020-04-02T02:02:02.02Z"
-    }
-    {
-      "MemberKey": "def123",
-      "ModificationTimestamp": "2020-05-10T02:02:02.02Z"
-    }
-  ]
-}
 ```
 
 **Get Top Ten Residential Properties**
 ```json
 GET https://api.reso.org/Property?$filter=PropertyType eq 'Residential'&$top=10
 HTTP/2 200 OK
+```
+
+**Get Properties with a Listing Price of Less than $300K**
+```json
+GET https://api.reso.org/Property?$filter=ListPrice lt 300000
+HTTP/2 200 OK
 
 {
-  "@odata.context": "https://api.reso.org/Property?$filter=PropertyType eq 'Residential'&$top=10",
+  "@odata.context": "https://api.reso.org/Property?$filter=ListPrice lt 300000",
   "value": [
     {
-      "ListingKey": "abc123",
-      "ModificationTimestamp": "2020-04-02T02:02:02.02Z"
+      "ListingKey": "a9",
+      "BedroomsTotal": 4,
+      "ListPrice": 299999,
+      "StreetName": "9th",
+      "ModificationTimestamp": "2021-08-15T00:01:01.01.007Z",
+      "StandardStatus": "Active",
+      "AccessibilityFeatures": []
+    }
+  ]
+}
+```
+**Get Properties with a Price Range of $250k to $500k**
+```json
+GET https://api.reso.org/Property?$filter=ListPrice gt 250000 and ListPrice lt 500000
+HTTP/2 200 OK
+
+{
+  "@odata.context": "https://api.reso.org/Property?$filter=ListPrice gt 250000 and ListPrice lt 500000",
+  "value": [
+    {
+      "ListingKey": "a10",
+      "BedroomsTotal": 4,
+      "ListPrice": 475000,
+      "StreetName": "10th",
+      "ModificationTimestamp": "2021-08-15T00:01:01.01.007Z",
+      "StandardStatus": "Active",
+      "AccessibilityFeatures": []
     }
   ]
 }
 ```
 
-**Get Properties with a Listing Price of Less than $300K**
-
-```https://api.reso.org/Property?$filter=ListPrice lt 300000```
-
-**Get Properties with a Price Range of $250k to $500k**
-
-```https://api.reso.org/Property?$filter=ListPrice gt 250000 and ListPrice lt 500000```
-
 **Select Specific Field Values**
+```json
+https://api.reso.org/Member?$select=MemberLastName,MemberFirstName,MemberID
+HTTP/2 200 OK
 
-```https://api.reso.org/Member?$select=MemberLastName,MemberFirstName,MemberID```
+{
+  "@odata.context": "https://api.reso.org/Member?$select=MemberLastName,MemberFirstName,MemberID",
+  "value": [
+    {
+      "MemberLastName": "Simpson",
+      "MemberFirstName": "James",
+      "MemberID": "JSIMPSON"
+    }
+  ]
+}
+```
 
 Note: All names in the $select option are case-sensitive to match the names of elements provided by the resource.
 
