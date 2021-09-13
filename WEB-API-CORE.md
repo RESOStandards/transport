@@ -1371,7 +1371,7 @@ TODO
 ### 2.8 Core Query Examples
 
 **Get Properties Listed in December of 2020**
-```xml
+```json
 GET https://api.reso.org/Property?$filter=ListingContractDate ge 2020-12-01 and ListingContractDate lt 2021-01-01
 HTTP/2 200 OK
 
@@ -1393,7 +1393,7 @@ HTTP/2 200 OK
 ```
 
 **Get Properties Listed in a Given Year**
-```xml
+```json
 GET https://api.reso.org/Property?$filter=ListingContractDate ge 2020-01-01 and ListingContractDate le 2020-12-31
 HTTP/2 200 OK
 
@@ -1413,8 +1413,9 @@ HTTP/2 200 OK
   ]
 }
 ```
+
 **Get Active Members with First Name 'James' or 'Adam'**
-```xml
+```json
 GET https://api.reso.org/Member?$filter=(MemberStatus eq 'Active' and (MemberFirstName eq 'James' or MemberFirstName eq 'Adam'))
 HTTP/2 200 OK
 
@@ -1423,17 +1424,18 @@ HTTP/2 200 OK
   "value": [
     {
       "MemberKey": "a1",
-      "MemberStatus: "Active",
+      "MemberStatus": "Active",
       "MemberFirstName": "James",
       "MemberLastName": "Doe",
       "MemberEmail": "james@jamesdoe.com",
-      "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z",
+      "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
     }
   ]
 }
 ```
+
 **Query on Boolean Field to Find Short Sales**
-```xml
+```json
 GET https://api.reso.org/Property?$filter=ShortSale eq true
 HTTP/2 200 OK
 
@@ -1454,7 +1456,7 @@ HTTP/2 200 OK
 ```
 
 **Combine Multiple Criteria in a Listing Search**
-```xml
+```json
 GET https://api.reso.org/Property?$filter=ListPrice gt 250000 and ListPrice lt 500000
 HTTP/2 200 OK
 
@@ -1473,8 +1475,9 @@ HTTP/2 200 OK
   ]
 }
 ```
+
 **Get Properties with a Listing Price Greater Than $300K**
-```xml
+```json
 GET https://api.reso.org/Property?$filter=ListPrice gt 300000
 HTTP/2 200 OK
 
@@ -1493,9 +1496,9 @@ HTTP/2 200 OK
   ]
 }
 ```
-**Get Properties with a Listing Price of $300K**
 
-```xml
+**Get Properties with a Listing Price of $300K**
+```json
 GET https://api.reso.org/Property?$filter=ListPrice eq 300000
 HTTP/2 200 OK
 
@@ -1516,7 +1519,7 @@ HTTP/2 200 OK
 ```
 **Retrieve Records in a Specific Order**
 
-```xml
+```json
 GET https://api.reso.org/Property?$filter=ListPrice lt 500000&$orderby=ListPrice desc
 HTTP/2 200 OK
 
@@ -1537,7 +1540,7 @@ HTTP/2 200 OK
 ```
 **Get a Count of Property Records**
 
-```xml
+```json
 GET https://api.reso.org/Property?$select=ListingKey,ModificationTimestamp&$top=0&$count=true
 HTTP/2 200 OK
 
@@ -1555,7 +1558,7 @@ HTTP/2 200 OK
 
 
 **Filter by Field Value**
-```xml
+```json
 GET https://api.reso.org/Member?$filter=(MemberLastName eq 'Doe')
 HTTP/2 200 OK
 
@@ -1564,7 +1567,7 @@ HTTP/2 200 OK
   "value": [
     {
       "MemberKey": "a1",
-      "MemberStatus: "Active",
+      "MemberStatus": "Active",
       "MemberFirstName": "John",
       "MemberLastName": "Doe",
       "MemberEmail": "john@johndoe.com",
@@ -1573,10 +1576,10 @@ HTTP/2 200 OK
   ]
 }
 ```
-Note: All names in the $filter option are case sensitive to match the names of elements provided by the resource.
+**Note:** All names in the $filter option are case sensitive to match the names of elements provided by the resource.
 
 **Get the Next Five Members**
-```xml
+```json
 GET https://api.reso.org//Member?$top=5&$skip=5
 HTTP/2 200 OK
 
@@ -1590,17 +1593,16 @@ HTTP/2 200 OK
     }
   ]
 }
-
 ```
 **Note:** The implementation of $top and $orderby is defined by the server and may restrict what values may be used in either option. A compliant client SHOULD use the $orderby query to sustain consistency between requests, however a compliant server is not required to guarantee consistent results between requests.
 
 **Get the First Five Members**
-```xml
+```json
 GET https://api.reso.org/Member?$top=5
 HTTP/2 200 OK
 
 {
-  "@odata.context": "https://api.reso.org/Member?$top=5,
+  "@odata.context": "https://api.reso.org/Member?$top=5",
   "value": [
     {
       "MemberKey": "abc123",
@@ -1610,14 +1612,12 @@ HTTP/2 200 OK
       "MemberKey": "def123",
       "ModificationTimestamp": "2020-05-10T02:02:02.02Z"
     }
-    ...etc...
   ]
 }
-
 ```
 
 **Get Top Ten Residential Properties**
-```xml
+```json
 GET https://api.reso.org/Property?$filter=PropertyType eq 'Residential'&$top=10
 HTTP/2 200 OK
 
@@ -1630,7 +1630,6 @@ HTTP/2 200 OK
     }
   ]
 }
-
 ```
 
 **Get Properties with a Listing Price of Less than $300K**
