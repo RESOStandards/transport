@@ -1598,7 +1598,7 @@ HTTP/2 200 OK
 GET https://api.reso.org//Member?$top=5&$skip=0
 HTTP/2 200 OK
 {
-  "@odata.context": "GET https://api.reso.org//Member?$top=5&$skip=0",
+  "@odata.context": "GET https://api.reso.org//Member?$top=5&$skip=5",
   "value": [
        {
       "MemberKey": "m111",
@@ -1973,7 +1973,7 @@ Note: The [Open ID Connect](https://openid.net/connect/) layer was previously su
 
 ## Section 5: Appendices
 
-### RCPs Approved for Web Version v2.0.0
+### RCPs Approved for Web Version 2.0.0
 
 [RCP - WEBAPI-010 Add Update Functionality to Web API Specification](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2239399511)<br />
 [RCP - WEBAPI-011 Child Order Action](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2239401081)<br />
