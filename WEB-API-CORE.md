@@ -644,7 +644,7 @@ HTTP/2 200 OK
     {
       "ListingKey": "bcd234",
       "ModificationTimestamp": "2020-04-02T02:02:02.007Z"
-    },
+    }
      {
       "ListingKey": "abc123",
       "ModificationTimestamp": "2020-04-02T02:02:02.02Z"
@@ -1379,14 +1379,14 @@ HTTP/2 200 OK
   "@odata.context": "https://api.reso.org/Property?$filter=ListingContractDate ge 2020-12-01 and ListingContractDate lt 2021-01-01",
   "value": [
     {
-      "ListingKey": "a1",
-      "BedroomsTotal": 4,
-      "ListPrice": 100000.01,
-      "StreetName": "1st",
-      "ModificationTimestamp": "2020-12-31T00:01:01.01.007Z",
-      "ListingContractDate": "2020-12-31",
-      "StandardStatus": "Closed",
-      "AccessibilityFeatures": []
+      "ListingKey": "abc123",
+      "BedroomsTotal": 5,
+      "ListPrice": 100000.00,
+      "StreetName": "Main",
+      "ModificationTimestamp": "2020-04-02T02:02:02.02Z",
+      "ListingContractDate": "2020-04-02",
+      "StandardStatus": "ActiveUnderContract",
+      "AccessibilityFeatures": ["AccessibleApproachWithRamp", "AccessibleEntrance", "Visitable"]
     }
   ]
 }
@@ -1401,12 +1401,12 @@ HTTP/2 200 OK
   "@odata.context": "https://api.reso.org/Property?$filter=ListingContractDate ge 2020-01-01 and ListingContractDate le 2020-12-31",
   "value": [
     {
-      "ListingKey": "a2",
+      "ListingKey": "abc234",
       "BedroomsTotal": 3,
-      "ListPrice": 200000,
+      "ListPrice": 200000.00,
       "StreetName": "2nd",
       "ModificationTimestamp": "2020-12-31T00:01:01.01.007Z",
-      "ListingContractDate": "2020-12-31",
+      "ListingContractDate": "2020-05-25",
       "StandardStatus": "Closed",
       "AccessibilityFeatures": []
     }
@@ -1423,11 +1423,17 @@ HTTP/2 200 OK
   "@odata.context": "https://api.reso.org/Member?$filter=(MemberFirstName eq 'James' or MemberFirstName eq 'Adam'))",
   "value": [
     {
-      "MemberKey": "a1",
+      "MemberKey": "m001",
       "MemberStatus": "Active",
       "MemberFirstName": "James",
-      "MemberLastName": "Doe",
-      "MemberEmail": "james@jamesdoe.com",
+      "MemberLastName": "Smith",
+      "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
+    }
+     {
+      "MemberKey": "m002",
+      "MemberStatus": "Active",
+      "MemberFirstName": "Adam",
+      "MemberLastName": "Thomas",
       "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
     }
   ]
@@ -1443,13 +1449,14 @@ HTTP/2 200 OK
   "@odata.context": "https://api.reso.org/Property?$filter=ShortSale eq true",
   "value": [
     {
-      "ListingKey": "a3",
-      "BedroomsTotal": 3,
-      "ListPrice": 200000,
-      "StreetName": "3rd",
-      "ModificationTimestamp": "2021-09-05T00:01:01.01.007Z",
-      "StandardStatus": "Active",
-      "AccessibilityFeatures": []
+      "ListingKey": "abc123",
+      "BedroomsTotal": 5,
+      "ListPrice": 100000.00,
+      "StreetName": "Main",
+      "ModificationTimestamp": "2020-04-02T02:02:02.02Z",
+      "ListingContractDate": "2020-04-02",
+      "StandardStatus": "ActiveUnderContract",
+      "AccessibilityFeatures": ["AccessibleApproachWithRamp", "AccessibleEntrance", "Visitable"]
     }
   ]
 }
@@ -1464,13 +1471,14 @@ HTTP/2 200 OK
   "@odata.context": "https://api.reso.org/Property?$filter=ListPrice gt 250000 and ListPrice lt 500000",
   "value": [
     {
-      "ListingKey": "a4",
-      "BedroomsTotal": 4,
-      "ListPrice": 350000,
-      "StreetName": "4th",
-      "ModificationTimestamp": "2021-08-25T00:01:01.01.007Z",
+      "ListingKey": "abc345",
+      "BedroomsTotal": 5,
+      "ListPrice": 400000.00,
+      "StreetName": "Main",
+      "ModificationTimestamp": "2020-04-02T02:02:02.02Z",
+      "ListingContractDate": "2020-04-02",
       "StandardStatus": "Active",
-      "AccessibilityFeatures": []
+      "AccessibilityFeatures": ["Visitable"]
     }
   ]
 }
@@ -1485,13 +1493,14 @@ HTTP/2 200 OK
   "@odata.context": "https://api.reso.org/Property?$filter=ListPrice gt 300000",
   "value": [
     {
-      "ListingKey": "a5",
-      "BedroomsTotal": 4,
-      "ListPrice": 320000,
-      "StreetName": "5th",
-      "ModificationTimestamp": "2021-08-15T00:01:01.01.007Z",
-      "StandardStatus": "Active Under Contract",
-      "AccessibilityFeatures": []
+      "ListingKey": "abc345",
+      "BedroomsTotal": 5,
+      "ListPrice": 400000.00,
+      "StreetName": "Main",
+      "ModificationTimestamp": "2020-04-02T02:02:02.02Z",
+      "ListingContractDate": "2020-04-02",
+      "StandardStatus": "Active",
+      "AccessibilityFeatures": ["Visitable"]
     }
   ]
 }
@@ -1506,11 +1515,11 @@ HTTP/2 200 OK
   "@odata.context": "https://api.reso.org/Property?$filter=ListPrice eq 300000",
   "value": [
     {
-      "ListingKey": "a6",
+      "ListingKey": "abc456",
       "BedroomsTotal": 4,
-      "ListPrice": 300000,
-      "StreetName": "6th",
-      "ModificationTimestamp": "2021-07-15T00:01:01.01.007Z",
+      "ListPrice": 300000.00,
+      "StreetName": "Oak",
+      "ModificationTimestamp": "2021-08-15T00:01:01.01.007Z",
       "StandardStatus": "Active",
       "AccessibilityFeatures": []
     }
@@ -1527,7 +1536,7 @@ HTTP/2 200 OK
   "@odata.context": "https://api.reso.org/Property?$filter=ListPrice lt 500000&$orderby=ListPrice desc",
   "value": [
     {
-      "ListingKey": "a7",
+      "ListingKey": "abc567",
       "BedroomsTotal": 5,
       "ListPrice": 499999,
       "StreetName": "7th",
@@ -1536,10 +1545,10 @@ HTTP/2 200 OK
       "AccessibilityFeatures": []
     }
     {
-      "ListingKey": "a25",
+      "ListingKey": "abc678",
       "BedroomsTotal": 5,
       "ListPrice": 489000,
-      "StreetName": "elm tree",
+      "StreetName": "Maple",
       "ModificationTimestamp": "2021-06-25T00:01:01.01.007Z",
       "StandardStatus": "Active",
       "AccessibilityFeatures": []
@@ -1558,26 +1567,25 @@ HTTP/2 200 OK
   "value": [
     {
       "ListingKey": "abc123",
-      "ModificationTimestamp": "2020-04-02T02:02:02.02Z"
+      "ModificationTimestamp": "2020-04-02T02:02:02.02Z" 
     }
   ]
 }
 ```
 **Filter by Field Value**
 ```json
-GET https://api.reso.org/Member?$filter=(MemberLastName eq 'Doe')
+GET https://api.reso.org/Member?$filter=(MemberLastName eq 'Smith')
 HTTP/2 200 OK
 
 {
-  "@odata.context": "https://api.reso.org/Member?$filter=(MemberLastName eq 'Doe')",
+  "@odata.context": "https://api.reso.org/Member?$filter=(MemberLastName eq 'Smith')",
   "value": [
     {
-      "MemberKey": "a1",
+     "MemberKey": "m001",
       "MemberStatus": "Active",
-      "MemberFirstName": "John",
-      "MemberLastName": "Doe",
-      "MemberEmail": "john@johndoe.com",
-      "ModificationTimestamp": "2020-02-21T00:01:01.01.007Z",
+      "MemberFirstName": "James",
+      "MemberLastName": "Smith",
+      "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
     }
   ]
 }
@@ -1586,21 +1594,104 @@ HTTP/2 200 OK
 
 **Get the Next Five Members**
 ```json
-GET https://api.reso.org//Member?$top=5&$skip=5
+GET https://api.reso.org//Member?$top=5&$skip=0
 HTTP/2 200 OK
+{
+  "@odata.context": "GET https://api.reso.org//Member?$top=5&$skip=0",
+  "value": [
+       {
+      "MemberKey": "m001",
+      "MemberStatus": "Active",
+      "MemberFirstName": "James",
+      "MemberLastName": "Smith",
+      "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
+    }
+     {
+      "MemberKey": "m002",
+      "MemberStatus": "Active",
+      "MemberFirstName": "Adam",
+      "MemberLastName": "Smith",
+      "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
+    }
+    {
+      "MemberKey": "m003",
+      "MemberStatus": "Active",
+      "MemberFirstName": "Jennifer",
+      "MemberLastName": "Smith",
+      "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
+    }
+    {
+      "MemberKey": "m004",
+      "MemberStatus": "Active",
+      "MemberFirstName": "Kevin",
+      "MemberLastName": "Smith",
+      "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
+    }
+    {
+      "MemberKey": "m005",
+      "MemberStatus": "Active",
+      "MemberFirstName": "Theresa",
+      "MemberLastName": "Smith",
+      "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
+    }
+  ]
+}
 ```
 **Note:** The implementation of $top and $orderby is defined by the server and may restrict what values may be used in either option. A compliant client SHOULD use the $orderby query to sustain consistency between requests, however a compliant server is not required to guarantee consistent results between requests.
 
 **Get the First Five Members**
 ```json
-GET https://api.reso.org/Member?$top=5
+GET https://api.reso.org/Member?$top=5&$skip=0
 HTTP/2 200 OK
+
+{
+  "@odata.context": "https://api.reso.org/Member?$top=5&$skip=0",
+  "value": [
+       {
+      "MemberKey": "m110",
+      "MemberStatus": "Active",
+      "MemberFirstName": "Angela",
+      "MemberLastName": "Adams",
+      "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
+    }
+     {
+      "MemberKey": "m111",
+      "MemberStatus": "Active",
+      "MemberFirstName": "Betty",
+      "MemberLastName": "Adams",
+      "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
+    }
+    {
+      "MemberKey": "m112",
+      "MemberStatus": "Active",
+      "MemberFirstName": "Henry",
+      "MemberLastName": "Adams",
+      "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
+    }
+    {
+      "MemberKey": "m113",
+      "MemberStatus": "Active",
+      "MemberFirstName": "Kevin",
+      "MemberLastName": "Adams",
+      "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
+    }
+    {
+      "MemberKey": "m114",
+      "MemberStatus": "Active",
+      "MemberFirstName": "Timothy",
+      "MemberLastName": "Adams",
+      "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
+    }
+  ]
+}
+
 ```
 
 **Get Top Ten Residential Properties**
 ```json
-GET https://api.reso.org/Property?$filter=PropertyType eq 'Residential'&$top=10
+GET https://api.reso.org/Property?$filter=PropertyType eq 'Residential'&$top=5
 HTTP/2 200 OK
+
 ```
 
 **Get Properties with a Listing Price of Less than $300K**
@@ -1612,13 +1703,14 @@ HTTP/2 200 OK
   "@odata.context": "https://api.reso.org/Property?$filter=ListPrice lt 300000",
   "value": [
     {
-      "ListingKey": "a9",
-      "BedroomsTotal": 4,
-      "ListPrice": 299999,
-      "StreetName": "9th",
-      "ModificationTimestamp": "2021-08-15T00:01:01.01.007Z",
-      "StandardStatus": "Active",
-      "AccessibilityFeatures": []
+      "ListingKey": "abc123",
+      "BedroomsTotal": 5,
+      "ListPrice": 100000.00,
+      "StreetName": "Main",
+      "ModificationTimestamp": "2020-04-02T02:02:02.02Z",
+      "ListingContractDate": "2020-04-02",
+      "StandardStatus": "ActiveUnderContract",
+      "AccessibilityFeatures": ["AccessibleApproachWithRamp", "AccessibleEntrance", "Visitable"]
     }
   ]
 }
@@ -1632,10 +1724,10 @@ HTTP/2 200 OK
   "@odata.context": "https://api.reso.org/Property?$filter=ListPrice gt 250000 and ListPrice lt 500000",
   "value": [
     {
-      "ListingKey": "a10",
+      "ListingKey": "abc456",
       "BedroomsTotal": 4,
-      "ListPrice": 475000,
-      "StreetName": "10th",
+      "ListPrice": 300000.00,
+      "StreetName": "Oak",
       "ModificationTimestamp": "2021-08-15T00:01:01.01.007Z",
       "StandardStatus": "Active",
       "AccessibilityFeatures": []
@@ -1653,9 +1745,9 @@ HTTP/2 200 OK
   "@odata.context": "https://api.reso.org/Member?$select=MemberLastName,MemberFirstName,MemberID",
   "value": [
     {
-      "MemberLastName": "Doe",
-      "MemberFirstName": "John",
-      "MemberID": "JDOE"
+      "MemberLastName": "Smith",
+      "MemberFirstName": "James",
+      "MemberID": "JSMITH"
     }
   ]
 }
@@ -1668,28 +1760,18 @@ GET https://api.reso.org/Property?$select=ListingKey,ModificationTimestamp&$orde
 HTTP/2 200 OK
 
 {
-  "@odata.context": "https://api.reso.org/Member?$select=MemberLastName,MemberFirstName,MemberID",
+  "@odata.context": "https://api.reso.org/Property?$select=ListingKey,ModificationTimestamp&$orderby=ModificationTimestamp desc",
   "value": [
     {
-      "ListingKey": "a13",
-      "BedroomsTotal": 4,
-      "ListPrice": 400000,
-      "StreetName": "12th",
-      "ModificationTimestamp": "2021-09-13T00:01:01.01.007Z",
-      "StandardStatus": "Active",
-      "AccessibilityFeatures": []
+      "ListingKey": "abc456",
+      "ModificationTimestamp": "2021-08-15T00:01:01.01.007Z"
     }
     {
-      "ListingKey": "a12",
-      "BedroomsTotal": 3,
-      "ListPrice": 350000,
-      "StreetName": "12th",
-      "ModificationTimestamp": "2021-09-12T00:01:01.01.007Z",
-      "StandardStatus": "Active",
-      "AccessibilityFeatures": []
+      "ListingKey": "abc123",
+      "ModificationTimestamp": "2020-04-02T02:02:02.02Z"
     }
-  [
-{
+  ]
+}
 ```
 
 **Get a Single Property**
@@ -1764,12 +1846,11 @@ HTTP/2 200 OK
   "@odata.context": "https://api.reso.org/Member?$filter=(MemberFirstName eq 'Joe' and MemberLastName eq 'Smith')",
   "value": [
     {
-      "MemberKey": "a16",
+      "MemberKey": "m118",
       "MemberStatus": "Active",
       "MemberFirstName": "Joe",
       "MemberLastName": "Smith",
-      "MemberEmail": "joe@joesmith.com",
-      "ModificationTimestamp": "2020-02-21T00:01:01.01.007Z",
+      "ModificationTimestamp": "2020-02-21T00:01:01.01.007Z"
     }
   ]
 }
