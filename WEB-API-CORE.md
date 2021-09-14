@@ -43,6 +43,7 @@
   - [2.9 Security](#29-security)
 - [Section 3: Authors](#section-3-authors)
 - [Section 4: References](#section-4-references)
+- [Section 5: Appendices](#section-5-appendices)
 
 # Introduction
 The Web API Core Endorsement provides a subset of functionality from the OASIS OData specification relevant to those who need to perform live queries or replicate data using the RESO Web API. This includes the ability to express metadata and provide query support for primitive OData types and enumerations. This document offers normative examples of what these items should look like, both in the metadata and payload.
@@ -1423,17 +1424,17 @@ HTTP/2 200 OK
   "@odata.context": "https://api.reso.org/Member?$filter=(MemberFirstName eq 'James' or MemberFirstName eq 'Adam'))",
   "value": [
     {
-      "MemberKey": "m001",
+      "MemberKey": "m111",
       "MemberStatus": "Active",
       "MemberFirstName": "James",
       "MemberLastName": "Smith",
       "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
     }
      {
-      "MemberKey": "m002",
+      "MemberKey": "m112",
       "MemberStatus": "Active",
       "MemberFirstName": "Adam",
-      "MemberLastName": "Thomas",
+      "MemberLastName": "Smith",
       "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
     }
   ]
@@ -1581,7 +1582,7 @@ HTTP/2 200 OK
   "@odata.context": "https://api.reso.org/Member?$filter=(MemberLastName eq 'Smith')",
   "value": [
     {
-     "MemberKey": "m001",
+     "MemberKey": "m111",
       "MemberStatus": "Active",
       "MemberFirstName": "James",
       "MemberLastName": "Smith",
@@ -1600,35 +1601,35 @@ HTTP/2 200 OK
   "@odata.context": "GET https://api.reso.org//Member?$top=5&$skip=0",
   "value": [
        {
-      "MemberKey": "m001",
+      "MemberKey": "m111",
       "MemberStatus": "Active",
       "MemberFirstName": "James",
       "MemberLastName": "Smith",
       "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
     }
      {
-      "MemberKey": "m002",
+      "MemberKey": "m112",
       "MemberStatus": "Active",
       "MemberFirstName": "Adam",
       "MemberLastName": "Smith",
       "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
     }
     {
-      "MemberKey": "m003",
+      "MemberKey": "m113",
       "MemberStatus": "Active",
       "MemberFirstName": "Jennifer",
       "MemberLastName": "Smith",
       "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
     }
     {
-      "MemberKey": "m004",
+      "MemberKey": "m114",
       "MemberStatus": "Active",
       "MemberFirstName": "Kevin",
       "MemberLastName": "Smith",
       "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
     }
     {
-      "MemberKey": "m005",
+      "MemberKey": "m115",
       "MemberStatus": "Active",
       "MemberFirstName": "Theresa",
       "MemberLastName": "Smith",
@@ -1648,35 +1649,35 @@ HTTP/2 200 OK
   "@odata.context": "https://api.reso.org/Member?$top=5&$skip=0",
   "value": [
        {
-      "MemberKey": "m110",
+      "MemberKey": "m001",
       "MemberStatus": "Active",
       "MemberFirstName": "Angela",
       "MemberLastName": "Adams",
       "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
     }
      {
-      "MemberKey": "m111",
+      "MemberKey": "m002",
       "MemberStatus": "Active",
       "MemberFirstName": "Betty",
       "MemberLastName": "Adams",
       "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
     }
     {
-      "MemberKey": "m112",
+      "MemberKey": "m003",
       "MemberStatus": "Active",
       "MemberFirstName": "Henry",
       "MemberLastName": "Adams",
       "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
     }
     {
-      "MemberKey": "m113",
+      "MemberKey": "m004",
       "MemberStatus": "Active",
       "MemberFirstName": "Kevin",
       "MemberLastName": "Adams",
       "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
     }
     {
-      "MemberKey": "m114",
+      "MemberKey": "m005",
       "MemberStatus": "Active",
       "MemberFirstName": "Timothy",
       "MemberLastName": "Adams",
@@ -1687,11 +1688,64 @@ HTTP/2 200 OK
 
 ```
 
-**Get Top Ten Residential Properties**
+**Get Top Five Residential Properties**
 ```json
 GET https://api.reso.org/Property?$filter=PropertyType eq 'Residential'&$top=5
 HTTP/2 200 OK
 
+{
+  "@odata.context": "https://test.reso.org/Property?$filter=ListingKey eq 'abc123'",
+  "value": [
+    {
+      "ListingKey": "abc123",
+      "BedroomsTotal": 5,
+      "ListPrice": 100000.00,
+      "StreetName": "Main",
+      "ModificationTimestamp": "2020-04-02T02:02:02.02Z",
+      "ListingContractDate": "2020-04-02",
+      "StandardStatus": "ActiveUnderContract",
+      "AccessibilityFeatures": ["AccessibleApproachWithRamp", "AccessibleEntrance", "Visitable"]
+    }
+    {
+    "ListingKey": "abc345",
+    "BedroomsTotal": 5,
+    "ListPrice": 400000.00,
+    "StreetName": "Main",
+    "ModificationTimestamp": "2020-04-02T02:02:02.02Z",
+    "ListingContractDate": "2020-04-02",
+    "StandardStatus": "Active",
+    "AccessibilityFeatures": ["Visitable"]
+    }
+    {
+    "ListingKey": "abc456",
+    "BedroomsTotal": 4,
+    "ListPrice": 300000.00,
+    "StreetName": "Oak",
+    "ModificationTimestamp": "2021-08-15T00:01:01.01.007Z",
+    "StandardStatus": "Active",
+    "AccessibilityFeatures": []
+    }
+    {
+    "ListingKey": "abc567",
+    "BedroomsTotal": 5,
+    "ListPrice": 499999,
+    "StreetName": "7th",
+    "ModificationTimestamp": "2021-06-25T00:01:01.01.007Z",
+    "StandardStatus": "Active",
+    "AccessibilityFeatures": []
+    }
+    {
+    "ListingKey": "abc678",
+    "BedroomsTotal": 5,
+    "ListPrice": 489000,
+    "StreetName": "Maple",
+    "ModificationTimestamp": "2021-06-25T00:01:01.01.007Z",
+    "StandardStatus": "Active",
+    "AccessibilityFeatures": []
+    }
+  ]
+}
+  
 ```
 
 **Get Properties with a Listing Price of Less than $300K**
@@ -1914,5 +1968,24 @@ Note: The [Open ID Connect](https://openid.net/connect/) layer was previously su
 | HTTP/1.1 Protocol | [Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing](https://tools.ietf.org/html/rfc7230) <br /> [Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content](https://tools.ietf.org/html/rfc7231) <br /> [Hypertext Transfer Protocol (HTTP/1.1): Conditional Requests](https://tools.ietf.org/html/rfc7232) <br /> [Hypertext Transfer Protocol (HTTP/1.1): Range Requests](https://tools.ietf.org/html/rfc7233) <br /> [Hypertext Transfer Protocol (HTTP/1.1): Caching](https://tools.ietf.org/html/rfc7234) <br /> [Hypertext Transfer Protocol (HTTP/1.1): Authentication](https://tools.ietf.org/html/rfc7235) |
 | HTTP/2.0 Protocol | [Hypertext Transfer Protocol Version 2 (HTTP/2)](https://tools.ietf.org/html/rfc7540) <br /> [HPACK: Header Compression for HTTP/2](https://tools.ietf.org/html/rfc7541)  |
 | Transport Layer Security (TLS) (Encryption for HTTP support) | [The Transport Layer Security (TLS) Protocol Version 1.2](https://www.ietf.org/rfc/rfc5246.txt) <br /> [Recommendations for Secure Use of Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS)](https://tools.ietf.org/html/rfc7525) <br /> [OWASP TLS implementation guide](https://www.owasp.org/index.php/Transport_Layer_Protection_Cheat_Sheet) <br /> [SSL Labs TLS Deployment Best Practices](https://www.ssllabs.com/downloads/SSL_TLS_Deployment_Best_Practices.pdf) |
+
 ---
+
+## Section 5: Appendices
+
+### RCPs Approved for Web Version v2.0.0
+
+[RCP - WEBAPI-010 Add Update Functionality to Web API Specification](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2239399511)
+[RCP - WEBAPI-011 Child Order Action](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2239401081)
+[RCP - WEBAPI-013 Add Certification Rule Impact/Changes to Process](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2239399520)
+[RCP - WEBAPI-016 Depreciate Bit Map Enumerations and Utilize Collections for Enumerations](https://reso.atlassian.net/wiki/display/RESOWebAPIRCP/RCP+-+WEBAPI-016+Depreciate+Bit+Map+Enumerations+and+Utilize+Collections+for+Enumerations)
+[RCP - WEBAPI-017 Add The Internet Tracking Resource to RESO Web API v1.1 Specification](https://reso.atlassian.net/wiki/display/RESOWebAPIRCP/RCP+-+WEBAPI-017+Add+The+Internet+Tracking+Resource+to+RESO+Web+API+v1.1+Specification)
+[RCP - WEBAPI-018 User Federation Best Practices](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2250178745/RCP+-+WEBAPI-018+User+Federation+Best+Practices)
+[RCP WebAPI-019 - Validation Expression in the WebAPI](https://reso.atlassian.net/wiki/display/RESOWebAPIRCP/RCP+WebAPI-019+-+Validation+Expression+in+the+WebAPI)
+[RCP - WEBAPI-026 Change Default Certification Testing to Bearer Token](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2259388362/RCP+-++WEBAPI-026+Change+Default+Certification+Testing+to+Bearer+Token)
+[RCP - WEBAPI-029 Revise Web API Certification Procedures](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275148134/RCP+-++WEBAPI-029+Revise+Web+API+Certification+Procedures)
+[RCP - WEBAPI-031 Data Dictionary Representation in the Web API](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275149854/RCP+-+WEBAPI-031+Data+Dictionary+Representation+in+the+Web+API)
+
+
+
 
