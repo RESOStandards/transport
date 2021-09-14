@@ -1975,16 +1975,16 @@ Note: The [Open ID Connect](https://openid.net/connect/) layer was previously su
 
 ### RCPs Approved for Web Version v2.0.0
 
-[RCP - WEBAPI-010 Add Update Functionality to Web API Specification](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2239399511)
-[RCP - WEBAPI-011 Child Order Action](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2239401081)
-[RCP - WEBAPI-013 Add Certification Rule Impact/Changes to Process](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2239399520)
-[RCP - WEBAPI-016 Depreciate Bit Map Enumerations and Utilize Collections for Enumerations](https://reso.atlassian.net/wiki/display/RESOWebAPIRCP/RCP+-+WEBAPI-016+Depreciate+Bit+Map+Enumerations+and+Utilize+Collections+for+Enumerations)
-[RCP - WEBAPI-017 Add The Internet Tracking Resource to RESO Web API v1.1 Specification](https://reso.atlassian.net/wiki/display/RESOWebAPIRCP/RCP+-+WEBAPI-017+Add+The+Internet+Tracking+Resource+to+RESO+Web+API+v1.1+Specification)
-[RCP - WEBAPI-018 User Federation Best Practices](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2250178745/RCP+-+WEBAPI-018+User+Federation+Best+Practices)
-[RCP WebAPI-019 - Validation Expression in the WebAPI](https://reso.atlassian.net/wiki/display/RESOWebAPIRCP/RCP+WebAPI-019+-+Validation+Expression+in+the+WebAPI)
-[RCP - WEBAPI-026 Change Default Certification Testing to Bearer Token](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2259388362/RCP+-++WEBAPI-026+Change+Default+Certification+Testing+to+Bearer+Token)
-[RCP - WEBAPI-029 Revise Web API Certification Procedures](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275148134/RCP+-++WEBAPI-029+Revise+Web+API+Certification+Procedures)
-[RCP - WEBAPI-031 Data Dictionary Representation in the Web API](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275149854/RCP+-+WEBAPI-031+Data+Dictionary+Representation+in+the+Web+API)
+[RCP - WEBAPI-010 Add Update Functionality to Web API Specification](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2239399511)<br />
+[RCP - WEBAPI-011 Child Order Action](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2239401081)<br />
+[RCP - WEBAPI-013 Add Certification Rule Impact/Changes to Process](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2239399520)<br />
+[RCP - WEBAPI-016 Depreciate Bit Map Enumerations and Utilize Collections for Enumerations](https://reso.atlassian.net/wiki/display/RESOWebAPIRCP/RCP+-+WEBAPI-016+Depreciate+Bit+Map+Enumerations+and+Utilize+Collections+for+Enumerations)<br />
+[RCP - WEBAPI-017 Add The Internet Tracking Resource to RESO Web API v1.1 Specification](https://reso.atlassian.net/wiki/display/RESOWebAPIRCP/RCP+-+WEBAPI-017+Add+The+Internet+Tracking+Resource+to+RESO+Web+API+v1.1+Specification)<br />
+[RCP - WEBAPI-018 User Federation Best Practices](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2250178745/RCP+-+WEBAPI-018+User+Federation+Best+Practices)<br />
+[RCP WebAPI-019 - Validation Expression in the WebAPI](https://reso.atlassian.net/wiki/display/RESOWebAPIRCP/RCP+WebAPI-019+-+Validation+Expression+in+the+WebAPI)<br />
+[RCP - WEBAPI-026 Change Default Certification Testing to Bearer Token](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2259388362/RCP+-++WEBAPI-026+Change+Default+Certification+Testing+to+Bearer+Token)<br />
+[RCP - WEBAPI-029 Revise Web API Certification Procedures](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275148134/RCP+-++WEBAPI-029+Revise+Web+API+Certification+Procedures)<br />
+[RCP - WEBAPI-031 Data Dictionary Representation in the Web API](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275149854/RCP+-+WEBAPI-031+Data+Dictionary+Representation+in+the+Web+API)<br />
 
 
 
