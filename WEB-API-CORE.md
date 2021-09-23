@@ -1429,7 +1429,7 @@ HTTP/2 200 OK
       "MemberFirstName": "James",
       "MemberLastName": "Smith",
       "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
-    }
+    },
      {
       "MemberKey": "m112",
       "MemberStatus": "Active",
@@ -1539,16 +1539,16 @@ HTTP/2 200 OK
     {
       "ListingKey": "abc567",
       "BedroomsTotal": 5,
-      "ListPrice": 499999,
+      "ListPrice": 499999.00,
       "StreetName": "7th",
       "ModificationTimestamp": "2021-06-25T00:01:01.01.007Z",
       "StandardStatus": "Active",
       "AccessibilityFeatures": []
-    }
+    },
     {
       "ListingKey": "abc678",
       "BedroomsTotal": 5,
-      "ListPrice": 489000,
+      "ListPrice": 489000.00,
       "StreetName": "Maple",
       "ModificationTimestamp": "2021-06-25T00:01:01.01.007Z",
       "StandardStatus": "Active",
@@ -1595,7 +1595,7 @@ HTTP/2 200 OK
 
 **Get the Next Five Members**
 ```json
-GET https://api.reso.org//Member?$top=5&$skip=0
+GET https://api.reso.org//Member?$top=5&$skip=5
 HTTP/2 200 OK
 {
   "@odata.context": "GET https://api.reso.org//Member?$top=5&$skip=5",
@@ -1606,28 +1606,28 @@ HTTP/2 200 OK
       "MemberFirstName": "James",
       "MemberLastName": "Smith",
       "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
-    }
+    },
      {
       "MemberKey": "m112",
       "MemberStatus": "Active",
       "MemberFirstName": "Adam",
       "MemberLastName": "Smith",
       "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
-    }
+    },
     {
       "MemberKey": "m113",
       "MemberStatus": "Active",
       "MemberFirstName": "Jennifer",
       "MemberLastName": "Smith",
       "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
-    }
+    },
     {
       "MemberKey": "m114",
       "MemberStatus": "Active",
       "MemberFirstName": "Kevin",
       "MemberLastName": "Smith",
       "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
-    }
+    },
     {
       "MemberKey": "m115",
       "MemberStatus": "Active",
@@ -1661,21 +1661,21 @@ HTTP/2 200 OK
       "MemberFirstName": "Betty",
       "MemberLastName": "Adams",
       "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
-    }
+    },
     {
       "MemberKey": "m003",
       "MemberStatus": "Active",
       "MemberFirstName": "Henry",
       "MemberLastName": "Adams",
       "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
-    }
+    },
     {
       "MemberKey": "m004",
       "MemberStatus": "Active",
       "MemberFirstName": "Kevin",
       "MemberLastName": "Adams",
       "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
-    }
+    },
     {
       "MemberKey": "m005",
       "MemberStatus": "Active",
@@ -1694,7 +1694,7 @@ GET https://api.reso.org/Property?$filter=PropertyType eq 'Residential'&$top=5
 HTTP/2 200 OK
 
 {
-  "@odata.context": "https://test.reso.org/Property?$filter=ListingKey eq 'abc123'",
+  "@odata.context": "https://api.reso.org/Property?$filter=ListingKey eq 'abc123'",
   "value": [
     {
       "ListingKey": "abc123",
@@ -1705,7 +1705,7 @@ HTTP/2 200 OK
       "ListingContractDate": "2020-04-02",
       "StandardStatus": "ActiveUnderContract",
       "AccessibilityFeatures": ["AccessibleApproachWithRamp", "AccessibleEntrance", "Visitable"]
-    }
+    },
     {
     "ListingKey": "abc345",
     "BedroomsTotal": 5,
@@ -1715,7 +1715,7 @@ HTTP/2 200 OK
     "ListingContractDate": "2020-04-02",
     "StandardStatus": "Active",
     "AccessibilityFeatures": ["Visitable"]
-    }
+    },
     {
     "ListingKey": "abc456",
     "BedroomsTotal": 4,
@@ -1724,7 +1724,7 @@ HTTP/2 200 OK
     "ModificationTimestamp": "2021-08-15T00:01:01.01.007Z",
     "StandardStatus": "Active",
     "AccessibilityFeatures": []
-    }
+    },
     {
     "ListingKey": "abc567",
     "BedroomsTotal": 5,
@@ -1733,7 +1733,7 @@ HTTP/2 200 OK
     "ModificationTimestamp": "2021-06-25T00:01:01.01.007Z",
     "StandardStatus": "Active",
     "AccessibilityFeatures": []
-    }
+    },
     {
     "ListingKey": "abc678",
     "BedroomsTotal": 5,
@@ -1819,7 +1819,7 @@ HTTP/2 200 OK
     {
       "ListingKey": "abc456",
       "ModificationTimestamp": "2021-08-15T00:01:01.01.007Z"
-    }
+    },
     {
       "ListingKey": "abc123",
       "ModificationTimestamp": "2020-04-02T02:02:02.02Z"
