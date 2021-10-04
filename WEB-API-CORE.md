@@ -17,28 +17,28 @@
     - [2.3.3 Metadata URI Conventions](#233-metadata-uri-conventions)
     - [2.3.4 Resource Endpoint](#234-resource-endpoint)
     - [2.4 Data Types](#24-data-types)
-    - [2.5 Query Support](#25-query-support)
-      - [2.5.1 Metadata Request](#251-metadata-request)
-      - [2.5.2 Service Document Request](#252-service-document-request)
-      - [2.5.3 Fetch by Key](#253-fetch-by-key)
-      - [2.5.4 $select Operator](254-select-operator)
-      - [2.5.5 $top Operator](#255-top-operator)
-      - [2.5.6 $count Operator](#256-count-operator)
-      - [2.5.7 $skip Operator](#257-skip-operator)
-      - [2.5.8 $orderby Operator](#258-orderby-operator)
-      - [2.5.9 $filter-Operator](#259-filter-operator)
-        - [2.5.9.1 OData Primitive Types](#2591-odata-primitive-types)
-        - [2.5.9.2 Equals](#2592-equals)
-        - [2.5.9.3 Not Equals](#2593-not-equals)
-        - [2.5.9.4 Greater Than](#2594-greater-than)
-        - [2.5.9.5 Greater Than or Equal](#2595-greater-than-or-equal)
-        - [2.5.9.6 Less Than](#2596-less-than)
-        - [2.5.9.7 Less Than or Equal](#2597-less-than-or-equal)
-        - [2.5.9.8 Single Enumerations](#2598-single-enumerations)
-        - [2.5.9.9 Multiple Enumerations](#2599-multiple-enumeraions)
+  - [2.5 Query Support](#25-query-support)
+    - [2.5.1 Metadata Request](#251-metadata-request)
+    - [2.5.2 Service Document Request](#252-service-document-request)
+    - [2.5.3 Fetch by Key](#253-fetch-by-key)
+    - [2.5.4 $select Operator](254-select-operator)
+    - [2.5.5 $top Operator](#255-top-operator)
+    - [2.5.6 $count Operator](#256-count-operator)
+    - [2.5.7 $skip Operator](#257-skip-operator)
+    - [2.5.8 $orderby Operator](#258-orderby-operator)
+    - [2.5.9 $filter-Operator](#259-filter-operator)
+      - [2.5.9.1 OData Primitive Types](#2591-odata-primitive-types)
+      - [2.5.9.2 Equals](#2592-equals)
+      - [2.5.9.3 Not Equals](#2593-not-equals)
+      - [2.5.9.4 Greater Than](#2594-greater-than)
+      - [2.5.9.5 Greater Than or Equal](#2595-greater-than-or-equal)
+      - [2.5.9.6 Less Than](#2596-less-than)
+      - [2.5.9.7 Less Than or Equal](#2597-less-than-or-equal)
+      - [2.5.9.8 Single Enumerations](#2598-single-enumerations)
+      - [2.5.9.9 Multiple Enumerations](#2599-multiple-enumeraions)
   - [2.6 Response Message Bodies](#26-response-codes-and-error-message-bodies)
-      - [2.6.1 HTTP Response Codes](#260-http-response-codes)
-      - [2.6.2 Error Message Bodies](#261-error-message-bodies)
+    - [2.6.1 HTTP Response Codes](#260-http-response-codes)
+    - [2.6.2 Error Message Bodies](#261-error-message-bodies)
   - [2.7 Standard Resources]()
   - [2.8 Core Query Examples](#28-core-query-examples)
   - [2.9 Security](#29-security)
@@ -341,7 +341,7 @@ GET https://api.reso.org/Property?$filter=ListPrice gt 100000.00
 
 <br />
 
-### 2.4 Data Types
+## 2.4 Data Types
 
 This section outlines the standard data types supported by the  Web API Core specification.
 
@@ -367,7 +367,7 @@ The following mappings exist between the RESO Data Dictionary and OData data typ
 
 <br />
 
-### 2.5 Query Support
+## 2.5 Query Support
 Each OData data type supports query operators relevant to its type. For instance, dates, timestamps, and numbers allow for greater than and less than comparisons.
 
 Specifics regarding data types and query operators are outlined in the sections that follow.
@@ -378,7 +378,7 @@ _The query operators shown in this section are MUST requirements for the Web API
 
 <br />
 
-#### 2.5.1 Metadata Request
+### 2.5.1 Metadata Request
 OData supports both XML and JSON metadata formats.
 
 Servers MAY support JSON metadata, but RESO requires they MUST support the XML metadata format.
@@ -430,7 +430,7 @@ HTTP/2 200 OK
 
 <br />
 
-#### 2.5.2 Service Document Request
+### 2.5.2 Service Document Request
 Servers MUST support a service document request, according to the OData Minimal Conformance Rules.
 
 > The service root URL identifies the root of an OData service. A GET request to this URL returns the format-specific service document, see [OData-JSON](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#ODataJSONRef).
@@ -493,7 +493,7 @@ HTTP/2 200 OK
 
 <br />
 
-#### 2.5.3 Fetch by Key
+### 2.5.3 Fetch by Key
 OData provides a way to access a single record by its key, called a singleton record.
 
 How the key is referenced depends on its type.
@@ -546,7 +546,7 @@ HTTP/2 200 OK
 
 <br />
 
-#### 2.5.4 `$select` Operator
+### 2.5.4 `$select` Operator
 
 OData allows clients to specify which fields they would like returned in a given payload through the use of the [$select operator](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#_Toc31361040).
 
@@ -573,7 +573,7 @@ RESO Web API Core servers MUST support the `$select` operator.
 
 <br />
 
-#### 2.5.5 `$top` Operator
+### 2.5.5 `$top` Operator
 
 The [OData `$top` operator](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#_Toc31361042) allows clients to specify the number of records they would like to request from a given server.
 
@@ -599,7 +599,7 @@ RESO Web API Core servers MUST support the `$top` operator.
 
 <br />
 
-#### 2.5.6 `$count` Operator
+### 2.5.6 `$count` Operator
 
 The [`$count` system query option](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_SystemQueryOptioncount) allows clients to request a count of the matching resources included with the resources in the response.
 
@@ -627,7 +627,7 @@ RESO Web API Core servers MUST support the `$count` operator.
 
 <br />
 
-#### 2.5.7 `$skip` Operator
+### 2.5.7 `$skip` Operator
 The [`$skip` query option](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#_Toc31361042) requests the number of items in the queried collection that are to be skipped and not included in the result. A client can request a particular page of items by combining `$top` and `$skip`.
 
 The semantics of `$top` and `$skip` are covered in the [OData-Protocol](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#odata) document. The [OData-ABNF](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#ABNF) top and skip syntax rules define the formal grammar of the `$top` and `$skip` query options respectively.
@@ -653,7 +653,7 @@ HTTP/2 200 OK
 
  <br />
 
- #### 2.5.8 `$orderby` Operator
+ ### 2.5.8 `$orderby` Operator
 
  The [`$orderby` system query option](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_SystemQueryOptionorderby) allows clients to request resources in a particular order.
 
@@ -685,7 +685,7 @@ RESO Web API Core servers MUST support the `$orderby` operator.
 
 <br />
 
-#### 2.5.9 `$filter` Operator
+### 2.5.9 `$filter` Operator
 
 OData `$filter` expressions provide query support for boolean search expressions.
 
@@ -715,7 +715,7 @@ _**Note**: support for `Edm.String` versions of enumerations, which use human-fr
 
 <br />
 
-##### 2.5.9.1 OData Primitive Types
+#### 2.5.9.1 OData Primitive Types
 
 This section outlines logical operators and query expressions available in Web API Core for the following [OData Primitive Types](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752517):
 * Integers: `Edm.Int16`, `Edm.Int32`, and `Edm.Int64`
@@ -738,7 +738,7 @@ Enumerations are also shown in the sample payloads. Queries for enumerations are
 
 <br />
 
-##### 2.5.9.2 Equals
+#### 2.5.9.2 Equals
 
 [OData Documentation](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_Equals)
 > The `eq` operator returns true if the left operand is equal to the right operand, otherwise it returns `false`.
@@ -783,7 +783,7 @@ HTTP/2 200 OK
 
 <br />
 
-##### 2.5.9.3 Not Equals
+#### 2.5.9.3 Not Equals
 
 [OData Documentation](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_NotEquals)
 > The `ne` operator returns `true` if the left operand is not equal to the right operand, otherwise it returns `false`.
@@ -830,7 +830,7 @@ HTTP/2 200 OK
 
 <br />
 
-##### 2.5.9.4 Greater Than
+#### 2.5.9.4 Greater Than
 
 [OData Documentation](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_GreaterThan)
 The `gt` operator returns `true` if the left operand is greater than the right operand, otherwise it returns `false`.
@@ -869,7 +869,7 @@ HTTP/2 200 OK
 
 <br />
 
-##### 2.5.9.5 Greater Than or Equal
+#### 2.5.9.5 Greater Than or Equal
 
 [OData Documentation](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_GreaterThanorEqual)
 > The `ge` operator returns `true` if the left operand is greater than or equal to the right operand, otherwise it returns `false`.
@@ -904,7 +904,7 @@ HTTP/2 200 OK
 
 <br />
 
-##### 2.5.9.6 Less Than
+#### 2.5.9.6 Less Than
 
 [OData Documentation](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_LessThan)
 > The `lt` operator returns `true` if the left operand is less than the right operand, otherwise it returns `false`.
@@ -943,7 +943,7 @@ HTTP/2 200 OK
 
 <br />
 
-##### 2.5.9.7 Less Than or Equal
+#### 2.5.9.7 Less Than or Equal
 
 [OData Documentation](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_LessThanorEqual)
 The `le` operator returns `true` if the left operand is less than or equal to the right operand, otherwise it returns `false`.
@@ -978,7 +978,7 @@ HTTP/2 200 OK
 
 <br />
 
-##### 2.5.9.8 Single Enumerations
+#### 2.5.9.8 Single Enumerations
 
 These are single-valued lookups, such as the [StandardStatus](https://ddwiki.reso.org/display/DDW17/StandardStatus+Field) field.
 
@@ -992,7 +992,7 @@ RESO is transitioning to `Edm.String` enumerations and new implementations shoul
 
 <br />
 
-###### 2.5.9.8.1 `Edm.EnumType` Enumerations
+##### 2.5.9.8.1 `Edm.EnumType` Enumerations
 OData provides the `Edm.EnumType` data type to express enumerations. [More information](https://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_EnumerationType).
 
 The `Edm.EnumType` data type supports `has`, `eq`, and `ne` queries.
@@ -1133,7 +1133,7 @@ HTTP/2 200 OK
 
 <br />
 
-###### 2.5.9.8.2 `Edm.String` Enumerations
+##### 2.5.9.8.2 `Edm.String` Enumerations
 
 Support for string-based enumerations was added in Web API Core through the use of the Lookup resource, [as outlined in RCP-032](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275152879).
 
@@ -1141,7 +1141,7 @@ This resource is still in DRAFT status. Please [contact RESO](mailto:dev@reso.or
 
 <br />
 
-##### 2.5.9.9 Multiple Enumerations
+#### 2.5.9.9 Multiple Enumerations
 
 The Web API Core specification currently offers three ways to express multiple enumerations:
 * [`Edm.EnumType`, with or without `IsFlags=true`](#TODO)
@@ -1156,7 +1156,7 @@ RESO is in the process of transitioning to human-friendly string values using `C
 
 <br />
 
-###### 2.5.9.9.1 OData `IsFlags=true`
+##### 2.5.9.9.1 OData `IsFlags=true`
 
 In the past, it was common for implementations to use OData IsFlags enumerations. While this type is still supported for backwards compatibility, multiple enumerations should use `Collection(Edm.EnumType)` or `Collection(Edm.String)` instead.
 
@@ -1231,7 +1231,7 @@ HTTP/2 200 OK
 
 <br />
 
-###### 2.5.9.9.2 Collection of `Edm.EnumType`
+##### 2.5.9.9.2 Collection of `Edm.EnumType`
 
 The RESO Web API Core specification allows for multiple enumerations to be defined in terms of collections of OData `Edm.EnumType` definitions.
 
@@ -1342,7 +1342,7 @@ HTTP/2 200 OK
 
 <br />
 
-###### 2.5.9.9.3 Collection of `Edm.String`
+##### 2.5.9.9.3 Collection of `Edm.String`
 
 Support for string-based enumerations was added in Web API Core through the use of the Lookup resource, [as outlined in RCP-032](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275152879).
 
@@ -1350,12 +1350,12 @@ This resource is still in DRAFT status. Please [contact RESO](mailto:dev@reso.or
 
 <br />
 
-### 2.6 Response Codes and Error Message Bodies
+## 2.6 Response Codes and Error Message Bodies
 This section describes expected response codes and error message bodies.
 
 <br />
 
-#### 2.6.1 HTTP Response Codes
+### 2.6.1 HTTP Response Codes
 A compatible server implementation MUST return a valid HTTP status code for each request indicating the status of the request.
 
 If the response was not successful the server MAY include an [error message](https://reso.atlassian.net/wiki/spaces/WebAPI2/pages/8163003779) in the body of the HTTP response. There is a defined response body for JSON but there is no explicit requirement in the OData standard.
@@ -1375,7 +1375,7 @@ If the response was not successful the server MAY include an [error message](htt
 
 <br />
 
-#### 2.6.2 Error Message Bodies
+### 2.6.2 Error Message Bodies
 When the client makes a request which cannot be satisfied or produces an error condition, a compliant server MUST follow the OData error handling guidelines.
 
 Full details of this mechanism may be found in the [JSON Error Response](http://docs.oasis-open.org/odata/odata-json-format/v4.0/errata03/os/odata-json-format-v4.0-errata03-os-complete.html#_Toc453766668) section of the OData specification.
@@ -1409,7 +1409,7 @@ HTTP/2 200 OK
 
 <br />
 
-### 2.7 Standard Resources
+## 2.7 Standard Resources
 
 In general, it's required that the RESO Web API be able to output data as per the RESO Data Dictionary. 
 
@@ -1428,7 +1428,7 @@ Servers MAY support local resources, fields, or lookups that don't follow the RE
 
 <br />
 
-### 2.8 Core Query Examples
+## 2.8 Core Query Examples
 The following examples show how Core queries can be used to query data on a given RESO Web API server.
 
 <br />
@@ -1968,7 +1968,7 @@ _**Note**: Query strings MUST be URL encoded where appropriate by a compliant cl
 
 <br />
 
-### 2.9 Security
+## 2.9 Security
 
 Servers MUST implement one of the following [OAuth2](https://oauth.net/2/) authentication methods to be compliant with the RESO Web API specification:
 
@@ -1982,7 +1982,7 @@ _**Note**: The [Open ID Connect](https://openid.net/connect/) layer was previous
 
 ---
 
-## Section 3: Authors
+# Section 3: Authors
 
 | Author | Company |
 | ------ | ------- |
@@ -2011,7 +2011,7 @@ Many thanks to those who contributed to the Web API Core specification, includin
 
 ---
 
-## Section 4: References
+# Section 4: References
 Please see the following references for more information regarding topics covered in this document.
 
 | Description | Link |
@@ -2031,9 +2031,9 @@ Please see the following references for more information regarding topics covere
 
 ---
 
-## Section 5: Appendices
+# Section 5: Appendices
 
-### Approved RCPs
+## Approved RCPs
 The following RCPs are included in Web API Core 2.0.0:
 * [RCP - WEBAPI-010 Add Update Functionality to Web API Specification](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2239399511)
 * [RCP - WEBAPI-011 Child Order Action](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2239401081)
@@ -2051,6 +2051,7 @@ The following RCPs are included in Web API Core 2.0.0:
 ---
 
 # Section 6: License
+
 This document is covered by the [RESO EULA](https://www.reso.org/eula/).
 
 <br /><br />
