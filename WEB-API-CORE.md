@@ -45,13 +45,12 @@
 - [Section 3: Authors](#section-3-authors)
 - [Section 4: References](#section-4-references)
 - [Section 5: Appendices](#section-5-appendices)
+- [Section 6: License](#section-6-license)
 
 ---
 
 # Introduction
 The Web API Core Endorsement provides a subset of functionality from the OASIS OData specification relevant to those who need to perform live queries or replicate data using the RESO Web API. This includes the ability to express metadata and provide query support for primitive OData types and enumerations. This document offers normative examples of what these items should look like, both in the metadata and payload.
-
-This document is covered by the [RESO EULA](https://www.reso.org/eula/).
 
 <br />
 
@@ -507,13 +506,13 @@ Note: unlike requests that return a collection of items in a value array, single
 
 String keys are surrounded with single quotes when used in an OData key query:
 ```
-GET https://api.reso.org/Property('abc123')
+GET https://api.reso.org/Property('a1')
 HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Property('abc123')",
-  "ListingKey": "abc123",
+  "@odata.context": "https://api.reso.org/Property('a1')",
+  "ListingKey": "a1",
   "BedroomsTotal": 5,
   "ListPrice": 100000.00,
   "StreetName": "Main",
@@ -560,11 +559,11 @@ HTTP/2 200 OK
   "@odata.context": "https://api.reso.org/Property?$select=ListingKey,ModificationTimestamp",
   "value": [
     {
-      "ListingKey": "abc123",
+      "ListingKey": "a1",
       "ModificationTimestamp": "2020-04-02T02:02:02.02Z"
     },
     {
-      "ListingKey": "bcd234",
+      "ListingKey": "b2",
       "ModificationTimestamp": "2020-04-02T02:02:02.007Z"
     }
   ]
@@ -589,7 +588,7 @@ HTTP/2 200 OK
   "@odata.context": "https://api.reso.org/Property?$select=ListingKey,ModificationTimestamp&$top=1",
   "value": [
     {
-      "ListingKey": "abc123",
+      "ListingKey": "a1",
       "ModificationTimestamp": "2020-04-02T02:02:02.02Z"
     }
   ]
@@ -618,7 +617,7 @@ HTTP/2 200 OK
   "@odata.count": 2,
   "value": [
     {
-      "ListingKey": "abc123",
+      "ListingKey": "a1",
       "ModificationTimestamp": "2020-04-02T02:02:02.02Z"
     }
   ]
@@ -643,7 +642,7 @@ HTTP/2 200 OK
   "@odata.count": 2,
   "value": [
     {
-      "ListingKey": "bcd234",
+      "ListingKey": "b2",
       "ModificationTimestamp": "2020-04-02T02:02:02.007Z"
     }
   ]
@@ -671,11 +670,11 @@ HTTP/2 200 OK
   "@odata.context": "https://api.reso.org/Property?$select=ListingKey,ModificationTimestamp&$orderby=ModificationTimestamp asc",
   "value": [
     {
-      "ListingKey": "bcd234",
+      "ListingKey": "b2",
       "ModificationTimestamp": "2020-04-02T02:02:02.007Z"
     }
      {
-      "ListingKey": "abc123",
+      "ListingKey": "a1",
       "ModificationTimestamp": "2020-04-02T02:02:02.02Z"
     }
   ]
@@ -1444,7 +1443,7 @@ HTTP/2 200 OK
   "@odata.context": "https://api.reso.org/Property?$filter=ListingContractDate ge 2020-12-01 and ListingContractDate lt 2021-01-01",
   "value": [
     {
-      "ListingKey": "abc123",
+      "ListingKey": "a1",
       "BedroomsTotal": 5,
       "ListPrice": 100000.00,
       "StreetName": "Main",
@@ -1469,7 +1468,7 @@ HTTP/2 200 OK
   "@odata.context": "https://api.reso.org/Property?$filter=ListingContractDate ge 2020-01-01 and ListingContractDate le 2020-12-31",
   "value": [
     {
-      "ListingKey": "abc234",
+      "ListingKey": "b2",
       "BedroomsTotal": 3,
       "ListPrice": 200000.00,
       "StreetName": "2nd",
@@ -1523,7 +1522,7 @@ HTTP/2 200 OK
   "@odata.context": "https://api.reso.org/Property?$filter=ShortSale eq true",
   "value": [
     {
-      "ListingKey": "abc123",
+      "ListingKey": "a1",
       "BedroomsTotal": 5,
       "ListPrice": 100000.00,
       "StreetName": "Main",
@@ -1548,7 +1547,7 @@ HTTP/2 200 OK
   "@odata.context": "https://api.reso.org/Property?$filter=ListPrice gt 250000 and ListPrice lt 500000",
   "value": [
     {
-      "ListingKey": "abc345",
+      "ListingKey": "c3",
       "BedroomsTotal": 5,
       "ListPrice": 400000.00,
       "StreetName": "Main",
@@ -1573,7 +1572,7 @@ HTTP/2 200 OK
   "@odata.context": "https://api.reso.org/Property?$filter=ListPrice gt 300000",
   "value": [
     {
-      "ListingKey": "abc345",
+      "ListingKey": "c3",
       "BedroomsTotal": 5,
       "ListPrice": 400000.00,
       "StreetName": "Main",
@@ -1598,7 +1597,7 @@ HTTP/2 200 OK
   "@odata.context": "https://api.reso.org/Property?$filter=ListPrice eq 300000",
   "value": [
     {
-      "ListingKey": "abc456",
+      "ListingKey": "d4",
       "BedroomsTotal": 4,
       "ListPrice": 300000.00,
       "StreetName": "Oak",
@@ -1623,7 +1622,7 @@ HTTP/2 200 OK
   "@odata.context": "https://api.reso.org/Property?$filter=ListPrice lt 500000&$orderby=ListPrice desc",
   "value": [
     {
-      "ListingKey": "abc567",
+      "ListingKey": "e5",
       "BedroomsTotal": 5,
       "ListPrice": 499999,
       "StreetName": "7th",
@@ -1632,7 +1631,7 @@ HTTP/2 200 OK
       "AccessibilityFeatures": []
     }
     {
-      "ListingKey": "abc678",
+      "ListingKey": "f6",
       "BedroomsTotal": 5,
       "ListPrice": 489000,
       "StreetName": "Maple",
@@ -1657,7 +1656,7 @@ HTTP/2 200 OK
   "@odata.count": 2,
   "value": [
     {
-      "ListingKey": "abc123",
+      "ListingKey": "a1",
       "ModificationTimestamp": "2020-04-02T02:02:02.02Z" 
     }
   ]
@@ -1677,7 +1676,7 @@ HTTP/2 200 OK
   "@odata.context": "https://api.reso.org/Property?$filter=PropertyType eq 'Residential'&$top=5",
   "value": [
     {
-      "ListingKey": "abc123",
+      "ListingKey": "a1",
       "BedroomsTotal": 5,
       "ListPrice": 100000.00,
       "StreetName": "Main",
@@ -1687,7 +1686,7 @@ HTTP/2 200 OK
       "AccessibilityFeatures": ["AccessibleApproachWithRamp", "AccessibleEntrance", "Visitable"]
     }
     {
-    "ListingKey": "abc345",
+    "ListingKey": "b2",
     "BedroomsTotal": 5,
     "ListPrice": 400000.00,
     "StreetName": "Main",
@@ -1697,7 +1696,7 @@ HTTP/2 200 OK
     "AccessibilityFeatures": ["Visitable"]
     }
     {
-    "ListingKey": "abc456",
+    "ListingKey": "c3",
     "BedroomsTotal": 4,
     "ListPrice": 300000.00,
     "StreetName": "Oak",
@@ -1706,7 +1705,7 @@ HTTP/2 200 OK
     "AccessibilityFeatures": []
     }
     {
-    "ListingKey": "abc567",
+    "ListingKey": "d4",
     "BedroomsTotal": 5,
     "ListPrice": 499999,
     "StreetName": "7th",
@@ -1715,7 +1714,7 @@ HTTP/2 200 OK
     "AccessibilityFeatures": []
     }
     {
-    "ListingKey": "abc678",
+    "ListingKey": "e5",
     "BedroomsTotal": 5,
     "ListPrice": 489000,
     "StreetName": "Maple",
@@ -1841,7 +1840,7 @@ HTTP/2 200 OK
   "@odata.context": "https://api.reso.org/Property?$filter=ListPrice lt 300000",
   "value": [
     {
-      "ListingKey": "abc123",
+      "ListingKey": "a1",
       "BedroomsTotal": 5,
       "ListPrice": 100000.00,
       "StreetName": "Main",
@@ -1866,7 +1865,7 @@ HTTP/2 200 OK
   "@odata.context": "https://api.reso.org/Property?$filter=ListPrice gt 250000 and ListPrice lt 500000",
   "value": [
     {
-      "ListingKey": "abc456",
+      "ListingKey": "b2",
       "BedroomsTotal": 4,
       "ListPrice": 300000.00,
       "StreetName": "Oak",
@@ -1911,11 +1910,11 @@ HTTP/2 200 OK
   "@odata.context": "https://api.reso.org/Property?$select=ListingKey,ModificationTimestamp&$orderby=ModificationTimestamp desc",
   "value": [
     {
-      "ListingKey": "abc456",
+      "ListingKey": "b2",
       "ModificationTimestamp": "2021-08-15T00:01:01.01.007Z"
     }
     {
-      "ListingKey": "abc123",
+      "ListingKey": "a1",
       "ModificationTimestamp": "2020-04-02T02:02:02.02Z"
     }
   ]
@@ -1968,8 +1967,6 @@ HTTP/2 200 OK
 _**Note**: Query strings MUST be URL encoded where appropriate by a compliant client._
 
 <br />
-
----
 
 ### 2.9 Security
 
@@ -2051,4 +2048,10 @@ The following RCPs are included in Web API Core 2.0.0:
 
 <br /><br />
 
+---
+
+# Section 6: License
+This document is covered by the [RESO EULA](https://www.reso.org/eula/).
+
+<br /><br />
 
