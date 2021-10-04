@@ -1144,9 +1144,9 @@ This resource is still in DRAFT status. Please [contact RESO](mailto:dev@reso.or
 #### 2.5.9.9 Multiple Enumerations
 
 The Web API Core specification currently offers three ways to express multiple enumerations:
-* [`Edm.EnumType`, with or without `IsFlags=true`](#TODO)
-* [`Collection(Edm.EnumType)`](#TODO)
-* [Collection(Edm.String)](#TODO)
+* [`Edm.EnumType`, with or without `IsFlags=true`](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#25991-odata-isflagstrue)
+* [`Collection(Edm.EnumType)`](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#25992-collection-of-edmenumtype)
+* [Collection(Edm.String)](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#25993-collection-of-edmstring)
 
 The `IsFlags=true` method is not recommended for current implementations due to size limitations of the underlying data type and will be deprecated in future versions of the Web API.
 
@@ -1235,7 +1235,7 @@ HTTP/2 200 OK
 
 The RESO Web API Core specification allows for multiple enumerations to be defined in terms of collections of OData `Edm.EnumType` definitions.
 
-While this approach is not well documented in OData reference material, it is nonetheless valid and was previously offered in order to overcome the [64-value limitation of IsFlags enumerations](#TODO).
+While this approach is not well documented in OData reference material, it is nonetheless valid and was previously offered in order to overcome the [64-value limitation of IsFlags enumerations](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#25991-odata-isflagstrue).
 
 Let’s consider the [AccessibilityFeatures](https://ddwiki.reso.org/display/DDW17/AccessibilityFeatures+Field) field, which is defined as follows in the [RESO reference XML metadata](https://raw.githubusercontent.com/RESOStandards/web-api-commander/main/src/main/resources/RESODataDictionary-1.7.xml):
 
