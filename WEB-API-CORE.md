@@ -2080,6 +2080,8 @@ Each item links to its relevant acceptance test in the RESO Commander repository
 
 Sample queries assume that `https://api.reso.org/` is being used as the OData service root.
 
+<br />
+
 ### Request and Validate OData XML Metadata
 
 **Id**
@@ -2101,8 +2103,12 @@ Request and Validate Server Metadata
 **Acceptance Test**
 
 [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L11-L23)
-| **Notes** | See: [Metadata Validation](#metadata-validation)
 
+**Notes**
+
+See: [Metadata Validation](#metadata-validation)
+
+<br />
 
 ### Service Document Request
 
@@ -2125,8 +2131,12 @@ Request and validate OData service document
 **Acceptance Test**
 
 [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L25-L31)
-| **Notes** | See: [OData service document request](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Toc453752280)
 
+**Notes**
+
+See: [OData service document request](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Toc453752280)
+
+<br />
 
 ### Fetch by Key
 
@@ -2149,8 +2159,11 @@ Allows Records to be retrieved by primary key.
 **Acceptance Test**
 
 [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L33-L41)
-| **Notes** | OData Indexability by Key Requirement. | 
 
+**Notes**
+OData Indexability by Key Requirement.
+
+<br />
 
 ### `$select` Query Option
 
