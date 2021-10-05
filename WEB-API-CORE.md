@@ -2081,7 +2081,7 @@ Each item links to its relevant acceptance test in the RESO Commander repository
 Sample queries assume that `https://api.reso.org/` is being used as the OData service root.
 
 ### Request and Validate OData XML Metadata
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | metadata-validation |
 | **Description** | Request and Validate Server Metadata |
@@ -2092,7 +2092,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 
 
 ### Service Document Request
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | service-document |
 | **Description** | Request and validate OData service document |
@@ -2103,7 +2103,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 
 
 ### Fetch by Key
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | fetch-by-key |
 | **Description** | Allows Records to be retrieved by primary key. |
@@ -2114,7 +2114,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 
 
 ### `$select` Query Option
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | select |
 | **Description** | `$select` allows fields to be requested on an individual basis as part of a query. |
@@ -2126,7 +2126,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### `$top` Query Option
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | top |
 | **Description** | `$top` allows the client to request a specific number of records in a query. |
@@ -2138,7 +2138,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### `$count` Query Option
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | top |
 | **Description** | The `$count` system query option with a value of `true` specifies that the total count of items within a collection matching the request be returned along with the result. |
@@ -2150,7 +2150,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### `$skip` Query Option
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | top |
 | **Description** | `$top` allows the client to request a specific number of records in a query. |
@@ -2162,7 +2162,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### `$orderby` ISO 8601 Timestamp Field Ascending
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | orderby-timestamp-asc |
 | **Description** | `$orderby` allows results to be returned in a specified order. |
@@ -2174,7 +2174,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### `$orderby` ISO 8601 Timestamp Field Descending
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | orderby-timestamp-desc |
 | **Description** | `$orderby` allows results to be returned in a specified order. |
@@ -2186,7 +2186,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### `$orderby` ISO 8601 Timestamp Field Ascending with Integer Greater Than Filter
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | orderby-timestamp-asc-filter-int-gt |
 | **Description** | `$orderby` allows results to be returned in a specified order. |
@@ -2198,7 +2198,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### `$orderby` ISO 8601 Timestamp Field Descending with Integer Greater Than Filter
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | orderby-timestamp-desc-filter-int-gt |
 | **Description** | `$orderby` allows results to be returned in a specified order. |
@@ -2210,7 +2210,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Integer Field Using AND Logical Operator
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | filter-int-and |
 | **Description** | `$filter` with `and` logical operator. |
@@ -2222,7 +2222,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Integer Field Using OR Logical Operator
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | filter-int-or |
 | **Description** | `$filter` with `or` logical operator. |
@@ -2234,7 +2234,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Integer Field Using NOT Logical Operator
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | filter-int-not |
 | **Description** | `$filter` with `not` logical operator. |
@@ -2246,7 +2246,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Integer Field Using EQ Logical Operator
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | filter-int-eq |
 | **Description** | `$filter` with `eq` logical operator. |
@@ -2258,7 +2258,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Integer Field Using NE Logical Operator
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | filter-int-ne |
 | **Description** | `$filter` with `ne` logical operator. |
@@ -2270,7 +2270,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Integer Field Using GT Logical Operator
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | filter-int-gt |
 | **Description** | `$filter` with `gt` logical operator. |
@@ -2282,7 +2282,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Integer Field Using GE Logical Operator
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | filter-int-ge |
 | **Description** | `$filter` with `ge` logical operator. |
@@ -2294,7 +2294,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Integer Field Using LT Logical Operator
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | filter-int-lt |
 | **Description** | `$filter` with `lt` logical operator. |
@@ -2306,7 +2306,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Integer Field Using LE Logical Operator
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | filter-int-le |
 | **Description** | `$filter` with `le` logical operator. |
@@ -2318,7 +2318,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Decimal Field Using NE Logical Operator
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | filter-decimal-ne |
 | **Description** | `$filter` with `ne` logical operator. |
@@ -2330,7 +2330,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Decimal Field Using GT Logical Operator
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | filter-decimal-gt |
 | **Description** | `$filter` with `gt` logical operator. |
@@ -2342,7 +2342,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Decimal Field Using GE Logical Operator
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | filter-decimal-ge |
 | **Description** | `$filter` with `ge` logical operator. |
@@ -2354,7 +2354,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Decimal Field Using LT Logical Operator
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | filter-decimal-lt |
 | **Description** | `$filter` with `lt` logical operator. |
@@ -2366,7 +2366,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Decimal Field Using LE Logical Operator
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | filter-decimal-le |
 | **Description** | `$filter` with `le` logical operator. |
@@ -2378,7 +2378,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter ISO 8601 Date Using EQ Logical Operator
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | filter-date-eq |
 | **Description** | `$filter` [ISO 8601 date](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `eq` logical operator. |
@@ -2390,7 +2390,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter ISO 8601 Date Using NE Logical Operator
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | filter-date-ne |
 | **Description** | `$filter` [ISO 8601 date](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `ne` logical operator. |
@@ -2402,7 +2402,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter ISO 8601 Date Using GT Logical Operator
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | filter-date-gt |
 | **Description** | `$filter` [ISO 8601 date](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `gt` logical operator. |
@@ -2414,7 +2414,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter ISO 8601 Date Using GE Logical Operator
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | filter-date-ge |
 | **Description** | `$filter` [ISO 8601 date](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `ge` logical operator. |
@@ -2426,7 +2426,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter ISO 8601 Date Using LT Logical Operator
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | filter-date-lt |
 | **Description** | `$filter` [ISO 8601 date](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `lt` logical operator. |
@@ -2438,7 +2438,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter ISO 8601 Date Using LE Logical Operator
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | filter-date-le |
 | **Description** | `$filter` [ISO 8601 date](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `le` logical operator. |
@@ -2450,7 +2450,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter ISO 8601 Timestamp Using NE Logical Operator
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | filter-datetime-ne |
 | **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `ne` logical operator. |
@@ -2462,7 +2462,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter ISO 8601 Timestamp Using GT Logical Operator
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | filter-datetime-gt |
 | **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `gt` logical operator. |
@@ -2474,7 +2474,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter ISO 8601 Timestamp Using GE Logical Operator
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | filter-datetime-ge |
 | **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `ge` logical operator. |
@@ -2486,7 +2486,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter ISO 8601 Timestamp Using LT Logical Operator
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | filter-datetime-lt |
 | **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `lt` logical operator. |
@@ -2498,7 +2498,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter ISO 8601 Timestamp Using LE Logical Operator
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | filter-datetime-le |
 | **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `le` logical operator. |
@@ -2510,7 +2510,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter ISO 8601 Timestamp Using NE Logical Operator and `now()` 
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | filter-datetime-ne-now |
 | **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `ne` logical operator. |
@@ -2523,7 +2523,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 
 
 ### Filter ISO 8601 Timestamp Using LT Logical Operator and `now()`
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | filter-datetime-lt-now |
 | **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `le` logical operator and the OData `now()` function. |
@@ -2535,7 +2535,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter ISO 8601 Timestamp Using LE Logical Operator and `now()`
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | filter-datetime-le-now |
 | **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `le` logical operator and the OData `now()` function. |
@@ -2547,7 +2547,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Single Enumeration Using `has` and OData `Edm.EnumType`
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | filter-enum-single-has |
 | **Description** | `has` operator for `Edm.EnumType`. |
@@ -2559,7 +2559,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Single Enumeration Using `eq` and OData `Edm.EnumType`
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | filter-enum-single-eq |
 | **Description** | `eq` operator for `Edm.EnumType`. |
@@ -2571,7 +2571,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Single Enumeration Using `ne` and OData `Edm.EnumType`
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | filter-enum-single-ne |
 | **Description** | `ne` operator for `Edm.EnumType`. |
@@ -2583,7 +2583,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Multiple Enumeration Using `has` and OData `Edm.EnumType`
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | filter-enum-multi-has |
 | **Description** | `has` operator for `Edm.EnumType` and `IsFlags=true`. |
@@ -2595,7 +2595,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Multiple Enumeration Using `has` and OData `Edm.EnumType` with `and` Logical Operator
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | filter-enum-multi-has-and |
 | **Description** | `has` operator for `Edm.EnumType` and `IsFlags=true` with `and` logical operator. |
@@ -2607,7 +2607,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Multiple Enumeration Using `any` Lambda Operator and OData `Collection(Edm.EnumType)`
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | filter-coll-enum-any |
 | **Description** | `any` lambda for `Collection(Edm.EnumType)`. |
@@ -2619,7 +2619,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Multiple Enumeration Using `all` Lambda Operator and OData `Collection(Edm.EnumType)`
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | filter-coll-enum-any |
 | **Description** | `any` lambda for `Collection(Edm.EnumType)`. |
@@ -2631,7 +2631,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### HTTP 400 Response Code Test
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | response-code-400 |
 | **Description** | Issues query to trigger HTTP 400 response code. |
@@ -2643,7 +2643,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### HTTP 404 Response Code Test
-| | |
+| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
 | --- | --- |
 | **Id** | response-code-404 |
 | **Description** | Issues query to trigger HTTP 404 response code. |
