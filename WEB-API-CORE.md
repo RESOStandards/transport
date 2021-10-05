@@ -146,7 +146,6 @@ While OData supports HTTP/1.0, there are many limitations in the HTTP/1.0 specif
 
 Since the RESO Web API requires that [HTTPS](https://en.wikipedia.org/wiki/HTTPS) and the [OAuth2](https://oauth.net/2/) protocols are used, all server implementations MUST implement [Transport Layer Security (TLS)](https://en.wikipedia.org/wiki/Transport_Layer_Security).
 
-<br />
 
 ### 2.2.1 Version Header
 The OData version header is used by the server to communicate the currently supported version of the specification:
@@ -186,7 +185,6 @@ Requirements
 
 See Response Message Bodies for details on expected responses.
 
-<br />
 
 ### 2.2.2 Optional OData Headers
 The following optional headers are defined in the specification:
@@ -201,7 +199,6 @@ The following optional headers are defined in the specification:
 ## 2.3 URL Formatting
 The OData transport protocol defines a few standardized URL formatting requirements for ease of use and application interoperability.
 
-<br />
 
 ### 2.3.1 Hostname
 The hostname of the URL is arbitrary and no naming convention is required.
@@ -210,7 +207,6 @@ The following example protocol and hostname are used in the examples in this doc
 
 ```https://api.reso.org```
 
-<br />
 
 ### 2.3.2 URI Conventions
 The OData transport protocol defines the following URI conventions:
@@ -225,7 +221,6 @@ The OData transport protocol defines the following URI conventions:
 
 RESO uses **TitleCase** for Resources, Fields, OData Lookup Values, and Navigation Properties.
 
-<br />
 
 ### 2.3.3 Metadata URI Conventions
 OData offers a [special endpoint](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_AddressingtheModelforaService) for conveying server metadata, located at:
@@ -258,7 +253,6 @@ with metadata endpoints,
 
 respectively.
 
-<br />
 
 ### 2.3.4 Resource Endpoint
 Resources are defined by the server’s XML Metadata document, which also defines the URLs used to query those resources.
@@ -397,7 +391,6 @@ See the OData specification for further details regarding Query Support.
 
 _The query operators shown in this section are MUST requirements for the Web API Core Endorsement unless otherwise specified._
 
-<br />
 
 ### 2.5.1 Metadata Request
 OData supports both XML and JSON metadata formats.
@@ -449,7 +442,6 @@ HTTP/2 200 OK
 * _RESO offers [reference metadata in XML format](https://raw.githubusercontent.com/RESOStandards/web-api-commander/main/src/main/resources/RESODataDictionary-1.7.xml) which can be used as a guide, and corresponds to RESO Data Dictionary 1.7._
 * _The above example does not demonstrate the use of annotations, which are outlined in the [reference XML Metadata document](https://raw.githubusercontent.com/RESOStandards/web-api-commander/main/src/main/resources/RESODataDictionary-1.7.xml)._
 
-<br />
 
 ### 2.5.2 Service Document Request
 Servers MUST support a service document request, according to the OData Minimal Conformance Rules.
@@ -513,7 +505,6 @@ HTTP/2 200 OK
 }
 ```
 
-<br />
 
 ### 2.5.3 Fetch by Key
 OData provides a way to access a single record by its key, called a singleton record.
@@ -566,7 +557,6 @@ HTTP/2 200 OK
 }
 ```
 
-<br />
 
 ### 2.5.4 `$select` Operator
 
@@ -593,7 +583,6 @@ HTTP/2 200 OK
 ```
 RESO Web API Core servers MUST support the `$select` operator.
 
-<br />
 
 ### 2.5.5 `$top` Operator
 
@@ -619,7 +608,6 @@ HTTP/2 200 OK
 
 RESO Web API Core servers MUST support the `$top` operator.
 
-<br />
 
 ### 2.5.6 `$count` Operator
 
@@ -647,7 +635,6 @@ HTTP/2 200 OK
 ```
 RESO Web API Core servers MUST support the `$count` operator.
 
-<br />
 
 ### 2.5.7 `$skip` Operator
 The [`$skip` query option](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#_Toc31361042) requests the number of items in the queried collection that are to be skipped and not included in the result. A client can request a particular page of items by combining `$top` and `$skip`.
@@ -705,7 +692,6 @@ HTTP/2 200 OK
 
 RESO Web API Core servers MUST support the `$orderby` operator.
 
-<br />
 
 ### 2.5.9 `$filter` Operator
 
@@ -731,7 +717,6 @@ At this document’s time of writing, most implementations use `Edm.EnumType` en
 
 _**Note**: support for `Edm.String` versions of enumerations, which use human-friendly display names as values, has recently been added and is the preferred approach for new implementations. The RESO community is in the process of moving away from `Edm.EnumType` lookups to simplify implementations and improve user friendliness. See [RCP-032](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275152879) for information about string lookups._
 
-<br />
 
 #### 2.5.9.1 OData Primitive Types
 
@@ -754,7 +739,6 @@ The examples presented here assume that the server is using a subset of [RESO’
 
 Enumerations are also shown in the sample payloads. Queries for enumerations are covered in later sections of this document.
 
-<br />
 
 #### 2.5.9.2 Equals
 
@@ -799,7 +783,6 @@ HTTP/2 200 OK
 }
 ```
 
-<br />
 
 #### 2.5.9.3 Not Equals
 
@@ -846,7 +829,6 @@ HTTP/2 200 OK
 }
 ```
 
-<br />
 
 #### 2.5.9.4 Greater Than
 
@@ -886,7 +868,6 @@ HTTP/2 200 OK
 }
 ```
 
-<br />
 
 #### 2.5.9.5 Greater Than or Equal
 
@@ -921,7 +902,6 @@ HTTP/2 200 OK
 }
 ```
 
-<br />
 
 #### 2.5.9.6 Less Than
 
@@ -960,7 +940,6 @@ HTTP/2 200 OK
 }
 ```
 
-<br />
 
 #### 2.5.9.7 Less Than or Equal
 
@@ -995,7 +974,6 @@ HTTP/2 200 OK
 }
 ```
 
-<br />
 
 #### 2.5.9.8 Single Enumerations
 
@@ -1009,7 +987,6 @@ There are two ways to express single enumerations in the RESO Web API Core speci
 
 RESO is transitioning to `Edm.String` enumerations and new implementations should follow that path.
 
-<br />
 
 ##### 2.5.9.8.1 `Edm.EnumType` Enumerations
 OData provides the `Edm.EnumType` data type to express enumerations. [More information](https://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_EnumerationType).
@@ -1150,7 +1127,6 @@ HTTP/2 200 OK
 }
 ```
 
-<br />
 
 ##### 2.5.9.8.2 `Edm.String` Enumerations
 
@@ -1158,7 +1134,6 @@ Support for string-based enumerations was added in Web API Core through the use 
 
 This resource is still in DRAFT status. Please [contact RESO](mailto:dev@reso.org) if you are interested in being certified using `Edm.String` lookups.
 
-<br />
 
 #### 2.5.9.9 Multiple Enumerations
 
@@ -1173,7 +1148,6 @@ Currently, [RESO’s reference XML metadata](https://raw.githubusercontent.com/R
 
 RESO is in the process of transitioning to human-friendly string values using `Collection(Edm.String)` for multiple enumerations, [as outlined in RCP-032](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275152879). New implementations are encouraged to take this approach. Please [contact RESO](mailto:dev@reso.org) if you are interested in being certified using string lookups.
 
-<br />
 
 ##### 2.5.9.9.1 OData `IsFlags=true`
 
@@ -1248,7 +1222,6 @@ HTTP/2 200 OK
 }
 ```
 
-<br />
 
 ##### 2.5.9.9.2 Collection of `Edm.EnumType`
 
@@ -1358,7 +1331,6 @@ HTTP/2 200 OK
 }
 ```
 
-<br />
 
 ##### 2.5.9.9.3 Collection of `Edm.String`
 
@@ -1371,7 +1343,6 @@ This resource is still in DRAFT status. Please [contact RESO](mailto:dev@reso.or
 ## 2.6 Response Codes and Error Message Bodies
 This section describes expected response codes and error message bodies.
 
-<br />
 
 ### 2.6.1 HTTP Response Codes
 A compatible server implementation MUST return a valid HTTP status code for each request indicating the status of the request.
@@ -1391,7 +1362,6 @@ If the response was not successful the server MAY include an [error message](htt
 | 500 | Internal Server Error | Returned when an unexpected error is encountered and more detail may be provided in the response body. |
 | 501 | Not Implemented | Returned when the requested method is not available. |
 
-<br />
 
 ### 2.6.2 Error Message Bodies
 When the client makes a request which cannot be satisfied or produces an error condition, a compliant server MUST follow the OData error handling guidelines.
@@ -2081,7 +2051,7 @@ Each item links to its relevant acceptance test in the RESO Commander repository
 Sample queries assume that `https://api.reso.org/` is being used as the OData service root.
 
 ### Request and Validate OData XML Metadata
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | metadata-validation |
 | **Description** | Request and Validate Server Metadata |
@@ -2092,7 +2062,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 
 
 ### Service Document Request
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | service-document |
 | **Description** | Request and validate OData service document |
@@ -2103,7 +2073,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 
 
 ### Fetch by Key
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | fetch-by-key |
 | **Description** | Allows Records to be retrieved by primary key. |
@@ -2114,7 +2084,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 
 
 ### `$select` Query Option
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | select |
 | **Description** | `$select` allows fields to be requested on an individual basis as part of a query. |
@@ -2123,10 +2093,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L43-L52) | 
 | **Notes** | The `$select` list determines the "data shape" of the response for a given query. | 
 
-<br />
 
 ### `$top` Query Option
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | top |
 | **Description** | `$top` allows the client to request a specific number of records in a query. |
@@ -2135,10 +2104,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L54-L64) | 
 | **Notes** | _None_ | 
 
-<br />
 
 ### `$count` Query Option
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | top |
 | **Description** | The `$count` system query option with a value of `true` specifies that the total count of items within a collection matching the request be returned along with the result. |
@@ -2147,10 +2115,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L85-L93) | 
 | **Notes** | _None_ | 
 
-<br />
 
 ### `$skip` Query Option
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | top |
 | **Description** | `$top` allows the client to request a specific number of records in a query. |
@@ -2159,10 +2126,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L66-L83) | 
 | **Notes** | Use `$top` and `$skip` in conjunction to page. | 
 
-<br />
 
 ### `$orderby` ISO 8601 Timestamp Field Ascending
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | orderby-timestamp-asc |
 | **Description** | `$orderby` allows results to be returned in a specified order. |
@@ -2171,10 +2137,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L419-L429) | 
 | **Notes** | [More information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752361) | 
 
-<br />
 
 ### `$orderby` ISO 8601 Timestamp Field Descending
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | orderby-timestamp-desc |
 | **Description** | `$orderby` allows results to be returned in a specified order. |
@@ -2183,10 +2148,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L431-L441) | 
 | **Notes** | [More information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752361) | 
 
-<br />
 
 ### `$orderby` ISO 8601 Timestamp Field Ascending with Integer Greater Than Filter
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | orderby-timestamp-asc-filter-int-gt |
 | **Description** | `$orderby` allows results to be returned in a specified order. |
@@ -2195,10 +2159,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L448-L458) | 
 | **Notes** | [More information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752361) | 
 
-<br />
 
 ### `$orderby` ISO 8601 Timestamp Field Descending with Integer Greater Than Filter
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | orderby-timestamp-desc-filter-int-gt |
 | **Description** | `$orderby` allows results to be returned in a specified order. |
@@ -2207,10 +2170,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L460-L470) | 
 | **Notes** | [More information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752361) | 
 
-<br />
 
 ### Filter Integer Field Using AND Logical Operator
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | filter-int-and |
 | **Description** | `$filter` with `and` logical operator. |
@@ -2219,10 +2181,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L99-L109) | 
 | **Notes** | [See OData 5.1.1.1.7](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) | 
 
-<br />
 
 ### Filter Integer Field Using OR Logical Operator
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | filter-int-or |
 | **Description** | `$filter` with `or` logical operator. |
@@ -2231,10 +2192,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L111-L121) | 
 | **Notes** | [See OData 5.1.1.1.8](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) | 
 
-<br />
 
 ### Filter Integer Field Using NOT Logical Operator
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | filter-int-not |
 | **Description** | `$filter` with `not` logical operator. |
@@ -2243,10 +2203,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L123-L133) | 
 | **Notes** | [See OData 5.1.1.1.9](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) | 
 
-<br />
 
 ### Filter Integer Field Using EQ Logical Operator
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | filter-int-eq |
 | **Description** | `$filter` with `eq` logical operator. |
@@ -2255,10 +2214,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L135-L145) | 
 | **Notes** | [See OData 5.1.1.1.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) | 
 
-<br />
 
 ### Filter Integer Field Using NE Logical Operator
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | filter-int-ne |
 | **Description** | `$filter` with `ne` logical operator. |
@@ -2267,10 +2225,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L147-L157) | 
 | **Notes** | [See OData 5.1.1.1.2](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) | 
 
-<br />
 
 ### Filter Integer Field Using GT Logical Operator
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | filter-int-gt |
 | **Description** | `$filter` with `gt` logical operator. |
@@ -2279,10 +2236,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L159-L169) | 
 | **Notes** | [See OData 5.1.1.1.3](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) | 
 
-<br />
 
 ### Filter Integer Field Using GE Logical Operator
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | filter-int-ge |
 | **Description** | `$filter` with `ge` logical operator. |
@@ -2291,10 +2247,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L171-L181) | 
 | **Notes** | [See OData 5.1.1.1.4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) | 
 
-<br />
 
 ### Filter Integer Field Using LT Logical Operator
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | filter-int-lt |
 | **Description** | `$filter` with `lt` logical operator. |
@@ -2303,10 +2258,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L183-L193) | 
 | **Notes** | [See OData 5.1.1.1.5](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) | 
 
-<br />
 
 ### Filter Integer Field Using LE Logical Operator
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | filter-int-le |
 | **Description** | `$filter` with `le` logical operator. |
@@ -2315,10 +2269,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L195-L205) | 
 | **Notes** | [See OData 5.1.1.1.6](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) | 
 
-<br />
 
 ### Filter Decimal Field Using NE Logical Operator
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | filter-decimal-ne |
 | **Description** | `$filter` with `ne` logical operator. |
@@ -2327,10 +2280,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L212-L222) | 
 | **Notes** | [See OData 5.1.1.1.2](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) | 
 
-<br />
 
 ### Filter Decimal Field Using GT Logical Operator
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | filter-decimal-gt |
 | **Description** | `$filter` with `gt` logical operator. |
@@ -2339,10 +2291,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L224-L234) | 
 | **Notes** | [See OData 5.1.1.1.4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) | 
 
-<br />
 
 ### Filter Decimal Field Using GE Logical Operator
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | filter-decimal-ge |
 | **Description** | `$filter` with `ge` logical operator. |
@@ -2351,10 +2302,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L236-L246) | 
 | **Notes** | [See OData 5.1.1.1.5](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) | 
 
-<br />
 
 ### Filter Decimal Field Using LT Logical Operator
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | filter-decimal-lt |
 | **Description** | `$filter` with `lt` logical operator. |
@@ -2363,10 +2313,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L248-L258) | 
 | **Notes** | [See OData 5.1.1.1.3](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) | 
 
-<br />
 
 ### Filter Decimal Field Using LE Logical Operator
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | filter-decimal-le |
 | **Description** | `$filter` with `le` logical operator. |
@@ -2375,10 +2324,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L260-L270) | 
 | **Notes** | [See OData 5.1.1.1.4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) | 
 
-<br />
 
 ### Filter ISO 8601 Date Using EQ Logical Operator
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | filter-date-eq |
 | **Description** | `$filter` [ISO 8601 date](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `eq` logical operator. |
@@ -2387,10 +2335,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L277-L287) | 
 | **Notes** | [See OData 5.1.1.6.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) | 
 
-<br />
 
 ### Filter ISO 8601 Date Using NE Logical Operator
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | filter-date-ne |
 | **Description** | `$filter` [ISO 8601 date](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `ne` logical operator. |
@@ -2399,10 +2346,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L289-L299) | 
 | **Notes** | [See OData 5.1.1.6.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) | 
 
-<br />
 
 ### Filter ISO 8601 Date Using GT Logical Operator
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | filter-date-gt |
 | **Description** | `$filter` [ISO 8601 date](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `gt` logical operator. |
@@ -2411,10 +2357,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L301-L311) | 
 | **Notes** | [See OData 5.1.1.6.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) | 
 
-<br />
 
 ### Filter ISO 8601 Date Using GE Logical Operator
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | filter-date-ge |
 | **Description** | `$filter` [ISO 8601 date](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `ge` logical operator. |
@@ -2423,10 +2368,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L313-L323) | 
 | **Notes** | [See OData 5.1.1.6.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) | 
 
-<br />
 
 ### Filter ISO 8601 Date Using LT Logical Operator
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | filter-date-lt |
 | **Description** | `$filter` [ISO 8601 date](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `lt` logical operator. |
@@ -2435,10 +2379,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L325-L335) | 
 | **Notes** | [See OData 5.1.1.6.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) | 
 
-<br />
 
 ### Filter ISO 8601 Date Using LE Logical Operator
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | filter-date-le |
 | **Description** | `$filter` [ISO 8601 date](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `le` logical operator. |
@@ -2447,10 +2390,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L337-L347) | 
 | **Notes** | [See OData 5.1.1.6.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) | 
 
-<br />
 
 ### Filter ISO 8601 Timestamp Using NE Logical Operator
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | filter-datetime-ne |
 | **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `ne` logical operator. |
@@ -2459,10 +2401,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source]()  | 
 | **Notes** | [See OData 5.1.1.6.11](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) | 
 
-<br />
 
 ### Filter ISO 8601 Timestamp Using GT Logical Operator
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | filter-datetime-gt |
 | **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `gt` logical operator. |
@@ -2471,10 +2412,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L354-L364) | 
 | **Notes** | [See OData 5.1.1.6.11](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) | 
 
-<br />
 
 ### Filter ISO 8601 Timestamp Using GE Logical Operator
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | filter-datetime-ge |
 | **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `ge` logical operator. |
@@ -2483,10 +2423,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L366-L376) | 
 | **Notes** | [See OData 5.1.1.6.11](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) | 
 
-<br />
 
 ### Filter ISO 8601 Timestamp Using LT Logical Operator
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | filter-datetime-lt |
 | **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `lt` logical operator. |
@@ -2495,10 +2434,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L378-L388) | 
 | **Notes** | [See OData 5.1.1.6.11](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) | 
 
-<br />
 
 ### Filter ISO 8601 Timestamp Using LE Logical Operator
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | filter-datetime-le |
 | **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `le` logical operator. |
@@ -2507,10 +2445,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source]() | 
 | **Notes** | [See OData 5.1.1.6.11](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) | 
 
-<br />
 
 ### Filter ISO 8601 Timestamp Using NE Logical Operator and `now()` 
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | filter-datetime-ne-now |
 | **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `ne` logical operator. |
@@ -2523,7 +2460,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 
 
 ### Filter ISO 8601 Timestamp Using LT Logical Operator and `now()`
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | filter-datetime-lt-now |
 | **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `le` logical operator and the OData `now()` function. |
@@ -2532,10 +2469,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L378-L388) | 
 | **Notes** | [See OData 5.1.1.8.9](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_now) | 
 
-<br />
 
 ### Filter ISO 8601 Timestamp Using LE Logical Operator and `now()`
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | filter-datetime-le-now |
 | **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `le` logical operator and the OData `now()` function. |
@@ -2544,10 +2480,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L390-L400) | 
 | **Notes** | [See OData 5.1.1.8.9](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_now) | 
 
-<br />
 
 ### Filter Single Enumeration Using `has` and OData `Edm.EnumType`
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | filter-enum-single-has |
 | **Description** | `has` operator for `Edm.EnumType`. |
@@ -2556,10 +2491,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L477-L487) | 
 | **Notes** | [More Information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752566) | 
 
-<br />
 
 ### Filter Single Enumeration Using `eq` and OData `Edm.EnumType`
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | filter-enum-single-eq |
 | **Description** | `eq` operator for `Edm.EnumType`. |
@@ -2568,10 +2502,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L489-L497) | 
 | **Notes** | [More Information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752566) | 
 
-<br />
 
 ### Filter Single Enumeration Using `ne` and OData `Edm.EnumType`
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | filter-enum-single-ne |
 | **Description** | `ne` operator for `Edm.EnumType`. |
@@ -2580,10 +2513,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L499-L506) | 
 | **Notes** | [More Information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752566) | 
 
-<br />
 
 ### Filter Multiple Enumeration Using `has` and OData `Edm.EnumType`
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | filter-enum-multi-has |
 | **Description** | `has` operator for `Edm.EnumType` and `IsFlags=true`. |
@@ -2592,10 +2524,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L513-L523) | 
 | **Notes** | [More Information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752566) | 
 
-<br />
 
 ### Filter Multiple Enumeration Using `has` and OData `Edm.EnumType` with `and` Logical Operator
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | filter-enum-multi-has-and |
 | **Description** | `has` operator for `Edm.EnumType` and `IsFlags=true` with `and` logical operator. |
@@ -2604,10 +2535,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L525-L536) | 
 | **Notes** | [More Information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752566) | 
 
-<br />
 
 ### Filter Multiple Enumeration Using `any` Lambda Operator and OData `Collection(Edm.EnumType)`
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | filter-coll-enum-any |
 | **Description** | `any` lambda for `Collection(Edm.EnumType)`. |
@@ -2616,10 +2546,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L543-L554) | 
 | **Notes** | [See OData 5.1.1.10.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) | 
 
-<br />
 
 ### Filter Multiple Enumeration Using `all` Lambda Operator and OData `Collection(Edm.EnumType)`
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | filter-coll-enum-any |
 | **Description** | `any` lambda for `Collection(Edm.EnumType)`. |
@@ -2628,10 +2557,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L556-L567) | 
 | **Notes** | [See OData 5.1.1.10.2](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) | 
 
-<br />
 
 ### HTTP 400 Response Code Test
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | response-code-400 |
 | **Description** | Issues query to trigger HTTP 400 response code. |
@@ -2640,10 +2568,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L575-L581) | 
 | **Notes** | _None_ | 
 
-<br />
 
 ### HTTP 404 Response Code Test
-| <div style="height:0px;width:200px" /> | <div style="height:0px;width:900px" /> |
+| <div style="width:200px" /> | <div style="width:900px" /> |
 | --- | --- |
 | **Id** | response-code-404 |
 | **Description** | Issues query to trigger HTTP 404 response code. |
