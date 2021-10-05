@@ -2186,7 +2186,10 @@ select
 **Acceptance Test**
 
 [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L43-L52)
-**Notes** The `$select` list determines the "data shape" of the response for a given query. | 
+
+**Notes**
+
+The `$select` list determines the "data shape" of the response for a given query.
 
 <br />
 
@@ -2267,7 +2270,10 @@ top
 **Acceptance Test**
 
 [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L66-L83)
-**Notes** Use `$top` and `$skip` in conjunction to page. | 
+
+**Notes** 
+
+Use `$top` and `$skip` in conjunction to page.
 
 <br />
 
