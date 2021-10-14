@@ -78,7 +78,6 @@ After metadata syntax has been validated, declared data models are checked for c
 Another aspect of semantic checking is ensuring that all models have keys so they can be indexed, meaning that a data request can be made to the server by key. This is a basic requirement for fetching data from a server.
 
 
-
 ## RESO Certification
 
 Several requirements must be met during Data Dictionary testing to ensure conformance with RESO Certification rules.
@@ -97,7 +96,7 @@ For each RESO Standard Resource found, its standard fields and lookups will be v
 
 Fields have both [naming](https://docs.google.com/document/d/15DFf9kDX_mlGCJVOch2fztl8W5h-yd18N0_03Sb4HwM/edit#heading=h.194xc45smnwr) and [data type mapping](https://docs.google.com/document/d/15DFf9kDX_mlGCJVOch2fztl8W5h-yd18N0_03Sb4HwM/edit#heading=h.ytsgiaioc8hv) requirements. Implementers are allowed to commingle their own fields and data types alongside RESO standard fields, but standard fields MUST match their [Data Dictionary type definition mappings](https://members.reso.org/pages/viewpage.action?pageId=67962918#RCP-WEBAPI-031DataDictionaryRepresentationintheWebAPI-2.6.1DictionaryandTransportTypeMappingsandAttributes).
 
-##### Standard Field Names
+#### Standard Field Names
 
 RESO Standard Fields MUST be named in accordance with the Data Dictionary definitions of those fields when present on a given server instance..
 
@@ -107,7 +106,7 @@ Variations such as *Price* or any Data Dictionary synonym of the ListPrice field
 
 Additional requirements for Standard Fields are [outlined in section on Data Type Mappings](https://docs.google.com/document/d/15DFf9kDX_mlGCJVOch2fztl8W5h-yd18N0_03Sb4HwM/edit#heading=h.ytsgiaioc8hv).
 
-##### Standard Display Names
+#### Standard Display Names
 
 **Note:** RESO Standard Display Names will not be tested at the current time. They had previously been tested but were not meant to have been a standard way to convey information about *which field* *or lookup* is intended at the transport level. [Standard Field Names](https://docs.google.com/document/d/15DFf9kDX_mlGCJVOch2fztl8W5h-yd18N0_03Sb4HwM/edit#heading=h.194xc45smnwr) and [Lookup Values](https://docs.google.com/document/d/15DFf9kDX_mlGCJVOch2fztl8W5h-yd18N0_03Sb4HwM/edit#heading=h.k0yrypywv6ms) MUST be used for this purpose instead.
 
@@ -115,7 +114,7 @@ There is a proposal in progress in the RESO Data Dictionary and Transport workgr
 
 [There is a MAY specification](https://members.reso.org/display/API2/2.4.8+Annotations) (RESO login required) for both *StandardName* and *MlsName* annotations that supports special characters, since OData fields and enumerations don't allow them. *Vendors may still use existing display name annotations as long as they pass the* [*metadata validation process*](https://docs.google.com/document/d/15DFf9kDX_mlGCJVOch2fztl8W5h-yd18N0_03Sb4HwM/edit#heading=h.evm2d6urqz93)*.*
 
-##### Lookups
+#### Lookups
 
 Underlying OData enumerations for Data Dictionary lookups MUST adhere to the naming conventions outlined in the [OData specification](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752675) and map to the correct types, as outlined in the [Data Type Mappings section](https://docs.google.com/document/d/15DFf9kDX_mlGCJVOch2fztl8W5h-yd18N0_03Sb4HwM/edit#heading=h.ytsgiaioc8hv).
 
@@ -128,13 +127,22 @@ Standard LookupValues are provided [in the Data Dictionary 1.7 Spreadsheet](http
 The following mappings apply to the RESO Data Dictionary and Web API specifications. 
 Data Dictionary data types shown in the following table are contained in the *SimpleDataType* column of the adopted Data Dictionary 1.7 spreadsheet, for instance [those for the Property Resource](https://docs.google.com/spreadsheets/d/1SZ0b6T4_lz6ti6qB2Je7NSz_9iNOaV_v9dbfhPwWgXA/edit#gid=16571180&range=E:E).
 
-*** Insert Table ***
+| Data Dictionary (1.6+) | Web API Core (1.0.2+)                                        |
+| :--------------------- | :----------------------------------------------------------- |
+| Boolean                | Edm.Bool                                                     |
+| Collection             | Related Resource Expansion, e.g. PropertyRooms or Units expanded into the Property resource. **Requires $expand Endorsement.** |
+| Date                   | Edm.Date                                                     |
+| Number                 | Edm.Decimal **OR** Edm.Double for decimal values; Edm.Int64 **OR** Edm.Int32 **OR** Edm.Int16 for integers. |
+| String                 | Edm.String                                                   |
+| String List, Single    | **EITHER** Edm.EnumType **OR** Edm.String                            |
+| Sting List, Multi      | **EITHER** Collection(Edm.EnumType) **OR** Edm.EnumType with IsFlags="true" **OR** Collection(Edm.String) |
+| Timestamp              | Edm.DateTimeOffset                                           |
 
 Each data type mapping has a corresponding Cucumber BDD acceptance test template that enforces the rules of a given type.
 
 ### Acceptance Test Templates
 
-##### Boolean
+#### Boolean
 
 Boolean values are mapped to the [Edm.Bool](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752635) data type and MUST contain a literal value of "true" or "false" when returned in a payload for a given Boolean field, which is enforced by the RESO Commander. Boolean fields MAY be null as any OData field is nullable. Null values are interpreted as "false."
 
@@ -146,7 +154,7 @@ When "AvailabilityDate" exists in the "Property" metadata
 Then "AvailabilityDate" MUST be "Date" data type
 ```
 
-##### Collection
+#### Collection
 
 **Note**: *Collections are not yet supported in the Data Dictionary or Web API Specifications for types other than Edm.EnumType. Collections in the Data Dictionary mean expanded resources, which will not be tested until the $expand Endorsement has been created.*
 
@@ -156,7 +164,7 @@ RESO will not be certifying this data type for related Data Dictionary Resources
 
 Standard Relationships have been provided in the adopted [Data Dictionary spreadsheet](https://docs.google.com/spreadsheets/d/1SZ0b6T4_lz6ti6qB2Je7NSz_9iNOaV_v9dbfhPwWgXA/edit#gid=266511010) to and [reference metadata](https://github.com/RESOStandards/web-api-commander/blob/58485cc04f24e464c6c1313d25428d43835d7668/src/main/resources/DDv1.7-StandardAndDisplayNames-20200922210930847.edmx) to guide vendors in the meantime. It's also worth noting that If a property definition for a Collection is nullable, it means that collection members are nullable. If there are no items in a given collection, the field would return an empty collection, but the field itself may not be null (by the OData specification).
 
-##### Date
+#### Date
 
 Date data types use the OData [Edm.Date](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752636) data type. Dates are expected to be in the format "yyyy-mm-dd" and should not include time zone offsets. For dates with time zone support, see [Timestamp](https://docs.google.com/document/d/15DFf9kDX_mlGCJVOch2fztl8W5h-yd18N0_03Sb4HwM/edit#heading=h.hhsogyonctqf).
 
@@ -172,7 +180,7 @@ Then "AvailabilityDate" MUST be "Date" data type
 
 Numbers may either be Integers or Decimals. 
 
-###### *Integers*
+##### *Integers*
 
 Numbers without Scale and Precision are treated as Integers in the Data Dictionary.
 
@@ -190,7 +198,7 @@ Scenario: BathroomsFull
 
 ***Note**:* *Synonyms testing is shown in the last line of the above example and is discussed further in a* [*subsequent section*](https://docs.google.com/document/d/15DFf9kDX_mlGCJVOch2fztl8W5h-yd18N0_03Sb4HwM/edit#heading=h.tcs2aspdfr41)*.*
 
-###### *Decimals*
+##### *Decimals*
 
 Decimals are expected to be [Edm.Decimal or Edm.Double](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752517) according to the [Data Dictionary Type Mappings](https://docs.google.com/document/d/15DFf9kDX_mlGCJVOch2fztl8W5h-yd18N0_03Sb4HwM/edit#heading=h.ytsgiaioc8hv). They MAY contain Precision and Scale attributes, as described by the entity data model type definition, which also MAY be omitted. 
 
@@ -210,7 +218,7 @@ Scenario: BuildingAreaTotal
 
 **Note:** *The Data Dictionary contains* [*references to Length and Precision*](https://ddwiki.reso.org/display/DDW17/Data+Dictionary+Terms+and+Meta+Definitions#DataDictionaryTermsandMetaDefinitions-SugMaxLength) *which have been found to be inaccurate with respect to standard definitions of decimal numbers. It uses Length and Precision to mean Precision and Scale, respectively. These items have been corrected in the code generation for decimal acceptance tests.*
 
-###### String
+##### String
 
 String values use the OData [Edm.String](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752644) data type. These strings represent a sequence of UTF-8 characters. String data types MAY specify a length attribute that specifies the length of a string a given server supports. The length property is not required by OData and may be omitted.
 
@@ -244,11 +252,11 @@ These items are similar to fields in that they MUST follow [OData field naming c
 
 As of Web API 1.0.2 Core, there are two formats allowed for String List, Multi. 
 
-##### Edm.EnumType with IsFlags="true"
+#### Edm.EnumType with IsFlags="true"
 
 The Web API Server Core 1.0.2 specification [outlines the use](https://members.reso.org/display/API2/2.4.10+Multi-Valued+Lookups) of the OData [Edm.EnumType](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752566) data type with the [IsFlags="true"](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752569) attribute set to signify that a given field supports multivalued enumerations. Applicants using this format will still be able to be certified.
 
-##### Collection(Edm.EnumType)
+#### Collection(Edm.EnumType)
 
 As there are limitations to the IsFlags approach in cases where multi-select items contain more than 64 distinct values, support for Collections(Edm.EnumType) was added to the [Data Dictionary Type Mappings](https://docs.google.com/document/d/15DFf9kDX_mlGCJVOch2fztl8W5h-yd18N0_03Sb4HwM/edit#heading=h.ytsgiaioc8hv) and backported to the Web API 1.0.2 Core specification to be used instead. 
 
@@ -422,15 +430,18 @@ At the time of writing, the Data Dictionary testing tool does not store any info
 
 RESO will be retrieving and saving server metadata in XML (EDMX) format at the time of Data Dictionary Certification for further analysis and to show what was retrieved from the server at the time of testing in case future questions arise. Metadata will be stored securely in the cloud and not available publicly. Information about resources, fields, and lookups found in the metadata during certification will be created as a derivative report. 
 
+
 # Feature Requests
 
 Feature requests can be requested as [issues on the RESO Commander's GitHub project](https://github.com/RESOStandards/web-api-commander/issues) or by contacting [the RESO development team.](mailto:dev@reso.org).
+
 
 # Support
 
 To apply for certification, or for help with an existing application, please contact [RESO Certification](mailto:certification@reso.org).
 
 For questions about revised certification procedures or for help or questions about RESO's automated testing tools, please contact RESO's [dev support](mailto:dev@reso.org).
+
 
 # Contributors
 
