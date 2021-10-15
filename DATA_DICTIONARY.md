@@ -7,23 +7,80 @@
 
 **Ratified**: December 2020
 
+# Table of Contents
+- [Certification](#certification)
+- [RESO End User License Agreement (EULA)](#reso-end-user-license-agreement-eula)
+- [Summary of Changes](#summary-of-changes)
+- [Purpose](#purpose)
+- [Background](#background)
+- [Testing Framework](#testing-framework)
+- [Testing Methodology](#testing-methodology)
+    + [Configuring the Test Client](#configuring-the-test-client)
+    + [Metadata Request Using RESO Standard Authentication](#metadata-request-using-reso-standard-authentication)
+  * [OData Metadata Validation](#odata-metadata-validation)
+    + [Syntax Checking](#syntax-checking)
+    + [Semantic Checking](#semantic-checking)
+  * [RESO Certification](#reso-certification)
+    + [Conformance with the RESO Standard Data Model](#conformance-with-the-reso-standard-data-model)
+      - [Resources](#resources)
+      - [Fields](#fields)
+      - [Standard Field Names](#standard-field-names)
+      - [Standard Display Names](#standard-display-names)
+      - [Lookups](#lookups)
+    + [Data Type Mappings](#data-type-mappings)
+    + [Acceptance Test Templates](#acceptance-test-templates)
+      - [Boolean](#boolean)
+      - [Collection](#collection)
+      - [Date](#date)
+      - [Number](#number)
+        * [*Integers*](#integers)
+        * [*Decimals*](#decimals)
+        * [String](#string)
+      - [String List, Single](#string-list-single)
+      - [String List, Multi](#string-list-multi)
+      - [Edm.EnumType with IsFlags="true"](#edmenumtype-with-isflags-true-)
+      - [Collection(Edm.EnumType)](#collection-edmenumtype-)
+      - [Timestamp](#timestamp)
+    + [Lookups Resource and Location Based-Fields](#lookups-resource-and-location-based-fields)
+    + [Additional References](#additional-references)
+    + [Additional Compliance Checking](#additional-compliance-checking)
+      - [Synonym Matching](#synonym-matching)
+      - [Similar Name Matching](#similar-name-matching)
+      - [Data-Driven Matching](#data-driven-matching)
+- [Certification Workflow](#certification-workflow)
+  * [Self Assessment](#self-assessment)
+  * [Application](#application)
+  * [Certification Issuance](#certification-issuance)
+- [Reporting](#reporting)
+  * [Data Collection](#data-collection)
+  * [Data Collection Pipeline](#data-collection-pipeline)
+  * [RESO Certification Map](#reso-certification-map)
+  * [RESO Data Compatibility Report](#reso-data-compatibility-report)
+  * [RESO Analytics Dashboard](#reso-analytics-dashboard)
+  * [Display of Information on RESO Website](#display-of-information-on-reso-website)
+  * [Data Retention Policies](#data-retention-policies)
+- [Feature Requests](#feature-requests)
+- [Support](#support)
+- [Contributors](#contributors)
+
+
 ## Certification
 [Link to Original Document](https://docs.google.com/document/d/15DFf9kDX_mlGCJVOch2fztl8W5h-yd18N0_03Sb4HwM/edit)
 
-# RESO End User License Agreement (EULA) #
+# RESO End User License Agreement (EULA)
 
 This End User License Agreement (the “EULA”) is entered into by and between the Real Estate Standards Organization (“RESO”) and the person or entity (“End User”) that is downloading or otherwise obtaining the product associated with this EULA (“RESO Product”). This EULA governs End Users use of the RESO Product and End User agrees to the terms of this EULA by downloading or otherwise obtaining or using the RESO Product.
 
 
 
-# Summary of Changes #
+# Summary of Changes
 
 The majority of the Data Dictionary 1.7 Specification was unchanged since initially ratified. 
 A summary of the changes from the previous testing rules is as follows:**Data Type Mappings**: A specification ([RCP-031](https://members.reso.org/display/RESOWebAPIRCP/RCP+-+WEBAPI-031+Data+Dictionary+Representation+in+the+Web+API)) was created to normalize Data Dictionary type mappings in the Web API, as [described here](https://members.reso.org/pages/viewpage.action?pageId=67962918#RCP-WEBAPI-031DataDictionaryRepresentationintheWebAPI-2.6.1DictionaryandTransportTypeMappingsandAttributes) and summarized in [this table](https://members.reso.org/pages/viewpage.action?pageId=67962918#RCP-WEBAPI-031DataDictionaryRepresentationintheWebAPI-DataTypeMappings.1). This was done to improve the predictability of data formats during transport. *See the section on* [*Data Type mappings*](https://docs.google.com/document/d/15DFf9kDX_mlGCJVOch2fztl8W5h-yd18N0_03Sb4HwM/edit#heading=h.ytsgiaioc8hv) *for more information.***IDX Payload Nomenclature**: Previously, terminology included IDX_Must, IDX_Optional, etc., which have all been consolidated under the IDX label. In general, Payloads have been streamlined and now [each field indicates which payloads it belongs to](https://docs.google.com/spreadsheets/d/1SZ0b6T4_lz6ti6qB2Je7NSz_9iNOaV_v9dbfhPwWgXA/edit#gid=16571180&range=R:R) in a binary fashion, such as *IDX* or *BBO*. 
 
 
 
-# Purpose #
+# Purpose
 
 The primary goal of Data Dictionary certification is interoperability. While the Web API Server specification ensures that servers can talk to each other in a uniform manner, if they are using different fields to represent the same data, it causes additional effort where mapping is concerned. This means products that need to interoperate between systems will be slow to market and complex. The point of the RESO Data Dictionary is to give data consumers and producers a common language to exchange data with.
 
@@ -33,7 +90,7 @@ Robust statistics are created through the use of the RESO Data Dictionary applic
 
 
 
-# Background #
+# Background
 
 The RESO Data Dictionary testing tool ensures compliance with RESO Data Dictionary definitions of resources, fields, and enumerations. Nonstandard or "local" data elements are also allowed, provided Data Dictionary resources are used whenever present on a given server and when metadata for any additional items are in a supported and valid transport format.
 Resources are top-level containers in the RESO ecosystem. Some examples are [*Property*](https://ddwiki.reso.org/display/DDW17/Property+Resource), [*Member*](https://ddwiki.reso.org/display/DDW17/Member+Resource), [*Office*](https://ddwiki.reso.org/display/DDW17/Office+Resource), [*Media*](https://ddwiki.reso.org/display/DDW17/Media+Resource)*, and* [*OpenHouse*](https://ddwiki.reso.org/display/DDW17/OpenHouse+Resource). 
@@ -41,7 +98,7 @@ Fields exist within a given resource and have name and type definitions that mus
 
 
 
-# Testing Framework #
+# Testing Framework
 
 Data Dictionary Certification is provided by the [RESO Commander](https://github.com/RESOStandards/web-api-commander). 
 The RESO Commander is an open source, cross-platform Java library created by RESO that uses established community libraries, such as the Apache Olingo OData Client, XML parsers, and JSON Schema Validators, to provide a testing API.
@@ -82,7 +139,7 @@ Another aspect of semantic checking is ensuring that all models have keys so the
 
 Several requirements must be met during Data Dictionary testing to ensure conformance with RESO Certification rules.
 
-### Conformance with the RESO Standard Data Model 
+### Conformance with the RESO Standard Data Model
 
 In this step, tests that have been generated from a given adopted RESO Data Dictionary version are run to locate and verify resources, fields, and enumerations contained within a server's metadata. This phase of testing is designed to test that items declared in the metadata using RESO Standard Field Names are consistent with the Data Dictionary definitions for those items.
 
@@ -384,7 +441,9 @@ The RESO Commander will also produce summary test statistics in the JSON format 
 
 Test data will be collected for analytics purposes. This information will be stored on a cloud drive in order to catalog results.
 
- -- **Insert Image** --
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/88680702/137548342-c3363b43-65d1-40fa-8cba-23de8580806b.jpg" />
+</p>
 
 Once test results are stored, they are sent to a collector service for analysis. The collector will be implemented in [ElasticSearch](https://www.elastic.co/).
 
@@ -396,7 +455,9 @@ Certification results will be published to the [RESO Certification Map](https://
 
 These information includes, but is not limited to (1) a report showing the RESO Standard Resources, Fields and Lookups in relation to the total number available on a per-resource basis; and, once enough aggregate data have been collected, (2) a field comparison report showing how an applicant scored relative to the market average, as shown in the following diagram:
 
--- **Insert Image** --
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/88680702/137548003-2d36d6db-f0a0-4497-a630-9965ee05619f.jpg" />
+</p>
 
 ## RESO Data Compatibility Report
 
@@ -404,7 +465,9 @@ A comparison tool will be created to show alignment between resources, fields, a
 
 While the reporting format has yet to be decided, conceptually the tool will find the intersection and difference between sets of resources, fields, and lookups between organizations. The information needed to produce these reports will be produced upon the initial release of the Data Dictionary testing tool, and a web-based UI will be created at a later time.
 
--- **Insert Image** --
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/88680702/137549347-be6b7648-f044-44aa-a86a-1c78a45c7690.jpg" />
+</p>
 
 ## RESO Analytics Dashboard
 
