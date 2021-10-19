@@ -32,9 +32,3 @@ The following documents may also be helpful:
 * [Payloads 1.7 Testing Specification](https://docs.google.com/document/d/1hNMqmDdK0C31tKrfdZnHIk1WmJPbAuluV_eJbErddCo/edit?usp=sharing)
 * [RESO Commander](https://github.com/RESOStandards/web-api-commander)
 
-## TODO
-- [ ] Improve the information in the Web API 2.0.0 landing (this) page.
-- [ ] Link existing RCPs from RCP center to this document, and add authors to contributors if they’re aren’t already.
-- [ ] Add overview to the Proposal section, if needed.
-- [x] Provide normative reference for the Service Document request.
-- [ ] Update language in “Standard Resources” and subsections.
