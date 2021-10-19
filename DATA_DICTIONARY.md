@@ -71,7 +71,6 @@ This worksheet is divided into three main sections:
 * **Lookup Fields and Values**: this sheet is a one-to-many collection of all the lookups defined in the Data Dictionary, referred to by their "Lookup Field" (which is really their grouping). There are two kinds of fields that use these lookups from the other resource sheets, those with Simple Data Types of _String List, Single_ and _String List, Multi_.
 * **Standard Relationships**: define nested relationships a given resource might have. These relationships affect a payload's data shape when related resources are joined together. These can either be one-to-one relationships where a single item is expanded into another, such as the case of Member expanded into Property as BuyerAgent, or they can be one-to-many relationships such as Media expanded into a Property record to show all of a given listing's photos. 
 
-
 <br />
 
 # Section 3: Certification
@@ -81,15 +80,11 @@ When standards are approved for the RESO Data Dictionary, those changes are stor
 
 Robust statistics are created through the use of the RESO Data Dictionary application, which are then ingested into a real-time analytics framework that lets users see industry-wide statistics about resources, fields, and enumerations. This information can be used to inform decisions about standardization and data mapping between RESO certified servers.
 
-<br />
-
 ## Background
 
 The RESO Data Dictionary testing tool ensures compliance with RESO Data Dictionary definitions of resources, fields, and enumerations. Nonstandard or "local" data elements are also allowed, provided Data Dictionary resources are used whenever present on a given server and when metadata for any additional items are in a supported and valid transport format.
 Resources are top-level containers in the RESO ecosystem. Some examples are [*Property*](https://ddwiki.reso.org/display/DDW17/Property+Resource), [*Member*](https://ddwiki.reso.org/display/DDW17/Member+Resource), [*Office*](https://ddwiki.reso.org/display/DDW17/Office+Resource), [*Media*](https://ddwiki.reso.org/display/DDW17/Media+Resource)*, and* [*OpenHouse*](https://ddwiki.reso.org/display/DDW17/OpenHouse+Resource). 
 Fields exist within a given resource and have name and type definitions that must be adhered to in order to be considered compliant. In the case of [*Property*](https://ddwiki.reso.org/display/DDW17/Property+Resource), examples of fields are [*ListPrice*](https://ddwiki.reso.org/display/DDW17/ListPrice+Field), [*ModificationTimestamp*](https://ddwiki.reso.org/display/DDW17/ModificationTimestamp+Field), etc. Fields don't exist on their own in the metadata. They will always be contained within a top-level resource definition that MUST match RESO Standard Resource definitions when they exist.
-
-<br />
 
 ## Testing Framework
 
@@ -107,13 +102,9 @@ A command-line interface (CLI) has been provided for local testing. This provide
 
 A graphical user interface (GUI) is also available through popular and free Integrated Development Environment (IDE) plugins for [IntelliJ](https://www.jetbrains.com/help/idea/enabling-cucumber-support-in-project.html) and [Eclipse](https://cucumber.github.io/cucumber-eclipse/). IDEs provide an enhanced testing experience, with better informational messages and the ability to easily run and debug each test step, when needed. The availability of plugins saves significant time in testing, development, and certification. The level of community support is one of the reasons open source tools were chosen as a testing platform.
 
-<br />
-
 ## Testing Methodology
 
 RESO Data Dictionary certification is based on adherence to: a) Resource, Field, and Lookup definitions outlined in each approved RESO Data Dictionary spreadsheet ([1.7 at the time of publication](https://docs.google.com/spreadsheets/d/1SZ0b6T4_lz6ti6qB2Je7NSz_9iNOaV_v9dbfhPwWgXA/edit?usp=sharing)), b) Transport requirements regarding [authentication](https://members.reso.org/display/RESOWebAPIRCP/RCP+-++WEBAPI-026+Change+Default+Certification+Testing+to+Bearer+Token) and OData conformance, and c) conformance with Data Dictionary to Web API data mappings [outlined later in this document](https://docs.google.com/document/d/15DFf9kDX_mlGCJVOch2fztl8W5h-yd18N0_03Sb4HwM/edit#heading=h.ytsgiaioc8hv), as well as in [RCP-031](https://members.reso.org/display/RESOWebAPIRCP/RCP+-+WEBAPI-031+Data+Dictionary+Representation+in+the+Web+API) (RESO login required).
-
-<br />
 
 ### Configuring the Test Client
 
@@ -126,34 +117,24 @@ The starting point is for applicants to create a configuration file in RESOScrip
 When testing begins, an HTTP request is made to an applicant's given service location with either OAuth2 [Bearer Tokens](https://oauth.net/2/bearer-tokens/) or [Client Credentials](https://oauth.net/2/grant-types/client-credentials/). Both of these authentication strategies allow for data consumption to be machine automated so that additional interaction from a user isn't necessary during the authentication process. As such, the RESO Data Dictionary Commander can be used for automated testing. 
 The metadata request is expected to function according to the OData specification in terms of [request](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#_Toc31358863) and [response](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#_Toc31358882) headers and response formats. RESO specifically uses an [XML version of OData metadata](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752500), which contains an Entity Data Model (EDM) and model definitions, and is often referred to as EDMX.
 
-<br />
-
 ### OData Metadata Validation
 
 #### Syntax Checking
 
 Metadata returned from a RESO Web API server are checked for XML validity as well as validated against Entity Data Model (EDM) and EDMX [definitions published by OASIS](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/schemas/), the creators of the OData specification. If metadata are invalid for any reason, Data Dictionary testing will halt.
 
-<br />
-
 #### Semantic Checking
 
 After metadata syntax has been validated, declared data models are checked for correctness. For example, if a given server declares support for the RESO *Property* resource, then the RESO Commander will look for an OData EntityType definition for *Property*. If the underlying data model is not found, metadata validation will fail with a diagnostic message to help users understand why a given error occurred. Once the model is found, its field and enumeration definitions will be checked for correctness as well.
 Another aspect of semantic checking is ensuring that all models have keys so they can be indexed, meaning that a data request can be made to the server by key. This is a basic requirement for fetching data from a server.
 
-<br />
-
 ### RESO Certification
 
 Several requirements must be met during Data Dictionary testing to ensure conformance with RESO Certification rules.
 
-<br />
-
 #### Conformance with the RESO Standard Data Model
 
 In this step, tests that have been generated from a given adopted RESO Data Dictionary version are run to locate and verify resources, fields, and enumerations contained within a server's metadata. This phase of testing is designed to test that items declared in the metadata using RESO Standard Field Names are consistent with the Data Dictionary definitions for those items.
-
-<br />
 
 #### Resources
 
@@ -161,15 +142,11 @@ Standard Resources MUST be expressed using RESO Standard Resource Names. For ins
 
 For each RESO Standard Resource found, its standard fields and lookups will be verified. Normative resource names for any Standard Resource can be found in the [RESO DDWiki](https://ddwiki.reso.org/display/DDW17/).
 
-<br />
-
 #### Fields
 
 Fields have both [naming](https://docs.google.com/document/d/15DFf9kDX_mlGCJVOch2fztl8W5h-yd18N0_03Sb4HwM/edit#heading=h.194xc45smnwr) and [data type mapping](https://docs.google.com/document/d/15DFf9kDX_mlGCJVOch2fztl8W5h-yd18N0_03Sb4HwM/edit#heading=h.ytsgiaioc8hv) requirements. 
 
 Implementers are allowed to commingle their own fields and data types alongside RESO standard fields, but standard fields MUST match their [Data Dictionary type definition mappings](https://members.reso.org/pages/viewpage.action?pageId=67962918#RCP-WEBAPI-031DataDictionaryRepresentationintheWebAPI-2.6.1DictionaryandTransportTypeMappingsandAttributes).
-
-<br />
 
 #### Standard Field Names
 
@@ -183,8 +160,6 @@ Various techniques are used to find potential matches with Data Dictionary defin
 
 Additional requirements for Standard Fields are [outlined in section on Data Type Mappings](https://docs.google.com/document/d/15DFf9kDX_mlGCJVOch2fztl8W5h-yd18N0_03Sb4HwM/edit#heading=h.ytsgiaioc8hv).
 
-<br />
-
 #### Standard Display Names
 
 **Note:** _RESO Standard Display Names are not being tested at the current time. They had previously been tested but were not meant to have been a standard way to convey information about *which field* *or lookup* is intended at the transport level. [Standard Field Names](https://docs.google.com/document/d/15DFf9kDX_mlGCJVOch2fztl8W5h-yd18N0_03Sb4HwM/edit#heading=h.194xc45smnwr) and [Lookup Values](https://docs.google.com/document/d/15DFf9kDX_mlGCJVOch2fztl8W5h-yd18N0_03Sb4HwM/edit#heading=h.k0yrypywv6ms) MUST be used for this purpose instead._
@@ -193,8 +168,6 @@ There is a proposal in progress in the RESO Data Dictionary and Transport workgr
 
 [There is a MAY specification](https://members.reso.org/display/API2/2.4.8+Annotations) (RESO login required) for both *StandardName* and *MlsName* annotations that supports special characters, since OData fields and enumerations don't allow them. *Vendors may still use existing display name annotations as long as they pass the* [*metadata validation process*](https://docs.google.com/document/d/15DFf9kDX_mlGCJVOch2fztl8W5h-yd18N0_03Sb4HwM/edit#heading=h.evm2d6urqz93)*.*
 
-<br />
-
 #### Lookups
 
 Underlying OData enumerations for Data Dictionary lookups MUST adhere to the naming conventions outlined in the [OData specification](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752675) and map to the correct types, as outlined in the [Data Type Mappings section](https://docs.google.com/document/d/15DFf9kDX_mlGCJVOch2fztl8W5h-yd18N0_03Sb4HwM/edit#heading=h.ytsgiaioc8hv).
@@ -202,8 +175,6 @@ Underlying OData enumerations for Data Dictionary lookups MUST adhere to the nam
 Standard LookupValues are provided [in the Data Dictionary 1.7 Spreadsheet](https://docs.google.com/spreadsheets/d/1SZ0b6T4_lz6ti6qB2Je7NSz_9iNOaV_v9dbfhPwWgXA/edit#gid=585857157&range=B:B). They are not required, but are intended to serve as a guide for those using OData. 
 
 **DEPRECATION NOTICE**: RESO will eventually be deprecating OData `IsFlags` enumerations in favor of the Lookup resource in a future version of the Data Dictionary. This change will come with a major version bump, and perhaps be part of Data Dictionary 2.0, TBD. See [RCP-032](https://members.reso.org/display/RESOWebAPIRCP/RCP+-+WEBAPI-032++Lookup+and+RelatedLookup+Resources+for+Lookup+Metadata) for more information.
-
-<br />
 
 ### Data Type Mappings
 
@@ -223,11 +194,7 @@ Data Dictionary data types shown in the following table are contained in the *Si
 
 Each data type mapping has a corresponding Cucumber BDD acceptance test template that enforces the rules of a given type.
 
-<br />
-
 ### Acceptance Test Templates
-
-<br />
 
 #### Boolean
 
@@ -241,8 +208,6 @@ Boolean values are mapped to the [Edm.Bool](http://docs.oasis-open.org/odata/oda
     Then "AvailabilityDate" MUST be "Date" data type
 ```
 
-<br />
-
 #### Collection
 
 **Note**: *Collections are not yet supported in the Data Dictionary or Web API Specifications for types other than Edm.EnumType. Collections in the Data Dictionary mean expanded resources, which will not be tested until the $expand Endorsement has been created.*
@@ -252,8 +217,6 @@ Collection data types are used in the Data Dictionary to indicate *possible expa
 RESO will not be certifying this data type for related Data Dictionary Resources and until the Expand Endorsement has been created. Vendors MAY use OData $expand functionality on their servers as long as server metadata pass OData validation. 
 
 Standard Relationships have been provided in the adopted [Data Dictionary spreadsheet](https://docs.google.com/spreadsheets/d/1SZ0b6T4_lz6ti6qB2Je7NSz_9iNOaV_v9dbfhPwWgXA/edit#gid=266511010) to and [reference metadata](https://github.com/RESOStandards/web-api-commander/blob/58485cc04f24e464c6c1313d25428d43835d7668/src/main/resources/DDv1.7-StandardAndDisplayNames-20200922210930847.edmx) to guide vendors in the meantime. It's also worth noting that If a property definition for a Collection is nullable, it means that collection members are nullable. If there are no items in a given collection, the field would return an empty collection, but the field itself may not be null (by the OData specification).
-
-<br />
 
 #### Date
 
@@ -266,8 +229,6 @@ Date data types use the OData [Edm.Date](http://docs.oasis-open.org/odata/odata/
     When "AvailabilityDate" exists in the "Property" metadata
     Then "AvailabilityDate" MUST be "Date" data type
 ```
-
-<br />
 
 #### Number
 
@@ -309,8 +270,6 @@ If the vendor declares Precision and Scale attributes, they SHOULD match those d
 
 **Note:** *The Data Dictionary contains* [*references to Length and Precision*](https://ddwiki.reso.org/display/DDW17/Data+Dictionary+Terms+and+Meta+Definitions#DataDictionaryTermsandMetaDefinitions-SugMaxLength) *which have been found to be inaccurate with respect to standard definitions of decimal numbers. It uses Length and Precision to mean Precision and Scale, respectively. These items have been corrected in the code generation for decimal acceptance tests.*
 
-<br />
-
 ##### String
 
 String values use the OData [Edm.String](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752644) data type. These strings represent a sequence of UTF-8 characters. String data types MAY specify a length attribute that specifies the length of a string a given server supports. The length property is not required by OData and may be omitted.
@@ -327,8 +286,6 @@ RESO provides recommended best practices for these lengths, and applicants will 
     And "AboveGradeFinishedArea" scale SHOULD be equal to the RESO Suggested Max Scale of 2
 ```
 
-<br />
-
 #### String List, Single
 
 The current RESO Web API specification uses the OData [Edm.EnumType](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752566) for single enumerations. As such, Data Dictionary items use this data type as well.
@@ -343,8 +300,6 @@ These items are similar to fields in that they MUST follow [OData field naming c
     Then "AboveGradeFinishedAreaSource" MUST be "Single Enumeration" data type
 ```
 
-<br />
-
 #### String List, Multi
 
 As of Web API 1.0.2 Core, there are two formats allowed for String List, Multi. 
@@ -353,15 +308,13 @@ As of Web API 1.0.2 Core, there are two formats allowed for String List, Multi.
 
 The Web API Server Core 1.0.2 specification [outlines the use](https://members.reso.org/display/API2/2.4.10+Multi-Valued+Lookups) of the OData [Edm.EnumType](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752566) data type with the [IsFlags="true"](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752569) attribute set to signify that a given field supports multivalued enumerations. Applicants using this format will still be able to be certified.
 
-<br />
-
 #### Collection(Edm.EnumType)
 
 As there are limitations to the IsFlags approach in cases where multi-select items contain more than 64 distinct values, support for Collections(Edm.EnumType) was added to the [Data Dictionary Type Mappings](https://docs.google.com/document/d/15DFf9kDX_mlGCJVOch2fztl8W5h-yd18N0_03Sb4HwM/edit#heading=h.ytsgiaioc8hv) and backported to the Web API 1.0.2 Core specification to be used instead. 
 
 The following sample test covers both representations:
 
-<u>Sample BDD Test</u>
+**Sample Test**
 
 ```gherkin
 Scenario: CommonWalls
@@ -369,13 +322,11 @@ Scenario: CommonWalls
     Then "CommonWalls" MUST be "Multiple Enumeration" data type
 ```
 
-<br />
-
 #### Timestamp
 
 Timestamps are expected to use the OData [edm:DateTimeOffset](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752637) data type. This represents an [ISO 8601 compliant](https://en.wikipedia.org/wiki/ISO_8601) date that includes support for both fractional seconds and time zones. The edm:DateTimeOffset doesn't have any additional length, precision, or scale attributes. Data conveyed using this format is expected to match the [date timestamp data type in the W3C specification](https://www.w3.org/TR/xmlschema11-2/#dateTimeStamp).
 
-<u>Sample BDD Test</u>
+**Sample Test**
 
 ```gherkin
   Scenario: ModificationTimestamp
@@ -390,8 +341,6 @@ Timestamps are expected to use the OData [edm:DateTimeOffset](http://docs.oasis-
     Then "ModificationTimestamp" MUST be "Timestamp" data type
 ```
 
-<br />
-
 ### Lookups Resource and Location-Based Fields
 
 After further discussion in the Transport and Certification subgroups, certain lookups will allowed to be Edm.String for String List, Single, or Collection(Edm.String) for String List, Multi, pending further discussion of Lookups, as outlined in [RCP-032](https://members.reso.org/display/RESOWebAPIRCP/RCP+-+WEBAPI-032++Lookups+Resource+for+Enumeration+Metadata). 
@@ -400,13 +349,9 @@ Note that RCP-032 started off as being specifically for location-based lookups, 
 
 Testing requirements will be added pending approval of a Lookups Resource by the Certification Subgroup and Transport Workgroup. This has also been noted in the section on [Data Type Mappings](https://docs.google.com/document/d/15DFf9kDX_mlGCJVOch2fztl8W5h-yd18N0_03Sb4HwM/edit#heading=h.ytsgiaioc8hv). Depending on the progress in the groups, the allowance for string-based lookups may precede testing rules for a general Lookups resource.
 
-<br />
-
 ### Additional References
 
 The current version of the generated BDD acceptance tests from which the Sample BDD Tests above were taken from [may be found here](https://github.com/RESOStandards/web-api-commander/blob/58485cc04f24e464c6c1313d25428d43835d7668/src/main/java/org/reso/certification/features/data-dictionary/v1-7-0/). Note that this link will be updated once the Data Dictionary 1.7 testing tool codebase has been merged into the main branch.
-
-<br />
 
 ### Additional Compliance Checking
 
@@ -420,8 +365,6 @@ Informational messages will be generated in cases where potential matches with a
 
 Some of the techniques used are described in the following sections.
 
-<br />
-
 #### Synonym Matching
 
 The metadata for a given server is checked for synonyms at the resource and field level.
@@ -431,8 +374,6 @@ Synonyms MUST NOT be used at the resource or field level. If a synonym of these 
 Examples of Synonym Checking are shown in the [sample Timestamp testing rules](https://docs.google.com/document/d/15DFf9kDX_mlGCJVOch2fztl8W5h-yd18N0_03Sb4HwM/edit#heading=h.330xrl44fu5t). 
 
 **Note**: *This feature is complete and will be included in the MVP.***12/29/2020:** *This feature previously covered lookups but they will not be checked in DD 1.7, as discussed in the Certification and Transport groups. Heuristics will be applied for Data Dictionary resource and field names.* [*GitHub issue*](https://github.com/RESOStandards/web-api-commander/issues/37)*.*
-
-<br />
 
 #### Similar Name Matching
 
@@ -448,8 +389,6 @@ Applicants are expected to provide a list of corrections [in a configuration fil
 
 **12/29/2020 Note**: *This feature is complete and will be included in the MVP. This feature previously covered lookups but they will not be checked in DD 1.7, as discussed in the Certification and Transport groups. Heuristics will be applied for Data Dictionary resource and field names.* [*GitHub issue*](https://github.com/RESOStandards/web-api-commander/issues/37)*.*
 
-<br />
-
 #### Data-Driven Matching
 
 RESO certification testing has progressively become more prescriptive and proscriptive over time. Exceptions for nonadherence to Data Dictionary rules were previously granted when an applicant filed a Supplemental Additional Information (SAI) request with RESO.
@@ -458,13 +397,9 @@ While SAIs are no longer part of the RESO Certification process, information tha
 
 **Note**: *This feature* ***will not*** *be included in the MVP. It will be released as part of a later enhancement.*
 
-<br />
-
 ## Certification Workflow
 
 The Certification workflow has been optimized around self-assessment prior to certification.
-
-<br />
 
 ### Self Assessment
 
@@ -474,32 +409,23 @@ Guides exist to help them with the evaluation process **TODO:** Create guide.
 
 Any questions regarding automated testing tools and revised certification procedures should be directed to [Joshua Darnell](mailto:josh@reso.org). For any other questions, or to start the certification process please contact [RESO Certification](mailto:certification@reso.org).
 
-<br />
-
 ### Application
 
 Those seeking RESO Certification will apply with the Membership Department prior to having their application reviewed by the Certification Department. Once an application has been processed, RESO will confirm the outcome of the automated testing tools using a RESOScript provided by the vendor, as described in the next section.
-
-<br />
 
 ### Certification Issuance
 
 A [RESOScript file is required for review](https://docs.google.com/document/d/15DFf9kDX_mlGCJVOch2fztl8W5h-yd18N0_03Sb4HwM/edit#heading=h.ymhjhbfn00gj). This file should contain credentials and the service location of the Web API Server instance hosting the Data Dictionary metadata to be tested.
 
-<br />
-
 ## Reporting
-<br />
 
 ### Data Collection
 
-Data CollectionMetadata for a given server instance will be consumed by the RESO Commander in the [OData XML CSDL metadata format](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/csprd02/odata-csdl-xml-v4.01-csprd02.html#_Toc486522889) but is not stored locally. Data analysis is done in memory and discarded upon termination of the application so applicants' source code is not retained.
+Metadata for a given server instance will be consumed by the RESO Commander in the [OData XML CSDL metadata format](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/csprd02/odata-csdl-xml-v4.01-csprd02.html#_Toc486522889) but is not stored locally. Data analysis is done in memory and discarded upon termination of the application so applicants' source code is not retained.
 
 A report will be generated when a certification application is processed that will contain statistics about what was found on a server when the testing tool was run. The report will be used to help the RESO Certification Department and the applicant evaluate results. The report will be emailed to the applicant and kept on file at RESO as proof of certification.
 
 The RESO Commander will also produce summary test statistics in the JSON format with the results of each test step and include relevant data such as Resources, Fields, and Lookups found during testing. These reports will be uploaded into a RESO data collection service for the purpose of analytics.
-
-<br />
 
 ### Data Collection Pipeline
 
@@ -513,8 +439,6 @@ Once test results are stored, they are sent to a collector service for analysis.
 
 While the Collector Service and ancillary reports will be delivered after the MVP testing tool, test data will be available from an API so that analytics may be shown on the RESO Certification Map during the initial release of the Data Dictionary testing tool.
 
-<br />
-
 ### RESO Certification Map
 
 Certification results will be published to the [RESO Certification Map](https://www.reso.org/certification/), which shows information about certified applicants in a geographical manner.
@@ -524,8 +448,6 @@ These information includes, but is not limited to (1) a report showing the RESO 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/88680702/137548003-2d36d6db-f0a0-4497-a630-9965ee05619f.jpg" />
 </p>
-
-<br />
 
 ### RESO Data Compatibility Report
 
@@ -537,13 +459,9 @@ While the reporting format has yet to be decided, conceptually the tool will fin
   <img src="https://user-images.githubusercontent.com/88680702/137549347-be6b7648-f044-44aa-a86a-1c78a45c7690.jpg" />
 </p>
 
-<br />
-
 ### RESO Analytics Dashboard
 
 An analytics dashboard will be populated with testing data, and will be driven by [Kibana](https://www.elastic.co/kibana), a popular real-time analytics tool. This dashboard will be available to RESO staff and workgroup chairs for planning purposes and to provide information regarding adoption of RESO standards.
-
-<br />
 
 ## Display of Information on RESO Website
 
@@ -557,8 +475,6 @@ For example:
 
 * For each discovered enumeration, how many implementations have that enumeration?
 
-<br />
-
 ### Data Retention Policies
 
 Applicants and certification recipients have the right to be forgotten. 
@@ -567,23 +483,15 @@ At the time of writing, the Data Dictionary testing tool does not store any info
 
 RESO will be retrieving and saving server metadata in XML (EDMX) format at the time of Data Dictionary Certification for further analysis and to show what was retrieved from the server at the time of testing in case future questions arise. Metadata will be stored securely in the cloud and not available publicly. Information about resources, fields, and lookups found in the metadata during certification will be created as a derivative report. 
 
-<br />
-
 ## Feature Requests
 
 Feature requests can be requested as [issues on the RESO Commander's GitHub project](https://github.com/RESOStandards/web-api-commander/issues) or by contacting [the RESO development team.](mailto:dev@reso.org).
-
-<br />
-
 
 ## Support
 
 To apply for certification, or for help with an existing application, please contact [RESO Certification](mailto:certification@reso.org).
 
 For questions about revised certification procedures or for help or questions about RESO's automated testing tools, please contact RESO's [dev support](mailto:dev@reso.org).
-
-<br />
-
 
 ## Contributors
 
