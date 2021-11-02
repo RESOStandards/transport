@@ -9,10 +9,13 @@
 
 [Link to Original Document](https://docs.google.com/document/d/1hNMqmDdK0C31tKrfdZnHIk1WmJPbAuluV_eJbErddCo/edit)
 
+<br />
+
 # RESO End User License Agreement (EULA)
 
 This End User License Agreement (the "EULA") is entered into by and between the Real Estate Standards Organization ("RESO") and the person or entity ("End User") that is downloading or otherwise obtaining the product associated with this EULA ("RESO Product"). This EULA governs End Users use of the RESO Product and End User agrees to the terms of this EULA by downloading or otherwise obtaining or using the RESO Product.
 
+<br />
 
 # Table of Contents
 - [Summary of Proposal](#summary-of-proposal)
@@ -23,9 +26,9 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 - [Testing Framework](#testing-framework)
 - [Feature Requests](#feature-requests)
 
+<br />
 
 # Summary of Proposal
-
 
 
 ## Initial Release: RESO Web API IDX Payloads (Q1 2021)
@@ -49,7 +52,7 @@ Web API Core 1.0.2 certification is also required for MLSs prior to Data Diction
 * Will extend Payloads testing support to non-OData Web API data sources via [RCP-022](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2254275316/RCP+-+WEBAPI-022+Lightweight+Autofill+Object) and [RCP-025](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2259388340/RCP+-+WEBAPI-025+Lightweight+Autofill+Schema). 
 * Currently in the Specification and Prototyping Phase. Seeking volunteers.
 
-
+<br />
 
 # Purpose
 
@@ -61,7 +64,7 @@ To address this, random sampling is used both to ensure that a) all mandatory re
 
 One of the primary goals of this project is that data providers can run the testing tools themselves on their own servers to see how they perform before applying for Payloads endorsements.
 
-
+<br />
 
 # Testing Methodology
 
@@ -139,7 +142,7 @@ The following events occurred during certification:
 * **WARN** - ListPrice was found 80% of the time using the RESO user and 50% of the time using the IDX user. Warn if the numbers are different for a given field
 * **FAIL** - ModificationTimestamp was found 10% of the time for the IDX user but is required. Therefore, IDX Payloads certification fails.
 
-
+<br />
 
 # Reporting
 
@@ -182,14 +185,13 @@ For example:
 * For each field in a given RESO Payload, how often are data in that field, on average?
 
   
-
 ## Data Retention Policies
 
 Applicants and certification recipients have the right to be forgotten.
 
 Queries used during testing will be stored in RESOScript files that are automatically generated for the purposes of testing and sharing results with the applicant to confirm. These queries will contain key data but data retrieved during sampling will not be stored.
 
-
+<br />
 
 # Certification Workflow
 
@@ -221,7 +223,7 @@ In both the [Metadata and Data Dictionary Validation](https://docs.google.com/do
 
 RESO MAY routinely retest applicants with these credentials without prior notice. If the credentials are found to be invalid or expired, the applicant is expected to provide new credentials upon request within five business days.
 
-
+<br />
 
 # Testing Framework
 
@@ -237,20 +239,20 @@ A command-line interface has been provided during the initial development phase 
 
 A graphical user interface (GUI) is also available through popular and free Integrated Development Environment (IDE) plugins for [IntelliJ](https://www.jetbrains.com/help/idea/enabling-cucumber-support-in-project.html) and [Eclipse](https://cucumber.github.io/cucumber-eclipse/). IDEs provide a superior testing platform, as they provide better informational messages and are able to run and debug the entire test suite as well as a given test individually. The availability of plugins saves significant time in testing, development, and certification. The level of community support is one of the reasons Cucumber was chosen as a testing platform.
 
-
+<br />
 
 # Feature Requests
 
 Feature requests can be requested as [issues on the RESO Commander’s GitHub project](https://github.com/RESOStandards/web-api-commander/issues), or by contacting [dev@reso.org](mailto:dev@reso.org) or [certification@reso.org](mailto:certification@reso.org).
 
-
+<br />
 
 # Support 
 
 Certification support will be provided by [certification@reso.org](mailto:certification@reso.org).
 Tool support is provided by [dev@reso.org](mailto:dev@reso.org).
 
-
+<br />
 
 # Contributors
 
