@@ -1,19 +1,19 @@
 # RESO Data Dictionary Endorsement
-**Version**: 1.7.0+ 
+|     |     |
+| --- | --- |
+| **Version** | 1.7.0 |
+| **Submitted By** | [Joshua Darnell](mailto:josh@reso.org) |
+| **Written** | June 2020 |
+| **Ratified** | December 2020 |
+| **Related RCPs** | [Web API Core 2.0.0](https://github.com/RESOStandards/reso-transport-specifications/blob/main/WEB-API-CORE.md) |
 
-**Web API Version**: Core 2.0.0+
-
-**Written**: June 2020
-
-**Ratified**: December 2020
-
-<br />
+<br /><br />
 
 # RESO End User License Agreement (EULA)
 
 This End User License Agreement (the "EULA") is entered into by and between the Real Estate Standards Organization ("RESO") and the person or entity ("End User") that is downloading or otherwise obtaining the product associated with this EULA ("RESO Product"). This EULA governs End Users use of the RESO Product and End User agrees to the terms of this EULA by downloading or otherwise obtaining or using the RESO Product.
 
-<br />
+<br /><br />
 
 # Table of Contents
 - [Summary of Changes](#summary-of-changes)
@@ -21,12 +21,12 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 - [Section 1: Purpose](#section-1-purpose)
 - [Section 2: Specification](#section-2-specification)
 - [Section 3: Certification](#section-3-certification)
-- [Section 4: Authors](#section-4-authors)
+- [Section 4: Contributors](#section-4-contributors)
 - [Section 5: References](#section-5-references)
 - [Section 6: Appendices](#section-6-appendices)
 - [Section 7: License](#section-7-license)
 
-<br />
+<br /><br />
 
 # Summary of Changes
 
@@ -37,14 +37,14 @@ A summary of the changes from the previous testing rules is as follows:
 * **IDX Payload Nomenclature**: Previously, terminology included _IDX_Must_, _IDX_Optional_, etc., which have all been consolidated under the IDX label. In general, Payloads have been streamlined and now [each field indicates which payloads it belongs to](https://docs.google.com/spreadsheets/d/1SZ0b6T4_lz6ti6qB2Je7NSz_9iNOaV_v9dbfhPwWgXA/edit#gid=16571180&range=R:R) in a binary fashion, such as *IDX* or *BBO*. 
 * **Data Sampling**: As of August 31, 2021, data sampling is also part of the Data Dictionary 1.7 Endorsement to ensure that what's available on a given server matches what's advertised and that the data conforms to the Data Dictionary specification, where applicable. 
 
-<br />
+<br /><br />
 
 # Introduction
 The RESO Data Dictionary defines the set of data elements available within RESO's domain. These consist of _resources_, _fields_, and _enumerations_, also known as _lookups_.
 
 This document outlines what the Data Dictionary is and how it maps to the RESO Web API transport layer.
 
-<br />
+<br /><br />
 
 # Section 1: Purpose
 The primary goal of the RESO Data Dictionary is interoperability through the consistent use of standard data elements. 
@@ -53,7 +53,7 @@ While the Web API Server specification ensures that servers can talk to each oth
 
 The point of the RESO Data Dictionary is to give data consumers and producers a common language to exchange data with.
 
-<br />
+<br /><br />
 
 # Section 2: Specification
 ## Overview 
@@ -71,7 +71,7 @@ This worksheet is divided into three main sections:
 * **Lookup Fields and Values**: this sheet is a one-to-many collection of all the lookups defined in the Data Dictionary, referred to by their "Lookup Field" (which is really their grouping). There are two kinds of fields that use these lookups from the other resource sheets, those with Simple Data Types of _String List, Single_ and _String List, Multi_.
 * **Standard Relationships**: define nested relationships a given resource might have. These relationships affect a payload's data shape when related resources are joined together. These can either be one-to-one relationships where a single item is expanded into another, such as the case of Member expanded into Property as BuyerAgent, or they can be one-to-many relationships such as Media expanded into a Property record to show all of a given listing's photos. 
 
-<br />
+<br /><br />
 
 # Section 3: Certification
 [Link to Original Document](https://docs.google.com/document/d/15DFf9kDX_mlGCJVOch2fztl8W5h-yd18N0_03Sb4HwM/edit)
@@ -182,7 +182,7 @@ The following mappings apply to the RESO Data Dictionary and Web API specificati
 Data Dictionary data types shown in the following table are contained in the *SimpleDataType* column of the adopted Data Dictionary 1.7 spreadsheet, for instance [those for the Property Resource](https://docs.google.com/spreadsheets/d/1SZ0b6T4_lz6ti6qB2Je7NSz_9iNOaV_v9dbfhPwWgXA/edit#gid=16571180&range=E:E).
 
 | Data Dictionary (1.6+) | Web API Core (1.0.2+)                                        |
-| :--------------------- | :----------------------------------------------------------- |
+| ---------------------- | ------------------------------------------------------------ |
 | Boolean                | Edm.Bool                                                     |
 | Collection             | Related Resource Expansion, e.g. PropertyRooms or Units expanded into the Property resource. **Requires $expand Endorsement.** |
 | Date                   | Edm.Date                                                     |
@@ -470,9 +470,7 @@ RESO may use anonymous aggregates collected during the certification process for
 For example:
 
 * For each discovered resource, how many implementations have that resource?
-
 * For each discovered field, how many implementations have that field?
-
 * For each discovered enumeration, how many implementations have that enumeration?
 
 ### Data Retention Policies
@@ -493,16 +491,49 @@ To apply for certification, or for help with an existing application, please con
 
 For questions about revised certification procedures or for help or questions about RESO's automated testing tools, please contact RESO's [dev support](mailto:dev@reso.org).
 
-## Contributors
+<br /><br />
+
+# Section 4. Contributors
+This document was written by [Joshua Darnell](mailto:josh@reso.org).
 
 Thanks to the following contributors for their help with this project:
 
-* Sergio Del Rio
-* Eric Finlay
-* Dylan Gmyrek
-* Rob Larson
-* Paul Stusiak
+| Contributor | Company |
+| --- | --- |
+| Sergio Del Rio | Templates for Business, Inc. |
+| Eric Finlay | Zillow Group |
+| Dylan Gmyrek | FBS |
+| Rob Larson | Larson Consulting, LLC |
+| Paul Stusiak | Falcon Technologies Corp. |
 
-If you would like to contribute, please contact [RESO's developers](mailto:dev@reso.org). This could mean anything from QA or beta testing to technical writing to doing code reviews or writing code.
+Many thanks to those who contributed to the RESO Data Dictionary specification, including volunteers from the RESO Data Dictionary and Transport Workgroups.
 
-Also, thanks to FBS for donating prototypes of their BDD acceptance tests to be used as models, and to the Austin Board of REALTORS® for donating RESO Web API reference servers.
+
+If you would like to contribute, please contact [RESO Development](mailto:dev@reso.org). This could mean anything from QA or beta testing to technical writing to doing code reviews or writing code.
+
+<br /><br />
+
+# Section 5: References
+
+Please see the following references for more information regarding topics covered in this document:
+* [Data Dictionary 1.7 Wiki](https://ddwiki.reso.org/display/DDW17/)
+* [Data Dictionary 1.7 Reference Sheet](https://docs.google.com/spreadsheets/d/1SZ0b6T4_lz6ti6qB2Je7NSz_9iNOaV_v9dbfhPwWgXA/edit?usp=sharing)
+* [RESO Web API Core Specification](https://github.com/RESOStandards/reso-transport-specifications/blob/main/WEB-API-CORE.md)
+* [RESO Common Schema Reference Metadata](https://github.com/RESOStandards/web-api-commander/blob/master/src/main/resources/RESODataDictionary-1.7.xml)
+* [RESO Common Schema Open API Specification](https://app.swaggerhub.com/apis/darnjo/RESO-Web-API-Common-Schema/1.7)
+
+<br /><br />
+
+# Section 6: Appendices
+
+The following RCPs are related to Data Dictionary 2.0:
+* [RCP-031 - Data Dictionary Representation in the RESO Web API](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275149854/RCP+-+WEBAPI-031+Data+Dictionary+Representation+in+the+Web+API)
+* [RCP-032 - Lookup Resource](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275152879)
+* [RCP-033 - Field Resource](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/7996473441)
+
+<br /><br />
+
+# Section 7: License
+This document is covered by the [RESO EULA](https://www.reso.org/eula/).
+
+Please [contact RESO](mailto:info@reso.org) if you have any questions.
