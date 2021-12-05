@@ -8,8 +8,6 @@ RESO Endorsements use [Semantic Versioning](https://semver.org/).
 # RESO Web API
 The following proposals use the RESO Web API as a transport mechansim.
 
-<br />
-
 ## [Data Dictionary Endorsement](./DATA_DICTIONARY.md)
 **Current Version**: 1.7
 
