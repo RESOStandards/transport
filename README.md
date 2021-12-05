@@ -5,8 +5,6 @@ Specifications are divided into modular endorsements, each of which are offered 
 
 RESO Endorsements use [Semantic Versioning](https://semver.org/).
 
-<br /><br />
-
 # RESO Web API
 The following proposals use the RESO Web API as a transport mechansim.
 
@@ -17,36 +15,29 @@ The following proposals use the RESO Web API as a transport mechansim.
 
 The Data Dictionary endorsement defines models for use in the RESO domain. These include Resources, Fields, Lookups, and Relationships between Resources.
 
-<br />
-
 ## [Web API Core Endorsement](./WEB-API-CORE.md)
 
 **Current Version**: 2.0.0
 
 The Web API Core endorsement defines the primary functionality RESO Web API servers are expected to have in order to provide both replication and live query support.
 
-<br />
-
 ## [Web API Add/Edit Endorsement](./WEB-API-ADD-EDIT.md)
 **In Progress: Cert Subgroup**
 
 The Web API Add/Edit endorsement defines how to Create, Update, and Delete data in the RESO Web API. 
-
-<br />
 
 ## [Web API Expand Endorsement](./WEB-API-EXPAND.md)
 **In Progress: Cert Subgroup**
 
 The Web API Expand endorsement outlines requirements for those who want to use OData `$expand` functionality to nest resources within others.
 
-<br />
-
 ## [Web API Validation Expression Endorsement](./WEB-API-VALIDATION-EXPRESSION.md)
 **Backlog**
 
 Web API Validation Expressions allow for the transport of machine-executable business rules using the [RETS 019 Validation Expression grammar](https://github.com/darnjo/rcp019).
 
-<br /><br />
+
+<br />
 
 # Related Documents
 The following documents may also be helpful:
