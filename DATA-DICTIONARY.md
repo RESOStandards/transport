@@ -1,6 +1,7 @@
 # RESO Data Dictionary Endorsement
-| Version | 1.7 |
+|     |     |
 | --- | --- |
+| **Version** | 1.7 |
 | **Submitter** | [Joshua Darnell](mailto:josh@reso.org) |
 | **Written** | June 2020 |
 | **Ratified** | December 2020 |
@@ -69,8 +70,6 @@ This worksheet is divided into three main sections:
 * **Resource Sheets**: define each given resource in the Data Dictionary, such as Property, Member, Office, or Media. These contain field definitions, which have data types and other attributes.
 * **Lookup Fields and Values**: this sheet is a one-to-many collection of all the lookups defined in the Data Dictionary, referred to by their "Lookup Field" (which is really their grouping). There are two kinds of fields that use these lookups from the other resource sheets, those with Simple Data Types of _String List, Single_ and _String List, Multi_.
 * **Standard Relationships**: define nested relationships a given resource might have. These relationships affect a payload's data shape when related resources are joined together. These can either be one-to-one relationships where a single item is expanded into another, such as the case of Member expanded into Property as BuyerAgent, or they can be one-to-many relationships such as Media expanded into a Property record to show all of a given listing's photos. 
-
-<br />
 
 ## Section 2.2: `Lookup` Resource for Enumeration Metadata
 
