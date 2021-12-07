@@ -124,14 +124,12 @@ Advertised lookups that cannot be retrieved won't be counted as part of what was
 
 Providers **MAY** support other queries on this resource, such as filtering by `LookupName`.
 
-<br />
-
 ### Example: GET Lookups by ModificationTimestamp 
 The following example shows retrieving a page of records, as determined by the provider, using a `ModificationTimestamp` query using `$orderby=ModificationTimestamp desc`.
 ```
 GET /Lookup?$filter=ModificationTimestamp lt 2020-08-01T00:00:00Z&$orderby=ModificationTimestamp desc
 ```
-```json
+```
 {
   "value": [{
     "LookupKey": "CDE125",
@@ -157,14 +155,12 @@ GET /Lookup?$filter=ModificationTimestamp lt 2020-08-01T00:00:00Z&$orderby=Modif
 
 If paging were needed, the next query would ask for records with a `ModificationTimestamp` of less than any found on the current page.
 
-<br />
-
 ### Example: GET Lookups by ModificationTimestamp with `$count=true`
 The following example shows retrieving a page of records, as determined by the provider, using a `ModificationTimestamp` query using `$orderby=ModificationTimestamp desc`.
 ```
 GET /Lookup?$count=true&$filter=ModificationTimestamp lt 2020-08-01T00:00:00Z&$orderby=ModificationTimestamp desc
 ```
-```json
+```
 {
   "@odata.count": 3,
   "value": [{
@@ -189,15 +185,13 @@ GET /Lookup?$count=true&$filter=ModificationTimestamp lt 2020-08-01T00:00:00Z&$o
 }
 ```
 
-<br />
-
 ### Example: GET Count of Available Lookups without $filter
 Providers MUST support the OData `$count=true` parameter. This can be used in conjunction with `$top=0` to provide a count without returning any values. 
 
 ```
 GET /Lookup?$top=0&$count=true
 ```
-```json
+```
 {
   "@odata.count": 3,
   "value": []
@@ -249,7 +243,7 @@ When using the `Lookup` resource, the values in the payload response will be the
 ```
 GET /Property?$top=1 
 ```
-```json
+```
 {
   "value": [
     {
@@ -592,8 +586,6 @@ Edit distance matches within the given threshold will trigger an error in the Da
 Due to the probabilistic nature of "fuzzy matching," some false negatives may be generated when local terminology too closely resembles RESO Standard items. 
 
 Applicants are expected to provide a list of corrections [in a configuration file](https://github.com/RESOStandards/web-api-commander/blob/58485cc04f24e464c6c1313d25428d43835d7668/src/main/resources/ignored.json) they will submit at the time of certification to address any cases that arise. These corrections will be added to the testing tool in order to ensure that once a particular case has been addressed, it won't be flagged again in other cases.
-
-**12/29/2020 Note**: *This feature is complete and will be included in the MVP. This feature previously covered lookups but they will not be checked in DD 1.7, as discussed in the Certification and Transport groups. Heuristics will be applied for Data Dictionary resource and field names.* [*GitHub issue*](https://github.com/RESOStandards/web-api-commander/issues/37)*.*
 
 #### Data-Driven Matching
 
