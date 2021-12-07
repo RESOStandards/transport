@@ -73,8 +73,6 @@ This worksheet is divided into three main sections:
 
 ## Section 2.2: `Lookup` Resource for Enumeration Metadata
 
-### Overview
-
 This section defines a RESO Data Dictionary resource called `Lookup` that can be used to convey metadata about the enumerations available on a given server. 
 
 In systems that cover large geographic areas, the amount of metadata can grow quite large. This is due to the fact that there are lookups for cities, counties, subdivisions, etc. for each of the areas a given vendor covers, making it impractical to deliver this information through a static OData XML metadata document.
@@ -135,7 +133,6 @@ GET /Lookup?$filter=ModificationTimestamp lt 2020-08-01T00:00:00Z&$orderby=Modif
 ```
 ```json
 {
-  "@odata.context": "https://your.resoapi.com/Lookup?$filter=ModificationTimestamp lt 2020-08-01T00:00:00Z$orderby=ModificationTimestamp desc",
   "value": [{
     "LookupKey": "CDE125",
     "LookupName": "CountyOrParish",
@@ -162,14 +159,13 @@ If paging were needed, the next query would ask for records with a `Modification
 
 <br />
 
-### Example: GET Lookups by ModificationTimestamp with $count=true
+### Example: GET Lookups by ModificationTimestamp with `$count=true`
 The following example shows retrieving a page of records, as determined by the provider, using a `ModificationTimestamp` query using `$orderby=ModificationTimestamp desc`.
 ```
 GET /Lookup?$count=true&$filter=ModificationTimestamp lt 2020-08-01T00:00:00Z&$orderby=ModificationTimestamp desc
 ```
 ```json
 {
-  "@odata.context": "https://your.resoapi.com/Lookup?$count=true&$filter=ModificationTimestamp lt 2020-08-01T00:00:00Z&$orderby=ModificationTimestamp desc",
   "@odata.count": 3,
   "value": [{
     "LookupKey": "CDE125",
@@ -203,7 +199,6 @@ GET /Lookup?$top=0&$count=true
 ```
 ```json
 {
-  "@odata.context":  "https://your.resoapi.com/Lookup?$top=0&$count=true",
   "@odata.count": 3,
   "value": []
 }
@@ -228,7 +223,7 @@ This section shows how the `Lookup` resource might be used in conjunction with d
             <Annotation Term="RESO.OData.Metadata.LookupName" String="StandardStatus" />  
         </Property>
         <Property Name="AccessibilityFeatures" Type="Collection(Edm.String)">
-            <Annotation Term="RESO.OData.Metadata.LookupName" String="ExteriorFeatures" />  
+            <Annotation Term="RESO.OData.Metadata.LookupName" String="AccessibilityFeatures" />  
         </Property>
         <Property Name="ModificationTimestamp" Precision="27" Type="Edm.DateTimeOffset"/>
       </EntityType>
@@ -256,7 +251,6 @@ GET /Property?$top=1
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Property?$top=1",
   "value": [
     {
       "ListingKey": "abc123",
@@ -302,10 +296,7 @@ Nonstandard or "local" data elements are also allowed, provided Data Dictionary 
 Data Dictionary Certification is provided by the [RESO Commander](https://github.com/RESOStandards/web-api-commander). 
 The RESO Commander is an open source, cross-platform Java library created by RESO that uses established community libraries, such as the Apache Olingo OData Client, XML parsers, and JSON Schema Validators, to provide a testing API.
 
-
-Acceptance tests define the requirements applicants are expected to meet in order to achieve certification. Data Dictionary acceptance tests are written in a high-level language (DSL) called [Gherkin](https://cucumber.io/docs/gherkin/reference/). This is part of a [Behavior Driven Development](https://en.wikipedia.org/wiki/Behavior-driven_development) (BDD) platform called [Cucumber](https://cucumber.io/), which allows for the expression of testing workflows using a natural language that is intended to be accessible to business analysts and QA testers in addition to programmers. 
-
-Acceptance tests are automatically generated from the adopted Data Dictionary spreadsheet for each given version of the specification, and can target any version of the Data Dictionary from 1.0 onwards. 
+Acceptance tests define the requirements applicants are expected to meet in order to achieve certification. Data Dictionary acceptance tests are written in a high-level language (DSL) called [Gherkin](https://cucumber.io/docs/gherkin/reference/). This is part of a [Behavior Driven Development](https://en.wikipedia.org/wiki/Behavior-driven_development) (BDD) platform called [Cucumber](https://cucumber.io/), which allows for the expression of testing workflows using a natural language that is intended to be accessible to business analysts and QA testers in addition to programmers. Tests are automatically generated from the adopted Data Dictionary spreadsheet for each given version of the specification, and can target any version of the Data Dictionary from 1.0 onwards. 
 
 The benefit of this strategy is that when a new Data Dictionary version is ratified, the tests may be generated and testing can begin right away, significantly reducing tool development time and adoption of the standard.
 
@@ -320,8 +311,6 @@ RESO Data Dictionary certification is based on adherence to: a) Resource, Field,
 ### Configuring the Test Client
 
 The starting point is for applicants to create a configuration file in RESOScript (XML) format which contains credentials and a server's RESO Web API endpoint. A sample RESOScript file and instructions for how to use it will be provided with the initial release of the testing tool.
-
-<br />
 
 ### Metadata Request Using RESO Standard Authentication
 
@@ -383,7 +372,7 @@ There is a proposal in progress in the RESO Data Dictionary and Transport workgr
 
 Underlying OData enumerations for Data Dictionary lookups MUST adhere to the naming conventions outlined in the [OData specification](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752675) and map to the correct types, as outlined in the [Data Type Mappings section](https://docs.google.com/document/d/15DFf9kDX_mlGCJVOch2fztl8W5h-yd18N0_03Sb4HwM/edit#heading=h.ytsgiaioc8hv).
 
-Standard LookupValues are provided [in the Data Dictionary 1.7 Spreadsheet](https://docs.google.com/spreadsheets/d/1SZ0b6T4_lz6ti6qB2Je7NSz_9iNOaV_v9dbfhPwWgXA/edit#gid=585857157&range=B:B). They are not required, but are intended to serve as a guide for those using OData. 
+Standard Lookup Values are provided [in the Data Dictionary 1.7 Spreadsheet](https://docs.google.com/spreadsheets/d/1SZ0b6T4_lz6ti6qB2Je7NSz_9iNOaV_v9dbfhPwWgXA/edit#gid=585857157&range=B:B). They are not required, but are intended to serve as a guide for those using OData. 
 
 **DEPRECATION NOTICE**: RESO will eventually be deprecating OData `IsFlags` enumerations in favor of the Lookup resource in a future version of the Data Dictionary. This change will come with a major version bump, and perhaps be part of Data Dictionary 2.0, TBD. See [RCP-032](https://members.reso.org/display/RESOWebAPIRCP/RCP+-+WEBAPI-032++Lookup+and+RelatedLookup+Resources+for+Lookup+Metadata) for more information.
 
@@ -556,12 +545,12 @@ Timestamps are expected to use the OData [edm:DateTimeOffset](http://docs.oasis-
 RESO supports use of a Data Dictionary resource in order to advertise lookup metadata. This has the advantage of providing human friendly lookup values as well as the ability to more easily replicate large sets of enumerations, such as subdivisions or cities.
 
 The following testing rules will be used during RESO Certification:
-* Check the data type of the lookup field, e.g. `StandardStatus` or `AccessibilityFeatures`, it should be `Edm.String` for single lookups and `Collection(Edm.String)` for multi. 
-* When using the `Lookup` resource, check that the required annotation is present and in the correct format.
+* Check the data type of the lookup field, e.g. `StandardStatus` or `AccessibilityFeatures`, it should be `Edm.String` for single enumerations and `Collection(Edm.String)` for multiple enumerations. 
+* Check that the required annotation is present and in the correct format.
 * Check that the `Lookup` resource is present in the metadata, exists on the server, and is defined correctly.
 * All records will be replicated from the `Lookup` resource using `ModificationTimestamp` queries. Payload data will then be correlated with what has been advertised.
 
-Servers **MUST** be able to provide the entire set of lookups relevant for testing through the replication operation, so if the page size is 100 and you give us 101 records with the same timestamp within a given interval, we won't be able to reach the advertised count we collect using the `$count` test.
+Servers **MUST** be able to provide the entire set of lookups relevant for testing through the replication operation, so if the page size is 100 and a given system has 101 records with the same timestamp, we won't be able to reach the advertised count we collect using the `$count=true` test.
 
 See the [Lookup resource section](#section-22-lookup-resource-for-enumeration-metadata) in the specification for more information.
 
