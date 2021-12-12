@@ -5,15 +5,15 @@
 | **Submitter** | [Joshua Darnell](mailto:josh@reso.org) |
 | **Written** | August 2020 |
 | **Ratified** | August 2020 |
-| **Related RCPs** | [Related RCP](/DATA-DICTIONARY.md) |
+| **Related RCPs** | [Data Dictionary Endorsement](/DATA-DICTIONARY.md) |
 
-<br /><br />
+<br />
 
 # RESO End User License Agreement (EULA)
 
 This End User License Agreement (the "EULA") is entered into by and between the Real Estate Standards Organization ("RESO") and the person or entity ("End User") that is downloading or otherwise obtaining the product associated with this EULA ("RESO Product"). This EULA governs End Users use of the RESO Product and End User agrees to the terms of this EULA by downloading or otherwise obtaining or using the RESO Product.
 
-<br /><br />
+<br />
 
 # Table of Contents
 - [Summary of Changes](#summary-of-changes)
@@ -35,14 +35,14 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 * Removed `DataSystem` endpoint in favor of OData Service Document.
 * Removed metallic certification levels in favor of modular Endorsements to provide additional functionality.
 
-<br /><br />
+<br />
 
 # Introduction
 The Web API Core Endorsement provides a subset of functionality from the OASIS OData specification relevant to those who need to perform live queries or replicate data using the RESO Web API. This includes the ability to express metadata and provide query support for primitive OData types and enumerations. 
 
 This document offers normative examples of what these items should look like, both in the metadata and payload.
 
-<br /><br />
+<br />
 
 # Section 1: Purpose
 
@@ -71,7 +71,7 @@ Compatible server and client applications MUST support [OData XML Metadata](http
 
 RESO Web API servers MUST conform to OData conventions with respect to metadata, query, and response formats as well as HTTP, TLS, and OAuth2 for application layer protocol, transport security, and authentication requirements.
 
-<br /><br />
+<br />
 
 # Section 2: Specification
 This specification outlines the requirements for the RESO Web API Core Endorsement, which is a subset of the OData 4.0 specification.
@@ -352,7 +352,7 @@ The following mappings exist between the RESO Data Dictionary and OData data typ
 | **Data Dictionary <img width=200px /> 1.6+** | **Web API 2.0.0+** | **Notes** <img width=1000px /> |
 | --- | --- | --- |
 | Boolean | [Edm.Bool](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Boolean) | MUST be one of the litera`true` or `false` (case-sensitive). |
-| Collection | [Edm.Collection](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752651) | Only supportfor `Edm.EnumType` in Web API Core, and only for those using `Collection(Edm.EnumType)` to represent lookups. <br /><br />Providers MAY use collection data types for their own resources. <br /><br />RESO also has defined standard [NavigationProperty](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Element_edm:NavigationProperty) definitions, which allow expansion between related resources. See [RESO’s reference metadata](https://raw.githubusercontent.com/RESOStandards/web-api-commander/main/src/main/resources/RESODataDictionary-1.7.xml) and search for "NavigationProperty" for normative XML Metadata references. |
+| Collection | [Edm.Collection](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752651) | In Web API Core, collections are only suppported when used with `Collection(Edm.EnumType)` or `Collection(Edm.String)` to represent lookups. <br /><br />Providers MAY use collection data types for their own expansions. <br /><br />RESO also has defined standard [NavigationProperty](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Element_edm:NavigationProperty) definitions, which allow expansion between related resources. See [RESO’s reference metadata](https://raw.githubusercontent.com/RESOStandards/web-api-commander/main/src/main/resources/RESODataDictionary-1.7.xml) and search for "NavigationProperty" for normative XML Metadata references. |
 | Date | [Edm.Date](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752636) | MUST be in YYYY-MM-DD formaccording to the [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date format. |
 | Number | [Edm.Decimal](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752638) OR [Edm.Double](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part3-csdl.html#_Toc453752517) for decimal values; [Edm.Int64](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part3-csdl.html#_Toc453752517) OR [Edm.Int32](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part3-csdl.html#_Toc453752517) OR [Edm.Int16](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part3-csdl.html#_Toc453752517) for integers. | Numbers that require decimal precision MUST use Edm.Decimal or Edm.Double, whose query and payload semantics are the same. Integers MAY be sized accordingly to support the data in a given field. |
 | String | [Edm.String](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752644) | MUST be case-sensitiby the OData specification. Field names are also case sensitive when used in the `$select`, `$filter`, and `$orderby` query operators and clients MUST respect case sensitivity defined in the resource metadata. |
@@ -1975,7 +1975,7 @@ Servers MUST implement one of the following [OAuth2](https://oauth.net/2/) authe
 
 **Note**: _The [Open ID Connect](https://openid.net/connect/) layer was previously supported by the RESO Web API. As of Web API 1.0.2, RESO only supports Bearer tokens and Client Credentials during Certification._
 
-<br /><br />
+<br />
 
 # Section 3: Certification
 
@@ -2139,7 +2139,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$skip=5``` |
 | **Section** | [2.5.7](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#257-skip-operator) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L66-L83) |
-| **Notes**  | Use `$top` and `$skip` in conjunction to page. |
+| **Notes** <img width=200px /> | Use `$top` and `$skip` in conjunction to page. <img width=1000px /> |
 
 <br />
 
@@ -2634,7 +2634,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L583-L589) |
 | **Notes** <img width=200px /> | _None_ <img width=1000px /> |
 
-<br /><br />
+<br />
 
 # Section 4: Contributors
 
@@ -2665,7 +2665,7 @@ Thanks to the following contributors for their help with this project:
 
 Many thanks to those who contributed to the Web API Core specification, including volunteers from the Transport workgroup. 
 
-<br /><br />
+<br />
 
 # Section 5: References
 Please see the following references for more information regarding topics covered in this document.
@@ -2683,7 +2683,7 @@ Please see the following references for more information regarding topics covere
 | HTTP/2.0 Protocol | [Hypertext Transfer Protocol Version 2 (HTTP/2)](https://tools.ietf.org/html/rfc7540) <br /> [HPACK: Header Compression for HTTP/2](https://tools.ietf.org/html/rfc7541)  |
 | Transport Layer Security (TLS) (Encryption for HTTP support) | [The Transport Layer Security (TLS) Protocol Version 1.2](https://www.ietf.org/rfc/rfc5246.txt) <br /> [Recommendations fSecure Use of Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS)](https://tools.ietf.org/html/rfc7525) <br /> [OWASP TLS implementation guide](https://www.owasp.org/index.php/Transport_Layer_Protection_Cheat_Sheet) <br /> [SSL Labs TLS Deployment Best Practices](https://www.ssllabs.com/downloads/SSL_TLS_Deployment_Best_Practices.pdf) |
 
-<br /><br />
+<br />
 
 # Section 6: Appendices
 
@@ -2700,7 +2700,7 @@ The following RCPs are included in Web API Core 2.0.0:
 * [RCP - WEBAPI-029 Revise Web API Certification Procedures](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275148134/RCP+-++WEBAPI-029+Revise+Web+API+Certification+Procedures)
 * [RCP - WEBAPI-031 Data Dictionary Representation in the Web API](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275149854/RCP+-+WEBAPI-031+Data+Dictionary+Representation+in+the+Web+API)
 
-<br /><br />
+<br />
 
 # Section 7: License
 This document is covered by the [RESO EULA](https://www.reso.org/eula/).
