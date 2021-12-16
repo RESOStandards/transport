@@ -1,10 +1,10 @@
 # RESO Data Dictionary Endorsement
 |     |     |
 | --- | --- |
-| **Version** | 1.7 |
+| **Version** | 2.0 |
 | **Submitter** | [Joshua Darnell](mailto:josh@reso.org) |
-| **Written** | June 2020 |
-| **Ratified** | December 2020 |
+| **Written** | December 2021 |
+| **Ratified** | TBD |
 | **Related RCPs** | [Web API Core 2.0.0](https://github.com/RESOStandards/reso-transport-specifications/blob/main/WEB-API-CORE.md) |
 
 <br />
@@ -29,13 +29,14 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 <br />
 
 # Summary of Changes
+* **LookupValue and LookupDisplayName Enforcement** - Standard _LookupValue_ items were added to the [Data Dictionary 1.7 reference sheet](https://docs.google.com/spreadsheets/d/1SZ0b6T4_lz6ti6qB2Je7NSz_9iNOaV_v9dbfhPwWgXA/edit#gid=1489187443&range=B:B)  to provide a specifcation for those using OData `Edm.EnumType` enumerations. Systems will be checked using a number of techniques, including edit distance matching, to ensure that they're using the standard values, when appropriate. For those using `Edm.String` values with the Lookup resource, the _LookupDisplayName_ will be checked as well.
+* **Resource and Field Name Enforcement** - Similarity metrics and other heuristics will also be used to ensure that standard names are being used for resources and fields as well.
+* **Data Validation Against Server Metadata** - The Data Dictionary 1.7 Specification didn't include strict checking of data available on a given server against its advertised metadata. In Data Dictionary 2.0, these two items MUST match. This means that providers will fail testing if resources, fields, or enumerations appear in the data set that weren't advertised on the server. Similar is true in cases where fields, such as `Edm.String`, exceed their advertised data length, or any other similar data anomolies.
+* **Reference Spreadsheet Structure** - Previously there were individual sheets for each resource. They have been merged into a single sheet called "Fields," which also matches the format of the new Field metadata resource. The resource that each field belongs to will be indicated in the Field entry. Enumerations will be in a separate Lookups sheet.
 
-The majority of the Data Dictionary 1.7 Specification was unchanged since initially ratified. 
 
-A summary of the changes from the previous testing rules is as follows:
-* **Data Type Mappings**: A specification ([RCP-031](https://members.reso.org/display/RESOWebAPIRCP/RCP+-+WEBAPI-031+Data+Dictionary+Representation+in+the+Web+API)) was created to normalize Data Dictionary type mappings in the Web API, as [described here](https://members.reso.org/pages/viewpage.action?pageId=67962918#RCP-WEBAPI-031DataDictionaryRepresentationintheWebAPI-2.6.1DictionaryandTransportTypeMappingsandAttributes) and summarized in [this table](https://members.reso.org/pages/viewpage.action?pageId=67962918#RCP-WEBAPI-031DataDictionaryRepresentationintheWebAPI-DataTypeMappings.1). This was done to improve the predictability of data formats during transport. _See the section on [*Data Type mappings*](https://docs.google.com/document/d/15DFf9kDX_mlGCJVOch2fztl8W5h-yd18N0_03Sb4HwM/edit#heading=h.ytsgiaioc8hv) for more information_.
-* **IDX Payload Nomenclature**: Previously, terminology included _IDX_Must_, _IDX_Optional_, etc., which have all been consolidated under the IDX label. In general, Payloads have been streamlined and now [each field indicates which payloads it belongs to](https://docs.google.com/spreadsheets/d/1SZ0b6T4_lz6ti6qB2Je7NSz_9iNOaV_v9dbfhPwWgXA/edit#gid=16571180&range=R:R) in a binary fashion, such as *IDX* or *BBO*. 
-* **Data Sampling**: As of August 31, 2021, data sampling is also part of the Data Dictionary 1.7 Endorsement to ensure that what's available on a given server matches what's advertised and that the data conforms to the Data Dictionary specification, where applicable. 
+
+
 
 <br />
 
