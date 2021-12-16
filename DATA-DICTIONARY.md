@@ -577,6 +577,13 @@ Servers **MUST** be able to provide the entire set of lookups relevant for testi
 
 See the [Lookup resource section](#section-22-lookup-resource-for-enumeration-metadata) in the specification for more information.
 
+### Schema Validation
+RESO Certification will include strict schema validation to ensure that the data available in the payload matches what's advertised in the metadata.
+
+This will consist of creating a JSON Schema representation of the available metadata, including the Field and Lookup resources, and validating all responses from the server with it. [JSON Schema allows](http://json-schema.org/understanding-json-schema/reference/object.html#additional-properties) an `additionalProperties` flag to be set to `false`, meaning that if any additional properties or enumerated values exist in the payload that aren't in the metadata, schema validation will fail. 
+
+This will also include stricter validation for things like string lengths. If an `Edm.String` field declares itself as 100 characters and the payload has 101 characters, the provider will fail certification.
+
 
 ### Additional References
 
@@ -615,13 +622,6 @@ Due to the probabilistic nature of "fuzzy matching," some false negatives may be
 
 Applicants are expected to provide a list of corrections [in a configuration file](https://github.com/RESOStandards/web-api-commander/blob/58485cc04f24e464c6c1313d25428d43835d7668/src/main/resources/ignored.json) they will submit at the time of certification to address any cases that arise. These corrections will be added to the testing tool in order to ensure that once a particular case has been addressed, it won't be flagged again in other cases.
 
-#### Data-Driven Matching
-
-RESO certification testing has progressively become more prescriptive and proscriptive over time. Exceptions for nonadherence to Data Dictionary rules were previously granted when an applicant filed a Supplemental Additional Information (SAI) request with RESO.
-
-While SAIs are no longer part of the RESO Certification process, information that was previously recorded will be used to create a corpus of matching terms to help guide vendors toward the Standard Names for Resources, Fields, and Enumerations.
-
-**Note**: *This feature* ***will not*** *be included in the MVP. It will be released as part of a later enhancement.*
 
 ## Certification Workflow
 
