@@ -1,1 +1,4 @@
 theme: jekyll-theme-slate
+title: RESO Transport Specifications
+github:
+  is_project_page: false
