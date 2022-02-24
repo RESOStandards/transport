@@ -1,4 +1,5 @@
 # RESO Data Dictionary Endorsement
+
 | **Version** | **1.7.0** |
 | :--- | :--- |
 | **Submitted By** | [Joshua Darnell](mailto:josh@reso.org) |
