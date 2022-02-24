@@ -1,11 +1,13 @@
 # RESO Web API Core Specification
-|     |     |
-| --- | --- |
+
 | **Version** | 2.0.0 |
+| :--- | :--- |
 | **Submitter** | [Joshua Darnell](mailto:josh@reso.org) |
 | **Written** | August 2020 |
 | **Ratified** | August 2020 |
+| **RCP** | RCP-037 |
 | **Related RCPs** | [Data Dictionary Endorsement](/DATA-DICTIONARY.md) |
+
 
 <br />
 
