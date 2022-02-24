@@ -9,15 +9,13 @@ RESO Endorsements use [Semantic Versioning](https://semver.org/).
 The following proposals use the RESO Web API as a transport mechansim.
 
 ## [Data Dictionary Endorsement](./DATA-DICTIONARY.md)
-**Current Version**: 1.7
-**Status**: Adopted
+**Status**: Adopted, **Current Version**: 1.7
 
 The Data Dictionary endorsement defines models for use in the RESO domain. These include Resources, Fields, Lookups, and Relationships between Resources.
 
 ## [Web API Core Endorsement](./WEB-API-CORE.md)
 
-**Current Version**: 2.0.0
-**Status**: Adopted
+**Status**: Adopted, **Current Version**: 2.0.0
 
 The Web API Core endorsement defines the primary functionality RESO Web API servers are expected to have in order to provide both replication and live query support.
 
