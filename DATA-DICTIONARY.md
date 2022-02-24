@@ -1,7 +1,6 @@
 # RESO Data Dictionary Endorsement
-|     |     |
-| --- | --- |
-| **Version** | 1.7.0 |
+| **Version** | **1.7.0** |
+| :--- | :--- |
 | **Submitted By** | [Joshua Darnell](mailto:josh@reso.org) |
 | **Written** | June 2020 |
 | **Ratified** | December 2020 |
