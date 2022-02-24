@@ -1,10 +1,11 @@
 # RESO Data Dictionary Endorsement
 
-| **Version** | **1.7.0** |
+| **Version** | 1.7.0 |
 | :--- | :--- |
-| **Submitted By** | [Joshua Darnell](mailto:josh@reso.org) |
+| **Submitter** | [Joshua Darnell](mailto:josh@reso.org) |
 | **Written** | June 2020 |
 | **Ratified** | December 2020 |
+| **RCP** | RCP-038 |
 | **Related RCPs** | [Web API Core 2.0.0](https://github.com/RESOStandards/reso-transport-specifications/blob/main/WEB-API-CORE.md) |
 
 <br /><br />
