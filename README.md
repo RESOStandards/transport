@@ -11,18 +11,18 @@ The following proposals use the RESO Web API as a transport mechansim.
 ## [Data Dictionary Endorsement](./DATA-DICTIONARY.md)
 **Status**: Adopted, **Current Version**: 1.7
 
-The Data Dictionary endorsement defines models for use in the RESO domain. These include Resources, Fields, Lookups, and Relationships between Resources.
+The Data Dictionary endorsement defines models for use in the RESO domain. These include resources, fields, lookups (a.k.a. enumerations) and relationships between resources.
 
 ## [Web API Core Endorsement](./WEB-API-CORE.md)
 
 **Status**: Adopted, **Current Version**: 2.0.0
 
-The Web API Core endorsement defines the primary functionality RESO Web API servers are expected to have in order to provide both replication and live query support.
+The Web API Core endorsement defines the primary functionality that RESO Web API servers are expected to have in order to provide both replication and live query support.
 
 ## [Web API Add/Edit Endorsement](./WEB-API-ADD-EDIT.md)
 **Status**: In Review by the RESO Certification Subgroup
 
-The Web API Add/Edit endorsement defines how to Create, Update, and Delete data in the RESO Web API. 
+The Web API Add/Edit endorsement defines how to Create, Update and Delete data in the RESO Web API. 
 
 ## [Web API Expand Endorsement](./WEB-API-EXPAND.md)
 **Status**: In Review by the RESO Certification Subgroup
@@ -56,7 +56,7 @@ The process for submitting a new proposal is as follows:
 * Create a new branch for the proposal by choosing the next available RCP number. 
   - The branch name should be created from the RCP number and use a short and meaningful name so others understand what the proposal does.
   - It should also include the current version of the proposal affected. 
-  - If the change proposal affects an existing version, a tag should be included specifying whether the proposed changes result in a major, minor, or patch level change to the existing spec.
+  - If the change proposal affects an existing version, a tag should be included specifying whether the proposed changes result in a major, minor or patch change to the existing spec.
   - Example: `rcp-040-fancy-new-web-api-feature-2.0.0-major`.
 * Use the RCP Template to create a change proposal.
 * When the proposal is ready for review, create a Draft PR so that it may be reviewed by the community and chairs.
