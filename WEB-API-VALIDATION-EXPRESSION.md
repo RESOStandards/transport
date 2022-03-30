@@ -1,1 +1,1 @@
-Use the [following branch](https://github.com/RESOStandards/reso-web-api-specifications/tree/rcp-019-validation-expressions-in-the-web-api-2.0.0) for this specification.
+[Current RCP-019 Proposal](https://github.com/RESOStandards/reso-transport-specifications/files/8384860/RESOWebAPIRCP-RCP-WEBAPI-019ValidationExpressionintheWebAPI-300322-2353.pdf)
