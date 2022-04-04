@@ -6,7 +6,7 @@
 | **Written** | June 2020 |
 | **Ratified** | December 2020 |
 | **RCP** | RCP-038 |
-| **Related RCPs** | [Web API Core 2.0.0](https://github.com/RESOStandards/reso-transport-specifications/blob/main/WEB-API-CORE.md) |
+| **Related RCPs** | [Web API Core 2.0.0](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md) |
 
 <br /><br />
 
@@ -519,7 +519,7 @@ If you would like to contribute, please contact [RESO Development](mailto:dev@re
 Please see the following references for more information regarding topics covered in this document:
 * [Data Dictionary 1.7 Wiki](https://ddwiki.reso.org/display/DDW17/)
 * [Data Dictionary 1.7 Reference Sheet](https://docs.google.com/spreadsheets/d/1SZ0b6T4_lz6ti6qB2Je7NSz_9iNOaV_v9dbfhPwWgXA/edit?usp=sharing)
-* [RESO Web API Core Specification](https://github.com/RESOStandards/reso-transport-specifications/blob/main/WEB-API-CORE.md)
+* [RESO Web API Core Specification](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md)
 * [RESO Common Schema Reference Metadata](https://github.com/RESOStandards/web-api-commander/blob/master/src/main/resources/RESODataDictionary-1.7.xml)
 * [RESO Common Schema Open API Specification](https://app.swaggerhub.com/apis/darnjo/RESO-Web-API-Common-Schema/1.7)
 

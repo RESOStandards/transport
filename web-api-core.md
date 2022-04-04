@@ -6,7 +6,7 @@
 | **Written** | August 2020 |
 | **Ratified** | August 2020 |
 | **RCP** | RCP-037 |
-| **Related RCPs** | [Data Dictionary Endorsement](/DATA-DICTIONARY.md) |
+| **Related RCPs** | [Data Dictionary Endorsement](/data-dictionary.md) |
 
 
 <br />

@@ -6,30 +6,30 @@ Specifications are divided into modular endorsements, each of which are offered 
 RESO Endorsements use [Semantic Versioning](https://semver.org/).
 
 # RESO Web API
-The following proposals use the RESO Web API as a transport mechansim.
+The following proposals use the RESO Web API as a transport mechanism.
 
-## [Data Dictionary Endorsement](./DATA-DICTIONARY.md)
+## [Data Dictionary Endorsement](./data-dictionary.md)
 **Status**: Adopted, **Current Version**: 1.7
 
 The Data Dictionary endorsement defines models for use in the RESO domain. These include Resources, Fields, Lookups, and Relationships between Resources.
 
-## [Web API Core Endorsement](./WEB-API-CORE.md)
+## [Payloads Endorsement](./payloads.md)
+**Status**: Adopted, **Current Version**: 1.7
+
+Defines general payloads data availability testing rules, as well as the IDX Payload Endorsement.
+
+## [Web API Core Endorsement](./web-api-core.md)
 
 **Status**: Adopted, **Current Version**: 2.0.0
 
 The Web API Core endorsement defines the primary functionality RESO Web API servers are expected to have in order to provide both replication and live query support.
 
-## [Web API Add/Edit Endorsement](./WEB-API-ADD-EDIT.md)
+## [Web API Add/Edit Endorsement](./web-api-add-edit.md)
 **Status**: In Review by the RESO Certification Subgroup
 
 The Web API Add/Edit endorsement defines how to Create, Update, and Delete data in the RESO Web API. 
 
-## [Web API Expand Endorsement](./WEB-API-EXPAND.md)
-**Status**: In Review by the RESO Certification Subgroup
-
-The Web API Expand endorsement outlines requirements for those who want to use OData `$expand` functionality to nest resources within others.
-
-## [Web API Validation Expression Endorsement](./WEB-API-VALIDATION-EXPRESSION.md)
+## [Web API Validation Expression Endorsement](./web-api-validation-expression.md)
 **Status**: In Transport Backlog
 
 Web API Validation Expressions allow for the transport of machine-executable business rules using the [RETS 019 Validation Expression grammar](https://github.com/darnjo/rcp019).
