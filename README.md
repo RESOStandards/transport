@@ -41,9 +41,8 @@ Web API Validation Expressions allow for the transport of machine-executable bus
 
 # Related Documents
 The following documents may also be helpful:
-* [Web API Core Testing Specification](https://docs.google.com/document/d/1btCduOpWWzeadeMcSviA8M9dclIz23P-bPUGKwcD0NY/edit#heading=h.tsujzsa8zmlt)
-* [Data Dictionary 1.7 Testing Specification](https://docs.google.com/document/d/15DFf9kDX_mlGCJVOch2fztl8W5h-yd18N0_03Sb4HwM/edit?usp=sharing)
-* [Payloads 1.7 Testing Specification](https://docs.google.com/document/d/1hNMqmDdK0C31tKrfdZnHIk1WmJPbAuluV_eJbErddCo/edit?usp=sharing)
+* [RESO DDWiki](https://ddwiki.reso.org/display/DDW17/)
+* [RESO Data Dictionary 1.7 Reference Spreadsheet](https://docs.google.com/spreadsheets/d/1_59Iqr7AQ51rEFa7p0ND-YhJjEru8gY-D_HM1yy5c6w/edit?usp=sharing)
 * [RESO Commander](https://github.com/RESOStandards/web-api-commander)
 
 <br />
