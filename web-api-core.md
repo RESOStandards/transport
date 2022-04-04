@@ -55,7 +55,7 @@ The purpose of the Web API Core specification is to establish a set of queries t
 The goals of the RESO Web API are as follows:
 
 * Adopt existing open standards rather than creating new specifications, when possible.
-* Leverage existing software toolkits and libraries.
+* Leverage existing software tool kits and libraries.
 * Favor convention over configuration, which increases predictability by reducing the number of decisions data consumers need to make.
 
 The Web API uses the [Open Data Protocol (OData)](https://www.odata.org/documentation/), which:

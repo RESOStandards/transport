@@ -5,6 +5,8 @@ Specifications are divided into modular endorsements, each of which are offered 
 
 RESO Endorsements use [Semantic Versioning](https://semver.org/).
 
+Please visit our [discussion forum](https://github.com/RESOStandards/reso-transport-specifications/discussions) if you have any questions, or [open an issue](https://github.com/RESOStandards/reso-transport-specifications/issues) if you have a new feature request. 
+
 # RESO Web API
 The following proposals use the RESO Web API as a transport mechanism.
 
