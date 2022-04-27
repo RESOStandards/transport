@@ -31,7 +31,7 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 <br />
 
 # Summary of Changes
-* Providers MUST use either OAuth2 Bearer tokens or Client Credentials for authentication (RCP-026).
+* Providers MUST use either OAuth2 Bearer tokens, Client Credentials or Authorization Code Credentials for authentication (RCP-026, RCP-041).
 * Strict Validation of OASIS XML Metadata.
 * Added support for `Collection(Edm.EnumType)` for String List, Multi Data Dictionary data types. (RCP-031)
 * Removed `DataSystem` endpoint in favor of OData Service Document.
@@ -107,9 +107,10 @@ The following terminology is used within this specification:
 | **Metadata** | Descriptive information about a data set, object, or resource that helps a recipient understand how resources, fields, and lookups are defined, and relationships between resources. This information contains field names, data types, and annotations that help data producers and consumers understand what’s available on a given server. In OData, metadata is always located at the path /$metadata relative to the provider's service root URL. |
 | **Payload** | The term "payload" generally refers to the JSON response returned by the server for a given request. The term is also used when creating or updating data, in which case the payload would be the data provided for create or update. |
 | **Schema** | A way of logically defining, grouping, organizing and structuring information about data so it may be understood by different systems. The schema defines the payload a given server is expected to support. |
-| **Authorization** | Authorization defines a set of protocols and processes for verifying that a given user has server access to one or more server resources. At the time of writing, the RESO Web API uses the OAuth2 Bearer Token and Client Credentials standards for authorization. |
+| **Authorization** | Authorization defines a set of protocols and processes for verifying that a given user has server access to one or more server resources. At the time of writing, the RESO Web API uses the OAuth2 Bearer Token, Client Credentials or Authentication Code standards for authorization. |
 | **Bearer Token** | A type of authorization that provides simple token-based authentication. More information. |
 | **Client Credentials** | A type of authorization grant that uses a client_id and client_secret (essentially username and password) as an additional layer of security in order to provide a Bearer Token upon request. This method is more resilient against man-in-the-middle attacks than Bearer Tokens since there is an additional token request step involved, and tokens may be expired and refreshed programmatically using this approach. More information. |
+| **Authorization Code** | A type of interactive authorization that allows a end user to grant a third party access to aquire a bearer token so they work on behalf of the end user. |
 | **MUST** | The given item is an absolute requirement of the specification. A feature that the specification states MUST be implemented is required in an implementation in order to be considered compliant. If the data is available in the system AND the data is presented for search then it MUST be implemented in the manner described in the specification. See Notes (1), below. |
 | **SHOULD** | A feature that the specification states SHOULD be implemented is treated for compliance purposes as a feature that may be implemented. There may exist valid reasons in particular circumstances to ignore an item classified as SHOULD, but the full implications should be understood and the case carefully weighed before choosing not to implement the given feature.  See Notes (1), below. |
 | **MAY** | This term means that an item is truly optional. A feature that the specification states MAY be implemented need not be implemented in order to be considered compliant. However, if it is implemented, the feature MUST be implemented in accordance with the specification. See Notes (1), below. |
@@ -1974,8 +1975,9 @@ Servers MUST implement one of the following [OAuth2](https://oauth.net/2/) authe
 
 * [Bearer Tokens](https://oauth.net/2/bearer-tokens/)
 * [Client Credentials](https://oauth.net/2/grant-types/client-credentials/)
+* [Authorization Code](https://oauth.net/2/grant-types/authorization-code/)
 
-**Note**: _The [Open ID Connect](https://openid.net/connect/) layer was previously supported by the RESO Web API. As of Web API 1.0.2, RESO only supports Bearer tokens and Client Credentials during Certification._
+**Note**: _The [Open ID Connect](https://openid.net/connect/) layer was previously supported by the RESO Web API. As of Web API 1.0.2, RESO only supports Bearer tokens, Client Credentials and Authorization Code during Certification._
 
 <br />
 
@@ -2000,7 +2002,7 @@ Each of these items MUST be valid with respect to OData for a Web API server to 
 
 Additionally, there are RESO requirements beyond those of OData. For instance, Web API Servers MUST expose at least one Property, Member, Office, Media, or InternetTracking Data Dictionary resource in order to be certified. 
 
-There are also authentication requirements which, at the time of writing, are servers that MUST support OAuth2 Auth Tokens OR Client Credentials.
+There are also authentication requirements which, at the time of writing, are servers that MUST support OAuth2 Auth Tokens, Client Credentials OR Authozation Code.
 
 The Web API Core testing rules ensure that server metadata are compliant, the data types provided by the RESO Data Dictionary support a minimum set of query operations valid for their types, that the query and response format are correct, and that the results logically match the query that was being used.
 
@@ -2026,9 +2028,9 @@ There is also a [sample template](https://github.com/RESOStandards/web-api-comma
 Items marked as REQUIRED in the configuration file MUST be completed, but things like sample field values have already been provided and should be sufficient for testing. If not, they also may be changed.
 
 ### Metadata Request Using RESO Standard Authentication
-When testing begins, an HTTP request is made to an applicant's given service location with either OAuth2 [Bearer Tokens](https://oauth.net/2/bearer-tokens/) or [Client Credentials](https://oauth.net/2/grant-types/client-credentials/). 
+When testing begins, an HTTP request is made to an applicant's given service location with either a [Bearer Tokens](https://oauth.net/2/bearer-tokens/), [Client Credentials](https://oauth.net/2/grant-types/client-credentials/) or [Authorization Code](https://oauth.net/2/grant-types/authorization-code/). 
 
-Both of these authentication strategies allow for data consumption to be machine automated so that additional interaction from a user isn't necessary during the authentication process. As such, the RESO Data Dictionary Commander can be used for automated testing. 
+The first two of these authentication strategies allow for data consumption to be machine automated so that additional interaction from a user isn't necessary during the authentication process. As such, the RESO Data Dictionary Commander can be used for automated testing.  Authorization Code allows for end user interactive authentication where a relationship between the client and server only exists through the end user. 
 
 The metadata request is expected to function according to the OData specification in terms of [request](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#_Toc31358863) and [response](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#_Toc31358882) headers and response formats. 
 
@@ -2701,6 +2703,7 @@ The following RCPs are included in Web API Core 2.0.0:
 * [RCP - WEBAPI-026 Change Default Certification Testing to Bearer Token](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2259388362/RCP+-++WEBAPI-026+Change+Default+Certification+Testing+to+Bearer+Token)
 * [RCP - WEBAPI-029 Revise Web API Certification Procedures](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275148134/RCP+-++WEBAPI-029+Revise+Web+API+Certification+Procedures)
 * [RCP - WEBAPI-031 Data Dictionary Representation in the Web API](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275149854/RCP+-+WEBAPI-031+Data+Dictionary+Representation+in+the+Web+API)
+* [RCP - WEBAPI-041 Authorization Code Support](#)
 
 <br />
 
