@@ -574,7 +574,50 @@ The following testing rules will be used during RESO Certification:
 
 Servers **MUST** be able to provide the entire set of lookups relevant for testing through the replication operation so, for example, if a given system has 101 records from the `$count=true` query option but only 100 records were fetched, this would fail. The opposite is also true, if 100 records were advertised and 101 were found, this would not pass testing.
 
-See the [Lookup resource section](#section-22-lookup-resource-for-enumeration-metadata) in the specification for more information.
+See the [Lookup resource section](#section-22-lookup-resource-for-enumeration-metadata) in the specification for more information. Testing rules may be found in the [RESO Commander repository](https://github.com/RESOStandards/web-api-commander/blob/main/src/main/java/org/reso/certification/features/data-dictionary/v1-7-0/additional-tests/lookup-resource-tests.feature). 
+
+At the time of writing, the BDD testing rules for the Lookup resource are as follows:
+
+```gherkin
+Feature: Lookup Acceptance Tests (RCP-032)
+
+  Background:
+    When a RESOScript file is provided
+    Then Client Settings and Parameters can be read from the RESOScript
+    And a test container was successfully created from the given RESOScript file
+    And the test container uses an Authorization Code or Client Credentials for authentication
+    And valid metadata were retrieved from the server
+    When the "Lookup" Resource exists in the metadata
+    Then valid data is replicated from the "Lookup" Resource
+
+  @dd-1.7 @rcp-032 @lookup-resource
+  Scenario: Ensure That Required Lookup Resource Fields Are Present in Server Metadata
+    Given that metadata have been retrieved from the server and validated
+    When the "Lookup" Resource exists in the metadata
+    Then "Lookup" Resource data and metadata MUST contain the following fields
+      | LookupKey |
+      | LookupName |
+      | LookupValue |
+      | ModificationTimestamp |
+
+
+  #  <!-- OData annotation for String List, Single field -->
+  #  <Property Name="OfficeCountyOrParish" Type="Edm.String">
+  #  <Annotation Term="RESO.OData.Metadata.LookupName" String="CountyOrParish" />
+  #  </Property>
+  #
+  #  <!-- OData annotation for String List, Multi field -->
+  #  <Property Name="ExteriorFeatures" Type="Collection(Edm.String)">
+  #  <Annotation Term="RESO.OData.Metadata.LookupName" String="ExteriorFeatures" />
+  #  </Property>
+  @dd-1.7 @rcp-032 @lookup-resource
+  Scenario: Check Required Annotations and LookupName Data
+    Given that metadata have been retrieved from the server and validated
+    When the "Lookup" Resource exists in the metadata
+    Then RESO Lookups using String or String Collection data types MUST have the annotation "RESO.OData.Metadata.LookupName"
+    And fields with the annotation term "RESO.OData.Metadata.LookupName" MUST have a LookupName in the Lookup Resource
+
+```
 
 ### Schema Validation
 RESO Certification will include strict schema validation to ensure that the data available in the payload matches what's advertised in the metadata.
@@ -737,6 +780,7 @@ Thanks to the following contributors for their help with this project:
 | Dylan Gmyrek | FBS |
 | Rob Larson | Larson Consulting, LLC |
 | Paul Stusiak | Falcon Technologies Corp. |
+| Cody Gustafson | FBS |
 
 Many thanks to those who contributed to the RESO Data Dictionary specification, including volunteers from the RESO Data Dictionary and Transport Workgroups.
 
