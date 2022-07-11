@@ -1,19 +1,12 @@
 # RESO Web API Core Specification
 
-| **Version** | 2.0.0 |
+| **Version** | 2.1.0 |
 | :--- | :--- |
 | **Submitter** | [Joshua Darnell](mailto:josh@reso.org) |
-| **Written** | August 2020 |
-| **Ratified** | August 2020 |
-| **RCP** | RCP-037 |
+| **Written** | July 2022 |
+| **Ratified** | -- |
+| **RCP** | RCP-043 |
 | **Related RCPs** | [Data Dictionary Endorsement](/data-dictionary.md) |
-
-
-<br />
-
-# RESO End User License Agreement (EULA)
-
-This End User License Agreement (the "EULA") is entered into by and between the Real Estate Standards Organization ("RESO") and the person or entity ("End User") that is downloading or otherwise obtaining the product associated with this EULA ("RESO Product"). This EULA governs End Users use of the RESO Product and End User agrees to the terms of this EULA by downloading or otherwise obtaining or using the RESO Product.
 
 <br />
 
@@ -30,12 +23,15 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 
 <br />
 
+# Requirement Levels
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC 2119](https://www.ietf.org/rfc/rfc2119.txt).
+
+<br />
+
 # Summary of Changes
-* Providers MUST use either OAuth2 Bearer tokens or Client Credentials for authentication (RCP-026).
-* Strict Validation of OASIS XML Metadata.
-* Added support for `Collection(Edm.EnumType)` for String List, Multi Data Dictionary data types. (RCP-031)
-* Removed `DataSystem` endpoint in favor of OData Service Document.
-* Removed metallic certification levels in favor of modular Endorsements to provide additional functionality.
+* **Expanded Data Elements** - Support for expanded data elements using OData `$expand` has been added. The Property, Member, Office, Field, and Lookup Resources MUST be available at the top level. All other resources MAY be expanded. Data consumers should be prepared to support either. 
+* **Server-Driven Paging** - In order to improve the ease and ability for data consumers to retrieve data from RESO Web API servers, providers MUST support server-driven paging using `@odata.nextLink`. 
+* **String Comparison Operators** - Support for the Lookup Resource was added in Data Dictionary 1.7, meaning that single- and multi-enumerations may be `Edm.String` or `Collection(Edm.String)`, respectively. In order to provide parity with existing enumeration tests, string comparison operators have been added to Web API Core 2.1.0 in order to test those cases. 
 
 <br />
 
@@ -125,7 +121,7 @@ The HTTP version MUST be [HTTP/1.1](https://datatracker.ietf.org/doc/html/rfc261
 
 While OData supports HTTP/1.0, there are many limitations in the HTTP/1.0 specification that we want to avoid. Therefore, we are limiting compatible implementations to HTTP/1.1 or above. For specific HTTP references, please see the references section.
 
-Since the RESO Web API requires that [HTTPS](https://en.wikipedia.org/wiki/HTTPS) and the [OAuth2](https://oauth.net/2/) protocols are used, all server implementations MUST implement [Transport Layer Security (TLS)](https://en.wikipedia.org/wiki/Transport_Layer_Security).
+Since the RESO Web API requires that [HTTPS](https://en.wikipedia.org/wiki/HTTPS) and the [OAuth2](https://oauth.net/2/) protocols are used, all server implementations MUST implement [Transport Layer Security (TLS)](https://en.wikipedia.org/wiki/Transport_Layer_Security). Providers MUST use TLS 1.2 or above.
 
 <br />
 
@@ -201,8 +197,9 @@ The OData transport protocol defines the following URI conventions:
 | **Metadata Path** | `https://api.reso.org/reso/$metadata` |
 | **Resource Path** | `https://api.reso.org/reso/Resource` |
 | **Service Root** | `https://api.reso.org/reso/` |
-| **Singleton Resource Path (String Key)** | `https://api.reso.org/reso/Resource('ID')` |
-| **Singleton Resource Path (Numeric Key)** | `https://api.reso.org/reso/Resource(123)`
+| **'Singleton' Resource Path** | `https://api.reso.org/reso/Resource('Id')` |
+| **Navigation Property Path** | `https://api.reso.org/Resource('Id')/Media` |
+| **Expanded Data Set** | `https://api.reso.org/Resource?$expand=Media` |
 
 RESO uses **TitleCase** for Resources, Fields, OData Lookup Values, and Navigation Properties.
 
@@ -294,7 +291,7 @@ This metadata defines the following items:
 
 <br />
 
-**Request Data from the Property Resource without an OData `$filter` Expression**
+#### Request Data from the Property Resource without an OData `$filter` Expression
 
 ```
 GET https://api.reso.org/Property
@@ -322,7 +319,7 @@ HTTP/2 200 OK
 
 <br />
 
-**Request Data from the Property Resource using an OData `$filter` Expression**
+#### Request Data from the Property Resource using an OData `$filter` Expression
 ```
 GET https://api.reso.org/Property?$filter=ListPrice gt 100000.00
 200 OK
@@ -345,13 +342,13 @@ GET https://api.reso.org/Property?$filter=ListPrice gt 100000.00
 
 ## 2.4 Data Types
 
-This section outlines the standard data types supported by the  Web API Core specification.
+This section outlines the standard data types supported by the Web API Core specification.
 
-**Data Type Mappings**
+### Data Type Mappings
 
 The following mappings exist between the RESO Data Dictionary and OData data types, as outlined in RCP-031:
 
-| **Data Dictionary <img width=200px /> 1.6+** | **Web API 2.0.0+** | **Notes** <img width=1000px /> |
+| **Data Dictionary <img width=200px /> 1.7+** | **Web API 2.0.0+** | **Notes** <img width=1000px /> |
 | --- | --- | --- |
 | Boolean | [Edm.Bool](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Boolean) | MUST be one of the litera`true` or `false` (case-sensitive). |
 | Collection | [Edm.Collection](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752651) | In Web API Core, collections are only suppported when used with `Collection(Edm.EnumType)` or `Collection(Edm.String)` to represent lookups. <br /><br />Providers MAY use collection data types for their own expansions. <br /><br />RESO also has defined standard [NavigationProperty](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Element_edm:NavigationProperty) definitions, which allow expansion between related resources. See [RESO’s reference metadata](https://raw.githubusercontent.com/RESOStandards/web-api-commander/main/src/main/resources/RESODataDictionary-1.7.xml) and search for "NavigationProperty" for normative XML Metadata references. |
@@ -516,27 +513,6 @@ HTTP/2 200 OK
 {
   "@odata.context": "https://api.reso.org/Property('a1')",
   "ListingKey": "a1",
-  "BedroomsTotal": 5,
-  "ListPrice": 100000.00,
-  "StreetName": "Main",
-  "ModificationTimestamp": "2020-04-02T02:02:02.02Z",
-  "ListingContractDate": "2020-04-02",
-  "StandardStatus": "ActiveUnderContract",
-  "AccessibilityFeatures": ["AccessibleApproachWithRamp", "AccessibleEntrance", "Visitable"]
-}
-```
-
-**Numeric Keys**
-
-Numeric keys do not use any special characters:
-```
-GET https://api.reso.org/Property(123)
-HTTP/2 200 OK
-```
-```json
-{
-  "@odata.context": "https://api.reso.org/Property(123)",
-  "ListingKeyNumeric": 123,
   "BedroomsTotal": 5,
   "ListPrice": 100000.00,
   "StreetName": "Main",
@@ -1349,6 +1325,166 @@ This resource is still in DRAFT status. Please [contact RESO](mailto:dev@reso.or
 
 <br />
 
+### 2.5.10 Expanded Data Elements
+Web API Core 2.1.0 also supports the use of OData `$expand`, which results in a nested data set from another defined resource. 
+
+**Example**
+Assume a given server defines a Property resource as follows, using the XML Metadata example from [section 2.3.3](#233-metadata-uri-conventions):
+
+```
+GET https://api.reso.org/$metadata&$format=application/xml
+HTTP/2 200 OK
+```
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="org.reso.metadata" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="Property">
+        <Key>
+          <PropertyRef Name="ListingKey" />
+        </Key>
+        <Property MaxLength="255" Name="ListingKey" Type="Edm.String" />
+        <Property Name="ListPrice" Precision="14" Scale="2" Type="Edm.Decimal" />
+        <Property Name="StandardStatus" Type="org.reso.metadata.enums.StandardStatus" />
+        <Property Name="ModificationTimestamp" Precision="27" Type="Edm.DateTimeOffset" />
+        <NavigationProperty Name="Media" Type="Collection(org.reso.metadata.Media)" />
+      </EntityType>
+      <EntityType Name="Media">
+        <Key>
+          <PropertyRef Name="MediaKey" />
+        </Key>
+        <Property MaxLength="255" Name="ChangedByMemberKey" Type="Edm.String" />
+        <Property MaxLength="255" Name="MediaKey" Type="Edm.String" />
+        <Property Name="MediaModificationTimestamp" Precision="27" Type="Edm.DateTimeOffset" />
+        <Property MaxLength="8000" Name="MediaURL" Type="Edm.String" />
+        <Property Name="ModificationTimestamp" Precision="27" Type="Edm.DateTimeOffset" />
+        <Property Name="Order" Type="Edm.Int64" />
+        <Property Name="ResourceName" Type="org.reso.metadata.enums.ResourceName" />
+        <Property MaxLength="255" Name="ResourceRecordKey" Type="Edm.String" />
+      </EntityType>
+    </Schema>
+    <Schema Namespace="org.reso.metadata.enums" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EnumType Name="StandardStatus">
+        <Member Name="Active" />
+        <Member Name="Closed" />
+        <Member Name="ComingSoon" />
+        <Member Name="Pending" />
+      </EnumType>
+      <EnumType Name="ResourceName">
+        <Member Name="Property" />
+      </EnumType>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
+```
+
+This metadata defines the following items:
+
+| **Item** | **XML Schema** | **Data Type** | **Attributes** | **Comments** |
+| --- | --- | --- | --- | --- |
+| **Property Resource** | EntityType | N/A | Key field of ListingKey | Each entity MUST define a Key property. |
+| **ListingKey Field** | Property | `Edm.String` | MaxLength of 255 | MaxLength is an optional attribute. |
+| **ListPrice Field** | Property | `Edm.Decimal` | Precision is 14, Scale is 2 | Precision and Scale are optional attributes. |
+| **StandardStatus Field** | Property | `org.reso.metadata.enums.StandardStatus` | N/A | The type in an `Edm.EnumType` definition is defined by the namespace and references the StandardStatus EnumType defined on line 16. |
+| **ModificationTimestamp Field** | Property | `Edm.DateTimeOffset` | Precision of 27 to support the ISO 8601 format | Supported timestamps in this case would be: `2021-05-21T06:28:34+00:00` OR `2021-05-21T06:28:34Z` either of which MAY have a trailing millisecond component, for example: `2021-05-21T06:28:34+00:00.108` OR `2021-05-21T06:28:34.007Z` |
+| **Media Navigation Property** | Media | `org.reso.metadata.Media` | `Collection` | Navigation properties provide `$expand` support. | 
+| **StandardStatus Enumeration** | EnumType | `Edm.EnumType` | N/A | Defines enumerations for: Active, Closed, ComingSoon, and Pending using the SimpleIdentifier format. |
+| **ResourceName Enumeration** | EnumType | `Edm.EnumType` | N/A | Defines possible resources for the `ResourceName` field in the Media Resource.  |
+
+<br />
+
+#### 2.5.10.1 Request Data from the Property Resource with a Media Expansion
+
+```
+GET https://api.reso.org/Property?$expand=Media&$top=2
+HTTP/2 200 OK
+```
+```json
+{
+  "@odata.context": "https://api.reso.org/Property?$expand=Media&$top=2",
+  "value": [
+    {
+      "ListingKey": "a1",
+      "ListPrice": 100000.0,
+      "ModificationTimestamp": "2022-04-02T02:02:02.02Z",
+      "StandardStatus": "Active",
+      "Media": [
+        {
+          "ChangedByMemberKey": "ABC123",
+          "MediaKey": "AT23852983",
+          "MediaModificationTimestamp": "2022-04-02T03:02:02.02Z",
+          "MediaURL": "https://cdn.reso.org/media/AT23852983",
+          "ModificationTimestamp": "2022-04-02T02:02:02.03Z",
+          "Order": 1,
+          "ResourceName": "Property",
+          "ResourceRecordKey": "a1"
+        }
+      ]
+    },
+    {
+      "ListingKey": "b2",
+      "ListPrice": 100001.0,
+      "ModificationTimestamp": "2022-04-03T02:02:02.02Z",
+      "StandardStatus": "Pending",
+      "Media": [
+        {
+          "ChangedByMemberKey": "ABC123",
+          "MediaKey": "AT23852983",
+          "MediaModificationTimestamp": "2022-04-02T03:02:02.02Z",
+          "MediaURL": "https://cdn.reso.org/media/AT23852983",
+          "ModificationTimestamp": "2022-04-02T02:02:02.03Z",
+          "Order": 1,
+          "ResourceName": "Property",
+          "ResourceRecordKey": "b2"
+        },
+        {
+          "ChangedByMemberKey": "ABC123",
+          "MediaKey": "BU23852983",
+          "MediaModificationTimestamp": "2022-04-02T03:02:02.02Z",
+          "MediaURL": "https://cdn.reso.org/media/BU23852983",
+          "ModificationTimestamp": "2022-04-02T02:02:02.03Z",
+          "Order": 2,
+          "ResourceName": "Property",
+          "ResourceRecordKey": "b2"
+        }
+      ]
+    }
+  ]
+}
+```
+
+**Note**: Since `$top=2` was requested, there is no `@odata.nextLink`. 
+
+<br />
+
+#### 2.5.10.2 Request Media for a Specific Listing in the Property Resource using Navigation Property Paths
+```
+GET https://api.reso.org/Property('a1')/Media
+200 OK
+```
+```json
+{
+  "@odata.context": "https://api.reso.org/Property('a1')/Media",
+  "value": [
+    {
+      "ChangedByMemberKey": "ABC123",
+      "MediaKey": "AT23852983",
+      "MediaModificationTimestamp": "2022-04-02T03:02:02.02Z",
+      "MediaURL": "https://cdn.reso.org/media/AT23852983",
+      "ModificationTimestamp": "2022-04-02T02:02:02.03Z",
+      "Order": 1,
+      "ResourceName": "Property",
+      "ResourceRecordKey": "a1"
+    }
+  ]
+}
+```
+
+<br />
+
+
 ## 2.6 Response Codes and Error Message Bodies
 This section describes expected response codes and error message bodies.
 
@@ -1432,7 +1568,7 @@ The following examples show how Core queries can be used to query data on a give
 
 <br />
 
-**Get Properties Listed in December of 2020**
+### Get Properties Listed in December of 2020
 ```
 GET https://api.reso.org/Property?$filter=ListingContractDate ge 2020-12-01 and ListingContractDate lt 2021-01-01
 HTTP/2 200 OK
@@ -1444,7 +1580,7 @@ HTTP/2 200 OK
     {
       "ListingKey": "a1",
       "BedroomsTotal": 5,
-      "ListPrice": 100000.00,
+      "ListPrice": 100000.0,
       "StreetName": "Main",
       "ModificationTimestamp": "2020-04-02T02:02:02.02Z",
       "ListingContractDate": "2020-04-02",
@@ -1457,7 +1593,7 @@ HTTP/2 200 OK
 
 <br />
 
-**Get Properties Listed in a Given Year**
+### Get Properties Listed in a Given Year
 ```
 GET https://api.reso.org/Property?$filter=ListingContractDate ge 2020-01-01 and ListingContractDate lt 2021-01-01
 HTTP/2 200 OK
@@ -1469,7 +1605,7 @@ HTTP/2 200 OK
     {
       "ListingKey": "b2",
       "BedroomsTotal": 3,
-      "ListPrice": 200000.00,
+      "ListPrice": 200000.0,
       "StreetName": "2nd",
       "ModificationTimestamp": "2020-12-31T00:01:01.01.007Z",
       "ListingContractDate": "2020-05-25",
@@ -1482,7 +1618,7 @@ HTTP/2 200 OK
 
 <br />
 
-**Get Active Members with First Name 'James' or 'Adam'**
+### Get Active Members with First Name 'James' or 'Adam'
 ```
 GET https://api.reso.org/Member?$filter=MemberStatus eq 'Active' and (MemberFirstName eq 'James' or MemberFirstName eq 'Adam')
 HTTP/2 200 OK
@@ -1497,8 +1633,8 @@ HTTP/2 200 OK
       "MemberFirstName": "James",
       "MemberLastName": "Smith",
       "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
-    }
-     {
+    },
+    {
       "MemberKey": "b2",
       "MemberStatus": "Active",
       "MemberFirstName": "Adam",
@@ -1511,7 +1647,7 @@ HTTP/2 200 OK
 
 <br />
 
-**Query on Boolean Field to Find Short Sales**
+### Query on Boolean Field to Find Short Sales
 ```
 GET https://api.reso.org/Property?$filter=ShortSale eq true
 HTTP/2 200 OK
@@ -1523,7 +1659,7 @@ HTTP/2 200 OK
     {
       "ListingKey": "a1",
       "BedroomsTotal": 5,
-      "ListPrice": 100000.00,
+      "ListPrice": 100000.0,
       "StreetName": "Main",
       "ModificationTimestamp": "2020-04-02T02:02:02.02Z",
       "ListingContractDate": "2020-04-02",
@@ -1537,7 +1673,7 @@ HTTP/2 200 OK
 
 <br />
 
-**Combine Multiple Criteria in a Listing Search**
+### Combine Multiple Criteria in a Listing Search
 ```
 GET https://api.reso.org/Property?$filter=ListPrice gt 250000 and ListPrice lt 500000
 HTTP/2 200 OK
@@ -1549,7 +1685,7 @@ HTTP/2 200 OK
     {
       "ListingKey": "c3",
       "BedroomsTotal": 5,
-      "ListPrice": 400000.00,
+      "ListPrice": 400000.0,
       "StreetName": "Main",
       "ModificationTimestamp": "2020-04-02T02:02:02.02Z",
       "ListingContractDate": "2020-04-02",
@@ -1562,7 +1698,7 @@ HTTP/2 200 OK
 
 <br />
 
-**Get Properties with a Listing Price Greater Than $300K**
+### Get Properties with a Listing Price Greater Than $300K
 ```
 GET https://api.reso.org/Property?$filter=ListPrice gt 300000
 HTTP/2 200 OK
@@ -1574,7 +1710,7 @@ HTTP/2 200 OK
     {
       "ListingKey": "c3",
       "BedroomsTotal": 5,
-      "ListPrice": 400000.00,
+      "ListPrice": 400000.0,
       "StreetName": "Main",
       "ModificationTimestamp": "2020-04-02T02:02:02.02Z",
       "ListingContractDate": "2020-04-02",
@@ -1587,7 +1723,7 @@ HTTP/2 200 OK
 
 <br />
 
-**Get Properties with a Listing Price of $300K**
+### Get Properties with a Listing Price of $300K
 ```
 GET https://api.reso.org/Property?$filter=ListPrice eq 300000
 HTTP/2 200 OK
@@ -1599,7 +1735,7 @@ HTTP/2 200 OK
     {
       "ListingKey": "d4",
       "BedroomsTotal": 4,
-      "ListPrice": 300000.00,
+      "ListPrice": 300000.0,
       "StreetName": "Oak",
       "ModificationTimestamp": "2021-08-15T00:01:01.01.007Z",
       "StandardStatus": "Active",
@@ -1611,7 +1747,7 @@ HTTP/2 200 OK
 
 <br />
 
-**Retrieve Records in a Specific Order**
+### Retrieve Records in a Specific Order
 
 ```
 GET https://api.reso.org/Property?$filter=ListPrice lt 500000&$orderby=ListPrice desc
@@ -1629,7 +1765,7 @@ HTTP/2 200 OK
       "ModificationTimestamp": "2021-06-25T00:01:01.01.007Z",
       "StandardStatus": "Active",
       "AccessibilityFeatures": []
-    }
+    },
     {
       "ListingKey": "f6",
       "BedroomsTotal": 5,
@@ -1645,7 +1781,7 @@ HTTP/2 200 OK
 
 <br />
 
-**Get a Count of Property Records**
+### Get a Count of Property Records
 ```
 GET https://api.reso.org/Property?$select=ListingKey,ModificationTimestamp&$top=1&$count=true
 HTTP/2 200 OK
@@ -1657,7 +1793,7 @@ HTTP/2 200 OK
   "value": [
     {
       "ListingKey": "a1",
-      "ModificationTimestamp": "2020-04-02T02:02:02.02Z" 
+      "ModificationTimestamp": "2020-04-02T02:02:02.02Z"
     }
   ]
 }
@@ -1666,7 +1802,7 @@ HTTP/2 200 OK
 <br />
 
 
-**Get Top Five Residential Properties**
+### Get Top Five Residential Properties
 ```
 GET https://api.reso.org/Property?$filter=PropertyType eq 'Residential'&$top=5
 HTTP/2 200 OK
@@ -1678,58 +1814,57 @@ HTTP/2 200 OK
     {
       "ListingKey": "a1",
       "BedroomsTotal": 5,
-      "ListPrice": 100000.00,
+      "ListPrice": 100000.0,
       "StreetName": "Main",
       "ModificationTimestamp": "2020-04-02T02:02:02.02Z",
       "ListingContractDate": "2020-04-02",
       "StandardStatus": "ActiveUnderContract",
       "AccessibilityFeatures": ["AccessibleApproachWithRamp", "AccessibleEntrance", "Visitable"]
-    }
+    },
     {
-    "ListingKey": "b2",
-    "BedroomsTotal": 5,
-    "ListPrice": 400000.00,
-    "StreetName": "Main",
-    "ModificationTimestamp": "2020-04-02T02:02:02.02Z",
-    "ListingContractDate": "2020-04-02",
-    "StandardStatus": "Active",
-    "AccessibilityFeatures": ["Visitable"]
-    }
+      "ListingKey": "b2",
+      "BedroomsTotal": 5,
+      "ListPrice": 400000.0,
+      "StreetName": "Main",
+      "ModificationTimestamp": "2020-04-02T02:02:02.02Z",
+      "ListingContractDate": "2020-04-02",
+      "StandardStatus": "Active",
+      "AccessibilityFeatures": ["Visitable"]
+    },
     {
-    "ListingKey": "c3",
-    "BedroomsTotal": 4,
-    "ListPrice": 300000.00,
-    "StreetName": "Oak",
-    "ModificationTimestamp": "2021-08-15T00:01:01.01.007Z",
-    "StandardStatus": "Active",
-    "AccessibilityFeatures": []
-    }
+      "ListingKey": "c3",
+      "BedroomsTotal": 4,
+      "ListPrice": 300000.0,
+      "StreetName": "Oak",
+      "ModificationTimestamp": "2021-08-15T00:01:01.01.007Z",
+      "StandardStatus": "Active",
+      "AccessibilityFeatures": []
+    },
     {
-    "ListingKey": "d4",
-    "BedroomsTotal": 5,
-    "ListPrice": 499999,
-    "StreetName": "7th",
-    "ModificationTimestamp": "2021-06-25T00:01:01.01.007Z",
-    "StandardStatus": "Active",
-    "AccessibilityFeatures": []
-    }
+      "ListingKey": "d4",
+      "BedroomsTotal": 5,
+      "ListPrice": 499999,
+      "StreetName": "7th",
+      "ModificationTimestamp": "2021-06-25T00:01:01.01.007Z",
+      "StandardStatus": "Active",
+      "AccessibilityFeatures": []
+    },
     {
-    "ListingKey": "e5",
-    "BedroomsTotal": 5,
-    "ListPrice": 489000,
-    "StreetName": "Maple",
-    "ModificationTimestamp": "2021-06-25T00:01:01.01.007Z",
-    "StandardStatus": "Active",
-    "AccessibilityFeatures": []
+      "ListingKey": "e5",
+      "BedroomsTotal": 5,
+      "ListPrice": 489000,
+      "StreetName": "Maple",
+      "ModificationTimestamp": "2021-06-25T00:01:01.01.007Z",
+      "StandardStatus": "Active",
+      "AccessibilityFeatures": []
     }
   ]
 }
-  
 ```
 
 <br />
 
-**Get the First Five Members**
+### Get the First Five Members
 ```
 GET https://api.reso.org/Member?$top=5&$skip=0
 HTTP/2 200 OK
@@ -1738,34 +1873,34 @@ HTTP/2 200 OK
 {
   "@odata.context": "https://api.reso.org/Member?$top=5&$skip=0",
   "value": [
-       {
+    {
       "MemberKey": "a1",
       "MemberStatus": "Active",
       "MemberFirstName": "Angela",
       "MemberLastName": "Adams",
       "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
-    }
-     {
+    },
+    {
       "MemberKey": "b2",
       "MemberStatus": "Active",
       "MemberFirstName": "Betty",
       "MemberLastName": "Adams",
       "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
-    }
+    },
     {
       "MemberKey": "c3",
       "MemberStatus": "Active",
       "MemberFirstName": "Henry",
       "MemberLastName": "Adams",
       "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
-    }
+    },
     {
       "MemberKey": "d4",
       "MemberStatus": "Active",
       "MemberFirstName": "Kevin",
       "MemberLastName": "Adams",
       "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
-    }
+    },
     {
       "MemberKey": "e5",
       "MemberStatus": "Active",
@@ -1779,7 +1914,7 @@ HTTP/2 200 OK
 
 <br />
 
-**Get the Next Five Members**
+### Get the Next Five Members
 ```
 GET https://api.reso.org//Member?$top=5&$skip=5
 HTTP/2 200 OK
@@ -1788,34 +1923,34 @@ HTTP/2 200 OK
 {
   "@odata.context": "GET https://api.reso.org//Member?$top=5&$skip=5",
   "value": [
-       {
+    {
       "MemberKey": "f6",
       "MemberStatus": "Active",
       "MemberFirstName": "James",
       "MemberLastName": "Smith",
       "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
-    }
-     {
+    },
+    {
       "MemberKey": "g7",
       "MemberStatus": "Active",
       "MemberFirstName": "Adam",
       "MemberLastName": "Smith",
       "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
-    }
+    },
     {
       "MemberKey": "h8",
       "MemberStatus": "Active",
       "MemberFirstName": "Jennifer",
       "MemberLastName": "Smith",
       "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
-    }
+    },
     {
       "MemberKey": "i9",
       "MemberStatus": "Active",
       "MemberFirstName": "Kevin",
       "MemberLastName": "Smith",
       "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
-    }
+    },
     {
       "MemberKey": "j10",
       "MemberStatus": "Active",
@@ -1826,11 +1961,11 @@ HTTP/2 200 OK
   ]
 }
 ```
-_**Note:** The implementation of $top and $orderby is defined by the server and may restrict what values may be used in either option. A compliant client SHOULD use the $orderby query to sustain consistency between requests, however a compliant server is not required to guarantee consistent results between requests._
+_**Note:** The implementation of `$top` and `$orderby` is defined by the server and may restrict what values may be used in either option. A compliant client SHOULD use the `$orderby` query to maintain consistency between requests, however a compliant server is not required to guarantee consistent results between requests._
 
 <br />
 
-**Get Properties with a Listing Price of Less than $300K**
+### Get Properties with a Listing Price of Less than $300K
 ```
 GET https://api.reso.org/Property?$filter=ListPrice lt 300000
 HTTP/2 200 OK
@@ -1842,7 +1977,7 @@ HTTP/2 200 OK
     {
       "ListingKey": "a1",
       "BedroomsTotal": 5,
-      "ListPrice": 100000.00,
+      "ListPrice": 100000.0,
       "StreetName": "Main",
       "ModificationTimestamp": "2020-04-02T02:02:02.02Z",
       "ListingContractDate": "2020-04-02",
@@ -1855,7 +1990,7 @@ HTTP/2 200 OK
 
 <br />
 
-**Get Properties with a Price Range of $250k to $500k**
+### Get Properties with a Price Range of $250k to $500k
 ```
 GET https://api.reso.org/Property?$filter=ListPrice gt 250000 and ListPrice lt 500000
 HTTP/2 200 OK
@@ -1867,7 +2002,7 @@ HTTP/2 200 OK
     {
       "ListingKey": "b2",
       "BedroomsTotal": 4,
-      "ListPrice": 300000.00,
+      "ListPrice": 300000.0,
       "StreetName": "Oak",
       "ModificationTimestamp": "2021-08-15T00:01:01.01.007Z",
       "StandardStatus": "Active",
@@ -1879,7 +2014,7 @@ HTTP/2 200 OK
 
 <br />
 
-**Select Specific Field Values**
+### Select Specific Field Values
 ```
 GET https://api.reso.org/Member?$select=MemberLastName,MemberFirstName,MemberMlsId
 HTTP/2 200 OK
@@ -1900,7 +2035,7 @@ _Note: All names in the `$select` option are case-sensitive to match the names o
 
 <br />
 
-**Get Most Recent ListingKey and ModificationTimestamp in Descending Order**
+### Get Most Recent ListingKey and ModificationTimestamp in Descending Order
 ```
 GET https://api.reso.org/Property?$select=ListingKey,ModificationTimestamp&$orderby=ModificationTimestamp desc
 HTTP/2 200 OK
@@ -1912,7 +2047,7 @@ HTTP/2 200 OK
     {
       "ListingKey": "b2",
       "ModificationTimestamp": "2021-08-15T00:01:01.01.007Z"
-    }
+    },
     {
       "ListingKey": "a1",
       "ModificationTimestamp": "2020-04-02T02:02:02.02Z"
@@ -1923,7 +2058,7 @@ HTTP/2 200 OK
 
 <br />
 
-**Get a Single Property Record**
+### Get a Single Property Record
 ```
 GET https://api.reso.org/Property('a3')
 HTTP/2 200 OK
@@ -1945,7 +2080,7 @@ _**Note**: this is referred to as a ["Singleton Property"](http://docs.oasis-ope
 
 <br />
 
-**Filter by Multiple Field Values**
+### Filter by Multiple Field Values
 ```
 GET https://api.reso.org/Member?$filter=MemberFirstName eq 'Joe' and MemberLastName eq 'Smith'
 HTTP/2 200 OK
@@ -1992,9 +2127,9 @@ This section will focus exclusively on the Web API Core specification.
 The RESO Web API provides an open standard for a RESTful, JSON-based API that's centered around the RESO Data Dictionary, with the ability to support local extension. At its core, the RESO Web API standard is based on a subset of the OData specification from OASIS.
 
 The OData specification consists of the following:
-* Metadata format.
-* Query format and URL structure to support it.
-* Response format and type system. 
+* Metadata format
+* Query format and URL structure to support it
+* Response format and type system
 
 Each of these items MUST be valid with respect to OData for a Web API server to be considered compliant.
 
@@ -2019,9 +2154,9 @@ A graphical user interface is also available through popular and free Integrated
 ### Configuring the Test Client
 Configuration of the RESO Commander for Web API Certification involves providing a service endpoint, authentication, resource, and field information in a template that will be used during the automated testing process.
 
-A blank [Web API Core template](https://github.com/RESOStandards/web-api-commander/blob/main/sample-web-api-server.core.1.0.2.resoscript) may be found in the root of the RESO Commander project. 
+A blank [Web API Core template](https://github.com/RESOStandards/web-api-commander/blob/main/sample-web-api-server.core.2.0.0.resoscript) may be found in the root of the RESO Commander project. 
 
-There is also a [sample template](https://github.com/RESOStandards/web-api-commander/blob/main/src/test/resources/mock.web-api-server.core.1.0.2.resoscript) used internally for acceptance testing of the Web API testing tool. The sample template provides a useful reference when filling out RESOScript files. 
+There is also a [sample template](https://github.com/RESOStandards/web-api-commander/blob/main/src/test/resources/mock.web-api-server.core.2.0.0.resoscript) used internally for acceptance testing of the Web API testing tool. The sample template provides a useful reference when filling out RESOScript files. 
 
 Items marked as REQUIRED in the configuration file MUST be completed, but things like sample field values have already been provided and should be sufficient for testing. If not, they also may be changed.
 
@@ -2638,6 +2773,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 
 <br />
 
+### TODO: Add Items from Web API Core 2.1.0 GitHub Issue
+See: https://github.com/RESOStandards/reso-transport-specifications/issues/22
+
 # Section 4: Contributors
 
 This document was written by [Joshua Darnell](mailto:josh@reso.org).
@@ -2648,7 +2786,7 @@ Thanks to the following contributors for their help with this project:
 | --- | --- |
 | Paul Stusiak | Falcon Technologies Corp. |
 | Sergio Del Rio | Templates for Business, Inc. |
-| Joshua Darnell | kurotek, LLC |
+| Joshua Darnell | RESO |
 | Cody Gustafson | FBS Data Systems |
 | Chris Lambrou | MetroMLS |
 | Scott Petronis | Onboard Informatics |
@@ -2657,13 +2795,15 @@ Thanks to the following contributors for their help with this project:
 | James McDaniel | UtahRealEstate.com |
 | Robert Gottesman | RESO |
 | Rob Larson | Larson Consulting, LLC |
-| Paul Hethmon | Corelogic |
+| Paul Hethmon | AMP Systems |
 | Rick Trevino | MetroList |
 | Pace Davis | Zillow Group |
 | Michael Watt | Zillow Group |
 | Geoff Rispin | Templates 4 Business, Inc. |
 | Maria Dalarcao | MLSListings, Inc. |
 | Jeremy Crawford | RESO |
+| Eric Finlay | Bridge Interactive |
+| Ryan Yates | Rapattoni |
 
 Many thanks to those who contributed to the Web API Core specification, including volunteers from the Transport workgroup. 
 
@@ -2705,6 +2845,8 @@ The following RCPs are included in Web API Core 2.0.0:
 <br />
 
 # Section 7: License
-This document is covered by the [RESO EULA](https://www.reso.org/eula/).
+This document is covered by the [RESO End User License Agreement (EULA)](https://www.reso.org/eula/).
+
+This End User License Agreement (the "EULA") is entered into by and between the Real Estate Standards Organization ("RESO") and the person or entity ("End User") that is downloading or otherwise obtaining the product associated with this EULA ("RESO Product"). This EULA governs End Users use of the RESO Product and End User agrees to the terms of this EULA by downloading or otherwise obtaining or using the RESO Product.
 
 Please [contact RESO](mailto:info@reso.org) if you have any questions.
