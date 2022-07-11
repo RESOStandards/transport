@@ -1,19 +1,20 @@
 # RESO Data Dictionary Endorsement
-|     |     |
-| --- | --- |
-| **Version** | 1.7 |
+
+| **Version** | 1.7.0 |
+| :--- | :--- |
 | **Submitter** | [Joshua Darnell](mailto:josh@reso.org) |
 | **Written** | June 2020 |
 | **Ratified** | December 2020 |
-| **Related RCPs** | [Web API Core 2.0.0](https://github.com/RESOStandards/reso-transport-specifications/blob/main/WEB-API-CORE.md) |
+| **RCP** | RCP-038 |
+| **Related RCPs** | [Web API Core 2.0.0](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md) |
 
-<br />
+<br /><br />
 
 # RESO End User License Agreement (EULA)
 
 This End User License Agreement (the "EULA") is entered into by and between the Real Estate Standards Organization ("RESO") and the person or entity ("End User") that is downloading or otherwise obtaining the product associated with this EULA ("RESO Product"). This EULA governs End Users use of the RESO Product and End User agrees to the terms of this EULA by downloading or otherwise obtaining or using the RESO Product.
 
-<br />
+<br /><br />
 
 # Table of Contents
 - [Summary of Changes](#summary-of-changes)
@@ -26,7 +27,7 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 - [Section 6: Appendices](#section-6-appendices)
 - [Section 7: License](#section-7-license)
 
-<br />
+<br /><br />
 
 # Summary of Changes
 
@@ -37,14 +38,14 @@ A summary of the changes from the previous testing rules is as follows:
 * **IDX Payload Nomenclature**: Previously, terminology included _IDX_Must_, _IDX_Optional_, etc., which have all been consolidated under the IDX label. In general, Payloads have been streamlined and now [each field indicates which payloads it belongs to](https://docs.google.com/spreadsheets/d/1SZ0b6T4_lz6ti6qB2Je7NSz_9iNOaV_v9dbfhPwWgXA/edit#gid=16571180&range=R:R) in a binary fashion, such as *IDX* or *BBO*. 
 * **Data Sampling**: As of August 31, 2021, data sampling is also part of the Data Dictionary 1.7 Endorsement to ensure that what's available on a given server matches what's advertised and that the data conforms to the Data Dictionary specification, where applicable. 
 
-<br />
+<br /><br />
 
 # Introduction
 The RESO Data Dictionary defines the set of data elements available within RESO's domain. These consist of _resources_, _fields_, and _enumerations_, also known as _lookups_.
 
 This document outlines what the Data Dictionary is and how it maps to the RESO Web API transport layer.
 
-<br />
+<br /><br />
 
 # Section 1: Purpose
 The primary goal of the RESO Data Dictionary is interoperability through the consistent use of standard data elements. 
@@ -53,7 +54,7 @@ While the Web API Server specification ensures that servers can talk to each oth
 
 The point of the RESO Data Dictionary is to give data consumers and producers a common language to exchange data with.
 
-<br />
+<br /><br />
 
 # Section 2: Specification
 ## Overview 
@@ -61,6 +62,7 @@ The RESO Data Dictionary consists of three main sets of data elements:
 * **Resources**: coarse-grained groupings where data is kept. For example, the Property resource contains information about a given property, including its listings when present. Resources contain _fields_ and _lookups_.
 * **Fields**: data elements where atomic values can exist. ListPrice is a field within the Property resource where a given listing's price would exist if it were available in the data set. Fields have data types such as Strings or Timestamps. 
 * **Lookups**: pre-defined values a given field can have as part of its definition. StandardStatus has allowed values of Active and Pending. These are also called enumerations, which can be closed or open with or without values defined. Closed enumerations MUST only contain their defined values. Others are open to extension if a similar value isn't already defined.
+
 
 ## Section 2.1: Data Dictionary Spreadsheet
 
@@ -70,6 +72,7 @@ This worksheet is divided into three main sections:
 * **Resource Sheets**: define each given resource in the Data Dictionary, such as Property, Member, Office, or Media. These contain field definitions, which have data types and other attributes.
 * **Lookup Fields and Values**: this sheet is a one-to-many collection of all the lookups defined in the Data Dictionary, referred to by their "Lookup Field" (which is really their grouping). There are two kinds of fields that use these lookups from the other resource sheets, those with Simple Data Types of _String List, Single_ and _String List, Multi_.
 * **Standard Relationships**: define nested relationships a given resource might have. These relationships affect a payload's data shape when related resources are joined together. These can either be one-to-one relationships where a single item is expanded into another, such as the case of Member expanded into Property as BuyerAgent, or they can be one-to-many relationships such as Media expanded into a Property record to show all of a given listing's photos. 
+
 
 ## Section 2.2: `Lookup` Resource for Enumeration Metadata
 
@@ -260,8 +263,7 @@ In the preceding example, the `Lookup` resource **MUST** contain the following:
 * Entry for `LookupName` of `StandardStatus` with "Active Under Contract" as a `LookupValue`
 * Entry for `LookupName` of `AccessibilityFeatures` with three records: "Accessible Approach with Ramp", "Accessible Entrance", and "Visitable"
 
-
-<br />
+<br /><br />
 
 # Section 3: Certification
 [Link to Original Document](https://docs.google.com/document/d/15DFf9kDX_mlGCJVOch2fztl8W5h-yd18N0_03Sb4HwM/edit)
@@ -271,6 +273,7 @@ When standards are approved for the RESO Data Dictionary, those changes are stor
 Robust statistics are created through the use of the RESO Data Dictionary application, which are then ingested into a real-time analytics framework that lets users see industry-wide statistics about resources, fields, and enumerations. This information can be used to inform decisions about standardization and data mapping between RESO certified servers.
 
 ## Background
+
 
 The RESO Data Dictionary testing tool ensures compliance with RESO Data Dictionary definitions of resources, fields, and enumerations. 
 
@@ -305,6 +308,9 @@ RESO Data Dictionary certification is based on adherence to: a) Resource, Field,
 ### Configuring the Test Client
 
 The starting point is for applicants to create a configuration file in RESOScript (XML) format which contains credentials and a server's RESO Web API endpoint. A sample RESOScript file and instructions for how to use it will be provided with the initial release of the testing tool.
+
+
+<br />
 
 ### Metadata Request Using RESO Standard Authentication
 
@@ -548,7 +554,6 @@ Servers **MUST** be able to provide the entire set of lookups relevant for testi
 
 See the [Lookup resource section](#section-22-lookup-resource-for-enumeration-metadata) in the specification for more information.
 
-
 ### Additional References
 
 The current version of the generated BDD acceptance tests from which the Sample BDD Tests above were taken from [may be found here](https://github.com/RESOStandards/web-api-commander/blob/58485cc04f24e464c6c1313d25428d43835d7668/src/main/java/org/reso/certification/features/data-dictionary/v1-7-0/). Note that this link will be updated once the Data Dictionary 1.7 testing tool codebase has been merged into the main branch.
@@ -689,7 +694,7 @@ To apply for certification, or for help with an existing application, please con
 
 For questions about revised certification procedures or for help or questions about RESO's automated testing tools, please contact RESO's [dev support](mailto:dev@reso.org).
 
-<br />
+<br /><br />
 
 # Section 4. Contributors
 This document was written by [Joshua Darnell](mailto:josh@reso.org).
@@ -709,18 +714,18 @@ Many thanks to those who contributed to the RESO Data Dictionary specification, 
 
 If you would like to contribute, please contact [RESO Development](mailto:dev@reso.org). This could mean anything from QA or beta testing to technical writing to doing code reviews or writing code.
 
-<br />
+<br /><br />
 
 # Section 5: References
 
 Please see the following references for more information regarding topics covered in this document:
 * [Data Dictionary 1.7 Wiki](https://ddwiki.reso.org/display/DDW17/)
 * [Data Dictionary 1.7 Reference Sheet](https://docs.google.com/spreadsheets/d/1SZ0b6T4_lz6ti6qB2Je7NSz_9iNOaV_v9dbfhPwWgXA/edit?usp=sharing)
-* [RESO Web API Core Specification](https://github.com/RESOStandards/reso-transport-specifications/blob/main/WEB-API-CORE.md)
+* [RESO Web API Core Specification](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md)
 * [RESO Common Schema Reference Metadata](https://github.com/RESOStandards/web-api-commander/blob/master/src/main/resources/RESODataDictionary-1.7.xml)
 * [RESO Common Schema Open API Specification](https://app.swaggerhub.com/apis/darnjo/RESO-Web-API-Common-Schema/1.7)
 
-<br />
+<br /><br />
 
 # Section 6: Appendices
 
@@ -729,7 +734,7 @@ The following RCPs are related to Data Dictionary 2.0:
 * [RCP-032 - Lookup Resource](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275152879)
 * [RCP-033 - Field Resource](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/7996473441)
 
-<br />
+<br /><br />
 
 # Section 7: License
 This document is covered by the [RESO EULA](https://www.reso.org/eula/).

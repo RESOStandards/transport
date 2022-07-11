@@ -1,12 +1,13 @@
-# RESO RCP Endorsement Template
-|     |     |
-| --- | --- |
+# RESO (Endorsement Name) Endorsement
+
 | **Version** | x.y.z |
+| :--- | :--- |
 | **Submitter** | [Name of Author](mailto:your@company.com) |
 | **Co-Submitter** | [Name of Author](mailto:your@company.com) |
 | **Written** | June 2020 |
 | **Ratified** | December 2020 |
-| **Related RCPs** | [Related RCP](https://github.com/RESOStandards/reso-transport-specifications) |
+| **RCP** | RCP-XYZ |
+| **Related RCPs** | [Related RCP](https://transport.reso.org) |
 
 <br /><br />
 
