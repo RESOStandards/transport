@@ -74,6 +74,7 @@ This worksheet is divided into three main sections:
 * **Standard Relationships**: define nested relationships a given resource might have. These relationships affect a payload's data shape when related resources are joined together. These can either be one-to-one relationships where a single item is expanded into another, such as the case of Member expanded into Property as BuyerAgent, or they can be one-to-many relationships such as Media expanded into a Property record to show all of a given listing's photos. 
 
 
+
 ## Section 2.2: `Lookup` Resource for Enumeration Metadata
 
 This section defines a RESO Data Dictionary resource called `Lookup` that can be used to convey metadata about the enumerations available on a given server. 
@@ -88,9 +89,9 @@ The `Lookup` resource is defined as follows:
 | Field             | Data Type    | Sample Value           | Nullable  | Description |
 | ----------------- | ------------ | ---------------------- | --------- | ----------- |
 | **LookupKey**     | `Edm.String` | "ABC123"               | **false** | The key used to uniquely identify the Lookup entry. |
-| **LookupName**    | `Edm.String` | "ListingAgreementType" | **false** | The name of the enumeration. This is the [_**LookupField**_](https://docs.google.com/spreadsheets/d/1SZ0b6T4_lz6ti6qB2Je7NSz_9iNOaV_v9dbfhPwWgXA/edit#gid=585857157&range=A:A) in the adopted Data Dictionary 1.7 spreadsheet. <br /> <br />It is called a "LookupName" in this proposal because more than one field can have a given lookup, so it refers to the name of the lookup rather than a given field. For example, Listing with CountyOrParish and Office with OfficeCountyOrParish having the same CountyOrParish LookupName. <br /><br />This MUST match the Data Dictionary definition for in cases where the lookup is defined. Vendors MAY add their own enumerations otherwise.<br /><br />The LookupName a given field uses is required to be annotated at the field level in the OData XML Metadata, as outlined later in this proposal. |
+| **LookupName**    | `Edm.String` | "ListingAgreementType" | **false** | The name of the enumeration. This is the [_**LookupField**_](https://docs.google.com/spreadsheets/d/1P4CqtBT-3hmfsWLeID5faJgGz2AYTU_7d-OKZBuY_c0/edit#gid=167198210&range=A:A) in the adopted Data Dictionary 2.0 spreadsheet. <br /> <br />It is called a "LookupName" in this proposal because more than one field can have a given lookup, so it refers to the name of the lookup rather than a given field. For example, Listing with CountyOrParish and Office with OfficeCountyOrParish having the same CountyOrParish LookupName. <br /><br />This MUST match the Data Dictionary definition for in cases where the lookup is defined. Vendors MAY add their own enumerations otherwise.<br /><br />The LookupName a given field uses is required to be annotated at the field level in the OData XML Metadata, as outlined later in this proposal. |
 | **LookupValue**   | `Edm.String` | "Seller Reserve" | **false** | The human-friendly display name the data consumer receives in the payload and uses in queries.<br /><br />This MAY be a local name or synonym for a given RESO Data Dictionary lookup item. |
-| **StandardLookupValue** | `Edm.String` | "Exclusive Agency" | true | The Data Dictionary [_**LookupDisplayName**_](https://docs.google.com/spreadsheets/d/1SZ0b6T4_lz6ti6qB2Je7NSz_9iNOaV_v9dbfhPwWgXA/edit#gid=585857157&range=C:C) of the enumerated value.<br /><br />This field is required when the LookupValue for a given item corresponds to a RESO standard value, meaning a standard lookup display name, known synonym, local name, or translation of that value.<br /><br />Local lookups MAY omit this value if they don't correspond to an existing RESO standard lookup value. |
+| **StandardLookupValue** | `Edm.String` | "Exclusive Agency" | true | The Data Dictionary [_**LookupDisplayName**_](https://docs.google.com/spreadsheets/d/1P4CqtBT-3hmfsWLeID5faJgGz2AYTU_7d-OKZBuY_c0/edit#gid=167198210&range=C:C) of the enumerated value.<br /><br />This field is required when the LookupValue for a given item corresponds to a RESO standard value, meaning a standard lookup display name, known synonym, local name, or translation of that value.<br /><br />Local lookups MAY omit this value if they don't correspond to an existing RESO standard lookup value. |
 | **LegacyODataValue**     | `Edm.String` | "ExclusiveAgency" | true | The Legacy OData lookup value that the server vendor provided in their OData XML Metadata.<br /><br />This value is optional, and has been included in order to provide a stable mechanism for translating OData lookup values to RESO standard lookup display names, as well as for historical data that might have included the OData value at some point, even after the vendor had converted to human friendly display names. |
 | **ModificationTimestamp** | `Edm.DateTimeOffset` | "2020-07-07T17:36:14+00:00" | **false** | The timestamp for when the enumeration value was last modified.<br /><br />This is used to help rebuild caches when metadata items change so consumers don't have to re-pull and reprocess the entire set of metadata when only a small number of changes have been made. |
 
@@ -119,18 +120,14 @@ Notes:
 * The underlying type for the lookup-based field **MUST** either be `Edm.String` or `Collection(Edm.String)`, depending on whether the given field is String List, Single or Multi in the Data Dictionary, respectively.
 
 ## Queries
-The `Lookup` resource **MUST** support querying by `ModificationTimestamp` and **MUST** provide enough granularity in its timestamps to be able to successfully page through and consume each of the records. 
-
-This means that the `Lookup` resource **MUST** support the query comparison operators outlined in the Web API Core specification for the `Edm.DateTimeOffset` data type, namely `eq`, `ne`, `lt`, `le`, `gt`, and `ge` as well as `$orderby`.
-
-Advertised lookups that cannot be retrieved won't be counted as part of what was found on a given server during certification and will fail in future versions of the RESO Data Dictionary.
+The `Lookup` resource **MUST** support queries that use the [OData`$top` and `$skip` query operators](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#_Toc31361042), in conjunction with a `ModificationTimestamp` parameter so consumers can synchronize since the last update. The client **MUST** be able to consume the advertised count of records from the server or testing will not pass.
 
 Providers **MAY** support other queries on this resource, such as filtering by `LookupName`.
 
-### Example: GET Lookups by ModificationTimestamp 
-The following example shows retrieving a page of records, as determined by the provider, using a `ModificationTimestamp` query using `$orderby=ModificationTimestamp desc`.
+### Example: GET Lookups using OData `$top` and `$skip` 
+The following example shows retrieving a page of records using an [OData `$top` and `$skip` query](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#_Toc31361042):
 ```
-GET /Lookup?$filter=ModificationTimestamp lt 2020-08-01T00:00:00Z&$orderby=ModificationTimestamp desc
+GET /Lookup?$top=100&$skip=0
 ```
 ```
 {
@@ -156,12 +153,14 @@ GET /Lookup?$filter=ModificationTimestamp lt 2020-08-01T00:00:00Z&$orderby=Modif
 }
 ```
 
-If paging were needed, the next query would ask for records with a `ModificationTimestamp` of less than any found on the current page.
+In the previous example, the client has requested 100 records but only the 3 shown were available. Clients should be prepared to paginate with page sizes less than the requested size. For example, if 1,000 were requested but only 100 were supported on the server, the consumer's next query should have a `$top=100` and `$skip=100`. 
 
-### Example: GET Lookups by ModificationTimestamp with `$count=true`
-The following example shows retrieving a page of records, as determined by the provider, using a `ModificationTimestamp` query using `$orderby=ModificationTimestamp desc`.
+
+### Example: GET Lookups with `$count=true` 
+Providers MUST support the OData `$count=true` parameter. 
+
 ```
-GET /Lookup?$count=true&$filter=ModificationTimestamp lt 2020-08-01T00:00:00Z&$orderby=ModificationTimestamp desc
+GET /Lookup?$count=true
 ```
 ```
 {
@@ -188,16 +187,39 @@ GET /Lookup?$count=true&$filter=ModificationTimestamp lt 2020-08-01T00:00:00Z&$o
 }
 ```
 
-### Example: GET Count of Available Lookups without $filter
-Providers MUST support the OData `$count=true` parameter. This can be used in conjunction with `$top=0` to provide a count without returning any values. 
+The count query may be used in conjunction with `$top=0` to provide a count without returning any values.
+
+### Example: GET records that were updated since they were last synced
+If a consumer wanted to catch up with any records updated since the last time they had synced, they might use the following query:
 
 ```
-GET /Lookup?$top=0&$count=true
+GET /Lookup?$filter=ModificationTimestamp ge 2022-01-01T00:00:00Z&$top=100&skip=0&$count=true
 ```
 ```
 {
-  "@odata.count": 3,
+  "@odata.count": 0,
   "value": []
+}
+```
+
+Since the count is zero, this means that there were no updates since the last sync on `2022-08-01T00:00:00Z`.
+
+If there were updates, something similar to the following might be expected:
+
+
+```
+GET /Lookup?$filter=ModificationTimestamp ge 2022-01-01T00:00:00Z&$top=100&skip=0&$count=true
+```
+```
+{
+  "@odata.count": 1,
+  "value": [{
+    "LookupKey": "CDE125",
+    "LookupName": "CountyOrParish",
+    "LookupValue": "Contra Costa County",
+    "StandardLookupValue": null,
+    "ModificationTimestamp": "2022-03-07T17:36:16Z"
+  }]
 }
 ```
 
@@ -546,13 +568,20 @@ RESO supports use of a Data Dictionary resource in order to advertise lookup met
 
 The following testing rules will be used during RESO Certification:
 * Check the data type of the lookup field, e.g. `StandardStatus` or `AccessibilityFeatures`, it should be `Edm.String` for single enumerations and `Collection(Edm.String)` for multiple enumerations. 
-* Check that the required annotation is present and in the correct format.
+* Check that the required annotation is present in the OData XML metadata from the server, and in the correct format.
 * Check that the `Lookup` resource is present in the metadata, exists on the server, and is defined correctly.
-* All records will be replicated from the `Lookup` resource using `ModificationTimestamp` queries. Payload data will then be correlated with what has been advertised.
+* All records will be replicated from the `Lookup` resource using `$top` and `$skip` queries. Payload data will then be correlated with what has been advertised to ensure that enumerations are present for each annotated lookup name. 
 
-Servers **MUST** be able to provide the entire set of lookups relevant for testing through the replication operation, so if the page size is 100 and a given system has 101 records with the same timestamp, we won't be able to reach the advertised count we collect using the `$count=true` test.
+Servers **MUST** be able to provide the entire set of lookups relevant for testing through the replication operation so, for example, if a given system has 101 records from the `$count=true` query option but only 100 records were fetched, this would fail. The opposite is also true, if 100 records were advertised and 101 were found, this would not pass testing.
 
 See the [Lookup resource section](#section-22-lookup-resource-for-enumeration-metadata) in the specification for more information.
+
+### Schema Validation
+RESO Certification will include strict schema validation to ensure that the data available in the payload matches what's advertised in the metadata.
+
+This will consist of creating a JSON Schema representation of the available metadata, including the Field and Lookup resources, and validating all responses from the server with it. [JSON Schema allows](http://json-schema.org/understanding-json-schema/reference/object.html#additional-properties) an `additionalProperties` flag to be set to `false`, meaning that if any additional properties or enumerated values exist in the payload that aren't in the metadata, schema validation will fail. 
+
+This will also include stricter validation for things like string lengths. If an `Edm.String` field declares itself as 100 characters and the payload has 101 characters, the provider will fail certification.
 
 ### Additional References
 
