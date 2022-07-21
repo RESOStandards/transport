@@ -1,5 +1,5 @@
 # RESO Endorsements
-Endorsements are modular specifications grouped by their transport procotol. For example, the _RESO Web API_. 
+Endorsements are modular specifications grouped by their transport procotol, for example, the _RESO Web API_.
 
 Specifications use [semantic versioning](https://semver.org/).
 
@@ -32,7 +32,7 @@ Proposals MUST have two verified implementations from separate vendors before th
 <br />
 
 # RATIFIED 
-Ratified proposals have been adopted by the workgroups and RESO as an organization.
+Ratified proposals have been adopted by the workgroups and RESO as an organization. Proposals that require certification testing must have adopted a specification, testing rules, and production-ready testing tools for ratification.
 
 ## [Data Dictionary 1.7](./data-dictionary.md)
 | **RCP** | RCP-036 |
@@ -57,7 +57,7 @@ The Data Dictionary endorsement defines models for use in the RESO domain. These
 | **Dependencies** | OData 4.0 or 4.01<br />TLS 1.2+<br />OAuth 2 (Auth Token or Client Credentials) |
 | **Related Links** | [Specification](./web-api-core.md)<br /> |
 
-The Web API Core endorsement defines the primary functionality RESO Web API servers are expected to have in order to provide both replication and live query support.
+The Web API Core endorsement defines the primary functionality RESO Web API servers are expected to support in order to provide both replication and live query support.
 
 <br />
 
@@ -171,7 +171,7 @@ The Web API Core 2.1.0 endorsement defines the primary functionality RESO Web AP
 | **Dependencies** | [Data Dictionary 1.7](./data-dictionary.md)<br />[Web API Core 2.0.0+](./web-api-core.md) |
 | **Related Links** | [GitHub Issue](https://github.com/RESOStandards/reso-transport-specifications/issues/23)<br /> |
 
-Defines general payloads data validation and availability testing rules, as well as the IDX Payload Endorsement.
+Payloads 2.0 defines general data validation and availability testing rules, as well as the IDX Payload Endorsement.
 
 **New in version 2.0**
 * Support for OData `$expand`
@@ -211,9 +211,8 @@ If you would like to suggest a new change proposal, please use the [**RCP Templa
 ## 3. Approval / Adoption Phase
 * The PR will be taken out of draft status at this point, awaiting final approval.
 * There may also be a motion to create Certification tools, and potentially new reports or metrics, at that time. If so, these items need to be added to RESO’s backlog. 
-* The group will decide which specification(s) it should be added to and which version(s) to target; those writing the proposals can make requests in this regard. 
+* The Transport and Certifiaction groups will decide which specification(s) it should be added to and which version(s) to target; those writing the proposals can make requests in this regard. 
 * Once the new specification is ready for ratification, related PRs will be merged into their corresponding specifications.
-
 
 
 Please contact [RESO Development](mailto:dev@reso.org) if you have any questions.
