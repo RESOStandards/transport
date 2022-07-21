@@ -35,6 +35,7 @@ Proposals MUST have two verified implementations from separate vendors before th
 Ratified proposals have been adopted by the workgroups and RESO as an organization. Proposals that require certification testing must have adopted a specification, testing rules, and production-ready testing tools for ratification.
 
 ## [Data Dictionary 1.7](./data-dictionary.md)
+
 | **RCP** | RCP-036 |
 | :--- | :--- |
 | **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org)) |
@@ -48,6 +49,7 @@ The Data Dictionary endorsement defines models for use in the RESO domain. These
 <br />
 
 ## [Web API Core 2.0.0](./web-api-core.md)
+
 | **RCP** | RCP-037 |
 | :--- | :--- |
 | **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org)) |
@@ -62,6 +64,7 @@ The Web API Core endorsement defines the primary functionality RESO Web API serv
 <br />
 
 ## [Payloads 1.7](./payloads.md)
+
 | **RCP** | RCP-038 |
 | :-- | :-- |
 | **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org)) |
@@ -143,6 +146,7 @@ The Data Dictionary endorsement defines models for use in the RESO domain. These
 Proposals that are in progress are ones that have been reviewed by the workgroups and are actively being worked on prior to draft status.
 
 ## [Web API Core 2.1.0](https://github.com/RESOStandards/reso-transport-specifications/issues/22)
+
 | **RCP** | RCP-039 |
 | :--- | :--- |
 | **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org)) |
@@ -162,6 +166,7 @@ The Web API Core 2.1.0 endorsement defines the primary functionality RESO Web AP
 <br />
 
 ## [Payloads 2.0](https://github.com/RESOStandards/reso-transport-specifications/issues/23)
+
 | **RCP** | RCP-041 |
 | :-- | :-- |
 | **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org)) |
@@ -208,10 +213,10 @@ If you would like to suggest a new change proposal, please use the [**RCP Templa
 * The proposal will stay in draft status until it has at least two implementations from two separate vendors, at which point there will be a workgroup discussion, including revisiting which existing specifications and versions to add it to, if applicable. 
 * The implementations should be verified against the proposed testing rules by RESO staff, even if on a development server. 
 
-## 3. Approval / Adoption Phase
+## 3. Approval and Adoption Phase
 * The PR will be taken out of draft status at this point, awaiting final approval.
 * There may also be a motion to create Certification tools, and potentially new reports or metrics, at that time. If so, these items need to be added to RESO’s backlog. 
-* The Transport and Certifiaction groups will decide which specification(s) it should be added to and which version(s) to target; those writing the proposals can make requests in this regard. 
+* The Transport and Certification groups will decide which specification(s) it should be added to and which version(s) to target; those writing the proposals can make requests in this regard. 
 * Once the new specification is ready for ratification, related PRs will be merged into their corresponding specifications.
 
 
