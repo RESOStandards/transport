@@ -37,7 +37,7 @@ Ratified proposals have been adopted by the workgroups and RESO as an organizati
 ## [Data Dictionary 1.7](./data-dictionary.md)
 | **RCP** | RCP-036 |
 | :--- | :--- |
-| **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org))
+| **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org)) |
 | **Status** | **RATIFIED** |
 | **Date Ratified** | January 2021 |
 | **Dependencies** | [Web API Core 2.0.0+](./web-api-core.md) |
@@ -50,7 +50,7 @@ The Data Dictionary endorsement defines models for use in the RESO domain. These
 ## [Web API Core 2.0.0](./web-api-core.md)
 | **RCP** | RCP-037 |
 | :--- | :--- |
-| **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org))
+| **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org)) |
 | **Status** | **RATIFIED** |
 | **Date Ratified** | January 2021 |
 | **Protocol** | HTTP |
@@ -64,7 +64,7 @@ The Web API Core endorsement defines the primary functionality RESO Web API serv
 ## [Payloads 1.7](./payloads.md)
 | **RCP** | RCP-038 |
 | :-- | :-- |
-| **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org))
+| **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org)) |
 | **Status** | **RATIFIED** |
 | **Date Ratified** | August 2021 |
 | **Protocol** | HTTP |
@@ -82,7 +82,7 @@ Draft proposals have been approved by the workgroups and organization and are aw
 
 | **RCP** | RCP-010 |
 | :--- | :--- |
-| **Authors** | Sergio Del Rio ([T4Bi](Sergio.Del.Rio@t4bi.com))<br />[Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org))
+| **Authors** | Sergio Del Rio ([T4Bi](Sergio.Del.Rio@t4bi.com))<br />[Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org)) |
 | **Status** | **DRAFT** |
 | **Date Approved** | April 2017 (original) |
 | **Dependencies** | [Data Dictionary 1.7+](./data-dictionary.md)<br />[Web API 2.0.0+](./web-api-core.md)<br />[Validation Expression grammar](https://github.com/darnjo/rcp019) |
@@ -124,7 +124,7 @@ The Lookup Resource provides a framework to advertise human-friendly display nam
 
 | **RCP** | RCP-040 |
 | :--- | :--- |
-| **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org))
+| **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org)) |
 | **Status** | **DRAFT** |
 | **Dependencies** | [Web API Core 2.0.0+](./web-api-core.md) |
 | **Related Links** | [Specification (Draft PR)](https://github.com/RESOStandards/reso-transport-specifications/blob/c1baab163567a98c5457137d65ad09e3a22ac46e/data-dictionary.md)<br />[DD Wiki 1.7](https://ddwiki.reso.org/display/DDW17/RESO+Data+Dictionary+1.7)<br />[Data Dictionary Spreadsheet](https://docs.google.com/spreadsheets/d/1_59Iqr7AQ51rEFa7p0ND-YhJjEru8gY-D_HM1yy5c6w/edit?usp=sharing) |
@@ -145,7 +145,7 @@ Proposals that are in progress are ones that have been reviewed by the workgroup
 ## [Web API Core 2.1.0](https://github.com/RESOStandards/reso-transport-specifications/issues/22)
 | **RCP** | RCP-039 |
 | :--- | :--- |
-| **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org))
+| **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org)) |
 | **Status** | **IN PROGRESS** |
 | **Date Started** | April 2022 |
 | **Protocol** | HTTP |
@@ -164,7 +164,7 @@ The Web API Core 2.1.0 endorsement defines the primary functionality RESO Web AP
 ## [Payloads 2.0](https://github.com/RESOStandards/reso-transport-specifications/issues/23)
 | **RCP** | RCP-041 |
 | :-- | :-- |
-| **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org))
+| **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org)) |
 | **Status** | **IN PROGRESS** |
 | **Date Started** | April 2022 |
 | **Protocol** | HTTP |
