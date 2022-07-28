@@ -1,29 +1,26 @@
 # RESO Endorsements
-Endorsements are modular specifications grouped by their transport procotol, for example, the _RESO Web API_.
-
-Specifications use [semantic versioning](https://semver.org/).
-
-Please visit our [discussion forum](https://github.com/RESOStandards/reso-transport-specifications/discussions) if you have any questions or would like to start a proposal.
-
-See [issues](https://github.com/RESOStandards/reso-transport-specifications/issues) for new specifications.
+Endorsements are modular specifications grouped by their transport procotol, for example, the _RESO Web API_. Specifications use [semantic versioning](https://semver.org/).
+* [**RATIFIED**](https://github.com/RESOStandards/reso-transport-specifications#ratified)
+* [**DRAFT**](https://github.com/RESOStandards/reso-transport-specifications#draft)
+* [**IN PROGRESS**](https://github.com/RESOStandards/reso-transport-specifications#in-progress)
 
 Proposals MUST have two verified implementations from separate vendors before they can be adopted.
 
-<br />
+Please visit our [discussion forum](https://github.com/RESOStandards/reso-transport-specifications/discussions) if you have any questions or would like to start a proposal. See [issues](https://github.com/RESOStandards/reso-transport-specifications/issues) for new specifications.
 
-| RCP | Name | Version | Status | Status Date |
+## CURRENT CHANGE PROPOSALS
+
+|  <div style="width:100px">RCP</div> | <div style="width:150px">Name</div> | Version | Status | Status Date |
 | :-- | :-- | :-- | :-- | :-- |
-| [**RCP-036**](#data-dictionary-17) | Data Dictionary | 1.7 | [**RATIFIED**](https://github.com/RESOStandards/reso-transport-specifications/edit/main/README.md#ratified) | Jan 2021 |
-| [**RCP-037**](#web-api-core-200) | Web API Core | 2.0 | [**RATIFIED**](https://github.com/RESOStandards/reso-transport-specifications/edit/main/README.md#ratified) | Jan 2021|
-| [**RCP-038**](#payloads-17) | Payloads (with IDX Payload) | 1.7 | [**RATIFIED**](https://github.com/RESOStandards/reso-transport-specifications/edit/main/README.md#ratified) | Aug 2021 |
-| | 
-| [**RCP-010**](#web-api-addedit) | Web API Add/Edit | 2.0.0 | [**DRAFT**](https://github.com/RESOStandards/reso-transport-specifications/edit/main/README.md#draft) | Apr 2017 |
-| [**RCP-019**](#web-api-validation-expressions) | Web API Validation Expressions | 2.0.0 | [**DRAFT**](https://github.com/RESOStandards/reso-transport-specifications/edit/main/README.md#draft) | Apr 2018 |
-| [**RCP-032**](#lookup-resource) | Lookup Resource | 1.7 | [**DRAFT**](https://github.com/RESOStandards/reso-transport-specifications/edit/main/README.md#draft) | Dec 2021 |
-| [**RCP-040**](#data-dictionary-20) | Data Dictionary | 2.0 | [**DRAFT**](https://github.com/RESOStandards/reso-transport-specifications/edit/main/README.md#draft) | Dec 2021 |
-| | 
-| [**RCP-039**](#web-api-core-210) | Web API Core | 2.1.0 | [**IN PROGRESS**](https://github.com/RESOStandards/reso-transport-specifications/edit/main/README.md#draft) | Apr 2021 |
-| [**RCP-041**](#payloads-20) | Payloads | 2.0 | [**IN PROGRESS**](https://github.com/RESOStandards/reso-transport-specifications/edit/main/README.md#draft) | Apr 2021 |
+| [**RCP-036**](#data-dictionary-17) | Data Dictionary | 1.7 | [**RATIFIED**](https://github.com/RESOStandards/reso-transport-specifications#ratified) | Jan 2021 |
+| [**RCP-037**](#web-api-core-200) | Web API Core | 2.0 | [**RATIFIED**](https://github.com/RESOStandards/reso-transport-specifications#ratified) | Jan 2021|
+| [**RCP-038**](#payloads-17) | Payloads (with IDX Payload) | 1.7 | [**RATIFIED**](https://github.com/RESOStandards/reso-transport-specifications#ratified) | Aug 2021 |
+| [**RCP-010**](#web-api-addedit) | Web API Add/Edit | 2.0.0 | [**DRAFT**](https://github.com/RESOStandards/reso-transport-specifications#draft) | Apr 2017 |
+| [**RCP-019**](#web-api-validation-expressions) | Web API Validation Expressions | 2.0.0 | [**DRAFT**](https://github.com/RESOStandards/reso-transport-specifications#draft) | Apr 2018 |
+| [**RCP-032**](#lookup-resource) | Lookup Resource | 1.7 | [**DRAFT**](https://github.com/RESOStandards/reso-transport-specifications#draft) | Dec 2021 |
+| [**RCP-040**](#data-dictionary-20) | Data Dictionary | 2.0 | [**DRAFT**](https://github.com/RESOStandards/reso-transport-specifications#draft) | Dec 2021 |
+| [**RCP-039**](#web-api-core-210) | Web API Core | 2.1.0 | [**IN PROGRESS**](https://github.com/RESOStandards/reso-transport-specifications#in-progress) | Apr 2021 |
+| [**RCP-041**](#payloads-20) | Payloads | 2.0 | [**IN PROGRESS**](https://github.com/RESOStandards/reso-transport-specifications#in-progress) | Apr 2021 |
 
 <br />
 
@@ -76,7 +73,11 @@ The Web API Core endorsement defines the primary functionality RESO Web API serv
 
 Defines general payloads data validation and availability testing rules, as well as the IDX Payload Endorsement.
 
-<br /><br />
+<br />
+
+---
+
+<br />
 
 # DRAFT
 Draft proposals have been approved by the workgroups and organization and are awaiting implementations and community review.
@@ -140,7 +141,11 @@ The Data Dictionary endorsement defines models for use in the RESO domain. These
 * Data validation against server metadata - if items are found in the payload that are not advertised, providers will ont pass testing
 * Updated Data Dictionary reference sheet structure
 
-<br /><br />
+<br />
+
+---
+
+<br />
 
 # IN PROGRESS
 Proposals that are in progress are ones that have been reviewed by the workgroups and are actively being worked on prior to draft status.
