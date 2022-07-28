@@ -8,7 +8,7 @@ Proposals MUST have two verified implementations from separate vendors before th
 
 Please visit our [discussion forum](https://github.com/RESOStandards/reso-transport-specifications/discussions) if you have any questions or would like to start a proposal. See [issues](https://github.com/RESOStandards/reso-transport-specifications/issues) for new specifications.
 
-## CURRENT CHANGE PROPOSALS
+## CHANGE PROPOSALS
 
 | RCP | Name | Version | Status | Status Date |
 | :-- | :-- | :-- | :-- | :-- |
@@ -89,7 +89,7 @@ Draft proposals have been approved by the workgroups and organization and are aw
 | **Authors** | Sergio Del Rio ([T4Bi](Sergio.Del.Rio@t4bi.com))<br />[Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org)) |
 | **Status** | **DRAFT** |
 | **Date Approved** | April 2017 (original) |
-| **Dependencies** | [Data Dictionary 1.7+](./data-dictionary.md)<br />[Web API 2.0.0+](./web-api-core.md)<br />[Validation Expression grammar](https://github.com/darnjo/rcp019) |
+| **Dependencies** | [Data Dictionary 1.7+](./data-dictionary.md)<br />[Web API 2.0.0+](./web-api-core.md) |
 | **Related Links** | [Specification (Draft PR)](https://github.com/RESOStandards/reso-transport-specifications/blob/c94fcd4d511a70f500a462cd10b8e48e10d0c113/data-dictionary.md)<br />[DD Wiki 1.7](https://ddwiki.reso.org/display/DDW17/RESO+Data+Dictionary+1.7)<br />[Data Dictionary Spreadsheet](https://docs.google.com/spreadsheets/d/1_59Iqr7AQ51rEFa7p0ND-YhJjEru8gY-D_HM1yy5c6w/edit?usp=sharing)<br /> |
 
 The Web API Add/Edit endorsement defines how to Create, Update, and Delete data in the RESO Web API. 
