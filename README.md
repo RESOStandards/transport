@@ -10,7 +10,7 @@ Please visit our [discussion forum](https://github.com/RESOStandards/reso-transp
 
 ## CURRENT CHANGE PROPOSALS
 
-|  <div style="width:100px">RCP</div> | <div style="width:150px">Name</div> | Version | Status | Status Date |
+| RCP | Name | Version | Status | Status Date |
 | :-- | :-- | :-- | :-- | :-- |
 | [**RCP-036**](#data-dictionary-17) | Data Dictionary | 1.7 | [**RATIFIED**](https://github.com/RESOStandards/reso-transport-specifications#ratified) | Jan 2021 |
 | [**RCP-037**](#web-api-core-200) | Web API Core | 2.0 | [**RATIFIED**](https://github.com/RESOStandards/reso-transport-specifications#ratified) | Jan 2021|
