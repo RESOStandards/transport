@@ -1,7 +1,7 @@
-# New Change Proposals
-The RESO RCP Process has the following phases:
+# RESO Change Proposal (RCP) Process
+The RCP Process is as follows:
 
-## Change Proposals
+## New Change Proposals
 1. Make a post on [GitHub Discussions](https://github.com/RESOStandards/transport/discussions). This should contain a summary of the business case, list of requirements, and initial proposal.
 2. Request that the topic be added to the Transport Workgroup agenda by emailing transport@reso.org at least two weeks before the meeting in which it's to be discussed. Ideally, there should be activity in the GitHub Discussion prior to the workgroup meeting. 
 3. Once there’s consensus in the group to move a given item forward, Transport will send it to the Certification Subgroup. [An issue should be created](https://github.com/RESOStandards/transport/issues/new) with a preliminary set of testing rules that could be used to (unambiguously) build software with. An impact assessment should also be included, when applicable.
