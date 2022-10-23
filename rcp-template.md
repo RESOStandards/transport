@@ -1,13 +1,14 @@
 # RESO (Endorsement Name) Endorsement
 
-| **Version** | x.y.z |
+| **RCP** | RCP-XXX |
 | :--- | :--- |
-| **Submitter** | [Name of Author](mailto:your@company.com) |
-| **Co-Submitter** | [Name of Author](mailto:your@company.com) |
-| **Written** | June 2020 |
-| **Ratified** | December 2020 |
-| **RCP** | RCP-XYZ |
-| **Related RCPs** | [Related RCP](https://transport.reso.org) |
+| **Authors** | [Author 1](#)<br />[Author 2](#) |
+| **Specification** | [**LINK TO RCP**](#) |
+| **Status** | IN PROGRESS |
+| **Date Ratified** | Month YYYY |
+| **Dependencies** | [Link 1](#)<br />[Link 2](#) |
+| **Related Links** | [Link 1](#)<br />[Link 2](#) |
+
 
 <br /><br />
 
@@ -53,7 +54,7 @@ Provide specifics about the proposal in this section.
 The following should be included:
 * Information about Authorization or Authentication, when relevant. 
 * Sample request and response payloads.
-* Examples of algorithms written in pseudocode.
+* Examples of algorithms written in pseudo code.
 * Links to existing specifications used in the standard, with examples of how they're used.
 
 <br /><br />
