@@ -5,7 +5,6 @@ All Endorsements start as [RESO Change Proposals (RCPs)](#reso-change-proposals)
 
 Specifications use [semantic versioning](https://semver.org/).
 
-
 # RCPs and Statuses
 * [**RATIFIED STANDARDS**](./proposals.md#ratified-standards)
 * [**DRAFT SPECIFICATIONS**](./proposals.md#draft-specifications)
@@ -18,12 +17,10 @@ Specifications use [semantic versioning](https://semver.org/).
 | [**RCP-036**](./proposals.md#data-dictionary-17) | **Data Dictionary** | **1.7** | **RATIFIED** | **Jan 2021** |
 | [**RCP-037**](./proposals.md#web-api-core-200) | **Web API Core** | **2.0** | **RATIFIED** | **Jan 2021** |
 | [**RCP-038**](./proposals.md#payloads-17) | **Payloads (with IDX Payload)** | **1.7** | **RATIFIED** | **Aug 2021** |
-| |
 | [RCP-010](./proposals.md#web-api-addedit) | Web API Add/Edit | 2.0.0 | DRAFT | Apr 2017 |
 | [RCP-019](./proposals.md#web-api-validation-expressions) | Web API Validation Expressions | 2.0.0 | DRAFT | Apr 2018 |
 | [RCP-032](./proposals.md#lookup-resource) | Lookup Resource | 1.7 | DRAFT | Dec 2021 |
 | [RCP-040](./proposals.md#data-dictionary-20) | Data Dictionary | 2.0 | DRAFT | Dec 2021 |
-| |
 | [RCP-039](./proposals.md#web-api-core-210) | Web API Core | 2.1.0 | IN PROGRESS | Apr 2022 |
 | [RCP-041](./proposals.md#payloads-20) | Payloads | 2.0 | IN PROGRESS | Apr 2022 |
 
