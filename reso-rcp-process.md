@@ -26,8 +26,7 @@ The RESO RCP Process has the following phases:
 
 Please contact dev@reso.org if you have any questions.
 
----
-<br />
+------
 
-[<- Home](./README.md)
+[**<- HOME**](./README.md)
 
