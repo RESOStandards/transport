@@ -1,25 +1,19 @@
 # RESO Change Proposals (RCPs)
 RESO Change Proposals are created through a [community review process](./reso-rcp-process.md).
 
-See [new change proposals](./reso-rcp-process.md#new-change-proposals) 
-
-
-<br /><br />
-
+See the section on [change proposals](./reso-rcp-process.md#change-proposals) for more information.
 
 # RCPs and Statuses
 * [**RATIFIED STANDARDS**](./proposals#ratified-standards)
 * [**DRAFT SPECIFICATIONS**](./proposals#draft-specifications)
 * [**IN PROGRESS PROPOSALS**](./proposals#in-progress-proposals)
 
-<br /><br />
+---
 
 # RATIFIED STANDARDS
 Ratified standards have been adopted by the Transport Workgroup and RESO as an organization.
 
 Proposals that require certification must have adopted a specification, testing rules, and production-ready testing tools before being ratified.
-
-<br />
 
 ## Data Dictionary 1.7
 
@@ -34,7 +28,7 @@ Proposals that require certification must have adopted a specification, testing 
 
 The Data Dictionary endorsement defines models for use in the RESO domain. These include Resources, Fields, Lookups, and Relationships between Resources. The Data Dictionary may use the RESO Web API or RESO's Common Schema JSON format for transport.
 
-<br /><br />
+<br />
 
 ## Web API Core 2.0.0
 
@@ -50,7 +44,7 @@ The Data Dictionary endorsement defines models for use in the RESO domain. These
 
 The Web API Core endorsement defines the primary functionality RESO Web API servers are expected to support in order to provide both replication and live query support.
 
-<br /><br />
+<br />
 
 ## Payloads 1.7
 
@@ -65,16 +59,10 @@ The Web API Core endorsement defines the primary functionality RESO Web API serv
 
 Defines general payloads data validation and availability testing rules, as well as the IDX Payload Endorsement.
 
-<br /><br />
-
 ---
-
-<br /><br />
 
 # DRAFT SPECIFICATIONS
 Draft specifications have been approved by the Certification Subgroup and are awaiting implementations and community review prior to Transport approval.
-
-<br />
 
 ## Web API Add/Edit
 
@@ -89,14 +77,14 @@ Draft specifications have been approved by the Certification Subgroup and are aw
 
 The Web API Add/Edit endorsement defines how to Create, Update, and Delete data in the RESO Web API. 
 
-<br /><br />
+<br />
 
 ## Web API Validation Expressions
 
 | **RCP** | RCP-019 |
 | :--- | :--- |
 | **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org))<br />Paul Stusiak ([Falcon Technologies](mailto:pstusiak@falcontechnologies.com)) |
-| **Specification** | [LINK TO RCP](./web-api-validation-expression.md) |
+| **Specification** | [**LINK TO RCP**](./web-api-validation-expression.md) |
 | **Status** | **DRAFT** |
 | **Date Approved** | April 2018 |
 | **Dependencies** | [Validation Expression grammar](https://github.com/darnjo/rcp019) <br /> [Data Dictionary 1.7+](./data-dictionary.md)<br />[Web API 2.0.0+](./web-api-core.md)<br /> |
@@ -104,7 +92,7 @@ The Web API Add/Edit endorsement defines how to Create, Update, and Delete data 
 
 Web API Validation Expressions allow for the transport of machine-executable business rules using the [RETS 019 Validation Expression grammar](https://github.com/darnjo/rcp019).
 
-<br /><br />
+<br />
 
 ## Lookup Resource
 
@@ -119,7 +107,7 @@ Web API Validation Expressions allow for the transport of machine-executable bus
 
 The Lookup Resource provides a framework to advertise human-friendly display names and use them in payloads. This reduces the amount of interpretation data consumers need to do when using enumerations, and they can display what they get in the payload directly rather than inferring the values from annotations. It also better supports providers who have a large amount of lookup metadata, allowing it to be consumed and updated through incremental updates rather than having to update all metadata each time something changes.
 
-<br /><br />
+<br />
 
 ## Data Dictionary 2.0
 
@@ -140,16 +128,10 @@ The Data Dictionary endorsement defines models for use in the RESO domain. These
 * Data validation against server metadata - if items are found in the payload that are not advertised, providers will ont pass testing
 * Updated Data Dictionary reference sheet structure
 
-<br /><br />
-
 ---
-
-<br /><br />
 
 # IN PROGRESS PROPOSALS
 In progress proposals are ones that are in review by Transport and Certification. See the [RESO RCP Process](./reso-rcp-process.md) and section on [new change proposals](./reso-rcp-process.md#new-change-proposals).
-
-<br />
 
 ## Web API Core 2.1.0
 
@@ -169,7 +151,7 @@ The Web API Core 2.1.0 endorsement defines the primary functionality RESO Web AP
 * Server-Driven Paging (`@odata.nextLink`) required for Certification
 * Support for the Lookup Resource, including string comparison tests for enumerations
 
-<br /><br />
+<br />
 
 ## Payloads 2.0
 
@@ -195,6 +177,4 @@ Please contact dev@reso.org if you have any questions.
 
 ---
 
-<br />
-
-[<- HOME](./README.md)
+[**<- HOME**](./README.md)
