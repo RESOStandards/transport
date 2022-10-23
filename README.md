@@ -5,14 +5,11 @@ All Endorsements start as _RESO Change Proposals (RCPs)_.
 
 Specifications use [semantic versioning](https://semver.org/).
 
-<br />
 
 # RCPs and Statuses
 * [**RATIFIED STANDARDS**](./proposals.md#ratified-standards)
 * [**DRAFT SPECIFICATIONS**](./proposals.md#draft-specifications)
 * [**IN PROGRESS PROPOSALS**](./proposals.md#in-progress-proposals)
-
-<br />
 
 # Current Change Proposals
 
@@ -31,22 +28,15 @@ Specifications use [semantic versioning](https://semver.org/).
 | [**RCP-041**](./proposals.md#payloads-20) | Payloads | 2.0 | IN PROGRESS | Apr 2022 |
 
 
-<br />
-
 # New Change Proposals
-
 Please see the section on [new change proposals](./reso-rcp-process.md#new-change-proposals) for an outline of the RCP process, or if you'd like to make a new change proposal.
-
-<br />
 
 # Certification and RESO Analytics
 More information about [RESO Certification](./certification-reso-analytics.md).
 
-<br />
-
 ---
 
-<br />
+[**About RESO**](https://reso.org)
 
-[[About RESO](https://reso.org)] &nbsp; [[RESO Data Dictionary](https://ddwiki.reso.org)]
+[**RESO Data Dictionary**](https://ddwiki.reso.org)
 
