@@ -2,18 +2,21 @@
 
 | **RCP** | RCP-039 |
 | :--- | :--- |
-| **Version** | 2.1.0 |
-| **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org))  |
-| **Specification** | [**LINK TO RCP**](https://github.com/RESOStandards/transport/blob/22-web-api-core-210-specification/web-api-core.md) |
+| **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org)) |
+| **Specification** | [**LINK TO TESTING RULES**](https://github.com/RESOStandards/transport/issues/22) |
 | **Status** | **IN PROGRESS** |
-| **Date Submitted** | April 2022 |
-| **Date Testing Rules Approved** | September 2022 |
+| **Date Proposed** | April 2022 |
 | **Protocol** | HTTP |
 | **Dependencies** | OData 4.0 or 4.01<br />TLS 1.2+<br />OAuth 2 (Auth Token or Client Credentials) |
-| **Related Links** | [OASIS OData TC](https://www.oasis-open.org/committees/tc_home.php?wg_abbrev=odata) <br /> |
 
-The Web API Core endorsement defines the primary functionality RESO Web API servers are expected to support in order to provide both replication and live query support.
+The Web API Core 2.1.0 endorsement defines the primary functionality RESO Web API servers are expected to have in order to provide both replication and live query support. 
 
+**New in version 2.1.0**
+* Support for OData `$expand`
+* Server-Driven Paging (`@odata.nextLink`) required for Certification
+* Support for the Lookup Resource, including string comparison tests for enumerations
+
+<br />
 <br />
 
 # Table of Contents
