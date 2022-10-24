@@ -1,12 +1,17 @@
-# RESO Data Dictionary Endorsement
+## RESO Data Dictionary Endorsement
 
-| **Version** | 1.7.0 |
+| **RCP** | RCP-040 |
 | :--- | :--- |
-| **Submitter** | [Joshua Darnell](mailto:josh@reso.org) |
-| **Written** | June 2020 |
-| **Ratified** | December 2020 |
-| **RCP** | RCP-038 |
-| **Related RCPs** | [Web API Core 2.0.0](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md) |
+| **Version** | **2.0** |
+| **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org)) |
+| **Specification** | [**LINK TO RCP**](https://github.com/RESOStandards/transport/blob/c1baab163567a98c5457137d65ad09e3a22ac46e/data-dictionary.md) |
+| **Status** | **DRAFT** |
+| **Date Submitted** | December 2021 |
+| **Date Approved** | September 2022 |
+| **Dependencies** | [Web API Core 2.0.0+](./web-api-core.md) |
+| **Related Links** | [DD Wiki 2.0](https://ddwiki.reso.org/pages/viewpage.action?pageId=1123655)<br />[Data Dictionary 2.0 Spreadsheet](https://docs.google.com/spreadsheets/d/1_59Iqr7AQ51rEFa7p0ND-YhJjEru8gY-D_HM1yy5c6w/edit?usp=sharing) |
+
+The Data Dictionary endorsement defines models for use in the RESO domain. These include Resources, Fields, Lookups, and Relationships between Resources.
 
 <br />
 
@@ -30,10 +35,12 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 <br />
 
 # Summary of Changes
+
 * **LookupValue and LookupDisplayName Enforcement** - Standard _LookupValue_ items were added to the [Data Dictionary 1.7 reference sheet](https://docs.google.com/spreadsheets/d/1SZ0b6T4_lz6ti6qB2Je7NSz_9iNOaV_v9dbfhPwWgXA/edit#gid=1489187443&range=B:B) to provide a specifcation for those using OData `Edm.EnumType` enumerations. These items have been carried over to the [Data Dictionary 2.0 reference sheet](https://docs.google.com/spreadsheets/d/1P4CqtBT-3hmfsWLeID5faJgGz2AYTU_7d-OKZBuY_c0/edit#gid=167198210&range=B:B) as well. Systems will be checked using a number of techniques, including edit distance matching, to ensure that they're using the standard values, when appropriate. For those using `Edm.String` values with the Lookup resource, the _LookupDisplayName_ will be checked as well.
 * **Resource and Field Name Enforcement** - Similarity metrics and other heuristics will also be used to ensure that standard names are being used for resources and fields as well.
 * **Data Validation Against Server Metadata** - The Data Dictionary 1.7 Specification didn't include strict checking of data available on a given server against its advertised metadata. In Data Dictionary 2.0, these two items MUST match. This means that providers will fail testing if resources, fields, or enumerations appear in the data set that weren't advertised on the server. Similar is true in cases where fields, such as `Edm.String`, exceed their advertised data length, or any other similar data anomolies.
 * **Reference Spreadsheet Structure** - Previously there were individual sheets for each resource. They have been merged into a single sheet called "Fields," which also matches the format of the new Field metadata resource. The resource that each field belongs to will be indicated in the Field entry. Enumerations will be in a separate Lookups sheet.
+
 
 <br />
 
