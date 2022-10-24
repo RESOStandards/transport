@@ -1,5 +1,4 @@
 # RESO Change Proposal (RCP) Process
-The RCP Process is as follows:
 
 ## New Change Proposals
 1. Make a post on [GitHub Discussions](https://github.com/RESOStandards/transport/discussions). This should contain a summary of the business case, list of requirements, and initial proposal.
