@@ -1,16 +1,23 @@
 # RESO Payloads Endorsement
 
-| **RCP** | RCP-038 |
+| **RCP** | 41 |
 | :-- | :-- |
+| **Version** | **2.0** |
 | **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org)) |
-| **Specification** | [**LINK TO RCP**](./payloads.md) |
-| **Status** | **RATIFIED** |
-| **Date Submitted** | September 2020 |
-| **Date Ratified** | August 2021 |
+| **Specification** | [**LINK TO TESTING RULES**](https://github.com/RESOStandards/reso-transport-specifications/issues/23) |
+| **Status** | **IN PROGRESS** |
+| **Date Started** | April 2022 |
 | **Protocol** | HTTP |
-| **Dependencies** | [Data Dictionary 1.7](data-dictionary.md)<br />[Web API Core 2.0.0+](./web-api-core.md) |
+| **Dependencies** | [Data Dictionary 1.7](./data-dictionary.md)<br />[Web API Core 2.0.0+](./web-api-core.md) |
 
-The [Payloads specification](./payloads.md) defines general payloads data validation and availability testing rules, as well as the IDX Payload Endorsement.
+Payloads 2.0 defines general data validation and availability testing rules, as well as the IDX Payload Endorsement.
+
+**New in version 2.0**
+* Support for OData `$expand`
+* Sampling using server-driven paging
+* Strict checking of what's advertised in the metadata vs. what was found in the payload
+
+<br />
 
 # Approved Testing Rules
 See [GitHub Issue](https://github.com/RESOStandards/transport/issues/23).
