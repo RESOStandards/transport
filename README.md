@@ -42,11 +42,12 @@ In progress proposals are ones that are in review by Transport and Certification
 | [**RCP-039**](https://github.com/RESOStandards/transport/blob/22-web-api-core-210-specification/web-api-core.md) | **Web API Core** | **2.1.0** | **IN PROGRESS** | **Apr 2022** |
 | [**RCP-041**](https://github.com/RESOStandards/transport/blob/23-payloads-20-specification/payloads.md) | **Payloads** | **2.0** | **IN PROGRESS** | **Apr 2022** |
 
+<br />
 
 # RESO Change Proposal Process
-Please see the section on [change proposals](./reso-rcp-process.md#reso-change-proposal-rcp-process) for an outline of the RCP process.
+Please see the section on [**change proposals**](./reso-rcp-process.md#reso-change-proposal-rcp-process) for an outline of the RCP process.
 
-[**Create new change proposal**](./reso-rcp-process.md#new-change-proposals)
+[**Create new change proposal**](./reso-rcp-process.md#new-change-proposals).
 
 <br />
 
