@@ -2,7 +2,7 @@
 **RESO Endorsements** are modular specifications that are associated with a given transport protocol.
 
 * Specifications use [**semantic versioning**](https://semver.org/).
-* All Endorsements start as [**RESO Change Proposals (RCPs)**](#reso-change-proposals). 
+* All Endorsements start as [**RESO Change Proposals (RCPs)**](./reso-rcp-process.md#reso-change-proposal-rcp-process). 
 * See [**GitHub Discussions**](https://github.com/RESOStandards/transport/discussions) for current proposals.
 
 <br />
