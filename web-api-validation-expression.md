@@ -1,4 +1,15 @@
-# [RCP-019] RESO Web API Validation Expressions
+# RESO Validation Expressions
+
+| **RCP** | 19 |
+| :--- | :--- |
+| **Version** | 19.1 |
+| **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org))<br />Paul Stusiak ([Falcon Technologies](mailto:pstusiak@falcontechnologies.com)) |
+| **Specification** | [**LINK TO RCP**](./web-api-validation-expression.md) |
+| **Status** | **DRAFT** |
+| **Date Approved** | April 2018 |
+| **Dependencies** | [Validation Expression grammar](https://github.com/darnjo/rcp019) <br /> [Data Dictionary 1.7+](./data-dictionary.md)<br />[Web API 2.0.0+](./web-api-core.md)<br /> |
+| **Related Links** | [DD Wiki 1.7](https://ddwiki.reso.org/display/DDW17/RESO+Data+Dictionary+1.7)<br />[Data Dictionary Spreadsheet](https://docs.google.com/spreadsheets/d/1_59Iqr7AQ51rEFa7p0ND-YhJjEru8gY-D_HM1yy5c6w/edit?usp=sharing)<br /> |
+
 RESO Validation Expressions build on the RETS Validation Expression grammar to provide a familiar, intermediate representation of computable business rules. The RCP-019 proposal consists of a Rules resource for transport and a grammar. 
 
 [**RCP-019 Proposal in PDF format**](https://github.com/RESOStandards/reso-transport-specifications/files/8384860/RESOWebAPIRCP-RCP-WEBAPI-019ValidationExpressionintheWebAPI-300322-2353.pdf)
