@@ -1,7 +1,8 @@
 # RESO (Endorsement Name) Endorsement
 
-| **RCP** | RCP-XXX |
+| **RCP** | XXX |
 | :--- | :--- |
+| **Version** | **x.y.z** |
 | **Authors** | [Author 1](#)<br />[Author 2](#) |
 | **Specification** | [**LINK TO RCP**](#) |
 | **Status** | IN PROGRESS |

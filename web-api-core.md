@@ -1,13 +1,17 @@
 # RESO Web API Core Specification
 
-| **Version** | 2.0.0 |
+| **RCP** | 37 |
 | :--- | :--- |
-| **Submitter** | [Joshua Darnell](mailto:josh@reso.org) |
-| **Written** | August 2020 |
-| **Ratified** | August 2020 |
-| **RCP** | RCP-037 |
-| **Related RCPs** | [Data Dictionary Endorsement](/data-dictionary.md) |
+| **Version** | **2.0.0** |
+| **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org))  |
+| **Status** | **RATIFIED** |
+| **Date Submitted** | August 2020 |
+| **Date Ratified** | January 2021 |
+| **Protocol** | HTTP |
+| **Dependencies** | OData 4.0 or 4.01<br />TLS 1.2+<br />OAuth 2 (Auth Token or Client Credentials) |
+| **Related Links** | [OASIS OData TC](https://www.oasis-open.org/committees/tc_home.php?wg_abbrev=odata) <br /> |
 
+The Web API Core endorsement defines the primary functionality RESO Web API servers are expected to support in order to provide both replication and live query support.
 
 <br />
 

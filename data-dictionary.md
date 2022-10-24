@@ -1,12 +1,17 @@
 # RESO Data Dictionary Endorsement
 
-| **Version** | 1.7.0 |
+| **RCP** | 36 |
 | :--- | :--- |
-| **Submitter** | [Joshua Darnell](mailto:josh@reso.org) |
+| **Version** | 1.7 |
+| **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org)) |
+| **Status** | **RATIFIED** |
 | **Written** | June 2020 |
 | **Ratified** | December 2020 |
-| **RCP** | RCP-038 |
-| **Related RCPs** | [Web API Core 2.0.0](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md) |
+| **Dependencies** | [Web API Core 2.0.0+](./web-api-core.md) |
+| **Related Links** | [DD Wiki 1.7](https://ddwiki.reso.org/display/DDW17/RESO+Data+Dictionary+1.7)<br />[Data Dictionary 1.7 Spreadsheet](https://docs.google.com/spreadsheets/d/1_59Iqr7AQ51rEFa7p0ND-YhJjEru8gY-D_HM1yy5c6w/edit?usp=sharing) |
+
+The Data Dictionary endorsement defines models for use in the RESO domain. These include Resources, Fields, Lookups, and Relationships between Resources. The Data Dictionary may use the RESO Web API or RESO's Common Schema JSON format for transport.
+
 
 <br /><br />
 
