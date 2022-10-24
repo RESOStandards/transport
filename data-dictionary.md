@@ -13,6 +13,12 @@
 
 The Data Dictionary endorsement defines models for use in the RESO domain. These include Resources, Fields, Lookups, and Relationships between Resources.
 
+**New in version 2.0**
+* Added new resources, fields, and enumerations
+* Additional validation of resources, fields, and enumerations using a number of heuristics (substring, edit distance, and data-driven matching)
+* Data validation against server metadata - if items are found in the payload that are not advertised, providers will ont pass testing
+* Updated Data Dictionary reference sheet structure
+
 <br />
 
 # RESO End User License Agreement (EULA)
