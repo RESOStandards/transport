@@ -1,6 +1,6 @@
 ## RESO Data Dictionary Endorsement
 
-| **RCP** | RCP-040 |
+| **RCP** | 40 |
 | :--- | :--- |
 | **Version** | **2.0** |
 | **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org)) |
