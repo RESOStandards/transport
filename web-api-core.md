@@ -1,6 +1,6 @@
 # RESO Web API Core Specification
 
-| **RCP** | RCP-039 |
+| **RCP** | 39 |
 | :--- | :--- |
 | **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org)) |
 | **Specification** | [**LINK TO TESTING RULES**](https://github.com/RESOStandards/transport/issues/22) |
