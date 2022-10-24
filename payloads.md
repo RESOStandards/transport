@@ -10,7 +10,7 @@
 | **Protocol** | HTTP |
 | **Dependencies** | [Data Dictionary 1.7](data-dictionary.md)<br />[Web API Core 2.0.0+](./web-api-core.md) |
 
-The [Payloads specification] defines general payloads data validation and availability testing rules, as well as the IDX Payload Endorsement.
+The [Payloads specification](./payloads.md) defines general payloads data validation and availability testing rules, as well as the IDX Payload Endorsement.
 
 # Approved Testing Rules
 See [GitHub Issue](https://github.com/RESOStandards/transport/issues/23).
