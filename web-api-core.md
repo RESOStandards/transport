@@ -1,12 +1,18 @@
 # RESO Web API Core Specification
 
-| **Version** | 2.1.0 |
+| **RCP** | RCP-039 |
 | :--- | :--- |
-| **Submitter** | [Joshua Darnell](mailto:josh@reso.org) |
-| **Written** | July 2022 |
-| **Ratified** | -- |
-| **RCP** | RCP-043 |
-| **Related RCPs** | [Data Dictionary Endorsement](/data-dictionary.md) |
+| **Version** | 2.1.0 |
+| **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org))  |
+| **Specification** | [**LINK TO RCP**](https://github.com/RESOStandards/transport/blob/22-web-api-core-210-specification/web-api-core.md) |
+| **Status** | **IN PROGRESS** |
+| **Date Submitted** | April 2022 |
+| **Date Testing Rules Approved** | September 2022 |
+| **Protocol** | HTTP |
+| **Dependencies** | OData 4.0 or 4.01<br />TLS 1.2+<br />OAuth 2 (Auth Token or Client Credentials) |
+| **Related Links** | [OASIS OData TC](https://www.oasis-open.org/committees/tc_home.php?wg_abbrev=odata) <br /> |
+
+The Web API Core endorsement defines the primary functionality RESO Web API servers are expected to support in order to provide both replication and live query support.
 
 <br />
 
@@ -32,6 +38,73 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 * **Expanded Data Elements** - Support for expanded data elements using OData `$expand` has been added. The Property, Member, Office, Field, and Lookup Resources MUST be available at the top level. All other resources MAY be expanded. Data consumers should be prepared to support either. 
 * **Server-Driven Paging** - In order to improve the ease and ability for data consumers to retrieve data from RESO Web API servers, providers MUST support server-driven paging using `@odata.nextLink`. 
 * **String Comparison Operators** - Support for the Lookup Resource was added in Data Dictionary 1.7, meaning that single- and multi-enumerations may be `Edm.String` or `Collection(Edm.String)`, respectively. In order to provide parity with existing enumeration tests, string comparison operators have been added to Web API Core 2.1.0 in order to test those cases. 
+
+<br />
+
+# Approved Testing Rules
+
+See [GitHub Issue](https://github.com/RESOStandards/transport/blob/22-web-api-core-210-specification/web-api-core.md).
+
+The RESO Certification Subgroup has requested a new Web API Core specification be created to include certain features like support for OData Expand and Server-Driven paging.
+
+---
+
+## Support for Expanded Data Elements
+
+* An authoritative list of top-level items will be created for Data Dictionary 1.7, and each subsequent version, starting with Property, Member, Office, Field, and Lookup Resources. 
+* These items MAY be expanded into other resources, expanding Member into Property as ListAgent for example, but MUST be available at the top level.
+* Other items, such as Media or HistoryTransactional MAY be available at the top level but also MAY be available as expansions (or both).
+* Web API Core testing only requires one resource to be tested, though providers may test more than one. 
+* Providers who support expand should specify at least one navigation property to test for a given resource.
+* Additional queries on expanded resources WILL NOT be tested at this time. Providers MAY support them as they see fit.
+* Assume the resource being tested is Property, with a navigation property of Media:
+  * A GET request will be made to `/Property?$expand=Media` and the Property payload will be checked for a collection-based property called Media, and each result in the collection will be validated against the OData EntityType advertised in the metadata for Media. 
+  * Keys will be collected from the first request to Property, and a GET request will be made to `/Property('XXXXX')/Media` where `XXXXX` is the key.
+* As of Data Dictionary 1.7, standard names have been added for related RESO standard data elements. For example, here are [those in the Property Resource](https://docs.google.com/spreadsheets/d/1_59Iqr7AQ51rEFa7p0ND-YhJjEru8gY-D_HM1yy5c6w/edit#gid=799978943&range=595:614). Providers MUST use standard names for standard expansions, when present, but MAY create their own local expansions outside of this as long as they are OData compliant.
+* Expanded properties MUST use the definitions in the RESO Data Dictionary, when applicable. These items have been added to the Data Dictionary Wiki (e.g. [Media](https://ddwiki.reso.org/display/DDW17/Media+Field)) and [DD reference sheets](https://docs.google.com/spreadsheets/d/1_59Iqr7AQ51rEFa7p0ND-YhJjEru8gY-D_HM1yy5c6w/edit#gid=799978943&range=595:606), as well as generated in the [reference metadata](https://raw.githubusercontent.com/RESOStandards/web-api-commander/main/src/main/resources/RESODataDictionary-1.7.xml).  Providers MAY add their own local expansions as well.
+
+---
+
+## Providers MUST Support Server-Driven Paging
+
+Providers MUST support server-driven paging using `@odata.nextLink`.
+
+This functionality is needed so that data consumers may reliably consume data when only a partial result is returned and it’s classified as a MUST within [OData Minimal Conformance Requirements](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_OData40MinimalConformanceLevel) (item 3) for version 4.0 and above.
+
+Basic tests will be added in the Web API Core 2.1.0 tests, but the majority of nextLink testing will be done in the Payloads 2.0 Specification, which could result in a failure of nextLink-based operations even if the provider passed Web API Core 2.1.0 testing. 
+
+* A count will be made on the given resource being tested to ensure there are records. 
+* A request will be made using `$top=1`. This should NOT contain `@odata.nextLink`, since one record should be available, and we’ve reached the end of the set.
+* Several pages (10+) of records will be fetched using `@odata.nextLink` without any additional `$filter` parameters to ensure that the data returned with each response doesn't match any of the previous responses. 
+* Next links with `$filter` will also be tested. Since ModificationTimestamp is the only required field at this point, it will be used. 
+  * A `$filter` request will be made for records greater than one year back using the timestamp field being tested in the Web API Core tests, and several pages (10+), will be fetched to ensure that each page has an `@odata.nextLink`, when applicable. If the total number of records are fetched during this process, the last page will be checked to ensure there is no nextLink. This testing will be done using the greater than (`gt`) operator. 
+  * The same test will be performed using the less than (`lt`) operator for records prior to the current timestamp. 
+  * Each page of data fetched will be validated to ensure that the timestamp field value is greater or less than what was requested. 
+
+---
+
+## String Comparison Operators for Single- and Multi-Valued Enumerations
+
+With the current Web API Core tests, both single- and multi-valued enumerations are tested for those using OData `Edm.EnumType` enumerations and either `Collection(Edm.EnumType)` or `Edm.EnumType` with `IsFlags=true`. 
+
+String-based enumerations were added to Data Dictionary 1.7+ using the Lookup resource. There is currently no way to test this case in Web API Core 2.0.0. 
+
+The following tests will be added to support this case: 
+* Providers will supply a LookupName to test for single- and multi-valued enumerations, as well as sample values for each case. For single-valued enumerations, there will be one sample value, and for multi-valued enumerations there will be two. 
+* Data will be consumed from the Lookup Resource and validated. The provided LookupName will be checked to ensure it’s present in the Lookup Resource data, as will the lookup values.
+* For single-valued enumeration tests, assume that the LookupName provided is “StandardStatus” with a sample value of “Active” - the following requests will be made, and resulting data validated to ensure it matches the given queries:
+  * `GET /Property?$filter=StandardStatus eq 'Active'`
+  * `GET /Property?$filter=StandardStatus ne 'Active'`
+* For multi-valued enumeration tests, assume that the LookupName provided is "AccessibilityFeatures” and the values are “Accessible Entrance” and “Visitable” - the following tests will be made and resulting data validated to ensure it matches the given queries: 
+  * `GET /Property?$filter=AccessibilityFeatures/any(enum:enum eq 'Accessible Entrance' OR enum eq 'Visitable')`
+  * `GET /Property?$filter=AccessibilityFeatures/all(enum:enum eq 'Accessible Entrance' OR enum eq 'Visitable')`
+* As of OData “4.01” the `in` operator was introduced to determine whether a given value is in a set of values. This is more convenient that writing `Field1 eq 'value1' OR Field1 eq 'value2' OR...`. IF the response header indicates that the OData version is "4.01", then the `in` operator will be tested using a query similar to the following:
+  * `GET /Property?$filter=StandardStatus in ('Active', 'Pending', 'Sold')`
+  * TBD if we want to support `in` for multi-valued enumerations (using `any` and `all`)
+
+<br />
+
+---
 
 <br />
 
