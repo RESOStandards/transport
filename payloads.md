@@ -1,6 +1,6 @@
 # RESO Payloads Endorsement
 
-| **RCP** | 41 |
+| **RCP** | RCP-041 |
 | :-- | :-- |
 | **Version** | **2.0** |
 | **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org)) |
