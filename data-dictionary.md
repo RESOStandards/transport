@@ -1,6 +1,6 @@
 # RESO Data Dictionary Endorsement
 
-| **RCP** | RCP-036 |
+| **RCP** | 36 |
 | :--- | :--- |
 | **Version** | 1.7 |
 | **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org)) |
@@ -11,7 +11,7 @@
 | **Related Links** | [DD Wiki 1.7](https://ddwiki.reso.org/display/DDW17/RESO+Data+Dictionary+1.7)<br />[Data Dictionary 1.7 Spreadsheet](https://docs.google.com/spreadsheets/d/1_59Iqr7AQ51rEFa7p0ND-YhJjEru8gY-D_HM1yy5c6w/edit?usp=sharing) |
 
 # Lookup Resource
-| **RCP** | RCP-032 |
+| **RCP** | 32 |
 | :--- | :--- |
 | **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org)) |
 | **Status** | **DRAFT** |
