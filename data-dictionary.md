@@ -13,6 +13,7 @@
 # Lookup Resource
 | **RCP** | 32 |
 | :--- | :--- |
+| **Version** | 1.7 |
 | **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org)) |
 | **Status** | **DRAFT** |
 | **Date Submitted** | December 2021 |
