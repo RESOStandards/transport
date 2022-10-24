@@ -18,6 +18,7 @@ The Web API Core endorsement defines the primary functionality RESO Web API serv
 
 # Table of Contents
 - [Summary of Changes](#summary-of-changes)
+- [Approved Testing Rules](#approved-testing-rules)
 - [Introduction](#introduction)
 - [Section 1: Purpose](#section-1-purpose)
 - [Section 2: Specification](#section-2-specification)
