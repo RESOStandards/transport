@@ -4,7 +4,7 @@
 | :--- | :--- |
 | **Version** | **1.7** |
 | **Authors** | Alexander Likholyot ([Planitar](alex@planitar.com))<br />Joshua Darnell ([RESO](mailto:josh@reso.org))<br />Paul Stusiak ([Falcon Technologies](pstusiak@falcontechnologies.com)) | |
-| **Status** | **DRAFT** |
+| **Status** | **IN PROGRESS** |
 | **Date Submitted** | February 2019 |
 | **Date Approved** | April 2019 |
 | **Dependencies** | [Data Dictionary 1.7](https://ddwiki.reso.org/display/DDW17/RESO+Data+Dictionary+1.7) |
