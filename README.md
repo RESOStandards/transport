@@ -41,6 +41,7 @@ In progress proposals are ones that are in review by Transport and Certification
 | :-- | :-- | :-- | :-- | :-- |
 | [**RCP-022**](https://github.com/RESOStandards/transport/blob/43-migrate-rcp-022-from-confluence/autofill-service.md) | **Autofill Service** | **1.0.0** | **IN PROGRESS** | **Apr 2019** |
 | [**RCP-025**](https://github.com/RESOStandards/transport/blob/44-migrate-rcp-025-from-confluence/dd-json-payloads.md) | **Data Dictionary JSON Payloads** | **1.7** | **IN PROGRESS** | **Apr 2019** |
+| [**RCP-027**](https://github.com/RESOStandards/transport/blob/45-migrate-rcp-027-from-confluence/entity-events.md) | **EntityEvent Resource and Replication** | **2.0** | **IN PROGRESS** | **Apr 2019** |
 | [**RCP-039**](https://github.com/RESOStandards/transport/blob/22-web-api-core-210-specification/web-api-core.md) | **Web API Core** | **2.1.0** | **IN PROGRESS** | **Apr 2022** |
 | [**RCP-041**](https://github.com/RESOStandards/transport/blob/23-payloads-20-specification/payloads.md) | **Payloads** | **2.0** | **IN PROGRESS** | **Apr 2022** |
 
