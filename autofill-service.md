@@ -8,7 +8,7 @@
 | **Date Submitted** | August 2018 |
 | **Date Approved** | April 2019 |
 | **Protocol** | HTTP |
-| **Dependencies** | [RCP-025](./dd-json-payloads.md)<br />[RESO Data Dictionary 1.7](https://ddwiki.reso.org/display/DDW17/RESO+Data+Dictionary+1.7) |
+| **Dependencies** | [RCP-025](https://github.com/RESOStandards/transport/blob/44-migrate-rcp-025-from-confluence/dd-json-payloads.md)<br />[RESO Data Dictionary 1.7](https://ddwiki.reso.org/display/DDW17/RESO+Data+Dictionary+1.7) |
 | **Related Links** | [OASIS OData TC](https://www.oasis-open.org/committees/tc_home.php?wg_abbrev=odata) <br /> |
 
 The RESO Autofill Service makes it easy to consume RESO standard data sets in Data Dictionary JSON format.
@@ -122,7 +122,7 @@ Returns information about property with a tour as a RESO Property object:
   * video URL
   * etc.
 
-See [RCP-025](./dd-json-payloads.md) for more information about the Data Dictionary JSON format.
+See [RCP-025](https://github.com/RESOStandards/transport/blob/44-migrate-rcp-025-from-confluence/dd-json-payloads.md) for more information about the Data Dictionary JSON format.
 
 # Impact
 Does not require any new Data Dictionary or Web API standards. Uses existing Data Dictionary JSON format.
