@@ -4,7 +4,7 @@
 | :--- | :--- |
 | **Version** | **1.0.0** |
 | **Authors** | Alexander Likholyot ([Planitar](mailto:alex@planitar.com))<br />Paul Stusiak ([Falcon Technologies](mailto:pstusiak@falcontechnologies.com))<br />Joshua Darnell ([RESO](mailto:josh@reso.org)) |
-| **Status** | **DRAFT** |
+| **Status** | **IN PROGRESS** |
 | **Date Submitted** | August 2018 |
 | **Date Approved** | April 2019 |
 | **Protocol** | HTTP |
