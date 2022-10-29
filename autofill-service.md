@@ -85,7 +85,7 @@ GET https://autofill.site.com
           "ShortDescription": "imperial"
         }
       ],
-      "PropertyRooms": [
+      "Rooms": [
         {
           "RoomType": "Dining",
           "RoomName": "Breakfast",
