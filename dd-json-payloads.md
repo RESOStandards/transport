@@ -110,7 +110,7 @@ except now the resulting payload would contain keys for any data that was meant 
   "value": [
     {
       "StreetNumber": "1804",
-      "PropertyRooms": [
+      "Rooms": [
         {
           "RoomKey": "A34535F235",
           "RoomWidth": 5.139,
