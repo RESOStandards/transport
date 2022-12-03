@@ -10,8 +10,6 @@
 | **Dependencies** | [Data Dictionary 1.7](https://ddwiki.reso.org/display/DDW17/RESO+Data+Dictionary+1.7) |
 | **Related Links** | [RESO Common Schema Open API Format](https://github.com/RESOStandards/web-api-commander/blob/main/src/main/resources/RESODataDictionary-1.7.openapi3.json) |
 
-Data Dictionary JSON Payloads are a normative standard format generated from the Data Dictionary specification that can be used with any JSON Web API or data source. Local data elements are also supported.  
-
 # Synopsis
 This proposal establishes a normative JSON data format that corresponds with the RESO Data Dictionary and is compatible with existing Web API implementations for retrieving or creating data.
 
