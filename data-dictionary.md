@@ -16,7 +16,7 @@ The Data Dictionary endorsement defines models for use in the RESO domain. These
 **New in version 2.0**
 * Added new resources, fields, and enumerations
 * Additional validation of resources, fields, and enumerations using a number of heuristics (substring, edit distance, and data-driven matching)
-* Data validation against server metadata - if items are found in the payload that are not advertised, providers will ont pass testing
+* Data validation against server metadata - if items are found in the payload that are not advertised, providers will not pass testing
 * Updated Data Dictionary reference sheet structure
 
 <br />
@@ -42,9 +42,9 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 
 # Summary of Changes
 
-* **LookupValue and LookupDisplayName Enforcement** - Standard _LookupValue_ items were added to the [Data Dictionary 1.7 reference sheet](https://docs.google.com/spreadsheets/d/1SZ0b6T4_lz6ti6qB2Je7NSz_9iNOaV_v9dbfhPwWgXA/edit#gid=1489187443&range=B:B) to provide a specifcation for those using OData `Edm.EnumType` enumerations. These items have been carried over to the [Data Dictionary 2.0 reference sheet](https://docs.google.com/spreadsheets/d/1P4CqtBT-3hmfsWLeID5faJgGz2AYTU_7d-OKZBuY_c0/edit#gid=167198210&range=B:B) as well. Systems will be checked using a number of techniques, including edit distance matching, to ensure that they're using the standard values, when appropriate. For those using `Edm.String` values with the Lookup resource, the _LookupDisplayName_ will be checked as well.
+* **LookupValue and LookupDisplayName Enforcement** - Standard _LookupValue_ items were added to the [Data Dictionary 1.7 reference sheet](https://docs.google.com/spreadsheets/d/1SZ0b6T4_lz6ti6qB2Je7NSz_9iNOaV_v9dbfhPwWgXA/edit#gid=1489187443&range=B:B) to provide a specification for those using OData `Edm.EnumType` enumerations. These items have been carried over to the [Data Dictionary 2.0 reference sheet](https://docs.google.com/spreadsheets/d/1P4CqtBT-3hmfsWLeID5faJgGz2AYTU_7d-OKZBuY_c0/edit#gid=167198210&range=B:B) as well. Systems will be checked using a number of techniques, including edit distance matching, to ensure that they're using the standard values, when appropriate. For those using `Edm.String` values with the Lookup resource, the _LookupDisplayName_ will be checked as well.
 * **Resource and Field Name Enforcement** - Similarity metrics and other heuristics will also be used to ensure that standard names are being used for resources and fields as well.
-* **Data Validation Against Server Metadata** - The Data Dictionary 1.7 Specification didn't include strict checking of data available on a given server against its advertised metadata. In Data Dictionary 2.0, these two items MUST match. This means that providers will fail testing if resources, fields, or enumerations appear in the data set that weren't advertised on the server. Similar is true in cases where fields, such as `Edm.String`, exceed their advertised data length, or any other similar data anomolies.
+* **Data Validation Against Server Metadata** - The Data Dictionary 1.7 Specification didn't include strict checking of data available on a given server against its advertised metadata. In Data Dictionary 2.0, these two items MUST match. This means that providers will fail testing if resources, fields, or enumerations appear in the data set that weren't advertised on the server. Similar is true in cases where fields, such as `Edm.String`, exceed their advertised data length, or any other similar data anomalies.
 * **Reference Spreadsheet Structure** - Previously there were individual sheets for each resource. They have been merged into a single sheet called "Fields," which also matches the format of the new Field metadata resource. The resource that each field belongs to will be indicated in the Field entry. Enumerations will be in a separate Lookups sheet.
 
 
@@ -391,7 +391,7 @@ Additional requirements for Standard Fields are [outlined in section on Data Typ
 
 There is a proposal in progress in the RESO Data Dictionary and Transport workgroups to add further testing requirements for Display Names, which will most likely have its own Endorsement. 
 
-[There is a MAY specification](https://members.reso.org/display/API2/2.4.8+Annotations) (RESO login required) for both *StandardName* and *MlsName* annotations that supports special characters, since OData fields and enumerations don't allow them. *Vendors may still use existing display name annotations as long as they pass the* [*metadata validation process*](https://docs.google.com/document/d/15DFf9kDX_mlGCJVOch2fztl8W5h-yd18N0_03Sb4HwM/edit#heading=h.evm2d6urqz93)*.*
+[There is a MAY specification](https://members.reso.org/display/API2/2.4.8+Annotations) (RESO login required) for both *StandardName* and *MlsName* annotations that support special characters, since OData fields and enumerations don't allow them. *Vendors may still use existing display name annotations as long as they pass the* [*metadata validation process*](https://docs.google.com/document/d/15DFf9kDX_mlGCJVOch2fztl8W5h-yd18N0_03Sb4HwM/edit#heading=h.evm2d6urqz93)*.*
 
 #### Lookups
 
@@ -439,7 +439,7 @@ Boolean values are mapped to the [Edm.Bool](http://docs.oasis-open.org/odata/oda
 
 Collection data types are used in the Data Dictionary to indicate *possible expansions*, which use the OData [Edm.Collection type](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752651) to present a collection of instances of a given type, such as Media items related to a Property record.
 
-RESO will not be certifying this data type for related Data Dictionary Resources and until the Expand Endorsement has been created. Vendors MAY use OData $expand functionality on their servers as long as server metadata pass OData validation. 
+RESO will not be certifying this data type for related Data Dictionary Resources and until the Expand Endorsement has been created. Vendors MAY use OData $expand functionality on their servers as long as server metadata passes OData validation. 
 
 Standard Relationships have been provided in the adopted [Data Dictionary spreadsheet](https://docs.google.com/spreadsheets/d/1SZ0b6T4_lz6ti6qB2Je7NSz_9iNOaV_v9dbfhPwWgXA/edit#gid=266511010) to and [reference metadata](https://github.com/RESOStandards/web-api-commander/blob/main/src/main/resources/RESODataDictionary-1.7.xml) to guide vendors in the meantime. It's also worth noting that If a property definition for a Collection is nullable, it means that collection members are nullable. If there are no items in a given collection, the field would return an empty collection, but the field itself may not be null (by the OData specification).
 
@@ -666,7 +666,7 @@ The Certification workflow has been optimized around self-assessment prior to ce
 
 It's expected that applicants will ensure they pass all RESO Data Dictionary tests and have reviewed results to their satisfaction prior to applying for certification.
 
-Guides exist to help them with the evaluation process **TODO:** Create guide. 
+Guides exist to help them with the evaluation process.
 
 Any questions regarding automated testing tools and revised certification procedures should be directed to [Joshua Darnell](mailto:josh@reso.org). For any other questions, or to start the certification process please contact [RESO Certification](mailto:certification@reso.org).
 
@@ -696,7 +696,7 @@ Test data will be collected for analytics purposes. This information will be sto
   <img src="https://user-images.githubusercontent.com/88680702/137548342-c3363b43-65d1-40fa-8cba-23de8580806b.jpg" />
 </p>
 
-Once test results are stored, they are sent to a collector service for analysis. The collector will be implemented in [ElasticSearch](https://www.elastic.co/).
+Once test results are stored, they are sent to a collector service for analysis. The collector will be implemented in [Elasticsearch](https://www.elastic.co/).
 
 While the Collector Service and ancillary reports will be delivered after the MVP testing tool, test data will be available from an API so that analytics may be shown on the RESO Certification Map during the initial release of the Data Dictionary testing tool.
 
