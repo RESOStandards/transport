@@ -11,11 +11,12 @@
 | **Related Links** | [DD Wiki 1.7](https://ddwiki.reso.org/display/DDW17/RESO+Data+Dictionary+1.7)<br />[Data Dictionary 1.7 Spreadsheet](https://docs.google.com/spreadsheets/d/1_59Iqr7AQ51rEFa7p0ND-YhJjEru8gY-D_HM1yy5c6w/edit?usp=sharing) |
 
 # Lookup Resource
+
 | **RCP** | 32 |
 | :--- | :--- |
 | **Version** | 1.7 |
 | **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org)) |
-| **Status** | **DRAFT** |
+| **Status** | **APPROVED** |
 | **Date Submitted** | December 2021 |
 | **Date Approved** | Sept 2022 |
 | **Dependencies** | [Web API Core 2.0.0+](./web-api-core.md)<br /> [DD Wiki 1.7 Lookup Resource](https://ddwiki.reso.org/display/DDW17/Lookup+Resource) |
@@ -49,7 +50,7 @@ The majority of the Data Dictionary 1.7 Specification was unchanged since initia
 * **Data Type Mappings**: A specification ([RCP-031](https://members.reso.org/display/RESOWebAPIRCP/RCP+-+WEBAPI-031+Data+Dictionary+Representation+in+the+Web+API)) was created to normalize Data Dictionary type mappings in the Web API, as [described here](https://members.reso.org/pages/viewpage.action?pageId=67962918#RCP-WEBAPI-031DataDictionaryRepresentationintheWebAPI-2.6.1DictionaryandTransportTypeMappingsandAttributes) and summarized in [this table](https://members.reso.org/pages/viewpage.action?pageId=67962918#RCP-WEBAPI-031DataDictionaryRepresentationintheWebAPI-DataTypeMappings.1). This was done to improve the predictability of data formats during transport. _See the section on [*Data Type mappings*](https://docs.google.com/document/d/15DFf9kDX_mlGCJVOch2fztl8W5h-yd18N0_03Sb4HwM/edit#heading=h.ytsgiaioc8hv) for more information_.
 * **IDX Payload Nomenclature**: Previously, terminology included _IDX_Must_, _IDX_Optional_, etc., which have all been consolidated under the IDX label. In general, Payloads have been streamlined and now [each field indicates which payloads it belongs to](https://docs.google.com/spreadsheets/d/1SZ0b6T4_lz6ti6qB2Je7NSz_9iNOaV_v9dbfhPwWgXA/edit#gid=16571180&range=R:R) in a binary fashion, such as *IDX* or *BBO*. 
 * **Data Sampling**: As of August 31, 2021, data sampling is also part of the Data Dictionary 1.7 Endorsement to ensure that what's available on a given server matches what's advertised and that the data conforms to the Data Dictionary specification, where applicable. 
-* **Lookup Resource**: Added support for the Lookup Resource. See [DD Wiki]([url](https://ddwiki.reso.org/display/DDW17/Lookup+Resource)).
+* **Lookup Resource**: Added support for the Lookup Resource. See [DD Wiki](https://ddwiki.reso.org/display/DDW17/Lookup+Resource).
 
 <br /><br />
 
