@@ -14,7 +14,7 @@ Proposals that require certification must have adopted a specification, testing 
 
 | RCP | Name | Version | Status | Status Date |
 | :-- | :-- | :-- | :-- | :-- |
-| [**RCP-036**](./data-dictionary.md) | **Data Dictionary** | **1.7** | **RATIFIED** | **Jan 2021** |
+| [**RCP-036**](./data-dictionary.md) | **Data Dictionary with Lookup Resource** | **1.7** | **RATIFIED** | **Jan 2021** |
 | [**RCP-037**](./web-api-core.md) | **Web API Core** | **2.0** | **RATIFIED** | **Jan 2021** |
 | [**RCP-038**](./payloads.md) | **Payloads (with IDX Payload)** | **1.7** | **RATIFIED** | **Aug 2021** |
 
@@ -23,12 +23,10 @@ Proposals that require certification must have adopted a specification, testing 
 # DRAFT SPECIFICATIONS
 Draft specifications have been approved by the Certification Subgroup and are awaiting implementations and community review prior to Transport approval.
 
-
 | RCP | Name | Version | Status | Status Date |
 | :-- | :-- | :-- | :-- | :-- |
-| [**RCP-010**](./web-api-add-edit.md) | **Web API Add/Edit** | **2.0.0** | **DRAFT** | **Apr 2017** |
+| [**RCP-010**](https://github.com/RESOStandards/transport/blob/rcp-010-updated-draft-specification/web-api-add-edit.md) | **Web API Add/Edit** | **2.0.0** | **DRAFT** | **Apr 2017** |
 | [**RCP-019**](./web-api-validation-expression.md) | **Web API Validation Expressions** | **2.0.0** | **DRAFT** | **Apr 2018** |
-| [**RCP-032**](https://github.com/RESOStandards/transport/blob/rcp-032-lookup-resource-dd-1.7-minor/data-dictionary.md) | **Lookup Resource** | **1.7** | **DRAFT** | **Dec 2021** |
 | [**RCP-040**](https://github.com/RESOStandards/transport/blob/rcp-040-data-dictionary-2.0-endorsement-major-dd-1.7/data-dictionary.md) | **Data Dictionary** | **2.0** | **DRAFT** | **Dec 2021** |
 
 <br />

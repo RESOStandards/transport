@@ -5,13 +5,22 @@
 | **Version** | 1.7 |
 | **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org)) |
 | **Status** | **RATIFIED** |
-| **Written** | June 2020 |
-| **Ratified** | December 2020 |
+| **Date Submitted** | June 2020 |
+| **Date Ratified** | December 2020 |
 | **Dependencies** | [Web API Core 2.0.0+](./web-api-core.md) |
 | **Related Links** | [DD Wiki 1.7](https://ddwiki.reso.org/display/DDW17/RESO+Data+Dictionary+1.7)<br />[Data Dictionary 1.7 Spreadsheet](https://docs.google.com/spreadsheets/d/1_59Iqr7AQ51rEFa7p0ND-YhJjEru8gY-D_HM1yy5c6w/edit?usp=sharing) |
 
-The Data Dictionary endorsement defines models for use in the RESO domain. These include Resources, Fields, Lookups, and Relationships between Resources. The Data Dictionary may use the RESO Web API or RESO's Common Schema JSON format for transport.
+# Lookup Resource
 
+| **RCP** | 32 |
+| :--- | :--- |
+| **Version** | 1.7 |
+| **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org)) |
+| **Status** | **APPROVED** |
+| **Date Submitted** | December 2021 |
+| **Date Approved** | Sept 2022 |
+| **Dependencies** | [Web API Core 2.0.0+](./web-api-core.md)<br /> [DD Wiki 1.7 Lookup Resource](https://ddwiki.reso.org/display/DDW17/Lookup+Resource) |
+| **Related Links** | [Data Dictionary 1.7 Spreadsheet](https://docs.google.com/spreadsheets/d/1_59Iqr7AQ51rEFa7p0ND-YhJjEru8gY-D_HM1yy5c6w/edit#gid=544946974)<br />[Data Dictionary 2.0 Spreadsheet](https://docs.google.com/spreadsheets/d/1_59Iqr7AQ51rEFa7p0ND-YhJjEru8gY-D_HM1yy5c6w/edit?usp=sharing) |
 
 <br /><br />
 
@@ -38,10 +47,10 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 
 The majority of the Data Dictionary 1.7 Specification was unchanged since initially ratified. 
 
-A summary of the changes from the previous testing rules is as follows:
 * **Data Type Mappings**: A specification ([RCP-031](https://members.reso.org/display/RESOWebAPIRCP/RCP+-+WEBAPI-031+Data+Dictionary+Representation+in+the+Web+API)) was created to normalize Data Dictionary type mappings in the Web API, as [described here](https://members.reso.org/pages/viewpage.action?pageId=67962918#RCP-WEBAPI-031DataDictionaryRepresentationintheWebAPI-2.6.1DictionaryandTransportTypeMappingsandAttributes) and summarized in [this table](https://members.reso.org/pages/viewpage.action?pageId=67962918#RCP-WEBAPI-031DataDictionaryRepresentationintheWebAPI-DataTypeMappings.1). This was done to improve the predictability of data formats during transport. _See the section on [*Data Type mappings*](https://docs.google.com/document/d/15DFf9kDX_mlGCJVOch2fztl8W5h-yd18N0_03Sb4HwM/edit#heading=h.ytsgiaioc8hv) for more information_.
 * **IDX Payload Nomenclature**: Previously, terminology included _IDX_Must_, _IDX_Optional_, etc., which have all been consolidated under the IDX label. In general, Payloads have been streamlined and now [each field indicates which payloads it belongs to](https://docs.google.com/spreadsheets/d/1SZ0b6T4_lz6ti6qB2Je7NSz_9iNOaV_v9dbfhPwWgXA/edit#gid=16571180&range=R:R) in a binary fashion, such as *IDX* or *BBO*. 
 * **Data Sampling**: As of August 31, 2021, data sampling is also part of the Data Dictionary 1.7 Endorsement to ensure that what's available on a given server matches what's advertised and that the data conforms to the Data Dictionary specification, where applicable. 
+* **Lookup Resource**: Added support for the Lookup Resource. See [DD Wiki](https://ddwiki.reso.org/display/DDW17/Lookup+Resource).
 
 <br /><br />
 
@@ -68,7 +77,8 @@ The RESO Data Dictionary consists of three main sets of data elements:
 * **Fields**: data elements where atomic values can exist. ListPrice is a field within the Property resource where a given listing's price would exist if it were available in the data set. Fields have data types such as Strings or Timestamps. 
 * **Lookups**: pre-defined values a given field can have as part of its definition. StandardStatus has allowed values of Active and Pending. These are also called enumerations, which can be closed or open with or without values defined. Closed enumerations MUST only contain their defined values. Others are open to extension if a similar value isn't already defined.
 
-## Data Dictionary Spreadsheet
+
+## Section 2.1: Data Dictionary Spreadsheet
 
 The Data Dictionary specification is defined [as a spreadsheet](https://docs.google.com/spreadsheets/d/1SZ0b6T4_lz6ti6qB2Je7NSz_9iNOaV_v9dbfhPwWgXA/edit?usp=sharing), where each newly adopted version produces its own spreadsheet when ratified.
 
@@ -76,6 +86,218 @@ This worksheet is divided into three main sections:
 * **Resource Sheets**: define each given resource in the Data Dictionary, such as Property, Member, Office, or Media. These contain field definitions, which have data types and other attributes.
 * **Lookup Fields and Values**: this sheet is a one-to-many collection of all the lookups defined in the Data Dictionary, referred to by their "Lookup Field" (which is really their grouping). There are two kinds of fields that use these lookups from the other resource sheets, those with Simple Data Types of _String List, Single_ and _String List, Multi_.
 * **Standard Relationships**: define nested relationships a given resource might have. These relationships affect a payload's data shape when related resources are joined together. These can either be one-to-one relationships where a single item is expanded into another, such as the case of Member expanded into Property as BuyerAgent, or they can be one-to-many relationships such as Media expanded into a Property record to show all of a given listing's photos. 
+
+
+
+## Section 2.2: `Lookup` Resource for Enumeration Metadata
+
+This section defines a RESO Data Dictionary resource called `Lookup` that can be used to convey metadata about the enumerations available on a given server. 
+
+In systems that cover large geographic areas, the amount of metadata can grow quite large. This is due to the fact that there are lookups for cities, counties, subdivisions, etc. for each of the areas a given vendor covers, making it impractical to deliver this information through a static OData XML metadata document.
+
+The `Lookup` resource also allows human-friendly display names to be used in transport, both for queries and payloads, while providing consumers with a way to replicate metadata, as needed, rather than all at once.
+
+### Resource Definition
+The `Lookup` resource is defined as follows:
+
+| Field             | Data Type    | Sample Value           | Nullable  | Description |
+| ----------------- | ------------ | ---------------------- | --------- | ----------- |
+| **LookupKey**     | `Edm.String` | "ABC123"               | **false** | The key used to uniquely identify the Lookup entry. |
+| **LookupName**    | `Edm.String` | "ListingAgreementType" | **false** | The name of the enumeration. This is the [_**LookupField**_](https://docs.google.com/spreadsheets/d/1P4CqtBT-3hmfsWLeID5faJgGz2AYTU_7d-OKZBuY_c0/edit#gid=167198210&range=A:A) in the adopted Data Dictionary 2.0 spreadsheet. <br /> <br />It is called a "LookupName" in this proposal because more than one field can have a given lookup, so it refers to the name of the lookup rather than a given field. For example, Listing with CountyOrParish and Office with OfficeCountyOrParish having the same CountyOrParish LookupName. <br /><br />This MUST match the Data Dictionary definition for in cases where the lookup is defined. Vendors MAY add their own enumerations otherwise.<br /><br />The LookupName a given field uses is required to be annotated at the field level in the OData XML Metadata, as outlined later in this proposal. |
+| **LookupValue**   | `Edm.String` | "Seller Reserve" | **false** | The human-friendly display name the data consumer receives in the payload and uses in queries.<br /><br />This MAY be a local name or synonym for a given RESO Data Dictionary lookup item. |
+| **StandardLookupValue** | `Edm.String` | "Exclusive Agency" | true | The Data Dictionary [_**LookupDisplayName**_](https://docs.google.com/spreadsheets/d/1P4CqtBT-3hmfsWLeID5faJgGz2AYTU_7d-OKZBuY_c0/edit#gid=167198210&range=C:C) of the enumerated value.<br /><br />This field is required when the LookupValue for a given item corresponds to a RESO standard value, meaning a standard lookup display name, known synonym, local name, or translation of that value.<br /><br />Local lookups MAY omit this value if they don't correspond to an existing RESO standard lookup value. |
+| **LegacyODataValue**     | `Edm.String` | "ExclusiveAgency" | true | The Legacy OData lookup value that the server vendor provided in their OData XML Metadata.<br /><br />This value is optional, and has been included in order to provide a stable mechanism for translating OData lookup values to RESO standard lookup display names, as well as for historical data that might have included the OData value at some point, even after the vendor had converted to human friendly display names. |
+| **ModificationTimestamp** | `Edm.DateTimeOffset` | "2020-07-07T17:36:14+00:00" | **false** | The timestamp for when the enumeration value was last modified.<br /><br />This is used to help rebuild caches when metadata items change so consumers don't have to re-pull and reprocess the entire set of metadata when only a small number of changes have been made. |
+
+## Required Annotation
+For any String List, Single or String List, Multi field using the Lookup resource, the following MUST be present in the server metadata:
+
+### Example
+```xml
+<!-- OData annotation for String List, Single field -->
+<Property Name="OfficeCountyOrParish" Type="Edm.String">
+  <Annotation Term="RESO.OData.Metadata.LookupName" String="CountyOrParish" />  
+</Property>
+
+<!-- OData annotation for String List, Multi field -->
+<Property Name="ExteriorFeatures" Type="Collection(Edm.String)">
+  <Annotation Term="RESO.OData.Metadata.LookupName" String="ExteriorFeatures" />  
+</Property>
+```
+Where: 
+* `Term` uses the required namespace RESO.OData.Metadata.LookupName
+* `String` indicates the LookupName in the Lookup Resource in which the given field's lookups are defined. 
+
+Notes:
+* The referenced LookupName **MUST** be a standard lookup name for items currently defined by the RESO Data Dictionary. For example, for the `StandardStatus` field in the Data Dictionary, the `LookupName` **MUST** be `StandardStatus`.
+* Data providers **MAY** add additional LookupName entries when not already defined by the Dictionary.
+* The underlying type for the lookup-based field **MUST** either be `Edm.String` or `Collection(Edm.String)`, depending on whether the given field is String List, Single or Multi in the Data Dictionary, respectively.
+
+## Queries
+The `Lookup` resource **MUST** support queries that use the [OData`$top` and `$skip` query operators](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#_Toc31361042), in conjunction with a `ModificationTimestamp` parameter so consumers can synchronize since the last update. The client **MUST** be able to consume the advertised count of records from the server or testing will not pass.
+
+Providers **MAY** support other queries on this resource, such as filtering by `LookupName`.
+
+### Example: GET Lookups using OData `$top` and `$skip` 
+The following example shows retrieving a page of records using an [OData `$top` and `$skip` query](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#_Toc31361042):
+```
+GET /Lookup?$top=100&$skip=0
+```
+```
+{
+  "value": [{
+    "LookupKey": "CDE125",
+    "LookupName": "CountyOrParish",
+    "LookupValue": "Contra Costa County",
+    "StandardLookupValue": null,
+    "ModificationTimestamp": "2020-07-07T17:36:16Z"
+  }, {
+    "LookupKey": "BCD124",
+    "LookupName": "CountyOrParish",
+    "LookupValue": "Ventura County",
+    "StandardLookupValue": null,
+    "ModificationTimestamp": "2020-07-07T17:36:15Z"
+  }, {
+    "LookupKey": "ABC123",
+    "LookupName": "CountyOrParish",
+    "LookupValue": "Los Angeles County",
+    "StandardLookupValue": null,
+    "ModificationTimestamp": "2020-07-07T17:36:14Z"
+ }]
+}
+```
+
+In the previous example, the client has requested 100 records but only the 3 shown were available. Clients should be prepared to paginate with page sizes less than the requested size. For example, if 1,000 were requested but only 100 were supported on the server, the consumer's next query should have a `$top=100` and `$skip=100`. 
+
+
+### Example: GET Lookups with `$count=true` 
+Providers MUST support the OData `$count=true` parameter. 
+
+```
+GET /Lookup?$count=true
+```
+```
+{
+  "@odata.count": 3,
+  "value": [{
+    "LookupKey": "CDE125",
+    "LookupName": "CountyOrParish",
+    "LookupValue": "Contra Costa County",
+    "StandardLookupValue": null,
+    "ModificationTimestamp": "2020-07-07T17:36:16Z"
+  }, {
+    "LookupKey": "BCD124",
+    "LookupName": "CountyOrParish",
+    "LookupValue": "Ventura County",
+    "StandardLookupValue": null,
+    "ModificationTimestamp": "2020-07-07T17:36:15Z"
+  }, {
+    "LookupKey": "ABC123",
+    "LookupName": "CountyOrParish",
+    "LookupValue": "Los Angeles County",
+    "StandardLookupValue": null,
+    "ModificationTimestamp": "2020-07-07T17:36:14Z"
+ }]
+}
+```
+
+The count query may be used in conjunction with `$top=0` to provide a count without returning any values.
+
+### Example: GET records that were updated since they were last synced
+If a consumer wanted to catch up with any records updated since the last time they had synced, they might use the following query:
+
+```
+GET /Lookup?$filter=ModificationTimestamp ge 2022-01-01T00:00:00Z&$top=100&skip=0&$count=true
+```
+```
+{
+  "@odata.count": 0,
+  "value": []
+}
+```
+
+Since the count is zero, this means that there were no updates since the last sync on `2022-08-01T00:00:00Z`.
+
+If there were updates, something similar to the following might be expected:
+
+
+```
+GET /Lookup?$filter=ModificationTimestamp ge 2022-01-01T00:00:00Z&$top=100&skip=0&$count=true
+```
+```
+{
+  "@odata.count": 1,
+  "value": [{
+    "LookupKey": "CDE125",
+    "LookupName": "CountyOrParish",
+    "LookupValue": "Contra Costa County",
+    "StandardLookupValue": null,
+    "ModificationTimestamp": "2022-03-07T17:36:16Z"
+  }]
+}
+```
+
+## Usage
+
+### Example Metadata
+This section shows how the `Lookup` resource might be used in conjunction with data from the `Property` resource with OData XML Metadata defined as follows:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="org.reso.metadata" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="Property">
+        <Key>
+          <PropertyRef Name="ListingKey"/>
+        </Key>
+        <Property MaxLength="255" Name="ListingKey" Type="Edm.String"/>
+        <Property Name="StandardStatus" Type="Edm.String">
+            <Annotation Term="RESO.OData.Metadata.LookupName" String="StandardStatus" />  
+        </Property>
+        <Property Name="AccessibilityFeatures" Type="Collection(Edm.String)">
+            <Annotation Term="RESO.OData.Metadata.LookupName" String="AccessibilityFeatures" />  
+        </Property>
+        <Property Name="ModificationTimestamp" Precision="27" Type="Edm.DateTimeOffset"/>
+      </EntityType>
+      <EntityType Name="Lookup">
+        <Key>
+          <PropertyRef Name="LookupKey"/>
+        </Key>
+        <Property Name="LookupKey" Type="Edm.String" Nullable="false" />
+        <Property Name="LookupName" Type="Edm.String" Nullable="false" />
+        <Property Name="LookupValue" Type="Edm.String" Nullable="false" />
+        <Property Name="StandardLookupValue" Type="Edm.String" />
+        <Property Name="LegacyODataValue" Type="Edm.String" />
+        <Property Name="ModificationTimestamp" Precision="27" Type="Edm.DateTimeOffset"  Nullable="false" />
+      </EntityType>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
+```
+
+### GET Property Record with Human Friendly Standard Lookups
+When using the `Lookup` resource, the values in the payload response will be the human friendly display name for a given enumeration:
+
+```
+GET /Property?$top=1 
+```
+```
+{
+  "value": [
+    {
+      "ListingKey": "abc123",
+      "StandardStatus": "Active Under Contract",     
+      "AccessibilityFeatures": ["Accessible Approach with Ramp", "Accessible Entrance", "Visitable"],
+      "ModificationTimestamp": "2020-04-02T02:02:02.02Z"
+    }
+  ]
+}
+```
+
+In the preceding example, the `Lookup` resource **MUST** contain the following:
+* Entry for `LookupName` of `StandardStatus` with "Active Under Contract" as a `LookupValue`
+* Entry for `LookupName` of `AccessibilityFeatures` with three records: "Accessible Approach with Ramp", "Accessible Entrance", and "Visitable"
 
 <br /><br />
 
@@ -88,19 +310,26 @@ Robust statistics are created through the use of the RESO Data Dictionary applic
 
 ## Background
 
-The RESO Data Dictionary testing tool ensures compliance with RESO Data Dictionary definitions of resources, fields, and enumerations. Nonstandard or "local" data elements are also allowed, provided Data Dictionary resources are used whenever present on a given server and when metadata for any additional items are in a supported and valid transport format.
-Resources are top-level containers in the RESO ecosystem. Some examples are [*Property*](https://ddwiki.reso.org/display/DDW17/Property+Resource), [*Member*](https://ddwiki.reso.org/display/DDW17/Member+Resource), [*Office*](https://ddwiki.reso.org/display/DDW17/Office+Resource), [*Media*](https://ddwiki.reso.org/display/DDW17/Media+Resource)*, and* [*OpenHouse*](https://ddwiki.reso.org/display/DDW17/OpenHouse+Resource). 
-Fields exist within a given resource and have name and type definitions that must be adhered to in order to be considered compliant. In the case of [*Property*](https://ddwiki.reso.org/display/DDW17/Property+Resource), examples of fields are [*ListPrice*](https://ddwiki.reso.org/display/DDW17/ListPrice+Field), [*ModificationTimestamp*](https://ddwiki.reso.org/display/DDW17/ModificationTimestamp+Field), etc. Fields don't exist on their own in the metadata. They will always be contained within a top-level resource definition that MUST match RESO Standard Resource definitions when they exist.
+
+The RESO Data Dictionary testing tool ensures compliance with RESO Data Dictionary definitions of resources, fields, and enumerations. 
+
+
+Nonstandard or "local" data elements are also allowed, provided Data Dictionary resources are used whenever present on a given server and when metadata for any additional items are in a supported and valid transport format.
+
+
+**Resources** are top-level containers in the RESO ecosystem. Some examples are [*Property*](https://ddwiki.reso.org/display/DDW17/Property+Resource), [*Member*](https://ddwiki.reso.org/display/DDW17/Member+Resource), [*Office*](https://ddwiki.reso.org/display/DDW17/Office+Resource), [*Media*](https://ddwiki.reso.org/display/DDW17/Media+Resource)*, and* [*OpenHouse*](https://ddwiki.reso.org/display/DDW17/OpenHouse+Resource). 
+
+
+**Fields** exist within a given resource and have name and type definitions that must be adhered to in order to be considered compliant. In the case of [*Property*](https://ddwiki.reso.org/display/DDW17/Property+Resource), examples of fields are [*ListPrice*](https://ddwiki.reso.org/display/DDW17/ListPrice+Field), [*ModificationTimestamp*](https://ddwiki.reso.org/display/DDW17/ModificationTimestamp+Field), etc. Fields don't exist on their own in the metadata. They will always be contained within a top-level resource definition that MUST match RESO Standard Resource definitions when they exist.
+
+**Lookups** define possible values for a given field, and are used in cases such as [**StandardStatus**](https://ddwiki.reso.org/display/DDW17/StandardStatus+Field) and [**ExteriorFeatures**](https://ddwiki.reso.org/display/DDW17/ExteriorFeatures+Field).
 
 ## Testing Framework
 
 Data Dictionary Certification is provided by the [RESO Commander](https://github.com/RESOStandards/web-api-commander). 
 The RESO Commander is an open source, cross-platform Java library created by RESO that uses established community libraries, such as the Apache Olingo OData Client, XML parsers, and JSON Schema Validators, to provide a testing API.
 
-
-Acceptance tests define the requirements applicants are expected to meet in order to achieve certification. Data Dictionary acceptance tests are written in a high-level language (DSL) called [Gherkin](https://cucumber.io/docs/gherkin/reference/). This is part of a [Behavior Driven Development](https://en.wikipedia.org/wiki/Behavior-driven_development) (BDD) platform called [Cucumber](https://cucumber.io/), which allows for the expression of testing workflows using a natural language that is intended to be accessible to business analysts and QA testers in addition to programmers. 
-
-Acceptance tests are automatically generated from the adopted Data Dictionary spreadsheet for each given version of the specification, and can target any version of the Data Dictionary from 1.0 onwards. 
+Acceptance tests define the requirements applicants are expected to meet in order to achieve certification. Data Dictionary acceptance tests are written in a high-level language (DSL) called [Gherkin](https://cucumber.io/docs/gherkin/reference/). This is part of a [Behavior Driven Development](https://en.wikipedia.org/wiki/Behavior-driven_development) (BDD) platform called [Cucumber](https://cucumber.io/), which allows for the expression of testing workflows using a natural language that is intended to be accessible to business analysts and QA testers in addition to programmers. Tests are automatically generated from the adopted Data Dictionary spreadsheet for each given version of the specification, and can target any version of the Data Dictionary from 1.0 onwards. 
 
 The benefit of this strategy is that when a new Data Dictionary version is ratified, the tests may be generated and testing can begin right away, significantly reducing tool development time and adoption of the standard.
 
@@ -115,6 +344,7 @@ RESO Data Dictionary certification is based on adherence to: a) Resource, Field,
 ### Configuring the Test Client
 
 The starting point is for applicants to create a configuration file in RESOScript (XML) format which contains credentials and a server's RESO Web API endpoint. A sample RESOScript file and instructions for how to use it will be provided with the initial release of the testing tool.
+
 
 <br />
 
@@ -178,7 +408,7 @@ There is a proposal in progress in the RESO Data Dictionary and Transport workgr
 
 Underlying OData enumerations for Data Dictionary lookups MUST adhere to the naming conventions outlined in the [OData specification](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752675) and map to the correct types, as outlined in the [Data Type Mappings section](https://docs.google.com/document/d/15DFf9kDX_mlGCJVOch2fztl8W5h-yd18N0_03Sb4HwM/edit#heading=h.ytsgiaioc8hv).
 
-Standard LookupValues are provided [in the Data Dictionary 1.7 Spreadsheet](https://docs.google.com/spreadsheets/d/1SZ0b6T4_lz6ti6qB2Je7NSz_9iNOaV_v9dbfhPwWgXA/edit#gid=585857157&range=B:B). They are not required, but are intended to serve as a guide for those using OData. 
+Standard Lookup Values are provided [in the Data Dictionary 1.7 Spreadsheet](https://docs.google.com/spreadsheets/d/1SZ0b6T4_lz6ti6qB2Je7NSz_9iNOaV_v9dbfhPwWgXA/edit#gid=585857157&range=B:B). They are not required, but are intended to serve as a guide for those using OData. 
 
 **DEPRECATION NOTICE**: RESO will eventually be deprecating OData `IsFlags` enumerations in favor of the Lookup resource in a future version of the Data Dictionary. This change will come with a major version bump, and perhaps be part of Data Dictionary 2.0, TBD. See [RCP-032](https://members.reso.org/display/RESOWebAPIRCP/RCP+-+WEBAPI-032++Lookup+and+RelatedLookup+Resources+for+Lookup+Metadata) for more information.
 
@@ -347,13 +577,68 @@ Timestamps are expected to use the OData [edm:DateTimeOffset](http://docs.oasis-
     Then "ModificationTimestamp" MUST be "Timestamp" data type
 ```
 
-### Lookups Resource and Location-Based Fields
+### Lookup Resource
+RESO supports use of a Data Dictionary resource in order to advertise lookup metadata. This has the advantage of providing human friendly lookup values as well as the ability to more easily replicate large sets of enumerations, such as subdivisions or cities.
 
-After further discussion in the Transport and Certification subgroups, certain lookups will allowed to be Edm.String for String List, Single, or Collection(Edm.String) for String List, Multi, pending further discussion of Lookups, as outlined in [RCP-032](https://members.reso.org/display/RESOWebAPIRCP/RCP+-+WEBAPI-032++Lookups+Resource+for+Enumeration+Metadata). 
+The following testing rules will be used during RESO Certification:
+* Check the data type of the lookup field, e.g. `StandardStatus` or `AccessibilityFeatures`, it should be `Edm.String` for single enumerations and `Collection(Edm.String)` for multiple enumerations. 
+* Check that the required annotation is present in the OData XML metadata from the server, and in the correct format.
+* Check that the `Lookup` resource is present in the metadata, exists on the server, and is defined correctly.
+* All records will be replicated from the `Lookup` resource using `$top` and `$skip` queries. Payload data will then be correlated with what has been advertised to ensure that enumerations are present for each annotated lookup name. 
 
-Note that RCP-032 started off as being specifically for location-based lookups, such as City and CountyOrParish, and has potentially been expanded to include any Lookup. 
+Servers **MUST** be able to provide the entire set of lookups relevant for testing through the replication operation so, for example, if a given system has 101 records from the `$count=true` query option but only 100 records were fetched, this would fail. The opposite is also true, if 100 records were advertised and 101 were found, this would not pass testing.
 
-Testing requirements will be added pending approval of a Lookups Resource by the Certification Subgroup and Transport Workgroup. This has also been noted in the section on [Data Type Mappings](https://docs.google.com/document/d/15DFf9kDX_mlGCJVOch2fztl8W5h-yd18N0_03Sb4HwM/edit#heading=h.ytsgiaioc8hv). Depending on the progress in the groups, the allowance for string-based lookups may precede testing rules for a general Lookups resource.
+See the [Lookup resource section](#section-22-lookup-resource-for-enumeration-metadata) in the specification for more information. Testing rules may be found in the [RESO Commander repository](https://github.com/RESOStandards/web-api-commander/blob/main/src/main/java/org/reso/certification/features/data-dictionary/v1-7-0/additional-tests/lookup-resource-tests.feature). 
+
+At the time of writing, the BDD testing rules for the Lookup resource are as follows:
+
+```gherkin
+Feature: Lookup Acceptance Tests (RCP-032)
+
+  Background:
+    When a RESOScript file is provided
+    Then Client Settings and Parameters can be read from the RESOScript
+    And a test container was successfully created from the given RESOScript file
+    And the test container uses an Authorization Code or Client Credentials for authentication
+    And valid metadata were retrieved from the server
+    When the "Lookup" Resource exists in the metadata
+    Then valid data is replicated from the "Lookup" Resource
+
+  @dd-1.7 @rcp-032 @lookup-resource
+  Scenario: Ensure That Required Lookup Resource Fields Are Present in Server Metadata
+    Given that metadata have been retrieved from the server and validated
+    When the "Lookup" Resource exists in the metadata
+    Then "Lookup" Resource data and metadata MUST contain the following fields
+      | LookupKey |
+      | LookupName |
+      | LookupValue |
+      | ModificationTimestamp |
+
+
+  #  <!-- OData annotation for String List, Single field -->
+  #  <Property Name="OfficeCountyOrParish" Type="Edm.String">
+  #  <Annotation Term="RESO.OData.Metadata.LookupName" String="CountyOrParish" />
+  #  </Property>
+  #
+  #  <!-- OData annotation for String List, Multi field -->
+  #  <Property Name="ExteriorFeatures" Type="Collection(Edm.String)">
+  #  <Annotation Term="RESO.OData.Metadata.LookupName" String="ExteriorFeatures" />
+  #  </Property>
+  @dd-1.7 @rcp-032 @lookup-resource
+  Scenario: Check Required Annotations and LookupName Data
+    Given that metadata have been retrieved from the server and validated
+    When the "Lookup" Resource exists in the metadata
+    Then RESO Lookups using String or String Collection data types MUST have the annotation "RESO.OData.Metadata.LookupName"
+    And fields with the annotation term "RESO.OData.Metadata.LookupName" MUST have a LookupName in the Lookup Resource
+
+```
+
+### Schema Validation
+RESO Certification will include strict schema validation to ensure that the data available in the payload matches what's advertised in the metadata.
+
+This will consist of creating a JSON Schema representation of the available metadata, including the Field and Lookup resources, and validating all responses from the server with it. [JSON Schema allows](http://json-schema.org/understanding-json-schema/reference/object.html#additional-properties) an `additionalProperties` flag to be set to `false`, meaning that if any additional properties or enumerated values exist in the payload that aren't in the metadata, schema validation will fail. 
+
+This will also include stricter validation for things like string lengths. If an `Edm.String` field declares itself as 100 characters and the payload has 101 characters, the provider will fail certification.
 
 ### Additional References
 
@@ -392,8 +677,6 @@ Edit distance matches within the given threshold will trigger an error in the Da
 Due to the probabilistic nature of "fuzzy matching," some false negatives may be generated when local terminology too closely resembles RESO Standard items. 
 
 Applicants are expected to provide a list of corrections [in a configuration file](https://github.com/RESOStandards/web-api-commander/blob/58485cc04f24e464c6c1313d25428d43835d7668/src/main/resources/ignored.json) they will submit at the time of certification to address any cases that arise. These corrections will be added to the testing tool in order to ensure that once a particular case has been addressed, it won't be flagged again in other cases.
-
-**12/29/2020 Note**: *This feature is complete and will be included in the MVP. This feature previously covered lookups but they will not be checked in DD 1.7, as discussed in the Certification and Transport groups. Heuristics will be applied for Data Dictionary resource and field names.* [*GitHub issue*](https://github.com/RESOStandards/web-api-commander/issues/37)*.*
 
 #### Data-Driven Matching
 
@@ -511,6 +794,7 @@ Thanks to the following contributors for their help with this project:
 | Dylan Gmyrek | FBS |
 | Rob Larson | Larson Consulting, LLC |
 | Paul Stusiak | Falcon Technologies Corp. |
+| Cody Gustafson | FBS |
 
 Many thanks to those who contributed to the RESO Data Dictionary specification, including volunteers from the RESO Data Dictionary and Transport Workgroups.
 
