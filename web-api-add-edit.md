@@ -261,7 +261,7 @@ HTTP/2 400
     "details": [
       {
         "code": "30212",
-        "target": "Property.ListPrice",
+        "target": "ListPrice",
         "message": "List Price must be greater than 0"
       }
     ]
@@ -269,9 +269,9 @@ HTTP/2 400
 }
 ```
 
-Note how the `target` field in the `details` array references `Property.ListPrice`. It's important that providers follow this format in their error responses. Each item will be validated against the server metadata in order to make sure the item exists.
+Note how the `target` field in the `details` array references the `ListPrice` in the Property Resource. It's important that providers follow this format in their error responses. Each item will be validated against the server metadata in order to make sure the item exists.
 
-When the error is with an item in a collection, for example the second media object in a nested payload, it would be referenced by `Property.Media[1]`.
+When the error is with an item in a collection, for example the second media object in a nested payload, it would be referenced by `Media[1].Category`.
 
 The `message` MUST be provided, and SHOULD contain a user-friendly response that could be displayed in an application. 
 
@@ -404,7 +404,7 @@ HTTP/2 400
     "details": [
       {
         "code": "30212",
-        "target": "Property.ListPrice",
+        "target": "ListPrice",
         "message": "List Price must be greater than 0"
       }
     ]
