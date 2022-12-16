@@ -18,7 +18,7 @@
 - [Section 3: Certification](#section-3-certification)
 - [Section 4: Contributors](#section-4-contributors)
 - [Section 5: References](#section-5-references)
-- [Section 6: Appendices](#section-6-appendices)
+- [Section 6: Appendix](#section-6-appendix)
 - [Section 7: License](#section-7-license)
 
 <br />
@@ -827,7 +827,7 @@ Some requirements have been removed from the original proposal, specifically bat
 
 <br /><br />
 
-# Section 6: Appendices
+# Section 6: Appendix
 * [HTTP Error Responses](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#client_error_responses)
 
 <br /><br />
