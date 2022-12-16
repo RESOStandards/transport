@@ -26,19 +26,19 @@
 # Introduction
 The Web API Add/Edit Endorsement defines how to create, update, or delete data in the RESO Web API. It also includes standard error message responses so interactive clients may inform users how to correct issues with business rules, for example.
 
-This proposal does not provide formal business rule support, however. That is addressed in [Validation Expressions (RCP-019)](https://github.com/RESOStandards/transport/blob/main/web-api-validation-expression.md), which is compatible with this specification.
+This proposal does not provide formal business rule support. That is addressed in [Validation Expressions (RCP-019)](https://github.com/RESOStandards/transport/blob/main/web-api-validation-expression.md), which is compatible with this specification.
 
 
 <br />
 
 # Section 1: Purpose
-Creating and editing data is an important part of the listing transaction, and primarily done through a UI at the current time. 
+Creating and editing data is an important part of the listing transaction and primarily done through a UI. In order to allow for interactive clients, _data producers_ need to be able to perform certain actions. 
 
-There are other use cases for Add/Edit capabilities in the API as well, such as creating Open Houses, Showings, or maintaining Member and Office data.
+There are also other cases, such as creating Open Houses, Showings, or maintaining Member and Office data, where the ability to support such clients is useful.
 
 The goal of this proposal is to provide a standard mechanism for create, update, and delete actions in the RESO Web API.
 
-Add/Edit providers may implement as many or as few actions as makes sense for their business case, with one or more standard or local fields.
+Add/Edit providers may implement as many or as few actions as makes sense for their business case, with one or more standard or local fields. 
 
 When Data Dictionary elements are used, they will be recognized by the RESO Certification System.
 
@@ -95,10 +95,10 @@ The examples in this document assume the following OData XML Metadata:
 </edmx:Edmx>
 ```
 
-Note that the _Lookup Resource_ is used in the examples as well, so single- and multi-valued enumerations have types `Edm.String` and `Collection(Edm.String)`.
+Note that the _Lookup Resource_ is used in the examples above, so single- and multi-valued enumerations have types `Edm.String` and `Collection(Edm.String)`.
 
-## Representations
-Different responses are allowed for create (POST) or update (PATCH) actions. 
+## Responses and Representations
+More than one response format is allowed for create (POST) and update (PATCH) actions. 
 * Servers MAY support returning the representation of the updated record with the response, minimal responses with only headers and no payload, or both.
 * Clients MAY request either response type with the use of the `Prefer` header. Note that the server may not support the given `Prefer` header, so clients should expect either `representation` or `minimal` responses.
 * If the server supports returning the representation, then it MUST indicate this in the `Preference-Applied` header by showing that the preference was applied. 
@@ -116,27 +116,46 @@ _From the [OData "4.01" Specification](http://docs.oasis-open.org/odata/odata/v4
 >
 >A preference of return=representation requests that the service invokes the request and returns the modified entity. The service MAY apply this preference by returning the successfully modified resource in the body of the response, formatted according to the rules specified for the requested format. In this case the service MAY include a Preference-Applied response header containing the return=representation preference.
 
+## Error Responses
+The [OData "4.01" specification](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#_Toc31358908) outlines the JSON format of the error response body as follows:
+
+> The representation of an error response body is format-specific. It consists at least of the following information:
+>
+>·         code: required non-null, non-empty, language-independent string. Its value is a service-defined error code. This code serves as a sub-status for the HTTP error code specified in the response.
+>
+>·         message: required non-null, non-empty, language-dependent, human-readable string describing the error. The Content-Language header MUST contain the language code from [RFC5646] corresponding to the language in which the value for message is written.
+>
+>·         target: optional nullable, potentially empty string indicating the target of the error, for example, the name of the property in error.
+>
+>·         details: optional, potentially empty collection of structured instances with code, message, and target following the rules above.
+>
+>·         innererror: optional structured instance with service-defined content.
+> 
+> Service implementations SHOULD carefully consider which information to include in production environments to guard against potential security concerns around information disclosure.
+
+**Note**: RESO Certification requires the `details` array to be present in the error response, though optional in the OData specification above, in order to provide usability for interactive clients which need to know the affected fields and their corresponding error messages. The `target` and `message` fields are therefore also required in `details`.
+
+Examples of the error response format are shown in the following sections.
 
 ## Create Action
-This section shows requests and responses for creating records.
+This section outlines requests and responses for creating records.
 
-The [OData Service Root](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#_Toc31360927) in the following examples is assumed to be `https://api.reso.org`.
+The [OData Service Root](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#_Toc31360927) used in this document is assumed to be `https://api.reso.org`. This will vary between providers and systems.
 
 ### Create Action Succeeds
-There are two possible requests and responses when creating data depending on whether returning the _representation_ is supported and requested.
+There are two successful request and response formats depending on whether the server supports returning the created record in the response body.
 
 #### Create Action with `return=representation`
 A client can request that the current representation of a record be returned upon creation. 
 
-This is done with a request header value of `Prefer: return=representation`.
-
+This is done by using the `Prefer: return=representation` request header.
 
 **REQUEST**
 
 ```
 POST https://api.reso.org/Property
   OData-Version: 4.01
-  Content-Type: application/json;odata.metadata=minimal
+  Content-Type: application/json
   Accept: application/json
   Prefer: return=representation
 ```
@@ -159,8 +178,8 @@ HTTP/2 201 Created
   OData-Version: 4.01
   EntityId: "12345"
   Location: https://api.reso.org/Property('12345')
-  Content-Length: N
-  Content-Type: application/json;odata.metadata=minimal
+  Content-Length: 566
+  Content-Type: application/json
   Preference-Applied: return=representation
 ```
 
@@ -190,7 +209,7 @@ There may be cases where the representation isn't needed by the client or isn't 
 ```
 POST https://api.reso.org/Property
   OData-Version: 4.01
-  Content-Type: application/json;odata.metadata=minimal
+  Content-Type: application/json
   Accept: application/json
   Prefer: return=minimal
 ```
@@ -214,7 +233,7 @@ HTTP/2 204 No Content
   EntityId: "12345"
   Location: https://api.reso.org/Property('12345')
   Content-Length: N
-  Content-Type: application/json;odata.metadata=minimal
+  Content-Type: application/json
   Preference-Applied: return=minimal
 ```
 
@@ -230,7 +249,7 @@ There is a single error response, regardless of representation.
 ```
 POST https://api.reso.org/Property
   OData-Version: 4.01
-  Content-Type: application/json;odata.metadata=minimal
+  Content-Type: application/json
   Accept: application/json
   Prefer: return=representation
 ```
@@ -249,7 +268,7 @@ POST https://api.reso.org/Property
 **RESPONSE**
 
 ```
-HTTP/2 400
+HTTP/2 400 Bad Request
 ```
 
 ```json
@@ -271,20 +290,22 @@ HTTP/2 400
 
 Note how the `target` field in the `details` array references the `ListPrice` in the Property Resource. It's important that providers follow this format in their error responses. Each item will be validated against the server metadata in order to make sure the item exists.
 
-When the error is with an item in a collection, for example the second media object in a nested payload, it would be referenced by `Media[1].Category`.
+When the error is with an item in a collection, for example the second media object in a nested payload, it would be referenced by `Media[1].Category` (assuming the error was with the Category field). The RESO Data Dictionary defines standard relationships so that [Property has a collection of Media items](https://ddwiki.reso.org/display/DDW17/Media+Field) associated with it.
 
-The `message` MUST be provided, and SHOULD contain a user-friendly response that could be displayed in an application. 
+The `message` MUST be provided and SHOULD contain a user-friendly response that could be displayed in an application. 
 
-Certification will verify that there is a non-empty message, but will not validate the content.
+RESO Certification will verify that there is a non-null, non-empty message, but will not validate the content.
 
 ## Update Action
 This section shows requests and responses for updating records.
 
 ### Update Action Succeeds
-There are two possible requests and responses when updating data depending on whether returning the representation is supported and requested. 
+There are two possible request and response formats when updating data, depending on whether returning the representation is supported on a given system.
 
 #### Update Action with `return=representation`
-A client can request that the current representation of a record be returned upon update. This is done with a header value of `Prefer: return=representation`.
+A client can request that the current representation of a record be returned upon update. 
+
+This is done with a request header value of `Prefer: return=representation`.
 
 
 **REQUEST**
@@ -292,7 +313,7 @@ A client can request that the current representation of a record be returned upo
 ```
 PATCH https://api.reso.org/Property('12345')
   OData-Version: 4.01
-  Content-Type: application/json;odata.metadata=minimal
+  Content-Type: application/json
   Accept: application/json
   If-Match: W/\"MjAxOC0wMS0yM1QwODo1Njo0NS4yMi0wODowMA==\"
   Prefer: return=representation
@@ -308,11 +329,11 @@ PATCH https://api.reso.org/Property('12345')
 
 ```
 HTTP/2 200 OK
-  Content-Length: N
-  Content-Type: application/json;odata.metadata=minimal;
   EntityId: "12345"
   Location: https://api.reso.org/Property('12345')
   OData-Version: 4.01
+  Content-Length: 566
+  Content-Type: application/json;
   Preference-Applied: return=representation
 ```
 
@@ -335,7 +356,7 @@ HTTP/2 200 OK
 ```
 
 #### Update Action with `return=minimal`
-There may be cases where the representation isn't needed by the client or isn't supported by the server for update actions. 
+Similar to create actions, there may be cases where the representation isn't needed by the client or isn't supported by the server.
 
 The server MAY return a minimal response in these cases.
 
@@ -344,7 +365,7 @@ The server MAY return a minimal response in these cases.
 ```
 PATCH https://api.reso.org/Property('12345')
   OData-Version: 4.01
-  Content-Type: application/json;odata.metadata=minimal
+  Content-Type: application/json
   Accept: application/json
   If-Match: W/\"MjAxOC0wMS0yM1QwODo1Njo0NS4yMi0wODowMA==\"
   Prefer: return=minimal
@@ -365,19 +386,19 @@ HTTP/2 204 No Content
   Preference-Applied: return=minimal
 ```
 
-THere is no response body in this case, only the response headers shown above.
+There is no response body in this case, only the response headers shown above.
 
 <br />
 
 ### Update Action Fails
-Similar to the create action, there is a single error response regardless of the representation. 
+There is a single error response regardless of the representation. 
 
 **REQUEST**
 
 ```
 PATCH https://api.reso.org/Property('12345')
   OData-Version: 4.01
-  Content-Type: application/json;odata.metadata=minimal
+  Content-Type: application/json
   Accept: application/json
   If-Match: W/\"MjAxOC0wMS0yM1QwODo1Njo0NS4yMi0wODowMA==\"
   Prefer: return=representation
@@ -392,7 +413,7 @@ PATCH https://api.reso.org/Property('12345')
 **RESPONSE**
 
 ```
-HTTP/2 400
+HTTP/2 400 Bad Request
 ```
 
 ```json
@@ -411,6 +432,8 @@ HTTP/2 400
   }
 }
 ```
+
+Since the `target` of the first item in the `details` array is `ListPrice`, and the request was made to the Property Resource, this means the ListPrice field in the Property Resource had the error shown in `message`.
 
 
 ## Delete Action
@@ -436,8 +459,8 @@ There is no response body in this case.
 
 ### Delete Action Fails
 
-
 **REQUEST**
+
 Let's assume the client tries to delete a record that doesn't exist.
 
 ```
@@ -447,13 +470,16 @@ DELETE https://api.reso.org/Property('12346')
 ```
 
 **RESPONSE**
+
 The response would be as follows:
 
 ```
 HTTP/2 404 Not Found
 ```
 
-There are other possible error scenarios for `DELETE` actions as well. For example, the server does not support delete. The server is expected to respond with an HTTP `4XX` status code when errors are encountered, and may decide whether to return a response body with the appropriate error message in these cases.
+There are other possible error scenarios for `DELETE` actions as well. For example, the server does not support delete. 
+
+The server MUST respond with the appropriate HTTP `4XX` status code when errors are encountered, and MAY decide whether to return a response body with the appropriate error message in these cases.
 
 <br /><br />
 
@@ -461,23 +487,20 @@ There are other possible error scenarios for `DELETE` actions as well. For examp
 
 For each create, update, or delete action there is a success and failure scenario.
 
-Those being certified will provide known good and bad payloads that can trigger each of these responses. 
+Those being certified will provide known good and bad payloads that can trigger each of these responses. They will also indicate whether they support `return=minimal` or `return=representation` (or both) for each action being tested.
 
 Since Add/Edit potentially changes data, it is not required that providers be tested on production servers. The expectation is that they will make these services available, however, and that they match what they're certified with.
 
 Certification reports will show which actions and data elements were tested. Items matching the RESO Data Dictionary will be classified as such, but are not required. 
 
-
-## Create Action Succeeds
-
-### `return=representation`
+## Create Action Succeeds with `return=representation`
 
 When the `Prefer: return=representation` request header is present, the testing rules are as follows:
 
 ```
 POST https://api.reso.org/Property
   OData-Version: 4.01
-  Content-Type: application/json;odata.metadata=minimal
+  Content-Type: application/json
   Accept: application/json
   Prefer: return=representation
 ```
@@ -520,14 +543,14 @@ Scenario: Create operation succeeds using a given payload
   And the JSON response matches the format advertised in the metadata
 ```
 
-### `return=minimal`
+## Create Action Succeeds with `return=minimal`
 
 The testing rules for the minimal response are as follows:
 
 ```
 POST https://api.reso.org/Property
   OData-Version: 4.01
-  Content-Type: application/json;odata.metadata=minimal
+  Content-Type: application/json
   Accept: application/json
   Prefer: return=minimal
 ```
@@ -570,7 +593,7 @@ The error response is the same for the create action regardless if the client re
 ```
 POST https://api.reso.org/Property
   OData-Version: 4.01
-  Content-Type: application/json;odata.metadata=minimal
+  Content-Type: application/json
   Accept: application/json
   Prefer: return=representation
 ```
@@ -599,19 +622,16 @@ Scenario: Create operation fails using a given payload
 ```
 
 
-## Update Action Succeeds
+## Update Action Succeeds with `return=representation`
 
 Similar to the create action, update supports a `Prefer` header of `return=minimal` or `return=representation`.
 
-### `return=representation`
-
 When the `Prefer: return=representation` request header is present, the testing rules are as follows:
-
 
 ```
 PATCH https://api.reso.org/Property('12345')
   OData-Version: 4.01
-  Content-Type: application/json;odata.metadata=minimal
+  Content-Type: application/json
   Accept: application/json
   If-Match: W/\"MjAxOC0wMS0yM1QwODo1Njo0NS4yMi0wODowMA==\"
   Prefer: return=representation
@@ -658,7 +678,7 @@ Scenario: Update operation succeeds using a given payload
 
 ```
 
-### `return=minimal`
+## Update Action Succeeds with `return=minimal`
 
 When the `Prefer: return=minimal` request header is present, the testing rules are as follows:
 
@@ -666,7 +686,7 @@ When the `Prefer: return=minimal` request header is present, the testing rules a
 ```
 PATCH https://api.reso.org/Property('12345')
   OData-Version: 4.01
-  Content-Type: application/json;odata.metadata=minimal
+  Content-Type: application/json
   Accept: application/json
   If-Match: W/\"MjAxOC0wMS0yM1QwODo1Njo0NS4yMi0wODowMA==\"
   Prefer: return=minimal
@@ -707,7 +727,7 @@ Scenario: Update operation succeeds using a given payload with a minimal respons
 ```
 PATCH https://api.reso.org/Property('12345')
   OData-Version: 4.01
-  Content-Type: application/json;odata.metadata=minimal
+  Content-Type: application/json
   Accept: application/json
   If-Match: W/\"MjAxOC0wMS0yM1QwODo1Njo0NS4yMi0wODowMA==\"
   Prefer: return=representation
@@ -737,6 +757,8 @@ Scenario: Update operation fails using a given payload
 ```
 
 ## Delete Action Succeeds
+
+Unlike the create and update actions, the delete action only supports one response format.
 
 ```
 DELETE https://api.reso.org/Property('12345')
@@ -806,9 +828,7 @@ Some requirements have been removed from the original proposal, specifically bat
 <br /><br />
 
 # Section 6: Appendices
-
-* [OAuth2](https://oauth.net/2/)
-* [RESTful API](https://en.wikipedia.org/wiki/Representational_state_transfer)
+* [HTTP Error Responses](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#client_error_responses)
 
 <br /><br />
 
@@ -817,4 +837,4 @@ This document is covered by the [RESO EULA](https://www.reso.org/eula/).
 
 This End User License Agreement (the "EULA") is entered into by and between the Real Estate Standards Organization ("RESO") and the person or entity ("End User") that is downloading or otherwise obtaining the product associated with this EULA ("RESO Product"). This EULA governs End Users use of the RESO Product and End User agrees to the terms of this EULA by downloading or otherwise obtaining or using the RESO Product.
 
-Please [contact RESO](mailto:info@reso.org) if you have any questions.
+Please [contact RESO Transport](mailto:transport@reso.org) if you have any questions.
