@@ -9,6 +9,9 @@
 | **Dependencies** | [Data Dictionary 1.7+](./data-dictionary.md)<br />[Web API 2.0.0+](./web-api-core.md) |
 | **Related Links** | [DD Wiki 1.7](https://ddwiki.reso.org/display/DDW17/RESO+Data+Dictionary+1.7)<br />[Data Dictionary Spreadsheet](https://docs.google.com/spreadsheets/d/1_59Iqr7AQ51rEFa7p0ND-YhJjEru8gY-D_HM1yy5c6w/edit?usp=sharing)<br /> |
 
+The keywords "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC 2119](https://www.ietf.org/rfc/rfc2119.txt).
+
+
 <br />
 
 # Table of Contents
@@ -54,7 +57,19 @@ These correspond to the HTTP verbs `POST`, `PATCH`, and `DELETE`, respectively.
 
 This specification also defines standard error responses.
 
+## Authorization
+Servers MUST implement one of the following [OAuth2 authorization methods](https://oauth.net/2/) to be compliant with the RESO Web API specification:
+* [Bearer Tokens](https://oauth.net/2/bearer-tokens/)
+* [Client Credentials](https://oauth.net/2/grant-types/client-credentials/)
+
+OAuth2 is not part of OData. As such, servers and clients will need to implement support for it.
+
 ## Server Metadata
+RESO Web API servers MUST advertise metadata in XML format using a `/$metadata` path relative to their service root.
+
+The [OData Service Root](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#_Toc31360927) used in this document is assumed to be `https://api.reso.org`. 
+
+As such, the XML metadata would be available at `https://api.reso.org/$metadata`. This will vary between providers and systems.
 
 The examples in this document assume the following OData XML Metadata:
 
@@ -139,8 +154,6 @@ Examples of the error response format are shown in the following sections.
 
 ## Create Action
 This section outlines requests and responses for creating records.
-
-The [OData Service Root](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#_Toc31360927) used in this document is assumed to be `https://api.reso.org`. This will vary between providers and systems.
 
 ### Create Action Succeeds
 There are two successful request and response formats depending on whether the server supports returning the created record in the response body.
