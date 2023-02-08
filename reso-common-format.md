@@ -1,4 +1,4 @@
-# RESO Data Dictionary JSON Payloads
+# RESO Common Format
 
 | **RCP** | 25 |
 | :--- | :--- |
