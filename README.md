@@ -53,6 +53,11 @@ Please see the section on [**change proposals**](./reso-rcp-process.md#reso-chan
 
 <br />
 
+# License
+By downloading these resources, you confirm that you agree to the [RESO EULA](http://reso.org/eula).
+
+<br />
+
 # Certification and RESO Analytics
 More information about [RESO Certification](./certification-reso-analytics.md).
 
