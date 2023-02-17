@@ -48,7 +48,7 @@ In progress proposals are ones that are in review by Transport and Certification
 
 # RESO Change Proposal Process
 
-![Transport Specification Process](https://user-images.githubusercontent.com/535358/219705250-40c7c7ac-b406-4807-aae5-047795416ea1.svg)
+![Transport Specification Process](https://user-images.githubusercontent.com/535358/219707307-00067346-4c38-4488-b861-0cb22c8fd337.svg)
 
 [**CREATE NEW CHANGE PROPOSAL**](./reso-rcp-process.md#new-change-proposals).
 
