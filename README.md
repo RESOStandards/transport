@@ -14,9 +14,9 @@ Proposals that require certification must have adopted a specification, testing 
 
 | RCP | Name | Version | Status | Status Date |
 | :-- | :-- | :-- | :-- | :-- |
-| [**RCP-036**](./data-dictionary.md) | **Data Dictionary with Lookup Resource** | **1.7** | **RATIFIED** | **Jan 2021** |
-| [**RCP-037**](./web-api-core.md) | **Web API Core** | **2.0** | **RATIFIED** | **Jan 2021** |
-| [**RCP-038**](./payloads.md) | **Payloads (with IDX Payload)** | **1.7** | **RATIFIED** | **Aug 2021** |
+| [**RCP-036**](https://github.com/RESOStandards/transport/blob/main/data-dictionary.md) | **Data Dictionary with Lookup Resource** | **1.7** | **RATIFIED** | **Jan 2021** |
+| [**RCP-037**](https://github.com/RESOStandards/transport/blob/main/web-api-core.md) | **Web API Core** | **2.0** | **RATIFIED** | **Jan 2021** |
+| [**RCP-038**](https://github.com/RESOStandards/transport/blob/main/payloads.md) | **Payloads (with IDX Payload)** | **1.7** | **RATIFIED** | **Aug 2021** |
 
 <br />
 
@@ -26,7 +26,7 @@ Draft specifications have been approved by the Certification Subgroup and are aw
 | RCP | Name | Version | Status | Status Date |
 | :-- | :-- | :-- | :-- | :-- |
 | [**RCP-010**](https://github.com/RESOStandards/transport/blob/rcp-010-updated-draft-specification/web-api-add-edit.md) | **Web API Add/Edit** | **2.0.0** | **DRAFT** | **Apr 2017** |
-| [**RCP-019**](./web-api-validation-expression.md) | **Web API Validation Expressions** | **2.0.0** | **DRAFT** | **Apr 2018** |
+| [**RCP-019**](https://github.com/RESOStandards/transport/blob/main/web-api-validation-expression.md) | **Web API Validation Expressions** | **2.0.0** | **DRAFT** | **Apr 2018** |
 | [**RCP-040**](https://github.com/RESOStandards/transport/blob/rcp-040-data-dictionary-2.0-endorsement-major-dd-1.7/data-dictionary.md) | **Data Dictionary** | **2.0** | **DRAFT** | **Dec 2021** |
 
 <br />
@@ -47,9 +47,12 @@ In progress proposals are ones that are in review by Transport and Certification
 <br />
 
 # RESO Change Proposal Process
-Please see the section on [**change proposals**](./reso-rcp-process.md#reso-change-proposal-rcp-process) for an outline of the RCP process.
 
-[**Create new change proposal**](./reso-rcp-process.md#new-change-proposals).
+![Transport Specification Process](https://user-images.githubusercontent.com/535358/219705250-40c7c7ac-b406-4807-aae5-047795416ea1.svg)
+
+Please see the section on [**change proposals**](./reso-rcp-process.md#reso-change-proposal-rcp-process) for more information.
+
+[**CREATE NEW CHANGE PROPOSAL**](./reso-rcp-process.md#new-change-proposals).
 
 <br />
 
