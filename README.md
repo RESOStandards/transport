@@ -38,7 +38,7 @@ In progress proposals are ones that are in review by Transport and Certification
 | RCP | Name | Version | Status | Status Date |
 | :-- | :-- | :-- | :-- | :-- |
 | [**RCP-022**](https://github.com/RESOStandards/transport/blob/43-migrate-rcp-022-from-confluence/autofill-service.md) | **Autofill Service** | **1.0.0** | **IN PROGRESS** | **Apr 2019** |
-| [**RCP-025**](https://github.com/RESOStandards/transport/blob/44-migrate-rcp-025-from-confluence/dd-json-payloads.md) | **Data Dictionary JSON Payloads** | **1.7** | **IN PROGRESS** | **Apr 2019** |
+| [**RCP-025**](https://github.com/RESOStandards/transport/blob/23a935c6009d526de6ad843179acad6062455f73/reso-common-format.md) | **RESO Common Format** | **1.7** | **IN PROGRESS** | **Apr 2019** |
 | [**RCP-027**](https://github.com/RESOStandards/transport/blob/45-migrate-rcp-027-from-confluence/entity-events.md) | **EntityEvent Resource and Replication** | **2.0** | **IN PROGRESS** | **Apr 2019** |
 | [**RCP-028**](https://github.com/RESOStandards/transport/blob/46-migrate-rcp-028-from-confluence/web-hooks-push.md) | **Push Replication with EntityEvent and Web Hooks** | **2.0** | **IN PROGRESS** | **Feb 2020** |
 | [**RCP-039**](https://github.com/RESOStandards/transport/blob/22-web-api-core-210-specification/web-api-core.md) | **Web API Core** | **2.1.0** | **IN PROGRESS** | **Apr 2022** |
