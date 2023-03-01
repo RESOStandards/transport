@@ -52,7 +52,7 @@ In progress proposals are ones that are in review by Transport and Certification
 | [**RCP-041**](https://github.com/RESOStandards/transport/blob/23-payloads-20-specification/payloads.md) | **Payloads** | **2.0** | **Apr 2022** |
 | [**RCP-042**](https://github.com/RESOStandards/transport/issues/76) | **Model and Field Resources** | **DD 2.1** | **Feb 2023** |
 | [**RCP-043**](https://github.com/RESOStandards/transport/issues/77) | **Local Fields and Predictability** | **DD 2.1** | **Feb 2023** |
-
+| [**RCP-044**](https://github.com/RESOStandards/transport/issues/67) | **Metadata Internationalization and Locale** | **DD 2.1** | **Feb 2023** |
 
 ---
 
