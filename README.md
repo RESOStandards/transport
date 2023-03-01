@@ -50,7 +50,7 @@ In progress proposals are ones that are in review by Transport and Certification
 | [**RCP-028**](https://github.com/RESOStandards/transport/blob/46-migrate-rcp-028-from-confluence/web-hooks-push.md) | **Push Replication with EntityEvent and Web Hooks** | **2.0** | **Feb 2020** |
 | [**RCP-039**](https://github.com/RESOStandards/transport/blob/22-web-api-core-210-specification/web-api-core.md) | **Web API Core** | **2.1.0** | **Apr 2022** |
 | [**RCP-041**](https://github.com/RESOStandards/transport/blob/23-payloads-20-specification/payloads.md) | **Payloads** | **2.0** | **Apr 2022** |
-| [**RCP-042**](https://github.com/RESOStandards/transport/issues/76) | **Model and Field Resources** | ** DD 2.1** | **Feb 2023** |
+| [**RCP-042**](https://github.com/RESOStandards/transport/issues/76) | **Model and Field Resources** | **DD 2.1** | **Feb 2023** |
 
 ---
 
