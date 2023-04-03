@@ -32,7 +32,7 @@ Draft specifications have been approved by the Certification Subgroup and are aw
 
 | RCP | Name | Version | Date |
 | :-- | :-- | :-- | :-- |
-| [**RCP-010**](https://github.com/RESOStandards/transport/blob/rcp-010-updated-draft-specification/web-api-add-edit.md) | **Web API Add/Edit** | **2.0.0** | **Apr 2017** |
+| [**RCP-010**](https://github.com/RESOStandards/transport/blob/rcp-010-updated-draft-specification/web-api-add-edit.md) | **Web API Add/Edit** | **2.0.0** | **Apr 2023** |
 | [**RCP-019**](https://github.com/RESOStandards/transport/blob/main/web-api-validation-expression.md) | **Web API Validation Expressions** | **2.0.0** | **Apr 2018** |
 | [**RCP-040**](https://github.com/RESOStandards/transport/blob/rcp-040-data-dictionary-2.0-endorsement-major-dd-1.7/data-dictionary.md) | **Data Dictionary** | **2.0** | **Dec 2021** |
 
