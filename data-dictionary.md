@@ -11,6 +11,20 @@
 | **Dependencies** | [Web API Core 2.0.0+](./web-api-core.md) |
 | **Related Links** | [DD Wiki 2.0](https://ddwiki.reso.org/pages/viewpage.action?pageId=1123655)<br />[Data Dictionary 2.0 Spreadsheet](https://docs.google.com/spreadsheets/d/1eOB4Nv3wrAayB1av7n2AWPBRWDeB-UkiDa8h8cdsIEI/edit#gid=94181491) |
 
+# Lookup Resource
+
+| **RCP** | 32 |
+| :--- | :--- |
+| **Version** | 1.7 |
+| **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org)) |
+| **Status** | **APPROVED** |
+| **Date Submitted** | December 2021 |
+| **Date Approved** | Sept 2022 |
+| **Dependencies** | [Web API Core 2.0.0+](./web-api-core.md)<br /> [DD Wiki 1.7 Lookup Resource](https://ddwiki.reso.org/display/DDW17/Lookup+Resource) |
+| **Related Links** | [Data Dictionary 1.7 Spreadsheet](https://docs.google.com/spreadsheets/d/1_59Iqr7AQ51rEFa7p0ND-YhJjEru8gY-D_HM1yy5c6w/edit#gid=544946974)<br />[Data Dictionary 2.0 Spreadsheet](https://docs.google.com/spreadsheets/d/1_59Iqr7AQ51rEFa7p0ND-YhJjEru8gY-D_HM1yy5c6w/edit?usp=sharing) |
+
+<br />
+
 The Data Dictionary endorsement defines models for use in the RESO domain. These include Resources, Fields, Lookups, and Relationships between Resources.
 
 **New in version 2.0**
@@ -19,7 +33,6 @@ The Data Dictionary endorsement defines models for use in the RESO domain. These
 * Data validation against server metadata - if items are found in the payload that are not advertised, providers will not pass testing
 * Updated Data Dictionary reference sheet structure
 
-<br />
 
 # RESO End User License Agreement (EULA)
 
@@ -47,7 +60,6 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 * **Data Validation Against Server Metadata** - The Data Dictionary 1.7 Specification didn't include strict checking of data available on a given server against its advertised metadata. In Data Dictionary 2.0, these two items MUST match. This means that providers will fail testing if resources, fields, or enumerations appear in the data set that weren't advertised on the server. Similar is true in cases where fields, such as `Edm.String`, exceed their advertised data length, or any other similar data anomalies.
 * **Reference Spreadsheet Structure** - Previously there were individual sheets for each resource. They have been merged into a single sheet called "Fields," which also matches the format of the new Field metadata resource. The resource that each field belongs to will be indicated in the Field entry. Enumerations will be in a separate Lookups sheet.
 
-
 <br />
 
 # Introduction
@@ -72,6 +84,7 @@ The RESO Data Dictionary consists of three main sets of data elements:
 * **Resources**: coarse-grained groupings where data is kept. For example, the Property resource contains information about a given property, including its listings when present. Resources contain _fields_ and _lookups_.
 * **Fields**: data elements where atomic values can exist. ListPrice is a field within the Property resource where a given listing's price would exist if it were available in the data set. Fields have data types such as Strings or Timestamps. 
 * **Lookups**: pre-defined values a given field can have as part of its definition. StandardStatus has allowed values of Active and Pending. These are also called enumerations, which can be closed or open with or without values defined. Closed enumerations MUST only contain their defined values. Others are open to extension if a similar value isn't already defined.
+
 
 ## Section 2.1: Data Dictionary Spreadsheet
 
@@ -292,8 +305,8 @@ In the preceding example, the `Lookup` resource **MUST** contain the following:
 * Entry for `LookupName` of `StandardStatus` with "Active Under Contract" as a `LookupValue`
 * Entry for `LookupName` of `AccessibilityFeatures` with three records: "Accessible Approach with Ramp", "Accessible Entrance", and "Visitable"
 
-
 <br />
+
 
 # Section 3: Certification
 
@@ -305,16 +318,14 @@ Robust statistics are created through the use of the RESO Data Dictionary applic
 
 The RESO Data Dictionary testing tool ensures compliance with RESO Data Dictionary definitions of resources, fields, and enumerations. 
 
-
 Nonstandard or "local" data elements are also allowed, provided Data Dictionary resources are used whenever present on a given server and when metadata for any additional items are in a supported and valid transport format.
 
-
 **Resources** are top-level containers in the RESO ecosystem. Some examples are [**Property**](https://ddwiki.reso.org/display/DDW20/Property+Resource), [**Member**](https://ddwiki.reso.org/display/DDW20/Member+Resource), [**Office**](https://ddwiki.reso.org/display/DDW20/Office+Resource), [**Media**](https://ddwiki.reso.org/display/DDW20/Media+Resource)*, and* [**OpenHouse**](https://ddwiki.reso.org/display/DDW20/OpenHouse+Resource). 
-
 
 **Fields** exist within a given resource and have name and type definitions that must be adhered to in order to be considered compliant. In the case of [*Property*](https://ddwiki.reso.org/display/DDW20/Property+Resource), examples of fields are [*ListPrice*](https://ddwiki.reso.org/display/DDW20/ListPrice+Field), [*ModificationTimestamp*](https://ddwiki.reso.org/display/DDW20/ModificationTimestamp+Field), etc. Fields don't exist on their own in the metadata. They will always be contained within a top-level resource definition that MUST match RESO Standard Resource definitions when they exist.
 
 **Lookups** define possible values for a given field, and are used in cases such as [**StandardStatus**](https://ddwiki.reso.org/display/DDW20/StandardStatus+Field) and [**ExteriorFeatures**](https://ddwiki.reso.org/display/DDW20/ExteriorFeatures+Field).
+
 
 ## Testing Framework
 
@@ -669,7 +680,6 @@ Due to the probabilistic nature of "fuzzy matching," some false negatives may be
 
 Applicants are expected to provide corrections through the new variations review process.
 
-
 ## Certification Workflow
 
 The Certification workflow has been optimized around self-assessment prior to certification.
@@ -778,6 +788,7 @@ Thanks to the following contributors for their help with this project:
 | Dylan Gmyrek | FBS |
 | Rob Larson | Larson Consulting, LLC |
 | Paul Stusiak | Falcon Technologies Corp. |
+| Cody Gustafson | FBS |
 
 Many thanks to those who contributed to the RESO Data Dictionary specification, including volunteers from the RESO Data Dictionary and Transport Workgroups.
 
