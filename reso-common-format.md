@@ -201,10 +201,23 @@ This proposal doesn't introduce any additional requirements for current RESO Web
 # Compatibility
 RESO Data Dictionary 1.7+.
 
-# Certification Impact
-Draft implementations (2) have been verified and certification tools have been requested in order to provide reports in RESO Analytics.
+# Certification
+Since this specification isn't tied to a specific transport, testing is a bit different than endorsements that use the OData Web API.
 
-JSON Schema references will be produced as artifacts for RESO Certification. Implementers, please see [RESO Common Schema Open API Format](https://github.com/RESOStandards/web-api-commander/blob/main/src/main/resources/RESODataDictionary-1.7.openapi3.json) for a normative reference.
+## Payload Samples
+Providers will submit payload samples matching the format described in this proposal, which will be validated using JSON schema artifacts generated from the Data Dictionary specification being tested. Ideally, this would consist of up to 100,000 records per resource starting with the newest records first. Samples can be submitted as a single file per resource or collection of them. Local data elements will not be tested, but will show up on the Certification Report along with their inferred data type.
+
+## Schema Validation
+RESO will test that each standard field matches its Data Dictionary definition in both name and type and that no synonyms are present for fields. For enumerations, RESO will check for either the machine-friendly OData values or human-friendly values. There may be reasons for those using RESO Common Format to also support machine-friendly OData values if they're doing an integration with a Web API server.
+
+## Variations Report
+If the provider supports Data Dictionary 2.0 or greater, a Variations Report will be produced similar to Data Dictionary 2.0 testing. This file will contain corrections for resource, field, and lookup mappings where they don't match the Data Dictionary as well as suggested mappings if additional mappings were found. Providers will need to resolve the items flagged in the Variations Report before an endorsement can be issued. 
+
+## Certification Process and RESO Analytics
+Once a provider has submitted samples, testing has been performed, variations have been addressed, and testing has produced a "Passed" result, providers will be able to approve and publish their results in RESO Analytics. Results will appear on both https://certification.reso.org and https://reso.org/certification.
+
+To get started with testing, please contact [dev@reso.org](mailto:dev@reso.org). 
+
 
 # Original Proposal
 [**Download PDF**](https://github.com/RESOStandards/transport/files/9862314/RESOWebAPIRCP-RCP.-.WEBAPI-025.Lightweight.Autofill.Schema-251022-164452.pdf)
