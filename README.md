@@ -1,10 +1,10 @@
 # RESO Endorsements
 **RESO Endorsements** are modular specifications that are associated with a given transport protocol.
 
-* Specifications use [**semantic versioning**](https://semver.org/).
-* All Endorsements start as [**RESO Change Proposals (RCPs)**](./reso-rcp-process.md#reso-change-proposal-rcp-process). 
-* See [**GitHub Discussions**](https://github.com/RESOStandards/transport/discussions) for current proposals.
+* Specifications use [**semantic versioning**](https://semver.org/)
+* All Endorsements start as [**RESO Change Proposals (RCPs)**](./reso-rcp-process.md#reso-change-proposal-rcp-process)
 
+[**TRANSPORT DISCUSSION FORUM**](https://github.com/RESOStandards/transport/discussions)
 
 # RESO Change Proposal Process
 
@@ -14,10 +14,12 @@
 
 ---
 
+<br />
+
 # RATIFIED STANDARDS
 Ratified standards have been adopted by the Transport Workgroup and RESO as an organization.
 
-Proposals that require certification must have adopted a specification, testing rules, and production-ready testing tools before being ratified.
+Proposals that require certification must have an adopted specification and testing rules, and production-ready testing tools before being ratified. Standards may be ratified before they're ready to be shown in RESO Analytics.
 
 | RCP | Name | Version | Date |
 | :-- | :-- | :-- | :-- |
@@ -27,8 +29,17 @@ Proposals that require certification must have adopted a specification, testing 
 
 <br />
 
-# DRAFT SPECIFICATIONS
-Draft specifications have been approved by the Certification Subgroup and are awaiting implementations and community review prior to Transport approval.
+# APPROVED PROPOSALS
+Approved proposals have both specification and testing rules approved by Transport and Certification, and two verified implementations from different providers.
+
+| RCP | Name | Version | Date |
+| :-- | :-- | :-- | :-- |
+| [**RCP-025**](https://github.com/RESOStandards/transport/blob/19656c730e213069a08be11d9a4d2e24605a4577/reso-common-format.md) | **RESO Common Format** | **DD 1.7** | **Sept 2023** |
+
+<br />
+
+# DRAFT PROPOSALS
+Draft proposals have both specification and testing rules approved by Transport and Certification, and are awaiting implementations and community review prior to Transport approval.
 
 | RCP | Name | Version | Date |
 | :-- | :-- | :-- | :-- |
@@ -45,22 +56,23 @@ In progress proposals are ones that are in review by Transport and Certification
 | RCP | Name | Version | Date |
 | :-- | :-- | :-- | :-- |
 | [**RCP-022**](https://github.com/RESOStandards/transport/blob/43-migrate-rcp-022-from-confluence/autofill-service.md) | **Autofill Service** | **1.0.0** | **Apr 2019** |
-| [**RCP-025**](https://github.com/RESOStandards/transport/blob/23a935c6009d526de6ad843179acad6062455f73/reso-common-format.md) | **RESO Common Format** | **1.7** | **Apr 2019** |
-| [**RCP-027**](https://github.com/RESOStandards/transport/blob/45-migrate-rcp-027-from-confluence/entity-events.md) | **EntityEvent Resource and Replication** | **2.0** | **Apr 2019** |
-| [**RCP-028**](https://github.com/RESOStandards/transport/blob/46-migrate-rcp-028-from-confluence/web-hooks-push.md) | **Push Replication with EntityEvent and Web Hooks** | **2.0** | **Feb 2020** |
+| [**RCP-027**](https://github.com/RESOStandards/transport/blob/45-migrate-rcp-027-from-confluence/entity-events.md) | **EntityEvent Resource and Replication** | **DD 2.0** | **Apr 2019** |
+| [**RCP-028**](https://github.com/RESOStandards/transport/blob/46-migrate-rcp-028-from-confluence/web-hooks-push.md) | **Push Replication with EntityEvent and Web Hooks** | **DD 2.0** | **Feb 2020** |
+| [**RCP-035**](https://github.com/RESOStandards/transport/issues/96) | **Supporting Single Feeds** | **DD 2.1** | **Sept 2023** |
 | [**RCP-039**](https://github.com/RESOStandards/transport/blob/22-web-api-core-210-specification/web-api-core.md) | **Web API Core** | **2.1.0** | **Apr 2022** |
-| [**RCP-041**](https://github.com/RESOStandards/transport/blob/23-payloads-20-specification/payloads.md) | **Payloads** | **2.0** | **Apr 2022** |
+| [**RCP-041**](https://github.com/RESOStandards/transport/blob/23-payloads-20-specification/payloads.md) | **Payloads** | **DD 2.0** | **Apr 2022** |
 | [**RCP-042**](https://github.com/RESOStandards/transport/issues/76) | **Model and Field Resources** | **DD 2.1** | **Feb 2023** |
 | [**RCP-043**](https://github.com/RESOStandards/transport/issues/77) | **Local Fields and Predictability** | **DD 2.1** | **Feb 2023** |
 | [**RCP-044**](https://github.com/RESOStandards/transport/issues/67) | **Metadata Internationalization and Locale** | **DD 2.1** | **Feb 2023** |
+| [**RCP-045**](https://github.com/RESOStandards/transport/issues/67) | **Legacy and/or Deprecated Data Elements** | **DD 2.1** | **Sept 2023** |
 
 ---
 
 # License
-By downloading these resources, you confirm that you agree to the [RESO EULA](http://reso.org/eula).
+By downloading these resources, you confirm that you agree to the [**RESO EULA**](http://reso.org/eula).
 
 # Certification and RESO Analytics
-More information about [RESO Certification](./certification-reso-analytics.md).
+More information about [**RESO Certification**](./certification-reso-analytics.md).
 
 ---
 
