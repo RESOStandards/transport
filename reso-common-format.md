@@ -4,9 +4,9 @@
 | :--- | :--- |
 | **Version** | **1.7** |
 | **Authors** | Alexander Likholyot ([Planitar](mailto:alex@planitar.com))<br />Joshua Darnell ([RESO](mailto:josh@reso.org))<br />Paul Stusiak ([Falcon Technologies](mailto:pstusiak@falcontechnologies.com)) | |
-| **Status** | **IN PROGRESS** |
+| **Status** | **Approved** |
 | **Date Submitted** | February 2019 |
-| **Date Approved** | April 2019 |
+| **Date Approved** | September 2023 |
 | **Dependencies** | [Data Dictionary 1.7+](https://ddwiki.reso.org/display/DDW17/RESO+Data+Dictionary+1.7) |
 | **Related Links** | [RESO Common Schema Open API Format](https://github.com/RESOStandards/web-api-commander/blob/main/src/main/resources/RESODataDictionary-1.7.openapi3.json) |
 
