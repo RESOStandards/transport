@@ -1,14 +1,13 @@
 # RESO Change Proposal (RCP) Process
 
 ## New Change Proposals
-1. Make a post on [GitHub Discussions](https://github.com/RESOStandards/transport/discussions). This should contain a summary of the business case, list of requirements, and initial proposal.
+1. Make a post on [**GitHub Discussions**](https://github.com/RESOStandards/transport/discussions). This should contain a summary of the business case, list of requirements, and initial proposal.
 2. Request that the topic be added to the Transport Workgroup agenda by emailing transport@reso.org at least two weeks before the meeting in which it's to be discussed. Ideally, there should be activity in the GitHub Discussion prior to the workgroup meeting. 
-3. Once there’s consensus in the group to move a given item forward, Transport will send it to the Certification Subgroup. [An issue should be created](https://github.com/RESOStandards/transport/issues/new) with a preliminary set of testing rules that could be used to (unambiguously) build software with. An impact assessment should also be included, when applicable.
-4. Proposed testing rules will be reviewed by the Certification Subgroup.
-5. Once approved, a draft specification should be created. Please use the [RCP Template](./proposals/rcp-template.md). If the change proposal is based on an existing RCP, please create a new branch from the existing proposal. Otherwise, create a new branch.
+3. Once there’s consensus in the group to move a given item forward, [**an issue should be created**](https://github.com/RESOStandards/transport/issues/new) with a preliminary set of testing rules that could be used to (unambiguously) build software with, when applicable.
+4. A draft specification should be created. [**See instructions**](./proposals/).
 
 ## Draft Specification and Testing Rules
-1. The Certification Subgroup will review the draft specification. Once approved, a draft PR will be made.
+1. The workgroups will review the draft specification.
 2. The proposal will stay in draft status until it has at least two implementations from two separate vendors.
 3. Implementations must be verified against the proposed testing rules by RESO staff, even if on a development server. Contact dev@reso.org for verification.
 4. Once implementations have been verified, the proposal will be approved by the Certification Subgroup and sent to Transport for final approval. Keep in mind that additional changes may be requested by the community before proceeding.
