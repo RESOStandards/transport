@@ -5,7 +5,7 @@
 2. Request that the topic be added to the Transport Workgroup agenda by emailing transport@reso.org at least two weeks before the meeting in which it's to be discussed. Ideally, there should be activity in the GitHub Discussion prior to the workgroup meeting. 
 3. Once there’s consensus in the group to move a given item forward, Transport will send it to the Certification Subgroup. [An issue should be created](https://github.com/RESOStandards/transport/issues/new) with a preliminary set of testing rules that could be used to (unambiguously) build software with. An impact assessment should also be included, when applicable.
 4. Proposed testing rules will be reviewed by the Certification Subgroup.
-5. Once approved, a draft specification should be created. Please use the [RCP Template](./rcp-template.md). If the change proposal is based on an existing RCP, please create a new branch from the existing proposal. Otherwise, create a new branch.
+5. Once approved, a draft specification should be created. Please use the [RCP Template](./proposals/rcp-template.md). If the change proposal is based on an existing RCP, please create a new branch from the existing proposal. Otherwise, create a new branch.
 
 ## Draft Specification and Testing Rules
 1. The Certification Subgroup will review the draft specification. Once approved, a draft PR will be made.
