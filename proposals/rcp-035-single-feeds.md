@@ -1,0 +1,141 @@
+# RESO (Endorsement Name) Endorsement
+
+| **RCP** | 035 |
+| :--- | :--- |
+| **Version** | **DD 2.1** |
+| **Authors** | Eric Finlay |
+| **Specification** | [RCP-035](https://github.com/RESOStandards/transport/issues/96) |
+| **Status** | IN PROGRESS |
+| **Date Ratified** | Pending |
+| **Dependencies** | None |
+| **Related Links** | [Single Feed Discussion](https://github.com/RESOStandards/transport/discussions/71)|
+
+
+<br /><br />
+
+# RESO End User License Agreement (EULA)
+
+This End User License Agreement (the "EULA") is entered into by and between the Real Estate Standards Organization ("RESO") and the person or entity ("End User") that is downloading or otherwise obtaining the product associated with this EULA ("RESO Product"). This EULA governs End Users use of the RESO Product and End User agrees to the terms of this EULA by downloading or otherwise obtaining or using the RESO Product.
+
+<br /><br />
+
+# Table of Contents
+- [Summary of Changes](#summary-of-changes)
+- [Introduction](#introduction)
+- [Section 1: Purpose](#section-1-purpose)
+- [Section 2: Specification](#section-2-specification)
+- [Section 3: Certification](#section-3-certification)
+- [Section 4: Contributors](#section-4-contributors)
+- [Section 5: References](#section-5-references)
+- [Section 6: Appendices](#section-6-appendices)
+- [Section 7: License](#section-7-license)
+
+<br /><br />
+
+# Summary of Changes
+
+A new field called `FeedType` of type Open Mutli Enum String will be included in every data resource and the `Fields` metadata resource.
+
+This new field will have slightly different meanings when included on data resources vs on the `Fields` metadata resource.
+
+On data resources, this `FeedType` field will be used by the Data Provider to indicate which "feed" includes the given record. For instances, is this record part of an IDX or VOW Feed?
+
+On the metadata `Fields` resource, the `FeedType` field will indicate which feeds give access to the given field. For example, the `StandardStatus` object could have `FeedType` set to `['IDX', 'VOW']` whereas `CloseDate` may be set to `['VOW']` indicating that the `CloseDate` field is not part of the `IDX` feed.
+
+<br /><br />
+
+# Introduction
+
+Currently it is common for Data Consumers to have multiple different types of data access (hereafter referred to as "feeds") for a given MLS. An example of this could be a brokerage which could have access to an IDX, BBO, VOW, and PDAP feed, where each one is a separate set of credentials and imports that the brokerage has to be manage.
+
+The goal of this proposal is to provide mechanisms that will allow Data Providers and Data Consumers to combine all approved feeds into a single set of credentials while still giving the Data Consumer enough information to respect the usage agreements for each record and field. If the goal is realized it will reduce duplicated effort from Data Consumers needing to download redundant data and manage multiple credentials per MLS, and it will reduce the bandwidth/computation burden on Data Providers.
+
+<br /><br />
+
+# Section 1: Purpose
+The current problem is that some Data Consumers and Data Providers must manage multiple credentials for a single MLS/Data Consumer relationship to support sharing redundant data under different data licensing agreements, causing increased load, complexity, and duplication.
+
+The goal of this proposal is to provide a mechanism so that each Data Consumer only needs a single set of credentials for a given MLS, while giving enough information for the Data Consumer to respect all data licensing requirements.
+
+This will be done by the creation of the `FeedType` field of type Open Mutli Enum String on all data resources and the `Fields` metadata resource. The purpose of this field will be to communicate which feed a given record or field is part of.
+
+<br /><br />
+
+# Section 2: Specification
+
+The proposal is to add a field `FeedType` of type Open Mutli Enum String to all data resources and the `Fields` metadata resource. The initial list of potential values would be `IDX`, `VOW`, `BBO`, and `PDAP`. These values are labels and have no guarantee of matching industry-wide understandings of these terms. The only requirement is that they are meaningful to the Data Consumer and they are able to discern which data license agreement a given `FeedType` value is referencing, so they can correctly meet the restrictions of the data license agreement.
+
+Example response for a data resource:
+
+```
+@odata.context: "https://host.com/path...",
+value: [{
+    "ListPrice": 10000,
+    "StandardStatus": "Active",
+    "FeedType": ["IDX", "VOW"],
+    ...
+}, {
+    "ListPrice": 20000,
+    "StandardStatus": "Closed",
+    "FeedType": ["VOW"],
+    ...
+}]
+```
+
+Example response for the `Fields` metadata resource:
+
+```
+@odata.context: "https://host.com/path...",
+value: [{
+    "FieldName": "ListPrice",
+    "FeedType": ["IDX", "VOW"],
+    ...
+}, {
+    "FieldName": "CloseDate",
+    "FeedType": ["VOW"],
+    ...
+}]
+```
+
+<br /><br />
+
+# Section 3: Certification
+
+If the `FeedType` field is present on a data resource or the `Fields` metadata resource, it must be of type Open Mutli Enum String.
+
+<br /><br />
+
+# Section 4. Contributors
+This document was written by [Eric Finlay](ericfi@zillowgroup.com), [Author 1](mailto:author1@company.org), and [Author 2](mailto:author2@company.org).
+
+Thanks to the following contributors for their help with this project:
+
+| Contributor | Company |
+| --- | --- |
+| Joshua Darnell | RESO |
+| Geoff Rispin | Templates 4 Business |
+| Dave Bills | Pike's Peak Association of REALTORS® |
+| AJ Sulayman | Canopy MLS |
+| Eric Stegemann | TRIBUS |
+| John Breault | State-Wide MLS |
+
+<br /><br />
+
+# Section 5: References
+
+<br /><br />
+
+# Section 6: Appendices
+
+The following RCPs are related to Data Dictionary 2.1:
+* [RCP-042 - Model and Field Resources](https://github.com/RESOStandards/transport/issues/76)
+* [RCP-043 - Local Fields and Predictability](https://github.com/RESOStandards/transport/issues/77)
+* [RCP-044 - Metadata Internationalization and Locale](https://github.com/RESOStandards/transport/issues/67)
+* [RCP-045 - Legacy and/or Deprecated Data Elements](https://github.com/RESOStandards/transport/pull/104)
+
+<br /><br />
+
+# Section 7: License
+This document is covered by the [RESO EULA](https://www.reso.org/eula/).
+
+Please [contact RESO](mailto:info@reso.org) if you have any questions.
