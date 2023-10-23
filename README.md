@@ -34,6 +34,7 @@ Approved proposals have both specification and testing rules approved by Transpo
 
 | RCP | Name | Version | Date |
 | :-- | :-- | :-- | :-- |
+| [**RCP-039**](https://github.com/RESOStandards/transport/blob/22-web-api-core-210-specification/web-api-core.md) | **Web API Core** | **2.1.0** | **Sept 2022** |
 | [**RCP-040**](https://github.com/RESOStandards/transport/blob/rcp-040-data-dictionary-2.0-endorsement-major-dd-1.7/data-dictionary.md) | **Data Dictionary** | **2.0** | **Sept 2022** |
 | [**RCP-025**](https://github.com/RESOStandards/transport/blob/19656c730e213069a08be11d9a4d2e24605a4577/reso-common-format.md) | **RESO Common Format** | **DD 1.7** | **Sept 2023** |
 
@@ -60,7 +61,6 @@ In progress proposals are ones that are in review by Transport and Certification
 | [**RCP-027**](https://github.com/RESOStandards/transport/blob/45-migrate-rcp-027-from-confluence/entity-events.md) | **EntityEvent Resource and Replication** | **DD 2.0** | **Apr 2019** |
 | [**RCP-028**](https://github.com/RESOStandards/transport/blob/46-migrate-rcp-028-from-confluence/web-hooks-push.md) | **Push Replication with EntityEvent and Web Hooks** | **DD 2.0** | **Feb 2020** |
 | [**RCP-035**](https://github.com/RESOStandards/transport/issues/96) | **Supporting Single Feeds** | **DD 2.1** | **Sept 2023** |
-| [**RCP-039**](https://github.com/RESOStandards/transport/blob/22-web-api-core-210-specification/web-api-core.md) | **Web API Core** | **2.1.0** | **Apr 2022** |
 | [**RCP-041**](https://github.com/RESOStandards/transport/blob/23-payloads-20-specification/payloads.md) | **Payloads** | **DD 2.0** | **Apr 2022** |
 | [**RCP-042**](https://github.com/RESOStandards/transport/issues/76) | **Model and Field Resources** | **DD 2.1** | **Feb 2023** |
 | [**RCP-043**](https://github.com/RESOStandards/transport/issues/77) | **Local Fields and Predictability** | **DD 2.1** | **Feb 2023** |
