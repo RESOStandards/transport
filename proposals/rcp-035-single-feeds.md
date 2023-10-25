@@ -34,13 +34,13 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 
 # Summary of Changes
 
-A new field called `FeedType` of type Open Mutli Enum String will be included in every data resource and the `Fields` metadata resource.
+A new field called `FeedTypes` of type Open Mutli Enum String will be included in every data resource and the `Fields` metadata resource.
 
 This new field will have slightly different meanings when included on data resources vs on the `Fields` metadata resource.
 
-On data resources, this `FeedType` field will be used by the Data Provider to indicate which "feed" includes the given record. For instances, is this record part of an IDX or VOW Feed?
+On data resources, this `FeedTypes` field will be used by the Data Provider to indicate which "feed" includes the given record. For instances, is this record part of an IDX or VOW Feed?
 
-On the metadata `Fields` resource, the `FeedType` field will indicate which feeds give access to the given field. For example, the `StandardStatus` object could have `FeedType` set to `['IDX', 'VOW']` whereas `CloseDate` may be set to `['VOW']` indicating that the `CloseDate` field is not part of the `IDX` feed.
+On the metadata `Fields` resource, the `FeedTypes` field will indicate which feeds give access to the given field. For example, the `StandardStatus` object could have `FeedTypes` set to `['IDX', 'VOW']` whereas `CloseDate` may be set to `['VOW']` indicating that the `CloseDate` field is not part of the `IDX` feed.
 
 <br /><br />
 
@@ -57,13 +57,13 @@ The current problem is that some Data Consumers and Data Providers must manage m
 
 The goal of this proposal is to provide a mechanism so that each Data Consumer only needs a single set of credentials for a given MLS, while giving enough information for the Data Consumer to respect all data licensing requirements.
 
-This will be done by the creation of the `FeedType` field of type Open Mutli Enum String on all data resources and the `Fields` metadata resource. The purpose of this field will be to communicate which feed a given record or field is part of.
+This will be done by the creation of the `FeedTypes` field of type Open Mutli Enum String on all data resources and the `Fields` metadata resource. The purpose of this field will be to communicate which feed a given record or field is part of.
 
 <br /><br />
 
 # Section 2: Specification
 
-The proposal is to add a field `FeedType` of type Open Mutli Enum String to all data resources and the `Fields` metadata resource. The initial list of potential values would be `IDX`, `VOW`, `BBO`, and `PDAP`. These values are labels and have no guarantee of matching industry-wide understandings of these terms. The only requirement is that they are meaningful to the Data Consumer and they are able to discern which data license agreement a given `FeedType` value is referencing, so they can correctly meet the restrictions of the data license agreement.
+The proposal is to add a field `FeedTypes` of type Open Mutli Enum String to all data resources and the `Fields` metadata resource. The initial list of potential values would be `IDX`, `VOW`, `BBO`, and `PDAP`. These values are labels and have no guarantee of matching industry-wide understandings of these terms. The only requirement is that they are meaningful to the Data Consumer and they are able to discern which data license agreement a given `FeedTypes` value is referencing, so they can correctly meet the restrictions of the data license agreement.
 
 Example response for a data resource:
 
@@ -72,12 +72,12 @@ Example response for a data resource:
 value: [{
     "ListPrice": 10000,
     "StandardStatus": "Active",
-    "FeedType": ["IDX", "VOW"],
+    "FeedTypes": ["IDX", "VOW"],
     ...
 }, {
     "ListPrice": 20000,
     "StandardStatus": "Closed",
-    "FeedType": ["VOW"],
+    "FeedTypes": ["VOW"],
     ...
 }]
 ```
@@ -88,11 +88,11 @@ Example response for the `Fields` metadata resource:
 @odata.context: "https://host.com/path...",
 value: [{
     "FieldName": "ListPrice",
-    "FeedType": ["IDX", "VOW"],
+    "FeedTypes": ["IDX", "VOW"],
     ...
 }, {
     "FieldName": "CloseDate",
-    "FeedType": ["VOW"],
+    "FeedTypes": ["VOW"],
     ...
 }]
 ```
@@ -101,7 +101,7 @@ value: [{
 
 # Section 3: Certification
 
-If the `FeedType` field is present on a data resource or the `Fields` metadata resource, it must be of type Open Mutli Enum String.
+If the `FeedTypes` field is present on a data resource or the `Fields` metadata resource, it must be of type Open Mutli Enum String.
 
 <br /><br />
 
