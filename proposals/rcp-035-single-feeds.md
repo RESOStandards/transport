@@ -34,13 +34,15 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 
 # Summary of Changes
 
-A new field called `FeedTypes` of type Open Mutli Enum String will be included in every data resource and the `Fields` metadata resource.
+A new field called `FeedTypes` of type Open Mutli Enum String will be included in every data resource and the `Field` metadata resource. Also, a new field called `FeedRules` of type Collection(ComplexType) will be included in every data resource.
 
-This new field will have slightly different meanings when included on data resources vs on the `Fields` metadata resource.
+The new field `FeedTypes` will have slightly different meanings when included on data resources vs on the `Field` metadata resource.
 
 On data resources, this `FeedTypes` field will be used by the Data Provider to indicate which "feed" includes the given record. For instances, is this record part of an IDX or VOW Feed?
 
-On the metadata `Fields` resource, the `FeedTypes` field will indicate which feeds give access to the given field. For example, the `StandardStatus` object could have `FeedTypes` set to `['IDX', 'VOW']` whereas `CloseDate` may be set to `['VOW']` indicating that the `CloseDate` field is not part of the `IDX` feed.
+On the metadata `Field` resource, the `FeedTypes` field will indicate which feeds give access to the given field. For example, the `StandardStatus` object could have `FeedTypes` set to `['IDX', 'VOW']` whereas `CloseDate` may be set to `['VOW']` indicating that the `CloseDate` field is not part of the `IDX` feed.
+
+The `FeedRules` complex type will have 3 sub-fields - `FieldName` (String), `FeedType` (Open Enum String), and `Visible` (Boolean). The purpose of this field is to communicate overrides specific to a given record. An example of this would be an IDX Feed where `ExpirationDate` is only included based on the value of `StandardStatus`.
 
 <br /><br />
 
@@ -57,13 +59,21 @@ The current problem is that some Data Consumers and Data Providers must manage m
 
 The goal of this proposal is to provide a mechanism so that each Data Consumer only needs a single set of credentials for a given MLS, while giving enough information for the Data Consumer to respect all data licensing requirements.
 
-This will be done by the creation of the `FeedTypes` field of type Open Mutli Enum String on all data resources and the `Fields` metadata resource. The purpose of this field will be to communicate which feed a given record or field is part of.
+This will be done by the creation of the `FeedTypes` field of type Open Mutli Enum String on all data resources and the `Field` metadata resource and the creation of the `FeedRules` field of type Collection(ComplexType) on all data resources. The purpose of these fields will be to communicate which feed a given record or field is part of, and when it may be used.
 
 <br /><br />
 
 # Section 2: Specification
 
-The proposal is to add a field `FeedTypes` of type Open Mutli Enum String to all data resources and the `Fields` metadata resource. The initial list of potential values would be `IDX`, `VOW`, `BBO`, and `PDAP`. These values are labels and have no guarantee of matching industry-wide understandings of these terms. The only requirement is that they are meaningful to the Data Consumer and they are able to discern which data license agreement a given `FeedTypes` value is referencing, so they can correctly meet the restrictions of the data license agreement.
+The proposal is to add two fields: `FeedTypes` of type Open Mutli Enum String to all data resources and the `Field` metadata resource amd `FeedRules` of type Collection(ComplexType) to all data resources.
+
+## FeedTypes
+
+The initial list of potential values would be `IDX`, `VOW`, `BBO`, and `PDAP`. These values are labels and have no guarantee of matching industry-wide understandings of these terms. The only requirement is that they are meaningful to the Data Consumer and they are able to discern which data license agreement a given `FeedTypes` value is referencing, so they can correctly meet the restrictions of the data license agreement.
+
+## FeedRules
+
+The `FeedRules` Collection(ComplexType) will have 3 sub-fields: `FieldName` (String), `FeedType` (Oepn Enum String), and `Visible` (Boolean). The `FeedType` enum will have the same potential values as the `FeedTypes` enum. The purpose of this field will be to communicate overrides specific to a given record, usually based on the values of other fields.
 
 Example response for a data resource:
 
@@ -72,17 +82,24 @@ Example response for a data resource:
 value: [{
     "ListPrice": 10000,
     "StandardStatus": "Active",
+    "PrivateRemarks": "This is a private remark",
     "FeedTypes": ["IDX", "VOW"],
+    "FeedRules": [{
+        "FieldName": "PrivateRemarks",
+        "FeedType": "IDX",
+        "Visible": false
+    }]
     ...
 }, {
     "ListPrice": 20000,
     "StandardStatus": "Closed",
     "FeedTypes": ["VOW"],
+    "FeedRules": null
     ...
 }]
 ```
 
-Example response for the `Fields` metadata resource:
+Example response for the `Field` metadata resource:
 
 ```
 @odata.context: "https://host.com/path...",
@@ -101,7 +118,9 @@ value: [{
 
 # Section 3: Certification
 
-If the `FeedTypes` field is present on a data resource or the `Fields` metadata resource, it must be of type Open Mutli Enum String.
+If the `FeedTypes` field is present on a data resource or the `Field` metadata resource, it must be of type Open Mutli Enum String.
+
+If the `FeedRules` field is present on a data resource, it must be of type Collection(ComplexType - FieldName String, FeedType Open Enum String, Visible Boolean).
 
 <br /><br />
 
