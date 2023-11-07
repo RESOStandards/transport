@@ -1,10 +1,10 @@
+[**TRANSPORT DISCUSSION FORUM**](https://github.com/RESOStandards/transport/discussions)
+
 # RESO Endorsements
 **RESO Endorsements** are modular specifications that are associated with a given transport protocol.
 
 * Specifications use [**semantic versioning**](https://semver.org/)
 * All Endorsements start as [**RESO Change Proposals (RCPs)**](./reso-rcp-process.md#reso-change-proposal-rcp-process)
-
-[**TRANSPORT DISCUSSION FORUM**](https://github.com/RESOStandards/transport/discussions)
 
 # RESO Change Proposal Process
 
@@ -26,7 +26,9 @@ Proposals that require certification must have an adopted specification and test
 | [**RCP-036**](https://github.com/RESOStandards/transport/blob/main/data-dictionary.md) | **Data Dictionary with Lookup Resource** | **1.7** | **Jan 2021** |
 | [**RCP-037**](https://github.com/RESOStandards/transport/blob/main/web-api-core.md) | **Web API Core** | **2.0** | **Jan 2021** |
 | [**RCP-038**](https://github.com/RESOStandards/transport/blob/main/payloads.md) | **Payloads (with IDX Payload)** | **1.7** | **Aug 2021** |
-| [**RCP-025**](https://github.com/RESOStandards/transport/blob/19656c730e213069a08be11d9a4d2e24605a4577/reso-common-format.md) | **RESO Common Format** | **DD 1.7** | **Nov 2023** |
+| [**RCP-025**](https://github.com/RESOStandards/transport/blob/19656c730e213069a08be11d9a4d2e24605a4577/reso-common-format.md) | **RESO Common Format** | **1.0** | **Nov 2023** |
+| [**RCP-040**](https://github.com/RESOStandards/transport/blob/rcp-040-data-dictionary-2.0-endorsement-major-dd-1.7/data-dictionary.md) | **Data Dictionary** | **2.0** | **Nov 2023** |
+
 
 <br />
 
@@ -36,7 +38,6 @@ Approved proposals have both specification and testing rules approved by Transpo
 | RCP | Name | Version | Date |
 | :-- | :-- | :-- | :-- |
 | [**RCP-039**](https://github.com/RESOStandards/transport/blob/22-web-api-core-210-specification/web-api-core.md) | **Web API Core** | **2.1.0** | **Sept 2022** |
-| [**RCP-040**](https://github.com/RESOStandards/transport/blob/rcp-040-data-dictionary-2.0-endorsement-major-dd-1.7/data-dictionary.md) | **Data Dictionary** | **2.0** | **Sept 2022** |
 
 <br />
 
