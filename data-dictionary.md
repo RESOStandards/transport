@@ -4,24 +4,11 @@
 | :--- | :--- |
 | **Version** | **2.0** |
 | **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org)) |
-| **Specification** | [**LINK TO RCP**](https://github.com/RESOStandards/transport/pull/17) |
-| **Status** | **APPROVED** |
+| **Status** | **RATIFIED** |
 | **Date Submitted** | December 2021 |
-| **Date Approved** | September 2022 |
+| **Date Ratified** | November 2023 |
 | **Dependencies** | [Web API Core 2.0.0+](./web-api-core.md) |
 | **Related Links** | [DD Wiki 2.0](https://ddwiki.reso.org/pages/viewpage.action?pageId=1123655)<br />[Data Dictionary 2.0 Spreadsheet](https://docs.google.com/spreadsheets/d/1eOB4Nv3wrAayB1av7n2AWPBRWDeB-UkiDa8h8cdsIEI/edit#gid=94181491) |
-
-# Lookup Resource
-
-| **RCP** | 32 |
-| :--- | :--- |
-| **Version** | 1.7 |
-| **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org)) |
-| **Status** | **APPROVED** |
-| **Date Submitted** | December 2021 |
-| **Date Approved** | September 2022 |
-| **Dependencies** | [Web API Core 2.0.0+](./web-api-core.md)<br /> [DD Wiki 1.7 Lookup Resource](https://ddwiki.reso.org/display/DDW17/Lookup+Resource) |
-| **Related Links** | [Data Dictionary 1.7 Spreadsheet](https://docs.google.com/spreadsheets/d/1_59Iqr7AQ51rEFa7p0ND-YhJjEru8gY-D_HM1yy5c6w/edit#gid=544946974)<br />[Data Dictionary 2.0 Spreadsheet](https://docs.google.com/spreadsheets/d/1_59Iqr7AQ51rEFa7p0ND-YhJjEru8gY-D_HM1yy5c6w/edit?usp=sharing) |
 
 <br />
 
