@@ -1,5 +1,4 @@
 /*
- 
  RESO RCP-019 Validation Expression Grammar
  
  By downloading this resource, you agree to the RESO EULA: https://www.reso.org/eula/ Contact
@@ -16,11 +15,11 @@
  symbols and expressions, then the internals of your system are for you to decide. This example
  grammar should already perform reasonably well in most situations, but the parse tree will be a bit
  deep (and therefore not be as performant) due to the current structure.
- 
-
  */
 
 grammar rcp019;
+
+// TODO: import https://github.com/antlr/grammars-v4/blob/master/pcre/PCRE.g4
 
 options {
 	tokenVocab = rcp019Lexer;
@@ -46,10 +45,10 @@ prodExp: atomExp ((ASTERISK | SLASH | MOD) atomExp)*;
 
 // NOTE: original VE writing had that all lists of size 1 were atomExp, not list. LIST() and SET()
 // were created as a top-level item called 'collection' and should be used instead.
-atomExp: LPAREN exp RPAREN | list | value;
+atomExp: LPAREN exp RPAREN | listExp | value;
 
 // this was left in for backwards compatibility with the first production rule, LPAREN exp RPAREN
-list: LPAREN (exp (COMMA exp)*)? RPAREN;
+listExp: LPAREN (exp (COMMA exp)*)? RPAREN;
 
 // this was previously an atomExp, but was moved to the top-level for faster parsing (10x speedup)
 funcExp: func LPAREN (param (COMMA param)*)? RPAREN;
@@ -58,9 +57,6 @@ collectionExp: (LIST | SET) LPAREN (exp (COMMA exp)*)? RPAREN
 	| (UNION | INTERSECTION | DIFFERENCE) LPAREN (
 		collectionExp COMMA collectionExp (COMMA collectionExp)*
 	)? RPAREN;
-
-// SPECFUNC was added. LOCALFUNC could be added as well, with corresponding known local functions
-func: SPECFUNC | ALPHANUM;
 
 param: exp;
 
@@ -80,3 +76,6 @@ charValue: QUOTED_TERM;
 timeValue: HASH ISO_TIMESTAMP HASH;
 intValue: (PLUS | MINUS)? DIGIT+;
 floatValue: intValue DOT DIGIT+;
+
+// SPECFUNC was added. LOCALFUNC could be added as well, with corresponding known local functions
+func: SPECFUNC | ALPHANUM;
