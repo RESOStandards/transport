@@ -1,9 +1,5 @@
 lexer grammar rcp019Lexer;
 
-options {
-	tokenVocab = rcp019MetadataLexer;
-}
-
 CONCAT: PIPE;
 LPAREN: '(';
 RPAREN: ')';
