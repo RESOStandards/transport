@@ -253,9 +253,7 @@ Certification tools will be developed so a user can perform all these steps in a
 # Section 4. Contributors
 This document was rewritten from the original by [Joshua Darnell](mailto:josh@kurotek.com), and originally written by Joshua Darnell and [Paul Stusiak](mailto:pstusiak@falcontechnologies.com).
 
-Thanks to the following contributors for their help with this project:
-
-Parts of this proposal are based on the RETS Validation Expression language as expressed in RETS 1.9 and RCP 61. Thanks to Libor Viktorin, Mark Sleeman, Sergio Del Rio, and Paul Stusiak for that work. Thanks to Rob Larson for his collaboration on the Rules Resource proposal.
+Parts of this proposal are based on the RETS Validation Expression language as expressed in RETS 1.9 and RCP 61. Thanks to Libor Viktorin, Mark Sleeman, Sergio Del Rio, and Paul Stusiak for that work. Thanks to Rob Larson for his collaboration on the Rules Resource proposal and also to Bryan Burgers and Zenlist for providing additional feedback during implementation.
 
 <br /><br />
 
