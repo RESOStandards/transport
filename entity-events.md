@@ -118,8 +118,11 @@ GET /EntityEvent?$filter=EntityEventSequence gt 100
     }
   ]
 }
-
 ```
+
+## Replication
+
+One of the business cases for the EntityEvent Resource is replication. This is an optional, but important, part of the proposal. This section outlines related considerations.
 
 ### Business Cases
 
@@ -175,18 +178,6 @@ Based on earlier sections of this proposal, the child records should have appear
 
 This allows the consumer to remove references rather than deal with cascading deletes. 
 
-#### Relationship to HistoryTransactional
-A separate change proposal adds the _EntityEventSequence_ to _HistoryTransactional_ to associate events with entries in the _HistoryTransactional Resource_.
-
-Since _HistoryTransactional_ is a history of business events for a system, a relationship exists between events 
-in the _EntityEvent Resource_ and those that appear in HistoryTransactional.
-
-When a provider uses _HistoryTransactional_ with the _EntityEvent_ Resource, a consumer MUST be able to interpret the relationship 
-between EntityEvent and HistoryTransactional records. 
-
-Producers MAY, based on business rules, aggregate events such that the constraint should result in a one-to-one or a one-to-many
-relationship between EntityEvent records and HistoryTransactional resources.
-
 # Impact
 Producers should expose a new resource that implements the requirements of the proposal.
 
@@ -204,8 +195,6 @@ Additional test rules will be needed.
 * Confirm that for each record in a sample set of _EntityEvent_ records, that either a record with _ResourceName_ and _ResourceRecordKey_ is returned OR an `HTTP 400` response value indicating the records are no longer available.
 * Test sequence order.
 * Confirm that requesting the same _EntityEventSequence_ results in the same combination of _ResourceName_ and _ResourceRecordKey_.
-* Check metadata for the existence of an _EntityEventSequence_ field in the _HistoryTransactional Resource_.
-* When present, confirm that for a sample set of _EntityEvent_ records that corresponding values exist in _HistoryTransactional_.
 
 # Original Proposal
 [**Download PDF**](https://github.com/RESOStandards/transport/files/9862609/RESOWebAPIRCP-RCP.-.WEBAPI-027.Event.Resource.and.Replication.Model-251022-173840.pdf)
