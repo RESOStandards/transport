@@ -130,7 +130,20 @@ There are two types of consumers and two cases comprise the workflow of a consum
 
 #### Initial Synchronization
 
-The consumer is gathering events for the first time. Based on rules created by the producer or by the producer's client, the consumer. 
+The consumer is gathering each _EntityEvent_ record for the first time. Based on rules created by the producer or by the consumer, the consumer starts at the lowest
+value _EntityEventSequence_ number and processes each record.
+
+
+##### Example: Get All Records a Consumer Has Access To
+
+**Request**
+```
+GET /EntityEvent?$filter=EntityEventSequence ge 0
+```
+
+This will return the first EntityEventSequence the client has access to. This could be either 0 or 10,000, etc.
+
+If the provider supports Web API Core 2.1.0+ or Data Dictionary 2.0+, `@odata.nextLink` will present in the response until all data is returned.
 
 #### Ongoing Synchronization
 
