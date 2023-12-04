@@ -174,15 +174,15 @@ The Validation Expression grammar itself is not enough to compute rules. Additio
 The [Rules Resource](https://ddwiki.reso.org/display/DDW17/Rules+Resource) has been created in Data Dictionary 1.7+ to transport business rules. 
 
 At a minimum, these consist of the following:
-* Field: A standard or local field to effect with the outcome of _expression_
-* Action: One of the Actions in [Section 2.1.1](#section-211-actions)
-* Expression: The Validation Expression using the grammar [defined in Section 2.1.2](#section-212-validation-expressions)
+* [**FieldName**](https://ddwiki.reso.org/pages/viewpage.action?pageId=1130838): A standard or local field to effect with the outcome of _expression_
+* [**RuleAction**](https://ddwiki.reso.org/display/DDW17/RuleAction+Field): One of the Actions in [Section 2.1.1](#section-211-actions)
+* [**RuleExpression**](https://ddwiki.reso.org/display/DDW17/RuleExpression+Field): The Validation Expression using the grammar [defined in Section 2.1.2](#section-212-validation-expressions)
 
 ### Example: Update PurchaseContractDate when Listing is Closed
 
-| Field                       | Action   | Expression |
-| --------------------------- | -------- | ---------- |
-| **PurchaseContractDate**    | `SET`    | `IIF(LAST StandardStatus != 'Closed' .AND. StandardStatus = 'Closed', #2023-12-04#, NULL)`
+| FieldName                   | RuleAction   | RuleExpression |
+| --------------------------- | ------------ | -------------- |
+| **PurchaseContractDate**    | `SET`        | `IIF(LAST StandardStatus != 'Closed' .AND. StandardStatus = 'Closed', #2023-12-04#, NULL)` |
 
 It's also important that each rule contains human-friendly messages describing the outcome, when appropriate.
 
