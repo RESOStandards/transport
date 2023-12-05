@@ -1,14 +1,6 @@
 lexer grammar rcp019Lexer;
 
-SPECFUNC: IIF | MATCH;
 WS: [ \t\n\r]+ -> skip;
-// TODO: Dynamically fill in your FIELD_NAMEs here
-FIELD_NAME:
-	'ListPrice'
-	| 'Status'
-	| 'CloseDate'
-	| 'Bedrooms'
-	| 'Bathrooms';
 SPECOP:
 	EMPTY
 	| TRUE
@@ -64,7 +56,6 @@ MINUS: '-';
 MOD: '.MOD.';
 
 IIF: 'IIF';
-MATCH: 'MATCH';
 LAST: 'LAST';
 LIST: 'LIST';
 SET: 'SET';
@@ -90,13 +81,12 @@ MEMBER_MLS_ID: 'MEMBER_MLS_ID';
 OFFICE_BROKER_MLS_ID: 'OFFICE_BROKER_MLS_ID';
 OFFICE_MLS_ID: 'OFFICE_MLS_ID';
 
+IDENTIFIER: (ALPHA | UNDERSCORE) (ALPHANUM | UNDERSCORE)*;
 ALPHA: ('a' ..'z' | 'A' ..'Z');
 DIGIT: ('0' ..'9');
 
-// special tokens
-RESO_SPECIAL_TOKENS: FIELD_NAME | SPECOP;
-
 ALPHANUM: ALPHA (ALPHA | DIGIT)*;
+UNDERSCORE: '_';
 
 QUOTED_TERM: QUOTE (~[\\"])*? QUOTE | SQUOTE (~[\\'])*? SQUOTE;
 

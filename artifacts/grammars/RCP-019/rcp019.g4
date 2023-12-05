@@ -48,13 +48,17 @@ prodExp: atomExp ((ASTERISK | SLASH | MOD) atomExp)*;
 
 // NOTE: original VE writing had that all lists of size 1 were atomExp, not list. LIST() and SET()
 // were created as a top-level item called 'collection' and should be used instead.
-atomExp: collectionExp | funcExp | LPAREN exp RPAREN | listExp | value;
+atomExp: iifExp | collectionExp | funcExp | LPAREN exp RPAREN | listExp | value;
 
 // this was left in for backwards compatibility with the first production rule, LPAREN exp RPAREN
 listExp: LPAREN (exp (COMMA exp)*)? RPAREN;
 
 // this was previously an atomExp, but was moved to the top-level for faster parsing (10x speedup)
-funcExp: func LPAREN (param (COMMA param)*)? RPAREN;
+funcExp: IDENTIFIER LPAREN (param (COMMA param)*)? RPAREN;
+
+// This could be parsed as a funcExp, but IIF is special (it doesn't evaluate its parameters before
+// executing) so it is its own type
+iifExp: IIF LPAREN param COMMA param COMMA param RPAREN;
 
 collectionExp: (LIST | SET) LPAREN (exp (COMMA exp)*)? RPAREN
 	| (UNION | INTERSECTION | DIFFERENCE) LPAREN (
@@ -71,14 +75,11 @@ value:
 	| floatValue
 	| timeValue;
 
-fieldName: (LAST)? FIELD_NAME
-	| LBRACKET (LAST)? FIELD_NAME RBRACKET;
+fieldName: (LAST)? IDENTIFIER
+	| LBRACKET (LAST)? IDENTIFIER RBRACKET;
 
 specValue: DOT SPECOP DOT;
 charValue: QUOTED_TERM;
 timeValue: HASH ISO_TIMESTAMP HASH;
 intValue: (PLUS | MINUS)? DIGIT+;
 floatValue: intValue DOT DIGIT+;
-
-// SPECFUNC was added. LOCALFUNC could be added as well, with corresponding known local functions
-func: SPECFUNC | ALPHANUM;
