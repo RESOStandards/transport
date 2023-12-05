@@ -1,5 +1,31 @@
 lexer grammar rcp019Lexer;
 
+SPECFUNC: IIF | MATCH;
+WS: [ \t\n\r]+ -> skip;
+// TODO: Dynamically fill in your FIELD_NAMEs here
+FIELD_NAME:
+	'ListPrice'
+	| 'Status'
+	| 'CloseDate'
+	| 'Bedrooms'
+	| 'Bathrooms';
+SPECOP:
+	EMPTY
+	| TRUE
+	| FALSE
+	| TODAY
+	| NOW
+	| ENTRY
+	| OLDVALUE
+	| MEMBER_LOGIN_ID
+	| MEMBER_MLS_SECURITY_CLASS
+	| MEMBER_TYPE
+	| MEMBER_MLS_ID
+	| OFFICE_BROKER_MLS_ID
+	| OFFICE_MLS_ID
+	| UPDATEACTION
+	| ANY;
+
 CONCAT: PIPE;
 LPAREN: '(';
 RPAREN: ')';
@@ -70,33 +96,6 @@ DIGIT: ('0' ..'9');
 // special tokens
 RESO_SPECIAL_TOKENS: FIELD_NAME | SPECOP;
 
-// TODO: Dynamically fill in your FIELD_NAMEs here
-FIELD_NAME:
-	'ListPrice'
-	| 'Status'
-	| 'CloseDate'
-	| 'Bedrooms'
-	| 'Bathrooms';
-
-SPECFUNC: IIF | MATCH;
-
-SPECOP:
-	EMPTY
-	| TRUE
-	| FALSE
-	| TODAY
-	| NOW
-	| ENTRY
-	| OLDVALUE
-	| MEMBER_LOGIN_ID
-	| MEMBER_MLS_SECURITY_CLASS
-	| MEMBER_TYPE
-	| MEMBER_MLS_ID
-	| OFFICE_BROKER_MLS_ID
-	| OFFICE_MLS_ID
-	| UPDATEACTION
-	| ANY;
-
 ALPHANUM: ALPHA (ALPHA | DIGIT)*;
 
 QUOTED_TERM: QUOTE (~[\\"])*? QUOTE | SQUOTE (~[\\'])*? SQUOTE;
@@ -117,5 +116,3 @@ DAY: [0-3] DIGIT;
 //added support for c++ style comments
 SLASH_STAR_COMMENT: '/*' .+? '*/' -> skip;
 SLASH_SLASH_COMMENT: '//' .+? ('\n' | EOF) -> skip;
-
-WS: [ \t\n\r]+ -> skip;

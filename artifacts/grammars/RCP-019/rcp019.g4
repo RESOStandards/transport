@@ -25,6 +25,9 @@ options {
 	tokenVocab = rcp019Lexer;
 }
 
+// Parse an entire expression without leaving any extra input leftover
+topExp: exp EOF;
+
 exp: orExp | collectionExp | funcExp;
 
 orExp: andExp (OR andExp)*;
@@ -71,7 +74,7 @@ value:
 fieldName: (LAST)? FIELD_NAME
 	| LBRACKET (LAST)? FIELD_NAME RBRACKET;
 
-specValue: DOT FIELD_NAME DOT;
+specValue: DOT SPECOP DOT;
 charValue: QUOTED_TERM;
 timeValue: HASH ISO_TIMESTAMP HASH;
 intValue: (PLUS | MINUS)? DIGIT+;
