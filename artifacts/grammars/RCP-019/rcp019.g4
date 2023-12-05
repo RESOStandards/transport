@@ -28,7 +28,7 @@ options {
 // Parse an entire expression without leaving any extra input leftover
 topExp: exp EOF;
 
-exp: orExp | collectionExp | funcExp;
+exp: orExp;
 
 orExp: andExp (OR andExp)*;
 
@@ -48,7 +48,7 @@ prodExp: atomExp ((ASTERISK | SLASH | MOD) atomExp)*;
 
 // NOTE: original VE writing had that all lists of size 1 were atomExp, not list. LIST() and SET()
 // were created as a top-level item called 'collection' and should be used instead.
-atomExp: LPAREN exp RPAREN | listExp | value;
+atomExp: collectionExp | funcExp | LPAREN exp RPAREN | listExp | value;
 
 // this was left in for backwards compatibility with the first production rule, LPAREN exp RPAREN
 listExp: LPAREN (exp (COMMA exp)*)? RPAREN;
