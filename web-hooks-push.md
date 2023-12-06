@@ -2,11 +2,11 @@
 
 | **RCP** | 28 |
 | :--- | :--- |
-| **Version** | **2.0** |
+| **Version** | **1.0.0** |
 | **Authors** | Joshua Darnell ([RESO](mailto:josh@reso.org))<br />Paul Stusiak ([Falcon Technologies](pstusiak@falcontechnologies.com)) | 
-| **Status** | **IN PROGRESS** |
+| **Status** | **APPROVED** |
 | **Date Submitted** | April 2019 |
-| **Date Approved** | February 2020 |
+| **Date Approved** | December 2023 |
 | **Dependencies** | [Data Dictionary 2.0 EntityEvent Resource](https://ddwiki.reso.org/display/DDW20/EntityEvent+Resource) |
 | **Related Links** | [RCP-027](https://github.com/RESOStandards/transport/blob/45-migrate-rcp-027-from-confluence/entity-events.md)[Web Hooks](https://en.wikipedia.org/wiki/Webhook) |
 
