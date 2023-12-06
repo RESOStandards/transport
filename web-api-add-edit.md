@@ -4,8 +4,8 @@
 | :--- | :--- |
 | **Version** | 2.0.0 |
 | **Authors** | Sergio Del Rio ([T4Bi](mailto:Sergio.Del.Rio@t4bi.com))<br />[Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org)) |
-| **Status** | **DRAFT** |
-| **Date Approved** | April 3, 2023 |
+| **Status** | **APPROVED** |
+| **Date Approved** | December 4, 2023 |
 | **Dependencies** | [Data Dictionary 1.7+](./data-dictionary.md)<br />[Web API 2.0.0+](./web-api-core.md) |
 | **Related Links** | [DD Wiki 1.7](https://ddwiki.reso.org/display/DDW17/RESO+Data+Dictionary+1.7)<br />[Data Dictionary Spreadsheet](https://docs.google.com/spreadsheets/d/1_59Iqr7AQ51rEFa7p0ND-YhJjEru8gY-D_HM1yy5c6w/edit?usp=sharing)<br /> |
 
