@@ -37,17 +37,16 @@ Approved proposals have both specification and testing rules approved by Transpo
 
 | RCP | Name | Version | Date |
 | :-- | :-- | :-- | :-- |
+| [**RCP-010**](https://github.com/RESOStandards/transport/blob/rcp-010-updated-draft-specification/web-api-add-edit.md) | **Web API Add/Edit** | **1.0.0** | **Dec 2023** |
+| [**RCP-019**](https://github.com/RESOStandards/transport/blob/main/web-api-validation-expression.md) | **Web API Validation Expressions** | **1.0.0** | **Dec 2023** |
+| [**RCP-027**](https://github.com/RESOStandards/transport/blob/45-migrate-rcp-027-from-confluence/entity-events.md) | **EntityEvent Resource and Replication** | **1.0.0** | **Dec 2023** |
+| [**RCP-028**](https://github.com/RESOStandards/transport/blob/46-migrate-rcp-028-from-confluence/web-hooks-push.md) | **Push Replication with EntityEvent and Web Hooks** | **1.0.0** | **Dec 2023** |
 | [**RCP-039**](https://github.com/RESOStandards/transport/blob/22-web-api-core-210-specification/web-api-core.md) | **Web API Core** | **2.1.0** | **Sept 2022** |
 
 <br />
 
 # DRAFT PROPOSALS
 Draft proposals have both specification and testing rules approved by Transport and Certification, and are awaiting implementations and community review prior to Transport approval.
-
-| RCP | Name | Version | Date |
-| :-- | :-- | :-- | :-- |
-| [**RCP-010**](https://github.com/RESOStandards/transport/blob/rcp-010-updated-draft-specification/web-api-add-edit.md) | **Web API Add/Edit** | **2.0.0** | **Apr 2023** |
-| [**RCP-019**](https://github.com/RESOStandards/transport/blob/main/web-api-validation-expression.md) | **Web API Validation Expressions** | **2.0.0** | **Apr 2018** |
 
 <br />
 
@@ -58,8 +57,6 @@ In progress proposals are ones that are in review by Transport and Certification
 | RCP | Name | Version | Date |
 | :-- | :-- | :-- | :-- |
 | [**RCP-022**](https://github.com/RESOStandards/transport/blob/43-migrate-rcp-022-from-confluence/autofill-service.md) | **Autofill Service** | **1.0.0** | **Apr 2019** |
-| [**RCP-027**](https://github.com/RESOStandards/transport/blob/45-migrate-rcp-027-from-confluence/entity-events.md) | **EntityEvent Resource and Replication** | **DD 2.0** | **Apr 2019** |
-| [**RCP-028**](https://github.com/RESOStandards/transport/blob/46-migrate-rcp-028-from-confluence/web-hooks-push.md) | **Push Replication with EntityEvent and Web Hooks** | **DD 2.0** | **Feb 2020** |
 | [**RCP-035**](https://github.com/RESOStandards/transport/issues/96) | **Supporting Single Feeds** | **DD 2.1** | **Sept 2023** |
 | [**RCP-041**](https://github.com/RESOStandards/transport/blob/23-payloads-20-specification/payloads.md) | **Payloads** | **DD 2.0** | **Apr 2022** |
 | [**RCP-042**](https://github.com/RESOStandards/transport/issues/76) | **Model and Field Resources** | **DD 2.1** | **Feb 2023** |
