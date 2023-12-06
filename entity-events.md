@@ -4,9 +4,9 @@
 | :--- | :--- |
 | **Version** | **2.0** |
 | **Authors** | Joshua Darnell ([RESO](mailto:josh@reso.org))<br />Paul Stusiak ([Falcon Technologies](pstusiak@falcontechnologies.com)) | 
-| **Status** | **IN PROGRESS** |
+| **Status** | **APPROVED** |
 | **Date Submitted** | January 2019 |
-| **Date Approved** | April 2019 |
+| **Date Approved** | December 2023 |
 | **Dependencies** | [Data Dictionary 2.0 EntityEvent Resource](https://ddwiki.reso.org/display/DDW20/EntityEvent+Resource) |
 | **Related Links** | [Push Events using Web Hooks](./web-hook-push.md) |
 
