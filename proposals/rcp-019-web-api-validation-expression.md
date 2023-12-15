@@ -5,9 +5,9 @@
 | **Version** | **1.0.0** |
 | **Authors** | [Joshua Darnell](mailto:josh@kurotek.com)<br />[Paul Stusiak](mailto:pstusiak@falcontechnologies.com) |
 | **Specification** | [**LINK TO RCP**](./web-api-validation-expression.md) |
-| **Status** | **DRAFT** |
-| **Status Date** | April 2018 |
-| **Dependencies** | [Data Dictionary 1.7+](./data-dictionary.md)<br />[Validation Expression Grammar](./artifacts/grammars/RCP-019/rcp019.g4) |
+| **Status** | **APPROVED** |
+| **Status Date** | December 2023 |
+| **Dependencies** | [Data Dictionary 1.7+](./data-dictionary.md)<br />[Validation Expression Grammar](#) |
 | **Related Links** | [DD Wiki 1.7](https://ddwiki.reso.org/display/DDW17/RESO+Data+Dictionary+1.7)<br />[Data Dictionary Spreadsheet](https://docs.google.com/spreadsheets/d/1_59Iqr7AQ51rEFa7p0ND-YhJjEru8gY-D_HM1yy5c6w/edit?usp=sharing) |
 
 <br /><br />
