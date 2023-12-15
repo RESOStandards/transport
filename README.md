@@ -38,7 +38,7 @@ Approved proposals have both specification and testing rules approved by Transpo
 | RCP | Name | Version | Date |
 | :-- | :-- | :-- | :-- |
 | [**RCP-010**](web-api-add-edit.md) | **Web API Add/Edit** | **1.0.0** | **Dec 2023** |
-| [**RCP-019**](https://github.com/RESOStandards/transport/blob/4ff4cbc67cf39fe321956f7437ced718de766341/web-api-validation-expression.md) | **Web API Validation Expressions** | **1.0.0** | **Dec 2023** |
+| [**RCP-019**](./proposals/rcp-019-web-api-validation-expression.md) | **Web API Validation Expressions** | **1.0.0** | **Dec 2023** |
 | [**RCP-027**](https://github.com/RESOStandards/transport/blob/45-migrate-rcp-027-from-confluence/entity-events.md) | **EntityEvent Resource and Replication** | **1.0.0** | **Dec 2023** |
 | [**RCP-028**](https://github.com/RESOStandards/transport/blob/46-migrate-rcp-028-from-confluence/web-hooks-push.md) | **Push Replication with EntityEvent and Web Hooks** | **1.0.0** | **Dec 2023** |
 | [**RCP-039**](https://github.com/RESOStandards/transport/blob/22-web-api-core-210-specification/web-api-core.md) | **Web API Core** | **2.1.0** | **Sept 2022** |
