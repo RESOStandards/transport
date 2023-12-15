@@ -186,7 +186,7 @@ At a minimum, these consist of the following:
 
 It's also important that each rule contains human-friendly messages describing the outcome, when appropriate.
 
-## Rule Ordering
+## Section 2.3: Rule Ordering
 Rule ordering is important. Dependent rules MUST be executed in the order appropriate for their dependencies.
 
 Consider the basic operations: 
@@ -203,12 +203,12 @@ However, if we had another expression `d = 0`, it could be executed in any order
 
 The Rule Resource includes a [`RuleOrder`](https://ddwiki.reso.org/display/DDW17/RuleOrder+Field) property so ordering may be preserved.
 
-## Rule Versioning
+## Section 2.4: Rule Versioning
 Sometimes it might be necessary to communicate that a given rule has changed.
 
 The Rules Resource providers the [Rule Version](https://ddwiki.reso.org/display/DDW17/RuleVersion+Field) for these scenarios.
 
-## Filtering by FieldName and RuleAction
+## Section 2.5: Filtering by FieldName and RuleAction
 Consider the case where a client is interested in rules that might reject changes to ListPrice.
 
 These can be retrieved using the following request to the Rules Resource:
@@ -250,7 +250,7 @@ Certification tools will be developed so a user can perform all these steps in a
 
 <br /><br />
 
-# Section 4. Contributors
+# Section 4: Contributors
 This document was rewritten from the original by [Joshua Darnell](mailto:josh@kurotek.com), and originally written by Joshua Darnell and [Paul Stusiak](mailto:pstusiak@falcontechnologies.com).
 
 Thanks to the following contributors for their help with this project:
@@ -272,12 +272,93 @@ Please see the following references for more information regarding topics covere
 * [ANTLR 4 Documentation](https://www.antlr.org/)
 
 
-
 <br /><br />
 
 # Section 6: Appendices
 
-None at this time.
+## 6.1: List of Functions
+
+| Function | Parameter Types | Type | Comments |
+| -------- | --------------- | ---- | -------- | 
+| `BOOL` | { `BOOLEAN`, `CHAR` } | `BOOLEAN` | |
+| `CHAR` | { `Exp`, `TYPEOF(Exp) NE FLOAT` } | `CHAR` | |
+| `CHARF` | `FLOAT`, `INT` | `CHAR` | The `CHARF` function converts a Float number, and in the second parameter specifies how many decimal digits MUST appear after the point. |
+| `TIME` | { `TIME`, `CHAR`, `DATE` } | `TIME` | |
+| `DATE` | { `TIME`, `CHAR` } | `DATE` | |
+| `INT` | { `INT`, `FLOAT`, `BOOL`, `CHAR` } | `INT` | |
+| `FLOAT` | { `INT`, `FLOAT`, `BOOL`, `CHAR` } | `FLOAT` | |
+| `SUBSTR` | `CHAR`, `INT`, `INT` | `CHAR` | The `SUBSTR` function returns a substring of its first parameter. Second parameter is a starting position of the substring, third parameter is the ending position of the substring. Positions are 1-based. |
+| `STRLEN` | `CHAR` | `INT` | The `STRLEN` function returns the length if its parameter. |
+| `LOWER` | `CHAR` | `CHAR` | The `LOWER` function returns its parameter lower-cased. |
+| `UPPER` | `CHAR` | `CHAR` | The `UPPER` function returns its parameter upper-cased. |
+| `IIF` | `BOOLEAN`, `Exp`, `Exp` | `TYPEOF (Exp)` | The `IIF` function returns the value of its second parameter if the first parameter evaluates to true, or the value of its third parameter otherwise. Types of second and third parameter must be same, and it is the type of the result. These parameters are also known as `CondExp`, `TrueExp`, and `FalseExp`, respectively. |
+| `YEAR` | `TIME` | `INT` | |
+| `MONTH` | `TIME` | `INT` | | 
+| `DAY` | `TIME` | `INT` | |
+| `WEEKDAY` | `TIME` | `INT` | |
+| `TYPEOF` | `Exp` | `CHAR` | The input parameter, `Exp`, can be any valid expression in the grammar. This function will return a `CHAR` representation of the given expression's type, one of: { `BOOLEAN`, `CHAR`, `FLOAT`, `INT`, `TIME` } |
+| `MATCH` | `CHAR`, `Exp` | `BOOLEAN` | Takes a Regular Expression regex as a `CHAR` and an expression `Exp`, and returns True if expression matches regex and False otherwise. |
+
+<br />
+
+**Notes**
+1. The `BOOL`, `CHAR`, `TIME`, `DATE`, `INT` and `FLOAT` functions are used just to change a type of expression. Note that any of these functions may fail (return an ERROR value) if the parameter can not be converted to the appropriate type.
+
+2. In conversion from `BOOLEAN` to `INT` or `FLOAT`, `.TRUE.` is converted to "1" and `.FALSE.` is converted to "0". Casting `FLOAT` to `INT` discards the fractional part.
+
+3. When converting to `CHAR`, `BOOL` values are represented as "0" and "1", `TIME` and `DATE` values are represented using ISO 8601 format, `INT` values are represented with no leading zeros.
+
+4. When converting from `CHAR` to `BOOL`, values "0", "1", "YES", "NO", "TRUE" and "FALSE" (no matter what the case) MUST be understood.
+
+5. When converting from `CHAR` to `TIME`, any ISO 8601 compliant format must be understood. Leading and trailing `#` MUST be removed before conversion.
+
+6. When converting from `CHAR` to `INT` or `FLOAT`, usual formats MUST be understood. Scientific format (with exponent) MUST NOT be understood. `FLOAT` numbers with empty integral part ( .5, -.4) MUST be understood as long as there is at least one digit after the decimal point.
+
+7. The `YEAR`, `MONTH`, `DAY` and `WEEKDAY` parse the date part of `TIME` value. They return values ranging from 1 to the appropriate maximum. `WEEKDAY` returns 1 for Sunday, 2 for Monday etc.
+
+8. Other functions may be defined later (`HOUR` and `MINUTE` are first candidates). If a server uses a function the client does not recognize, the client MUST evaluate it as ERROR.
+
+9. A Validation Expression may have Operations applied to the parameters. The Operators may be applied on certain types that determine the result type. The input types and resulting output type is defined in the Validation Expression List of Operators Table (below).
+
+<br />
+
+## 6.2: List of Operators
+
+| Operator | Left Operand | Right Operand | Result | Meaning |
+| -------- | ------------ | ------------- | ------ | ------- |
+| `.MOD.` | `INT` | `INT` | `INT` | Arithmetic MODULO operation | 
+| `/`, `*` | `INT` | `INT` | `INT` | Integer division and multiplication | 
+| `/`, `*` | `INT` | `FLOAT` | `FLOAT` | Division and multiplication | 
+| `/`, `*` | `FLOAT` | `INT` | `FLOAT` | Division and multiplication | 
+| `/`, `*` | `FLOAT` | `FLOAT` | `FLOAT` | Division and multiplication | 
+| `+`, `-` | `FLOAT` | `FLOAT` | `FLOAT` | Addition and subtraction | 
+| `+`, `-` | `FLOAT` | `FLOAT` | `FLOAT` | Addition and subtraction | 
+| `+`, `-` | `FLOAT` | `FLOAT` | `FLOAT` | Addition and subtraction | 
+| `+`, `-` | `FLOAT` | `FLOAT` | `FLOAT` | Addition and subtraction | 
+| `+` | `FLOAT` | `TIME` | `TIME` | Time shift |
+| `+` | `TIME` | `FLOAT` | `TIME` | Time shift |
+| `-` | `TIME` | `FLOAT` | `TIME` | Time shift |
+| `-` | `TIME` | `TIME` | `FLOAT` | Time shift |
+| `\|\|` | `CHAR` | `CHAR` | `CHAR` | String concatenation |
+| `.CONTAINS.` | `CHAR` | `CHAR` | `BOOLEAN` | String containment. The operation is TRUE if the left operand contains the right operand as a substring anywhere within it. |
+| `.IN.` | Any | List of operands, all of the same type as the left operand | `BOOLEAN` | List inclusion. The operation is TRUE if the left operand is equal to any member of the list. |
+| `.AND.` | `BOOLEAN` | `BOOLEAN` | `BOOLEAN` | A Boolean operator that takes two Boolean operands, and whose value is TRUE if and only if both of its operands are TRUE. | 
+| `.OR.` | `BOOLEAN` | `BOOLEAN` | `BOOLEAN` | A Boolean operator that takes two Boolean operands, and whose value is TRUE if either of its operands is TRUE. |
+| `.NOT.` | `BOOLEAN` | `BOOLEAN` | `BOOLEAN` | A Boolean operator that takes a single Boolean operand and returns its inverse. | 
+| `=`, `!=` | Any | Same as left | `BOOLEAN` | Equality | 
+| `<`, `>`, `<=` , `>=` | `INT`, `FLOAT` | `INT`, `FLOAT` | `BOOLEAN` | Numeric comparison | 
+| `<`, `>`, `<=`, `>=` | `TIME` | `TIME` | `BOOLEAN` | Date and time comparison |
+| `<`, `>`, `<=`, `>=` | `BOOLEAN` | `BOOLEAN` | `BOOLEAN` | Boolean comparison (TRUE > FALSE) |
+
+<br />
+
+**Notes**
+1. Arithmetic operations between dates use number of days as the `FLOAT` parameter (or result); e.g. 0.25 represents a time span of 6 hours.
+
+2. Any operation with an ERROR argument MUST evaluate to ERROR. An EMPTY value may be compared (=,!=) against any value.
+
+3. Appropriate casting functions (`BOOL`, `CHAR`, `TIME`, `INT`, `FLOAT`) MUST be applied to the parameters. If a function or an operator is applied to a data type different than shown in the above tables, the expression MUST evaluate to ERROR.
+
 
 <br /><br />
 
