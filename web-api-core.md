@@ -4,8 +4,8 @@
 | :--- | :--- |
 | **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org)) |
 | **Specification** | [**LINK TO TESTING RULES**](https://github.com/RESOStandards/transport/issues/22) |
-| **Status** | **APPROVED** |
-| **Date Proposed** | Sept 2022 |
+| **Status** | **RATIFIED** |
+| **Date Proposed** | Dec 2023 |
 | **Protocol** | HTTP |
 | **Dependencies** | OData 4.0 or 4.01<br />TLS 1.2+<br />OAuth 2 (Auth Token or Client Credentials) |
 
