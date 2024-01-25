@@ -6,9 +6,9 @@
 | **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org)) |
 | **Status** | **RATIFIED** |
 | **Date Submitted** | December 2021 |
-| **Date Ratified** | November 2023 |
+| **Date Ratified** | December 2024 |
 | **Dependencies** | [Web API Core 2.0.0+](./web-api-core.md) |
-| **Related Links** | [DD Wiki 2.0](https://ddwiki.reso.org/pages/viewpage.action?pageId=1123655)<br />[Data Dictionary 2.0 Spreadsheet](https://docs.google.com/spreadsheets/d/1eOB4Nv3wrAayB1av7n2AWPBRWDeB-UkiDa8h8cdsIEI/edit#gid=94181491) |
+| **Related Links** | [DD Wiki 2.0](https://ddwiki.reso.org/display/DDW20/Data+Dictionary+2.0+Wiki)<br />[Data Dictionary 2.0 Spreadsheet](https://docs.google.com/spreadsheets/d/1eOB4Nv3wrAayB1av7n2AWPBRWDeB-UkiDa8h8cdsIEI/edit#gid=94181491) |
 
 <br />
 
@@ -316,7 +316,8 @@ Nonstandard or "local" data elements are also allowed, provided Data Dictionary 
 
 ## Testing Framework
 
-Data Dictionary Certification is provided by the [RESO Commander](https://github.com/RESOStandards/web-api-commander). 
+Data Dictionary Certification is provided by the [RESO Certification Utils CL](https://github.com/RESOStandards/reso-certification-utils), which uses the [RESO Commander](https://github.com/RESOStandards/web-api-commander) for the metadata testing portion.
+
 The RESO Commander is an open source, cross-platform Java library created by RESO that uses established community libraries, such as the Apache Olingo OData Client, XML parsers, and JSON Schema Validators, to provide a testing API.
 
 Acceptance tests define the requirements applicants are expected to meet in order to achieve certification. Data Dictionary acceptance tests are written in a high-level language (DSL) called [Gherkin](https://cucumber.io/docs/gherkin/reference/). This is part of a [Behavior Driven Development](https://en.wikipedia.org/wiki/Behavior-driven_development) (BDD) platform called [Cucumber](https://cucumber.io/), which allows for the expression of testing workflows using a natural language that is intended to be accessible to business analysts and QA testers in addition to programmers. Tests are automatically generated from the adopted Data Dictionary spreadsheet for each given version of the specification, and can target any version of the Data Dictionary from 1.0 onwards. 
@@ -623,7 +624,7 @@ This will also include stricter validation for things like string lengths. If an
 
 ### Additional References
 
-The current version of the generated BDD acceptance tests from which the Sample BDD Tests above were taken from [may be found here](https://github.com/RESOStandards/web-api-commander/tree/104-data-dictionary-2.0/src/main/java/org/reso/certification/features/data-dictionary/v2-0).
+The current version of the generated BDD acceptance tests from which the Sample BDD Tests above were taken from [may be found here](https://github.com/RESOStandards/web-api-commander/tree/main/src/main/java/org/reso/certification/features/data-dictionary/v2.0).
 
 ### Additional Compliance Checking
 
@@ -685,7 +686,7 @@ Those seeking RESO Certification will apply with the Membership Department prior
 
 ### Certification Issuance
 
-A RESOScript file is required for testing. This file should contain credentials and the service location of the Web API Server instance hosting the Data Dictionary metadata to be tested. See [sample Data Dictionary RESOScript file](https://github.com/RESOStandards/web-api-commander/blob/main/sample-data-dictionary.1.7.0.resoscript).
+A RESOScript file is required for testing. This file should contain credentials and the service location of the Web API Server instance hosting the Data Dictionary metadata to be tested. See [sample Data Dictionary RESOScript file](https://github.com/RESOStandards/web-api-commander/blob/main/sample-data-dictionary.resoscript).
 
 ## Reporting
 
@@ -789,9 +790,9 @@ If you would like to contribute, please contact [RESO Development](mailto:dev@re
 Please see the following references for more information regarding topics covered in this document:
 * [Data Dictionary 2.0 Wiki](https://ddwiki.reso.org/pages/viewpage.action?pageId=1123655)
 * [Data Dictionary 2.0 Reference Sheet](https://docs.google.com/spreadsheets/d/1eOB4Nv3wrAayB1av7n2AWPBRWDeB-UkiDa8h8cdsIEI/edit#gid=94181491)
-* [RESO Web API Core Specification](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md)
-* [RESO Common Schema Reference Metadata](https://raw.githubusercontent.com/RESOStandards/web-api-commander/104-data-dictionary-2.0/src/main/resources/RESODataDictionary-2.0.xml)
-* [RESO Common Schema Open API Specification](https://raw.githubusercontent.com/RESOStandards/web-api-commander/104-data-dictionary-2.0/src/main/resources/RESODataDictionary-2.0.openapi3.json)
+* [RESO Web API Core Specification](./web-api-core.md)
+* [RESO Common Schema Reference Metadata](https://github.com/RESOStandards/web-api-commander/blob/main/src/main/resources/RESODataDictionary-2.0.xml)
+* [RESO Common Schema Open API Specification](https://github.com/RESOStandards/web-api-commander/blob/main/src/main/resources/RESODataDictionary-2.0.openapi3.json)
 
 <br />
 

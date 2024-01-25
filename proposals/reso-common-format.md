@@ -4,7 +4,7 @@
 | :--- | :--- |
 | **Version** | **1.7** |
 | **Authors** | Alexander Likholyot ([Planitar](mailto:alex@planitar.com))<br />Joshua Darnell ([RESO](mailto:josh@reso.org))<br />Paul Stusiak ([Falcon Technologies](mailto:pstusiak@falcontechnologies.com)) | |
-| **Status** | **Ratified** |
+| **Status** | **RATIFIED** |
 | **Date Submitted** | February 2019 |
 | **Date Ratified** | November 2023 |
 | **Dependencies** | [Data Dictionary 1.7+](https://ddwiki.reso.org/display/DDW17/RESO+Data+Dictionary+1.7) |
@@ -221,4 +221,3 @@ To get started with testing, please contact [dev@reso.org](mailto:dev@reso.org).
 
 # Original Proposal
 [**Download PDF**](https://github.com/RESOStandards/transport/files/9862314/RESOWebAPIRCP-RCP.-.WEBAPI-025.Lightweight.Autofill.Schema-251022-164452.pdf)
-
