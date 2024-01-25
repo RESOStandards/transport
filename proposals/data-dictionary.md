@@ -6,7 +6,7 @@
 | **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org)) |
 | **Status** | **RATIFIED** |
 | **Date Submitted** | December 2021 |
-| **Date Ratified** | December 2024 |
+| **Date Ratified** | December 2023 |
 | **Dependencies** | [Web API Core 2.0.0+](./web-api-core.md) |
 | **Related Links** | [DD Wiki 2.0](https://ddwiki.reso.org/display/DDW20/Data+Dictionary+2.0+Wiki)<br />[Data Dictionary 2.0 Spreadsheet](https://docs.google.com/spreadsheets/d/1eOB4Nv3wrAayB1av7n2AWPBRWDeB-UkiDa8h8cdsIEI/edit#gid=94181491) |
 

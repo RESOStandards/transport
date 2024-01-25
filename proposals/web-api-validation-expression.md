@@ -6,7 +6,7 @@
 | **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org))<br />Paul Stusiak ([Falcon Technologies](mailto:pstusiak@falcontechnologies.com)) |
 | **Specification** | [**LINK TO RCP**](./web-api-validation-expression.md) |
 | **Status** | **RATIFIED** |
-| **Date Approved** | December 2024 |
+| **Date Ratified** | December 2023 |
 | **Dependencies** | [Validation Expression grammar](https://github.com/darnjo/rcp019) <br /> [Data Dictionary 1.7+](./data-dictionary.md)<br />[Web API 2.0.0+](./web-api-core.md)<br /> |
 | **Related Links** | [DD Wiki 1.7](https://ddwiki.reso.org/display/DDW17/RESO+Data+Dictionary+1.7)<br />[Data Dictionary Spreadsheet](https://docs.google.com/spreadsheets/d/1_59Iqr7AQ51rEFa7p0ND-YhJjEru8gY-D_HM1yy5c6w/edit?usp=sharing)<br /> |
 
