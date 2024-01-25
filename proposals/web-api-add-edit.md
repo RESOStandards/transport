@@ -4,8 +4,8 @@
 | :--- | :--- |
 | **Version** | 2.0.0 |
 | **Authors** | Sergio Del Rio ([T4Bi](mailto:Sergio.Del.Rio@t4bi.com))<br />[Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org)) |
-| **Status** | **APPROVED** |
-| **Date Approved** | December 4, 2023 |
+| **Status** | **RATIFIED** |
+| **Date Ratified** | December 2023 |
 | **Dependencies** | [Data Dictionary 1.7+](./data-dictionary.md)<br />[Web API 2.0.0+](./web-api-core.md) |
 | **Related Links** | [DD Wiki 1.7](https://ddwiki.reso.org/display/DDW17/RESO+Data+Dictionary+1.7)<br />[Data Dictionary Spreadsheet](https://docs.google.com/spreadsheets/d/1_59Iqr7AQ51rEFa7p0ND-YhJjEru8gY-D_HM1yy5c6w/edit?usp=sharing)<br /> |
 
@@ -29,7 +29,7 @@ The keywords "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SH
 # Introduction
 The Web API Add/Edit Endorsement defines how to create, update, or delete data in the RESO Web API. It also includes standard error message responses so interactive clients may inform users how to correct issues with business rules, for example.
 
-This proposal does not provide formal business rule support. That is addressed in [Validation Expressions (RCP-019)](https://github.com/RESOStandards/transport/blob/main/web-api-validation-expression.md), which is compatible with this specification.
+This proposal does not provide formal business rule support. That is addressed in [Validation Expressions (RCP-019)](./web-api-validation-expression.md), which is compatible with this specification.
 
 
 <br />
