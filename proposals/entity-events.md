@@ -1,14 +1,14 @@
 # RESO EntityEvent Resource and Replication Model
 
-| **RCP** | 27 |
-| :--- | :--- |
-| **Version** | **2.0** |
+| **RCP** | 27                                                                                                                       |
+| :--- |:-------------------------------------------------------------------------------------------------------------------------|
+| **Version** | **2.0.1**                                                                                                                |
 | **Authors** | Joshua Darnell ([RESO](mailto:josh@reso.org))<br />Paul Stusiak ([Falcon Technologies](pstusiak@falcontechnologies.com)) | 
-| **Status** | **RATIFIED** |
-| **Date Submitted** | January 2019 |
-| **Date Approved** | December 2023 |
-| **Dependencies** | [Data Dictionary 2.0 EntityEvent Resource](https://ddwiki.reso.org/display/DDW20/EntityEvent+Resource) |
-| **Related Links** | [Push Events using Web Hooks](./web-hooks-push.md) |
+| **Status** | **RATIFIED**                                                                                                             |
+| **Date Submitted** | January 2019                                                                                                             |
+| **Date Approved** | December 2023                                                                                                            |
+| **Dependencies** | [Data Dictionary 2.0 EntityEvent Resource](https://ddwiki.reso.org/display/DDW20/EntityEvent+Resource)                   |
+| **Related Links** | [Push Events using Web Hooks](./web-hooks-push.md)                                                                       |
 
 The RESO _EntityEvent_ Resource provides an efficient and streamlined way to replicate data by using the interface of an append-only log.
 
@@ -104,17 +104,17 @@ GET /EntityEvent?$filter=EntityEventSequence gt 100
     {
       "EntityEventSequence": 101,
       "ResourceName": "Member",
-      "ResourceRecordKey": 21
+      "ResourceRecordKey": "21"
     },
     {
       "EntityEventSequence": 103,
       "ResourceName": "Property",
-      "ResourceRecordKey": 539
+      "ResourceRecordKey": "539"
     },
     {
       "EntityEventSequence": 110,
       "ResourceName": "Media",
-      "ResourceRecordKey": 1239
+      "ResourceRecordKey": "1239"
     }
   ]
 }
