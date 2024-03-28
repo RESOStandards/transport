@@ -82,7 +82,7 @@ always increases in value and cannot change.
 Requesting the same _EntityEventSequence_ MUST result in the same _ResourceName_ and _ResourceRecordKey_. 
 
 When possible, providers should order events to simplify referential integrity for data consumers so they can replay events without 
-underlying underlying business knowledge of internal system relationships. 
+underlying business knowledge of internal system relationships. 
 
 For example, the addition of a Property Resource event should occur before any Media Resource events associated with the 
 Property appearing in the Events Resource.
