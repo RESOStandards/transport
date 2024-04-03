@@ -23,6 +23,124 @@ When an _EntityEventSequenceNumeric_, _ResourceName_, _ResourceRecordKey_ tuple 
 
 In doing so, the replication process becomes simpler for the consumer, as they only need to receive EntityEvents from the producer and pick up the corresponding records from provider APIs. In general, this is preferable to having to poll continuously for new records.
 
+# Examples
+The following examples show using the EntityEvent model along with [RESO Common Format](reso-common-format.md) , [OAuth2 bearer tokens](https://oauth.net/2/bearer-tokens/), and HTTP POST requests.
+
+RESO Common Format supports both single and multi-valued payloads.
+
+## 1. Producer Sends a Single EntityEvent to the Consumer API
+
+**REQUEST**
+```
+POST https://example.api.com/webhooks
+  Content-Type: application/json
+  Authorization: Bearer <token>
+```
+```json
+{
+  "@reso.context": "urn:reso:metadata:2.0:resource:entityevent",
+  "EntityEventSequence": 1101,
+  "ResourceName": "Showing",
+  "ResourceRecordKey": "235021"
+}
+```
+
+**RESPONSE**
+```
+HTTP/2 200
+Content-Type: application/json
+```
+
+## 2. Producer Sends a Batch of EntityEvent Records to the Consumer API
+
+**REQUEST**
+```
+POST https://example.api.com/webhooks
+  Content-Type: application/json
+  Authorization: Bearer <token>
+```
+```json
+{
+  "@reso.context": "urn:reso:metadata:2.0:resource:entityevent",
+  "value": [{
+    "EntityEventSequence": 1101,
+    "ResourceName": "Property",
+    "ResourceRecordKey": "235021"
+  }, {
+    "EntityEventSequence": 1111,
+    "ResourceName": "Media",
+    "ResourceRecordKey": "ABC123"
+  }]
+}
+```
+
+**RESPONSE**
+```
+HTTP/2 200
+Content-Type: application/json
+```
+
+## 3. Producer Sends a Batch of EntityEvent Records to a Consumer API With Retry-After
+
+**REQUEST**
+```
+POST https://example.api.com/webhooks
+  Content-Type: application/json
+  Authorization: Bearer <token>
+```
+```json
+{
+  "@reso.context": "urn:reso:metadata:2.0:resource:entityevent",
+  "value": [{
+    "EntityEventSequence": 1101,
+    "ResourceName": "Property",
+    "ResourceRecordKey": "235021"
+  }, {
+    "EntityEventSequence": 1111,
+    "ResourceName": "Media",
+    "ResourceRecordKey": "ABC123"
+  }]
+}
+```
+
+**RESPONSE**
+```
+HTTP/2 429
+Content-Type: application/json
+Retry-After: 3600
+```
+
+## 4. Producer Sends a Batch of EntityEvent Records to a Consumer API with Optional EntityEventSource Header
+
+**REQUEST**
+```
+POST https://example.api.com/webhooks
+  Content-Type: application/json
+  Authorization: Bearer <token>
+  EntityEventSource: IDX Feed 123
+```
+```json
+{
+  "@reso.context": "urn:reso:metadata:2.0:resource:entityevent",
+  "value": [{
+    "EntityEventSequence": 1101,
+    "ResourceName": "Property",
+    "ResourceRecordKey": "235021"
+  }, {
+    "EntityEventSequence": 1111,
+    "ResourceName": "Media",
+    "ResourceRecordKey": "ABC123"
+  }]
+}
+```
+
+**RESPONSE**
+```
+HTTP/2 200
+Content-Type: application/json
+```
+
+
 ## Requirements
 * Consumers MUST implement an API endpoint that can receive EntityEvents.
 * Consumers MUST establish authorization with the provider, using an OAuth2 bearer token.
@@ -40,7 +158,7 @@ Polite Behavior is especially important when the consumer is initializing a new 
 ## Consumer Labels for EntityEvent Sources
 Optionally, consumers may choose to provide a custom identifier that will allow them to distinguish between feeds from multiple sources from the same producer. 
 
-This identifier will be passed in the headers as something like "ConsumerLabel," if present, and is assumed to be String (255).
+This identifier will be passed in the headers as "EntityEventSource," if present, and is assumed to be String (255).
 
 # Impact
 Producers MAY push events from the _EntityEvent Resource_, specified in RCP-027, using POST requests to the consumer's API. 
