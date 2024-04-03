@@ -7,7 +7,7 @@
 | **Status** | **RATIFIED** |
 | **Date Submitted** | April 2019 |
 | **Date Approved** | December 2023 |
-| **Dependencies** | [Data Dictionary 2.0 EntityEvent Resource](https://ddwiki.reso.org/display/DDW20/EntityEvent+Resource) |
+| **Dependencies** | [Data Dictionary 2.0 EntityEvent Resource](https://ddwiki.reso.org/display/DDW20/EntityEvent+Resource) <br />[RESO Common Format](reso-common-format.md) |
 | **Related Links** | [RCP-027](./entity-events.md) <br />[Webhooks](https://en.wikipedia.org/wiki/Webhook) |
 
 # Synopsis
