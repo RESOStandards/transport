@@ -107,8 +107,11 @@ POST https://example.api.com/webhooks
 ```
 HTTP/2 429
 Content-Type: application/json
-Retry-After: 3600
+Retry-After: 60
 ```
+
+Since `Retry-After: 60` is present in the response header, the producer should wait 60 seconds before making another request.
+
 
 ## 4. Producer Sends a Batch of EntityEvent Records to a Consumer API with Optional EntityEventSource Header
 
