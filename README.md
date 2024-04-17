@@ -59,6 +59,7 @@ In progress proposals are ones that are in review by Transport and Certification
 | [**RCP-043**](https://github.com/RESOStandards/transport/issues/77) | **Local Fields and Predictability** | **DD 2.1** | **Feb 2023** |
 | [**RCP-044**](https://github.com/RESOStandards/transport/issues/67) | **Metadata Internationalization and Locale** | **DD 2.1** | **Feb 2023** |
 | [**RCP-045**](https://github.com/RESOStandards/transport/pull/104) | **Legacy and/or Deprecated Data Elements** | **DD 2.1** | **Sept 2023** |
+| [**RCP-047**](https://github.com/RESOStandards/transport/issues/130) | **RelatedLookup Resource** | **DD 2.1** | **March 2024** |
 
 ---
 
