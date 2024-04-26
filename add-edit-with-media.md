@@ -1,6 +1,6 @@
 # RESO Add/Edit Media
 
-| **RCP** | ?? |
+| **RCP** | 48 |
 | :--- | :--- |
 | **Version** | **2.1.0** |
 | **Authors** | [Geoff Rispin (T4bi)](grispin@t4bi.com)<br /> [Cody Gustafson (FBS)](cody.gustafson@fbs.com)|
