@@ -29,7 +29,7 @@ Proposals that require certification must have an adopted specification and test
 | [**RCP-040**](https://github.com/RESOStandards/transport/blob/a99fb6ca307208280ac51bca1f573e89cb67b202/proposals/data-dictionary.md) | **Data Dictionary** | **2.0** | **Nov 2023** |
 | [**RCP-010**](https://github.com/RESOStandards/transport/blob/a99fb6ca307208280ac51bca1f573e89cb67b202/proposals/web-api-add-edit.md) | **Web API Add/Edit** | **1.0.0** | **Dec 2023** |
 | [**RCP-019**](https://github.com/RESOStandards/transport/blob/a99fb6ca307208280ac51bca1f573e89cb67b202/proposals/web-api-validation-expression.md) | **Web API Validation Expressions** | **1.0.0** | **Dec 2023** |
-| [**RCP-027**](https://github.com/RESOStandards/transport/blob/a99fb6ca307208280ac51bca1f573e89cb67b202/proposals/entity-events.md) | **EntityEvent Resource and Replication** | **1.0.0** | **Dec 2023** |
+| [**RCP-027**](https://github.com/RESOStandards/transport/blob/1091f1e82b2108c5a6712af65a417c8db6c76c4c/proposals/entity-events.md) | **EntityEvent Resource and Replication** | **1.0.0** | **Dec 2023** |
 | [**RCP-028**](https://github.com/RESOStandards/transport/blob/main/proposals/webhooks-push.md) | **Push Replication with EntityEvent and Webhooks** | **1.0.0** | **Dec 2023** |
 | [**RCP-039**](https://github.com/RESOStandards/transport/blob/22-web-api-core-210-specification/web-api-core.md) | **Web API Core** | **2.1.0** | **Dec 2023** |
 
