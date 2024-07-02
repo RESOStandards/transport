@@ -1,5 +1,6 @@
-theme: jekyll-theme-slate
+# theme: jekyll-theme-slate
 title: RESO Transport Workgroup
+description: Specifications and Change Proposals
 
 #github:
 #  is_project_page: false
