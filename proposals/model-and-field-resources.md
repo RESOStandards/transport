@@ -1,4 +1,4 @@
-# RESO (Endorsement Name) Endorsement
+# Model and Field Resources
 
 | **RCP** | 42 |
 | :--- | :--- |
