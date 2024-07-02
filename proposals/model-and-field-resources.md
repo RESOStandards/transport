@@ -21,8 +21,7 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 
 # Table of Contents
 - [Summary of Changes](#summary-of-changes)
-- [Introduction](#introduction)
-- [Section 1: Purpose](#section-1-purpose)
+- [Section 1: Introduction](#section-1-introduction)
 - [Section 2: Specification](#section-2-specification)
 - [Section 3: Certification](#section-3-certification)
 - [Section 4: Contributors](#section-4-contributors)
