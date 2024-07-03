@@ -1,4 +1,4 @@
-# RESO (Endorsement Name) Endorsement
+# RelatedLookup Resource
 
 | **RCP** | 47 |
 | :--- | :--- |
