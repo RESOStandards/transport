@@ -69,7 +69,7 @@ The following fields will be **added** to the [Field Resource](https://ddwiki.re
   * Note: The Data Dictionary currently defines lookup names, such as StandardStatus, but LookupName will not be validated against the Data Dictionary Lookup Name. Providers are free to define their own and reuse across enumerated fields, if possible, or not.
 * **Type**
   * Definition: The transport-specific data type.
-  * Data Dictionary Type: Boolean
+  * Data Dictionary Type: String
   * OData Type: `Edm.String`
   * Nullable: `false`
   * Suggested Max Length: `100`
