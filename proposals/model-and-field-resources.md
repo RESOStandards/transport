@@ -11,13 +11,13 @@
 | **Related Links** | [RESO Common Format](./reso-common-format.md) |
 
 
-<br /><br />
+<br />
 
 # RESO End User License Agreement (EULA)
 
 This End User License Agreement (the "EULA") is entered into by and between the Real Estate Standards Organization ("RESO") and the person or entity ("End User") that is downloading or otherwise obtaining the product associated with this EULA ("RESO Product"). This EULA governs End Users use of the RESO Product and End User agrees to the terms of this EULA by downloading or otherwise obtaining or using the RESO Product.
 
-<br /><br />
+<br />
 
 # Table of Contents
 - [Summary of Changes](#summary-of-changes)
@@ -29,7 +29,7 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 - [Section 6: Appendices](#section-6-appendices)
 - [Section 7: License](#section-7-license)
 
-<br /><br />
+<br />
 
 # Summary of Changes
 * Adds support for advertising capabilities such as searchability and updatability in a standard format.
@@ -37,7 +37,7 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 * ResourceName has become ModelKey. Providers can still use ResourceName, but ModelKey must be present.
 * DisplayName has been deprecated in favor of the internationalized DisplayNames collection.
 
-<br /><br />
+<br />
 
 # Section 1: Introduction
 In order to make server metadata richer, easier to work with, and more Data Dictionary friendly and transport agnostic, this proposal adds support for a new Model Resource and additions to the Field Resource. 
@@ -46,12 +46,12 @@ The term "Resource" is used the same way the Data Dictionary uses it now, but th
 
 This proposal works with [Web API Core](https://github.com/RESOStandards/transport/blob/rcp-39-web-api-core-2-1-0/web-api-core.md) standards as well as [RESO Common Format](./reso-common-format.md), and in the latter case a non-OData server could advertise their metadata in standard format using the Model, Field, and Lookup Resources.
 
-<br /><br />
+<br />
 
 # Section 2: Specification
 This specification adds the Model Resource and makes some additions and changes to the existing Field Resource, as currently defined in Data Dictionary 1.7 and 2.0. 
 
-## Field Resource
+## 2.1: Field Resource
 
 The following fields will be **removed** from the Field Resource:
 * **[ResourceName](https://ddwiki.reso.org/pages/viewpage.action?pageId=395529)** will be deprecated in favor of **ModelKey**. 
@@ -139,7 +139,7 @@ The following fields will be **added** to the [Field Resource](https://ddwiki.re
   * **ModificationTimestamp** fields MUST have `SearchableYN = true`, `OrderableYN = true`, and `UpdatableYN = false`.
 
 
-## Model Resource
+## 2.2: Model Resource
 A new resource called "Model" will be created with the following fields.
 
 * **ModelKey**
@@ -212,11 +212,11 @@ A new resource called "Model" will be created with the following fields.
   * OData Type: `Edm.DateTimeOffset`
   * Nullable: `false`
 
-<br /><br />
+<br />
 
 # Section 3: Certification
 
-## Usage Requirements for RESO Web API Providers
+## 3.1: Usage Requirements for RESO Web API Providers
 * The Lookup Resource may be supported even if the server is not using the Model and Field Resources, but if so, all three MUST be present. 
 * If a server does not support the Model, Field, or Lookup Resources, they should respond with a non-2XX HTTP status if a client tries to access them. This gives a way for the client to know whether to query the OData XML Metadata or not.
 * RESO Web API providers using the Model and Field Resources MUST provide the minimum metadata required in OData XML Metadata, i.e. EntityType and Property definitions. Any attributes that can be expressed in OData Metadata such as type and length MUST match the values exactly for those using the Model and Field resources.
@@ -227,15 +227,14 @@ A new resource called "Model" will be created with the following fields.
 * RESO requires an exact match between the field names and data types used in the Data Dictionary and OData names and types. 
 * For local fields, there MUST be parity between the Field Resource definition and the OData XML Metadata. [Data type mappings may be found here](./data-dictionary.md#data-type-mappings). These items also map to JSON types and are part of the RESO Common Format.
 
-
-<br /><br />
+<br />
 
 # Section 4. Contributors
 This document was written by [Joshua Darnell (RESO)](mailto:josh@reso.org).
 
 Thanks to the RESO Transport Workgroup and others in the community for their feedback on the proposal.
 
-<br /><br />
+<br />
 
 # Section 5: References
 
@@ -244,12 +243,12 @@ Please see the following references for more information regarding topics covere
 * [RESO Common Format](https://github.com/RESOStandards/transport/blob/main/proposals/reso-common-format.md)
 * [Original Ticket and Discussion](https://github.com/RESOStandards/transport/issues/76)
 
-<br /><br />
+<br />
 
 # Section 6: Appendices
 * [ISO 8601 (Wikipedia)](https://en.wikipedia.org/wiki/ISO_8601)
 
-<br /><br />
+<br />
 
 # Section 7: License
 This document is covered by the [RESO EULA](https://www.reso.org/eula/).
