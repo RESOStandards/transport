@@ -10,14 +10,13 @@
 | **Dependencies** | [Data Dictionary 2.1](#) |
 | **Related Links** | [Lookup Resource](https://ddwiki.reso.org/display/DDW20/Lookup+Resource) |
 
-
-<br /><br />
+<br />
 
 # RESO End User License Agreement (EULA)
 
 This End User License Agreement (the "EULA") is entered into by and between the Real Estate Standards Organization ("RESO") and the person or entity ("End User") that is downloading or otherwise obtaining the product associated with this EULA ("RESO Product"). This EULA governs End Users use of the RESO Product and End User agrees to the terms of this EULA by downloading or otherwise obtaining or using the RESO Product.
 
-<br /><br />
+<br />
 
 # Table of Contents
 - [Summary](#summary)
@@ -29,12 +28,12 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 - [Section 6: Appendices](#section-6-appendices)
 - [Section 7: License](#section-7-license)
 
-<br /><br />
+<br />
 
 # Summary
 Adds support for defining relationships between enumerations. This allows users to know which enumerated values from a given field go with others. For example, which counties are in a given state or province and which schools are in a given county.
 
-<br /><br />
+<br />
 
 # Section 1: Introduction
 Conveying information about related enumerations is important in cases such as displaying accurate values for related option lists on search and input forms. 
@@ -43,7 +42,7 @@ This could be accomplished using computable business rules, such as those offere
 
 Since metadata for enumerations is already conveyed by the Lookup Resource, it's easier to build upon that and use resource-based metadata to address this case rather than grammars. 
 
-<br /><br />
+<br />
 
 # Section 2: Specification
 This specification defines a _RelatedLookup Resource_ to model relationships between Lookup Resource items.
@@ -240,7 +239,7 @@ GET /Lookup?$filter=LookupKey eq 'ABC123' or (RelatedLookup/any(a:a/RelatedLooku
 ## Impact
 This is a MAY proposal for Web API Core 2.0.0+ and Data Dictionary 2.1+. 
 
-<br /><br />
+<br />
 
 # Section 3: Certification
 
@@ -253,14 +252,14 @@ The following tests should be performed when the RelatedLookup Resource is prese
 * Combined LookupName and LookupKey queries MUST be supported. 
 * Navigation property path queries MUST be tested if the provider has an OData `NavigationProperty` defined between the Lookup and RelatedLookup resources.
 
-<br /><br />
+<br />
 
 # Section 4. Contributors
 This document was written by [Joshua Darnell (RESO)](mailto:josh@reso.org) and [Ryan Yates (Rapattoni Corporation)](mailto:ryates@rapattoni.com).
 
 Thanks to the RESO Transport Workgroup for the feedback they gave during to the creation of this proposal.
 
-<br /><br />
+<br />
 
 # Section 5: References
 
@@ -268,7 +267,7 @@ Please see the following references for more information regarding topics covere
 * [RESO Data Dictionary 2.0 Lookup Resource](https://ddwiki.reso.org/display/DDW20/Lookup+Resource)
 * [RESO Web API Core specification](https://github.com/RESOStandards/transport/blob/main/proposals/web-api-core.md)
 
-<br /><br />
+<br />
 
 # Section 6: Appendices
 
@@ -276,7 +275,7 @@ Please see the following references for more information regarding topics covere
 * [Original Proposal in RESO Confluence (login required)](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275152879/RCP+-+WEBAPI-032+Lookup+and+RelatedLookup+Resources+for+Lookup+Metadata)
 * [Original Proposal in PDF format](https://github.com/RESOStandards/transport/files/14968861/RESOWebAPIRCP-RCP.-.WEBAPI-032.Lookup.and.RelatedLookup.Resources.for.Lookup.Metadata-130424-224129.pdf)
 
-<br /><br />
+<br />
 
 # Section 7: License
 This document is covered by the [RESO EULA](https://www.reso.org/eula/).
