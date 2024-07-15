@@ -54,12 +54,12 @@ In progress proposals are ones that are in review by Transport and Certification
 | :-- | :-- | :-- | :-- |
 | [**RCP-22**](https://github.com/RESOStandards/transport/blob/43-migrate-rcp-022-from-confluence/autofill-service.md) | **Autofill Service** | **1.0.0** | **Apr 2019** |
 | [**RCP-35**](https://github.com/RESOStandards/transport/issues/96) | **Supporting Single Feeds** | **DD 2.1** | **Sept 2023** |
-| [**RCP-41**](https://github.com/RESOStandards/transport/blob/23-payloads-20-specification/payloads.md) | **Payloads** | **DD 2.0** | **Apr 2022** |
 | [**RCP-42**](https://github.com/RESOStandards/transport/issues/76) | **Model and Field Resources** | **DD 2.1** | **Feb 2023** |
 | [**RCP-43**](https://github.com/RESOStandards/transport/issues/77) | **Local Fields and Predictability** | **DD 2.1** | **Feb 2023** |
 | [**RCP-44**](https://github.com/RESOStandards/transport/issues/67) | **Metadata Internationalization and Locale** | **DD 2.1** | **Feb 2023** |
 | [**RCP-45**](https://github.com/RESOStandards/transport/pull/104) | **Legacy and/or Deprecated Data Elements** | **DD 2.1** | **Sept 2023** |
 | [**RCP-47**](https://github.com/RESOStandards/transport/blob/rcp-47-relatedlookup-resource/proposals/related-lookups.md) | **RelatedLookup Resource** | **DD 2.1** | **March 2024** |
+| [**RCP-49**](https://github.com/RESOStandards/transport/issues/142) | **EntityEvent Subscriptions and Filtering** | **DD 2.1** | **March 2024** |
 
 ---
 
