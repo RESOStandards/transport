@@ -1,17 +1,17 @@
-# RESO Add/Edit Media
+# Add/Edit with Media
 
 | **RCP** | 48 |
 | :--- | :--- |
-| **Version** | **2.1.0** |
+| **Version** | **2.0.0** |
 | **Authors** | [Geoff Rispin (T4bi)](grispin@t4bi.com)<br /> [Cody Gustafson (FBS)](cody.gustafson@fbs.com)|
 | **Status** | IN PROGRESS |
 | **Date Ratified** | |
-| **Dependencies** | [Data Dictionary 2.0+](./data-dictionary.md)<br />[Web API 2.1.0+](./web-api-core.md) |
-| **Related Links** | [Open Data Protocol (OData)](https://www.odata.org/documentation/) <br /> [OData streams](https://docs.oasis-open.org/odata/odata-json-format/v4.0/os/odata-json-format-v4.0-os.html)<br /> |
+| **Dependencies** | [Data Dictionary 2.0+](./data-dictionary.md)<br />[Web API 2.0.0+](./web-api-core.md) |
+| **Related Links** | [Open Data Protocol (OData)](https://www.odata.org/documentation/) <br /> [OData streams](https://docs.oasis-open.org/odata/odata-json-format/v4.02/odata-json-format-v4.02.html)<br /> |
 
 The keywords "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC 2119](https://www.ietf.org/rfc/rfc2119.txt).
 
-<br /><br />
+<br />
 
 # RESO End User License Agreement (EULA)
 
@@ -20,7 +20,7 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 <br /><br />
 
 # Table of Contents
-- [RESO Add/Edit Media](#reso-addedit-media)
+- [Add/Edit with Media](#addedit-with-media)
 - [RESO End User License Agreement (EULA)](#reso-end-user-license-agreement-eula)
 - [Table of Contents](#table-of-contents)
 - [Section 1: Introduction](#section-1-introduction)
@@ -33,11 +33,11 @@ This End User License Agreement (the "EULA") is entered into by and between the 
   - [Media Post Processing](#media-post-processing)
   - [Media Add/Edit Examples](#media-addedit-examples)
     - [Create Initial Media Resource](#create-initial-media-resource)
-    - [Upload the Media byte array](#upload-the-media-byte-array)
+    - [Upload the Media Byte Array](#upload-the-media-byte-array)
     - [Successful Media Upload](#successful-media-upload)
-    - [Media Record created but no byte stream provided](#media-record-created-but-no-byte-stream-provided)
+    - [Media Record Created but no Byte Stream Provided](#media-record-created-but-no-byte-stream-provided)
     - [Error Uploading Media](#error-uploading-media)
-    - [Media uploaded but byte stream rejected](#media-uploaded-but-byte-stream-rejected)
+    - [Media Uploaded but Byte Stream Rejected](#media-uploaded-but-byte-stream-rejected)
     - [Attempting to Update a Write-Once Data Provider](#attempting-to-update-a-write-once-data-provider)
 - [Section 3: Certification](#section-3-certification)
 - [Section 4: Contributors](#section-4-contributors)
@@ -49,7 +49,7 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 
 
 # Section 1: Introduction
-Solutions using the RESO Web API need a way to add or edit media data such as photos, documents and videos so that Web API clients can provide the media binary data consistently to the servers regardless of the Web API provider.  This proposal states a solution that leveraging the existing Add/Edit process and the OData binary data specifications.
+Solutions using the RESO Web API need a way to add or edit media data such as photos, documents and videos so that Web API clients can provide the media binary data consistently to the servers regardless of the Web API provider.  This proposal outlines a solution that leverages the existing Add/Edit process and the OData binary data specifications.
 
 <br /><br />
 
@@ -64,17 +64,17 @@ Solutions using the RESO Web API need a way to add or edit media data such as ph
 
 # Section 2: Specification
 
-This specification relies heavily on the [OData streams](https://docs.oasis-open.org/odata/odata-json-format/v4.0/os/odata-json-format-v4.0-os.html) specification for the transport interaction with the server.
+This specification relies heavily on the [OData streams](https://docs.oasis-open.org/odata/odata-json-format/v4.02/odata-json-format-v4.02.html) specification for the transport interaction with the server.
 
 While OData streams works for the communication of the data, there are some media operations that cannot be preformed in real 
 time and are deferred post-processing that could prevent the successful publishing of the media.  This could include format
-validation, transcoding (resizing, reformating) for different displays/devices, compliance validation, copyright validation and/or content delivery distribution to name a few identified scenarios.  
-As a result of this need to allow for background operations to occur after the media has been received, a method to communicate the progression of the media is required.  The existing field `MediaStatus` will be used to comminucate the status and `MediaStatusDescription` will be introduced to provide contextual information when available.  This will assist clients in know why media has been rejected without having to contact the server provider outside of the transport.
+validation, transcoding (resizing, reformatting) for different displays/devices, compliance validation, copyright validation and/or content delivery distribution to name a few identified scenarios.  
+As a result of this need to allow for background operations to occur after the media has been received, a method to communicate the progression of the media is required.  The existing [field `MediaStatus`](https://ddwiki.reso.org/display/DDW20/MediaStatus+Field) will be used to comminucate the status and `MediaStatusDescription` will be introduced to provide contextual information when available.  This will assist clients in know why media has been rejected without having to contact the server provider outside of the transport.
 
 ## Data Representation
 
 ### Data Structure
-These are the required fields to represent the upload process for media.  The data dictionary change set can be found [here](https://docs.google.com/spreadsheets/d/1QGAe3hFvKHu9fMVzlGbI4gIuiSLjdTHO7leGK47bP88/edit?usp=sharing):
+These are the required fields to represent the upload process for media.  The change request for the data dictionary workgroup can be found [here](https://reso.atlassian.net/wiki/spaces/DDGDF/pages/9525100546/Web+API+Add+Edit+with+Media):
 
 ```xml
 <EntityType Name="Media" hasStream="True">
@@ -95,7 +95,7 @@ The status of the media will be tracked on the `Media` resource.  The `MediaStat
 * `Processing` - the `Media` record is syntactically complete and is currently being processed by the backend
 * `Complete` - the `Media` record is validated and ready for consumption
 * `Deleted` - the `Media` record is no longer published 
-* `Rejected` - the `Media` has failed post processing for some reason.  Details of the problem will be presented in the `MediaStatusDescription` field.
+* `Rejected` - the `Media` has failed post processing for some reason.  Details of the problem will be presented in the `MediaStatusDescription` field. (e.g. "Media Payload does not match the specified media type", "Unable to decode Media Payload")
 
 Some examples of `Rejected` status reason could be:
 * Media stream does not match `MediaType`  (Sent a video for a photo Media record)
@@ -105,19 +105,19 @@ Some examples of `Rejected` status reason could be:
 
 ## Media Add/Edit Process
 
-The creation of the media resource will be done using as a standard RESO Web API 2.1.0 Add/Edit process. The post SHOULD include all known resource record fields for the media with the exception of only the media byte stream.
+The creation of the Media Resource will be done using as a standard RESO Web API 2.0.0 Add/Edit process. The post SHOULD include all known resource record fields for the media with the exception of only the media byte stream.
 
-The response object MAY contain `mediaReadLink` and `mediaEditLink` annotations which the client MUST respect as per the OData specification when communicating the byte stream to the server. If fields are not provided the implicit URLs per the OData specification MUST then be used.  
+The response object MAY contain `mediaReadLink` and `mediaEditLink` annotations which the client MUST respect as per the [OData specification](https://docs.oasis-open.org/odata/odata-json-format/v4.02/odata-json-format-v4.02.html) when communicating the byte stream to the server. If fields are not provided the implicit URLs per the [OData specification](https://docs.oasis-open.org/odata/odata-json-format/v4.02/odata-json-format-v4.02.html) MUST then be used.  
 
 Byte stream endpoints MUST only expect previously established security credentials if they are in the same HTTP security domain as the original request.  Byte stream endpoints outside the original OData security domain cannot expect any security credentials to be provided outside of the contents of the respective annotation being used.
 
 The Byte stream endpoint will provide HTTP response code values related to the success of the byte stream POST.  All HTTP 2xx response codes are successful.  All HTTP 4xx error codes except for HTTP 409 (Conflict) SHOULD have the client query the OData resource to validate/refresh the annotation URL and retry the POST using the URL.
 
-The HTTP 409 (Confict) response designates that the byte stream cannot be replaced.  This can happen if the implementation is using a write-once model for media to retain history.  When a 409 is received, the client SHOULD add a new media record with the updated byte stream and then delete the original Media record.
+The HTTP 409 (Confict) response designates that the byte stream cannot be replaced.  This can happen if the implementation is using a write-once model for media to retain history. Providers MUST return a HTTP 409 (Conflict) status when they are using a write-once model.  When a client recieves a HTTP 409 status, the client SHOULD add a new media record with the updated byte stream and then delete the original Media record. 
 
 ## Media Post Processing
 
-The Media record will transition to `Processing` status while the server prepares the media for distribution downstream. The implementation will do all the work required for distribution before changing the status to `Complete`
+The Media record will transition to `Processing` status while the server prepares the media for distribution downstream. The implementation will do all the work required for distribution before changing the status to `Complete`.
 
 If any post-upoload processing fails, the media record will be have a status of `Rejected` and the reasoning for the Media submitter will be populated in the `MediaStatusDescription` field for actions to be taken.
 
@@ -203,11 +203,11 @@ Preference-Applied: return=representation
 }
 ```
 
-The return from the POST will return the Media record with the object in an `Incomplete` status.  The next step in the process is to provide the byte stream for the media object to the server at the provided endpoint.  The client MUST use the `odata.mediaEditLink` if provided and use the implicit URL only if one is not provided as per the OData specification.
+The return from the POST will return the Media record with the object in an `Incomplete` status.  The next step in the process is to provide the byte stream for the media object to the server at the provided endpoint.  The client MUST use the `@odata.mediaEditLink` if provided and use the implicit URL only if one is not provided as per the OData specification.
 
-### Upload the Media byte array
+### Upload the Media Byte Array
 
-The byte stream upload is a simple HTTP POST transaction to the provided to the endpoint.  If it is an request outside the WebApi domain, then all required data (authentication, etc.) MUST be provided in the `mediaEditLink` URL.  If `mediaEditLink` is not in WebApi domain, then the established authentication (cookies, authentication headers, etc.) MUST continue to be provided.
+The byte stream upload is a simple HTTP POST transaction to the provided to the endpoint.  If it is an request outside the Web API domain, then all required data (authentication, etc.) MUST be provided in the `@odata.mediaEditLink` URL.  If `@odata.mediaEditLink` is not in WebApi domain, then the established authentication (cookies, authentication headers, etc.) MUST continue to be provided.
 
 **REQUEST - External Target**
 ```http
@@ -303,7 +303,7 @@ Preference-Applied: return=representation
 }
 ```
 
-### Media Record created but no byte stream provided
+### Media Record Created but no Byte Stream Provided
 
 This will leave the media record in a Incomplete state and the vendor can do culling/clean up as required. The client can requery the Media record for the URLs to attempt to re-use the Media record.  Rules can be used to prevent the transition of the listing until valid media is provided if required.
 
@@ -471,7 +471,7 @@ HTTP/2 403 Forbidden
 ```
 
 
-### Media uploaded but byte stream rejected
+### Media Uploaded but Byte Stream Rejected
 
 The media provided is not of the correct type or failed some other validation process after upload but before distribution occurred.
 
