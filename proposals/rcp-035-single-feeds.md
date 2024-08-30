@@ -67,11 +67,20 @@ This will be done by the creation of the `FeedTypes` field of type Open Mutli En
 
 The proposal is to add two fields: `FeedTypes` of type Open Mutli Enum String to all data resources and the `Field` metadata resource amd `FeedRules` of type Collection(ComplexType) to all data resources.
 
-## FeedTypes
+| Field | Resource/Model | Data Type | Sample Value | Nullable | Description |
+| - | - | - | - | - | - |
+| **FeedTypes** | Any Data Resource | Collection(Edm.String) | ["IDX", "BBO"] | False | A list of feeds that the given record is included in. |
+| **FeedTypes** | Field Resource | Collection(Edm.String) | ["IDX"] | False | A list of feeds that the given field is part of. |
+| **FeedRules** | Any Data Resource | Collection(ComplexTypes.FeedRule) | [{"FieldName": "PrivateRemarks", "FeedType": "IDX", "Visible": false}] | True | A collection of rules describing whether a given field on the record should be visible or not for a given feed. |
+| **FieldName** | ComplexTypes.FeedRule | Edm.String | "PrivateRemarks" | False | The field that the given rule applies to. |
+| **FeedType** | ComplexTypes.FeedRule | Edm.String | "IDX" | False | The feed that the given rule applies to. |
+| **Visible** | ComplexTypes.FeedRule | Edm.Boolean | false | False | Whether the `FieldName` should be displayed as part of the `FeedType` for the containing Data record. |
+
+## Section 2.1 FeedTypes
 
 The initial list of potential values would be `IDX`, `VOW`, `BBO`, and `PDAP`. These values are labels and have no guarantee of matching industry-wide understandings of these terms. The only requirement is that they are meaningful to the Data Consumer and they are able to discern which data license agreement a given `FeedTypes` value is referencing, so they can correctly meet the restrictions of the data license agreement.
 
-## FeedRules
+## Section 2.2 FeedRules
 
 The `FeedRules` Collection(ComplexType) will have 3 sub-fields: `FieldName` (String), `FeedType` (Oepn Enum String), and `Visible` (Boolean). The `FeedType` enum will have the same potential values as the `FeedTypes` enum. The purpose of this field will be to communicate overrides specific to a given record, usually based on the values of other fields.
 
