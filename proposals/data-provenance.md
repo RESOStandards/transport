@@ -81,9 +81,7 @@ This specification defines a new resource called Provenance and a new navigation
     <PropertyRef Name="ListingKey"/>
   </Key>
   <Property Name="ListingKey" Nullable="false" Type="Edm.String" />
-  <Property Name="Provenance" Nullable="false" Type="Collection(ProvenanceEntry)" />
   <Property Name="ModificationTimestamp" Nullable="false" Type="Edm.DateTimeOffset" />
-  <Property Name="Provenance" Nullable="false" Type="Collection(ProvenanceEntry)" />
   ...
   <NavigationProperty Name="Provenance" Nullable="false" Type="Collection(Provenance)">
 </EntityType>
