@@ -53,13 +53,15 @@ In progress proposals are ones that are in review by Transport and Certification
 | RCP | Name | Version | Date |
 | :-- | :-- | :-- | :-- |
 | [**RCP-22**](https://github.com/RESOStandards/transport/blob/43-migrate-rcp-022-from-confluence/autofill-service.md) | **Autofill Service** | **1.0.0** | **Apr 2019** |
-| [**RCP-35**](https://github.com/RESOStandards/transport/issues/96) | **Supporting Single Feeds** | **DD 2.1** | **Sept 2023** |
-| [**RCP-42**](https://github.com/RESOStandards/transport/issues/76) | **Model and Field Resources** | **DD 2.1** | **Feb 2023** |
+| [**RCP-35**](https://github.com/RESOStandards/transport/blob/e222c800f2e6ef091fe6c334ce5160456a4e5c56/proposals/rcp-035-single-feeds.md) | **Supporting Single Feeds** | **DD 2.1** | **Sept 2023** |
+| [**RCP-42**](https://github.com/RESOStandards/transport/blob/b21579a147a476a95fb0a9457ab6b23d5b7afc0a/proposals/model-and-field-resources.md) | **Model and Field Resources** | **DD 2.1** | **Feb 2023** |
 | [**RCP-43**](https://github.com/RESOStandards/transport/issues/77) | **Local Fields and Predictability** | **DD 2.1** | **Feb 2023** |
 | [**RCP-44**](https://github.com/RESOStandards/transport/issues/67) | **Metadata Internationalization and Locale** | **DD 2.1** | **Feb 2023** |
-| [**RCP-45**](https://github.com/RESOStandards/transport/pull/104) | **Legacy and/or Deprecated Data Elements** | **DD 2.1** | **Sept 2023** |
-| [**RCP-47**](https://github.com/RESOStandards/transport/blob/rcp-47-relatedlookup-resource/proposals/related-lookups.md) | **RelatedLookup Resource** | **DD 2.1** | **March 2024** |
+| [**RCP-45**](https://github.com/RESOStandards/transport/blob/ddb8bc9792173ef1a1d57eb5cb560af21d0fc558/proposals/rcp-45-legacy-deprecated-fields-lookups.md) | **Legacy and Deprecated Data Elements** | **DD 2.1** | **Sept 2023** |
+| [**RCP-47**](https://github.com/RESOStandards/transport/blob/015bd6181a3a9f56b1c5b767685761a842e0284c/proposals/related-lookups.md) | **RelatedLookup Resource** | **DD 2.1** | **March 2024** |
+| [**RCP-48**](https://github.com/RESOStandards/transport/blob/fc35c711487bcd59ffecd02780feb56269fabd73/proposals/web-api-add-edit-with-media.md) | **Add/Edit with Media** | **DD 2.1** | **April 2024** |
 | [**RCP-49**](https://github.com/RESOStandards/transport/issues/142) | **EntityEvent Subscriptions and Filtering** | **DD 2.1** | **March 2024** |
+| [**RCP-50**](https://github.com/RESOStandards/transport/blob/c66994f02571e0013f16168c26fbdcbcf77f4357/proposals/data-provenance.md) | **Data Provenance** | **DD 2.2** | **March 2024** |
 
 ---
 
