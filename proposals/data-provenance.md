@@ -6,7 +6,7 @@
 | **Authors** | [Josh Darnell (RESO)](mailto:josh@reso.org)<br />[Cody Gustafson (FBS)](mailto:cody@fbsdata.com) |
 | **Status** | IN PROGRESS |
 | **Date Ratified** | TBD |
-| **Dependencies** | [Data Dictionary 2.0](https://ddwiki.reso.org/display/DDW20/Data+Dictionary+2.0+Wiki) |
+| **Dependencies** | [Data Dictionary 1.7+](https://ddwiki.reso.org/display/DDW17/Data+Dictionary+1.7+Wiki) |
 
 
 <br />
@@ -31,9 +31,9 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 <br />
 
 # Summary of Changes
-* Adds a new shape to each resource called _Provenance_, which contains an ordered collection of entries.
-* Adds a new standard field called _Provenance_ to each resource. 
-* Creates a new way of identifying sources of a record which incorporates the vendor, system, and provider. 
+* Adds a new resource called Provenance, which can be expanded into related records and is not required at the top level, though providers MAY choose to support it.
+* Adds a new standard field to each resource called _Provenance_, which contains an ordered collection of entries.
+* Creates a new way of identifying who has had ownership of a record which incorporates the provider, system, and tenant using standard organization and system identifiers, when defined, and lets providers define their own local identifiers if needed. 
 
 <br />
 
@@ -60,30 +60,36 @@ This proposal adds support for complete provenance records as well as a way to s
 
 ## Section 2.1: Metadata Definition of Provenance
 
-This specification defines a new shape called Provenance, to be used in each resource similar to how OriginatingSystem and SourceSystem are now.
+This specification defines a new resource called Provenance and a new navigation property, also called Provenance, which can be expanded into each resource that supports it as needed. 
 
 ```xml
-<ComplexType Name="ProvenanceEntry">
+<EntityType Name="Provenance">
+  <Key>
+    <PropertyRef Name="ProvenanceKey"/>
+  </Key>
+  <Property Name="ProvenanceKey" Nullable="false" Type="Edm.String">
+  <Property Name="ResourceName" Nullable="false" Type="Edm.String">
+  <Property Name="ResourceRecordKey" Nullable="false" Type="Edm.String">
   <Property Name="OwnerUrn" Nullable="false" Type="Edm.String" />
   <Property Name="SystemKeyValue" Nullable="false" Type="Edm.String" />
   <Property Name="SystemModificationTimestamp" Nullable="false" Type="Edm.DateTimeOffset" />
-</ComplexType>
+  <Property Name="ModificationTimestamp" Nullable="false" Type="Edm.DataTimeOffset">
+</EntityType>
 
 <EntityType Name="Property">
-  ...
+  <Key>
+    <PropertyRef Name="ListingKey"/>
+  </Key>
   <Property Name="ListingKey" Nullable="false" Type="Edm.String" />
   <Property Name="Provenance" Nullable="false" Type="Collection(ProvenanceEntry)" />
   <Property Name="ModificationTimestamp" Nullable="false" Type="Edm.DateTimeOffset" />
+  <Property Name="Provenance" Nullable="false" Type="Collection(ProvenanceEntry)" />
   ...
+  <NavigationProperty Name="Provenance" Nullable="false" Type="Collection(Provenance)">
 </EntityType>
-
 ```
 
-Since they are shapes, rather than expansions, the records are expected to be present and always have at least one entry - that of the originating system. 
-
-This is to support the idea that Provenance should be part of the record, when available in a given system, without the end user needing to specifically request it (similar to OriginatingSystem and SourceSystem).
-
-TODO: Decide whether to make Provenance an expansion instead so it can be loaded on demand rather than always being part of the record. Should the end user always receive this information or should they have to ask for it?
+Similar to Media, the Provenance Resource is not required to be present at the top level and implements a "belongs-to" relationship with its parent records based on ResourceName and ResourceRecordKey.
 
 ## Section 2.2: Definition of OwnerUrn
 
@@ -92,8 +98,9 @@ In order to accurately identify the source of a given record, three pieces of in
 * The Unique System Identifier (USI) of the specific product the record came from. Each provider has at least one system. 
 * The UOI of the tenant whose records are being served by the given provider and system. If the provider and tenant are the name, then their UOIs would be the same. 
 
-This specification uses the [Uniform Resource Name (URN) standard](https://datatracker.ietf.org/doc/html/rfc8141) along with [RESO's URN namespace](https://www.iana.org/assignments/urn-formal/reso) to represent OwnerUrn as single string. 
+This specification uses the [**Uniform Resource Name (URN) standard**](https://datatracker.ietf.org/doc/html/rfc8141) along with [**RESO's URN namespace**](https://www.iana.org/assignments/urn-formal/reso) to represent OwnerUrn as single string. 
  
+<br />
 
 > **Definition**: _OwnerUrn_
 > 
@@ -115,7 +122,7 @@ There may also be scenarios that require allowing well-known organizations to de
 ### Section 2.2.2: Assigning Local Identifiers
 If an organization cannot have an ID assigned by RESO for some reason, a provider with an existing UOI can issue their own tenant UOI. 
 
-In these cases, the provider MUST also host an instance of the [RESO OUID Resource](https://ddwiki.reso.org/display/DDW20/OUID+Resource) with an OrganizationUniqueId that matches the one assigned by the provider, and the following request should be successful:
+In these cases, the provider MUST also host an instance of the [**RESO OUID Resource**](https://ddwiki.reso.org/display/DDW20/OUID+Resource) with an OrganizationUniqueId that matches the one assigned by the provider, and the following request should be successful:
 
 **REQUEST**
 ```
@@ -137,7 +144,7 @@ HTTP/2
 
 In practice, `{TenantUoi}` would be replaced with the local OrganizationUniqueId.
 
-Notes: 
+**Notes**
 * A new System Resource will be needed if providers also need to define their own system. 
 * It may also make sense to use an alternate OwnerUrn in these cases so others know that the identifiers were issued by provider rather than RESO. It might be nice to indicate which values were created locally, but this may also be a bit cumbersome. Example: `urn:reso:uoi:2.0:{ProviderUoi}:local:{ProviderUsi}:local:{TenantUoi}` indicates that both the ProviderUsi and TenantUoi were issued by the given ProviderUoi. If just the TenantUoi were local, the OwnerUrn would be `urn:reso:uoi:2.0:{ProviderUoi}:{ProviderUsi}:local:{TenantUoi}`.
 * If one provider uses local identifiers in their provenance records, another system consuming that information may no longer have access to the local UOI and USI records. If an end user needs access to this information, they should contact the well-known Provider UOI contained in the OwnerUrn for more information.
@@ -150,14 +157,14 @@ Assume the ProviderUoi is T00000012, ProviderUsi is 50022, TenantUoi is T0000001
 
 **REQUEST**
 ```
-GET https://example.api.com/Property('ABC123')?$select=ListingKey,Provenance,ModificationTimestamp
+GET https://example.api.com/Property('ABC123')?$expand=Provenance&$select=ListingKey,ModificationTimestamp,Provenance/OwnerUrn,Provenance/SystemKeyValue,Provenance/SystemModificationTimestamp
 HTTP/2
 ```
 
 **RESPONSE**
 ```json
 {
-  "@odata.context": "https://example.api.com/Property('ABC123')?$select=ListingKey,Provenance,ModificationTimestamp",
+  "@odata.context": "https://example.api.com/Property('ABC123')?$expand=Provenance&$select=ListingKey,ModificationTimestamp,Provenance/OwnerUrn,Provenance/SystemKeyValue,Provenance/SystemModificationTimestamp",
   "ListingKey": "ABC123",
   "Provenance": [
     {
@@ -179,14 +186,14 @@ Assume that the record from the previous example was replicated by a consumer wi
 
 **REQUEST**
 ```
-GET https://example.api.com/Property('DEF456')?$select=ListingKey,Provenance,ModificationTimestamp
+GET https://example.api.com/Property('DEF456')?$expand=Provenance&$select=ListingKey,ModificationTimestamp,Provenance/OwnerUrn,Provenance/SystemKeyValue,Provenance/SystemModificationTimestamp
 HTTP/2
 ```
 
 **RESPONSE**
 ```json
 {
-  "@odata.context": "https://example.api.com/Property('DEF456')?$select=ListingKey,Provenance,ModificationTimestamp",
+  "@odata.context": "https://example.api.com/Property('DEF456')?$expand=Provenance&$select=ListingKey,ModificationTimestamp,Provenance/OwnerUrn,Provenance/SystemKeyValue,Provenance/SystemModificationTimestamp",
   "ListingKey": "DEF456",
   "Provenance": [
     {
@@ -203,7 +210,7 @@ HTTP/2
   "ModificationTimestamp": "2024-09-05T02:31:21Z"
 }
 ```
-Notes:
+**Notes**
 * Provenance entries are ordered from earliest to latest.
 * The first provenance entry corresponds to the "originating system."
 * The last entry corresponds to the "source system."
@@ -227,7 +234,7 @@ RESO will validate the following during certification:
 # Section 4. Contributors
 This document was written by [Joshua Darnell](mailto:josh@reso.org), and [Cody Gustafson](mailto:cody@fbsdata.com).
 
-Thanks to those who attended the Winter 2024 RESO Dev Workshop for their feedback during the creation of this specification.
+Thanks to Ivaan Nazaroff, Paul Stusiak, Sam DeBord, and others who attended the Winter 2024 RESO Dev Workshop for their feedback during the creation of this specification.
 <br />
 
 # Section 5: References
@@ -249,13 +256,13 @@ For example, the provenance for a Property record with expanded Media might be a
 
 **REQUEST**
 ```
-GET https://example.api.com/Property('ABC123')?$expand=Media
+GET https://example.api.com/Property('DEF456')?$expand=Provenance,Media/Provenance&$select=ListingKey,ModificationTimestamp,Provenance/OwnerUrn,Provenance/SystemKeyValue,Provenance/SystemModificationTimestamp,Media/Provenance/OwnerUrn,Media/Provenance/SystemKeyValue,Media/Provenance/SystemModificationTimestamp
 ```
 
 **RESPONSE**
 ```json
 {
-  "@odata.context": "https://example.api.com/Property('DEF456')?$expand=Media",
+  "@odata.context": "https://example.api.com/Property('DEF456')?$expand=Provenance,Media/Provenance&$select=ListingKey,ModificationTimestamp,Provenance/OwnerUrn,Provenance/SystemKeyValue,Provenance/SystemModificationTimestamp,Media/Provenance/OwnerUrn,Media/Provenance/SystemKeyValue,Media/Provenance/SystemModificationTimestamp",
   "ListingKey": "DEF456",
   "Provenance": [
     {
