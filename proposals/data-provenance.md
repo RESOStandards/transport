@@ -3,11 +3,10 @@
 | **RCP** | 50 |
 | :--- | :--- |
 | **Version** | **1.0.0** |
-| **Authors** | [Cody Gustafson (FBS)](mailto:cody@fbsdata.com)<br />[Josh Darnell (RESO)](mailto:josh@reso.org) |
+| **Authors** | [Josh Darnell (RESO)](mailto:josh@reso.org)<br />[Cody Gustafson (FBS)](mailto:cody@fbsdata.com) |
 | **Status** | IN PROGRESS |
 | **Date Ratified** | TBD |
 | **Dependencies** | [Data Dictionary 2.0](https://ddwiki.reso.org/display/DDW20/Data+Dictionary+2.0+Wiki) |
-| **Related Links** | [|
 
 
 <br />
@@ -32,66 +31,265 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 <br />
 
 # Summary of Changes
-
-* Provide a brief summary of changes contained within this RCP. 
-* List significant changes or impact to existing standards.
+* Adds a new shape to each resource called _Provenance_, which contains an ordered collection of entries.
+* Adds a new standard field called _Provenance_ to each resource. 
+* Creates a new way of identifying sources of a record which incorporates the vendor, system, and provider. 
 
 <br />
 
 # Introduction
-Introductory information about your proposal, including any significant background or industry insight to help reviewers understand the context. 
+Understanding the provenance of a given record, such as a listing, is important in cases where it's flowed through many different systems. This is becoming more common, and will increase with the addition of Add/Edit capabilities. 
+
+Each system should also use standardized identifiers to describe where a record came from, which isn't the case currently and results in end users needing to maintain different sets of local organization mappings for each provider, even if they're both referencing the same originating or source system. This proposal uses RESO's Unique Organization Identifiers (UOIs) to address this issue. 
+
 
 <br />
 
 # Section 1: Purpose
-Outline specific business problems, goals, and practices that the specification addresses. 
+The RESO Data Dictionary currently includes OriginatingSystem and SourceSystem Key, ID, and Name fields in each resource in order to identify where a given record originated or where it was obtained from, respectively. 
+
+However, there are a couple of challenges with the current approach:
+* If a record moves through more than two systems, the intermediate provenance is lost. 
+* The IDs being used to describe organizations and systems are not standardized, and therefore result in additional custom mapping and programming to manage them.
+
+This proposal adds support for complete provenance records as well as a way to standardize IDs without affecting current OriginatingSystem or SourceSystem information, which are highly utilized at the moment but should be phased out over time in favor of the provenance record.
 
 <br />
 
 # Section 2: Specification
-Provide specifics about the proposal in this section. 
 
-The following should be included:
-* Information about Authorization or Authentication, when relevant. 
-* Sample request and response payloads.
-* Examples of algorithms written in pseudo code.
-* Links to existing specifications used in the standard, with examples of how they're used.
+## Section 2.1: Metadata Definition of Provenance
+
+This specification defines a new shape called Provenance, to be used in each resource similar to how OriginatingSystem and SourceSystem are now.
+
+```xml
+<ComplexType Name="ProvenanceEntry">
+  <Property Name="OwnerUrn" Nullable="false" Type="Edm.String" />
+  <Property Name="SystemKeyValue" Nullable="false" Type="Edm.String" />
+  <Property Name="SystemModificationTimestamp" Nullable="false" Type="Edm.DateTimeOffset" />
+</ComplexType>
+
+<EntityType Name="Property">
+  ...
+  <Property Name="ListingKey" Nullable="false" Type="Edm.String" />
+  <Property Name="Provenance" Nullable="false" Type="Collection(ProvenanceEntry)" />
+  <Property Name="ModificationTimestamp" Nullable="false" Type="Edm.DateTimeOffset" />
+  ...
+</EntityType>
+
+```
+
+Since they are shapes, rather than expansions, the records are expected to be present and always have at least one entry - that of the originating system. 
+
+This is to support the idea that Provenance should be part of the record, when available in a given system, without the end user needing to specifically request it (similar to OriginatingSystem and SourceSystem).
+
+TODO: Decide whether to make Provenance an expansion instead so it can be loaded on demand rather than always being part of the record. Should the end user always receive this information or should they have to ask for it?
+
+## Section 2.2: Definition of OwnerUrn
+
+In order to accurately identify the source of a given record, three pieces of information are needed:
+* The Unique Organization Identifier (UOI) of the provider whose system the record came from. This is the UOI of the vendor that provided the record.
+* The Unique System Identifier (USI) of the specific product the record came from. Each provider has at least one system. 
+* The UOI of the tenant whose records are being served by the given provider and system. If the provider and tenant are the name, then their UOIs would be the same. 
+
+This specification uses the [Uniform Resource Name (URN) standard](https://datatracker.ietf.org/doc/html/rfc8141) along with [RESO's URN namespace](https://www.iana.org/assignments/urn-formal/reso) to represent OwnerUrn as single string. 
+ 
+
+> **Definition**: _OwnerUrn_
+> 
+> `urn:reso:uoi:2.0:{ProviderUoi}:{ProviderUsi}:{TenantUoi}`
+
+Where:
+* `ProviderUoi` is the UOI of the record provider (i.e. vendor).
+* `ProviderUsi` is the USI of the vendor system the record came from. This could be a provider's internal system or public/private API, including certified RESO Web APIs.
+* `TenantUoi` is the UOI of the tenant whose data is being hosted (e.g., an MLS).
+
+Note that in many cases, knowing the ProviderUsi is sufficient. However, in some cases systems change from one provider to another. For example, if a system is sold to another company. 
+
+
+### Section 2.2.1: Authoritative and Local Identifiers
+RESO maintains authoritative Unique Organization and System Identifiers for certification. This addresses a large percentage of those who would implement this proposal, which are mainly MLSs and their vendors. For RESO-based identifiers, please [**contact RESO**](mailto:dev@reso.org). 
+
+There may also be scenarios that require allowing well-known organizations to define their own UOIs. This is covered in the next section.
+
+### Section 2.2.2: Assigning Local Identifiers
+If an organization cannot have an ID assigned by RESO for some reason, a provider with an existing UOI can issue their own tenant UOI. 
+
+In these cases, the provider MUST also host an instance of the [RESO OUID Resource](https://ddwiki.reso.org/display/DDW20/OUID+Resource) with an OrganizationUniqueId that matches the one assigned by the provider, and the following request should be successful:
+
+**REQUEST**
+```
+GET https://example.api.com/OUID?$select=OrganizationUniqueId&$filter=OrganizationUniqueId eq '{TenantUoi}'
+HTTP/2
+```
+
+**RESPONSE**
+```json
+{
+  "@odata.context": "https://example.api.com/OUID?$select=OrganizationUniqueId$filter=OrganizationUniqueId eq '{TenantUoi}'",
+  "value": [
+    {
+      "OrganizationUniqueId": "{TenantUoi}"
+    }
+  ]
+}
+```
+
+In practice, `{TenantUoi}` would be replaced with the local OrganizationUniqueId.
+
+Notes: 
+* A new System Resource will be needed if providers also need to define their own system. 
+* It may also make sense to use an alternate OwnerUrn in these cases so others know that the identifiers were issued by provider rather than RESO. It might be nice to indicate which values were created locally, but this may also be a bit cumbersome. Example: `urn:reso:uoi:2.0:{ProviderUoi}:local:{ProviderUsi}:local:{TenantUoi}` indicates that both the ProviderUsi and TenantUoi were issued by the given ProviderUoi. If just the TenantUoi were local, the OwnerUrn would be `urn:reso:uoi:2.0:{ProviderUoi}:{ProviderUsi}:local:{TenantUoi}`.
+* If one provider uses local identifiers in their provenance records, another system consuming that information may no longer have access to the local UOI and USI records. If an end user needs access to this information, they should contact the well-known Provider UOI contained in the OwnerUrn for more information.
+
+## Section 2.3: Examples
+This section contains a number of examples related to provenance records. 
+
+### Example: Adding an Initial Record to a System
+Assume the ProviderUoi is T00000012, ProviderUsi is 50022, TenantUoi is T00000012, and that a record was added to the Property Resource with ListingKey ABC123. 
+
+**REQUEST**
+```
+GET https://example.api.com/Property('ABC123')?$select=ListingKey,Provenance,ModificationTimestamp
+HTTP/2
+```
+
+**RESPONSE**
+```json
+{
+  "@odata.context": "https://example.api.com/Property('ABC123')?$select=ListingKey,Provenance,ModificationTimestamp",
+  "ListingKey": "ABC123",
+  "Provenance": [
+    {
+      "OwnerUrn": "urn:reso:uoi:2.0:T00000012:50022:T00000012",
+      "SystemKeyValue": "ABC123",
+      "SystemModificationTimestamp": "2024-09-05T02:27:51Z"
+    }
+  ],
+  "ModificationTimestamp": "2024-09-05T02:27:51Z"
+}
+```
+
+The first entry in the provenance record conveys the originating system information, as it's currently known in the Data Dictionary.
+
+### Example: Obtaining a Record from Another Provider
+When a record is ingested into another system, its provenance record should be updated. 
+
+Assume that the record from the previous example was replicated by a consumer with a ProviderUoi of T00000010, ProviderUsi of 50000, and TenantUoi of T00000012 (since the record corresponds to the same well-known tenant UOI) and, in the process, the ListingKey also changed to DEF456.
+
+**REQUEST**
+```
+GET https://example.api.com/Property('DEF456')?$select=ListingKey,Provenance,ModificationTimestamp
+HTTP/2
+```
+
+**RESPONSE**
+```json
+{
+  "@odata.context": "https://example.api.com/Property('DEF456')?$select=ListingKey,Provenance,ModificationTimestamp",
+  "ListingKey": "DEF456",
+  "Provenance": [
+    {
+      "OwnerUrn": "urn:reso:uoi:2.0:T00000012:50022:T00000012",
+      "SystemKeyValue": "ABC123",
+      "SystemModificationTimestamp": "2024-09-05T02:27:51Z"
+    },
+    {
+      "OwnerUrn": "urn:reso:uoi:2.0:T00000010:50000:T00000012",
+      "SystemKeyValue": "DEF456",
+      "SystemModificationTimestamp": "2024-09-05T02:31:21Z"
+    }
+  ],
+  "ModificationTimestamp": "2024-09-05T02:31:21Z"
+}
+```
+Notes:
+* Provenance entries are ordered from earliest to latest.
+* The first provenance entry corresponds to the "originating system."
+* The last entry corresponds to the "source system."
+* In some cases, records are inputted in one system and served from another, both from the same provider. The OwnerUrn would have the same ProviderUoi in these cases, with different ProviderUsi values.
 
 <br />
 
 # Section 3: Certification
-
-List testing rules required for the specification here. 
+RESO will validate the following during certification:
+* If Provenance is defined in a given system, there MUST be a complex type defined with OwnerUrn, SystemKeyValue, and SystemModificationTimestamp. 
+* OwnerUrn MUST follow the definition outlined in Section 2.2. 
+  * ProviderUoi, ProviderUsi, and TenantUoi will be verified against authoritative RESO UOI and USI services if standard identifiers are used.
+  * If local identifiers are used for ProviderUsi or TenantUoi, these records must also exist in the System and OUID resources with the appropriate `:local:` components in the OwnerUrn.
+  * If local identifiers are used, then the System and OUID resource schema will be validated against what's defined in the Data Dictionary for all standard data elements. Providers MAY add local fields to these resources.
+* SystemKeyValue MUST be present and equal to the current key value for that owner. 
+* SystemModificationTimestamp MUST be a valid ISO 8601 timestamp and always be less than or equal to the ModificationTimestamp of the record.
+* If more than one Provenance entry exists, the SystemModificationTimestamp of each subsequent record must be greater than the previous one.
 
 <br />
 
 # Section 4. Contributors
-This document was written by [Your Name](mailto:you@yourcompany.org), [Author 1](mailto:author1@company.org), and [Author 2](mailto:author2@company.org).
+This document was written by [Joshua Darnell](mailto:josh@reso.org), and [Cody Gustafson](mailto:cody@fbsdata.com).
 
-Thanks to the following contributors for their help with this project:
-
-| Contributor | Company |
-| --- | --- |
-| Contributor 1 | Company 1 |
-| Contributor 2 | Company 2 |
-
+Thanks to those who attended the Winter 2024 RESO Dev Workshop for their feedback during the creation of this specification.
 <br />
 
 # Section 5: References
 
 Please see the following references for more information regarding topics covered in this document:
-* [Reference 1](https://reso.org)
-* [Reference 2](https://reso.org)
-* ...
+* [RESO Unique Organization Identifier (UOI)](https://www.reso.org/reso-unique-identifiers/)
+* [Uniform Resource Name (URN)](https://datatracker.ietf.org/doc/html/rfc8141)
+* [RESO URN Assignment](https://www.iana.org/assignments/urn-formal/reso)
+
 
 <br />
 
 # Section 6: Appendices
 
-The following RCPs are related to Data Dictionary 2.0:
-* [RCP-0XY - Name](https://https://github.com/RESOStandards/reso-transport-specifications)
-* [RCP-0XZ - Name](https://github.com/RESOStandards/reso-transport-specifications)
-* ...
+## Appendix A: Retrieving Provenance for Expanded Records
+When expanded records are fetched from a system, both top-level and expanded records will have provenance information. 
+
+For example, the provenance for a Property record with expanded Media might be as follows:
+
+**REQUEST**
+```
+GET https://example.api.com/Property('ABC123')?$expand=Media
+```
+
+**RESPONSE**
+```json
+{
+  "@odata.context": "https://example.api.com/Property('DEF456')?$expand=Media",
+  "ListingKey": "DEF456",
+  "Provenance": [
+    {
+      "OwnerUrn": "urn:reso:uoi:2.0:T00000012:50022:T00000012",
+      "SystemKeyValue": "ABC123",
+      "SystemModificationTimestamp": "2024-09-05T02:27:51Z"
+    },
+    {
+      "OwnerUrn": "urn:reso:uoi:2.0:T00000010:50000:T00000012",
+      "SystemKeyValue": "DEF456",
+      "SystemModificationTimestamp": "2024-09-05T02:31:21Z"
+    }
+  ],
+  "ModificationTimestamp": "2024-09-05T02:31:21Z",
+  "Media": [
+    {
+      "MediaKey": "XYZ222",
+      "Provenance": [
+        {
+          "OwnerUrn": "urn:reso:uoi:2.0:T00000012:50022:T00000012",
+          "SystemKeyValue": "UVW111",
+          "SystemModificationTimestamp": "2024-09-05T02:27:51Z"
+        },
+        {
+          "OwnerUrn": "urn:reso:uoi:2.0:T00000010:50000:T00000012",
+          "SystemKeyValue": "XYZ222",
+          "SystemModificationTimestamp": "2024-09-05T02:31:21Z"
+        }
+      ],
+      "ModificationTimestamp": "2024-09-05T03:32:31Z"
+    }
+  ]
+}
+```
 
 <br />
 
