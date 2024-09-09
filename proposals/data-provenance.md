@@ -91,10 +91,9 @@ Similar to Media, the Provenance Resource is not required to be present at the t
 
 ## Section 2.2: Definition of OwnerUrn
 
-In order to accurately identify the source of a given record, three pieces of information are needed:
-* The Unique Organization Identifier (UOI) of the provider whose system the record came from. This is the UOI of the vendor that provided the record.
+In order to accurately identify the source of a given record, two pieces of information are needed:
 * The Unique System Identifier (USI) of the specific product the record came from. Each provider has at least one system. 
-* The UOI of the tenant whose records are being served by the given provider and system. If the provider and tenant are the name, then their UOIs would be the same. 
+* The UOI of the owner whose records are being served by the given system. 
 
 This specification uses the [**Uniform Resource Name (URN) standard**](https://datatracker.ietf.org/doc/html/rfc8141) along with [**RESO's URN namespace**](https://www.iana.org/assignments/urn-formal/reso) to represent OwnerUrn as single string. 
  
@@ -102,10 +101,9 @@ This specification uses the [**Uniform Resource Name (URN) standard**](https://d
 
 > **Definition**: _OwnerUrn_
 > 
-> `urn:reso:uoi:2.0:{ProviderUoi}:{ProviderUsi}:{TenantUoi}`
+> `urn:reso:uoi:2.0:{ProviderUsi}:{TenantUoi}`
 
 Where:
-* `ProviderUoi` is the UOI of the record provider (i.e. vendor).
 * `ProviderUsi` is the USI of the vendor system the record came from. This could be a provider's internal system or public/private API, including certified RESO Web APIs.
 * `TenantUoi` is the UOI of the tenant whose data is being hosted (e.g., an MLS).
 
@@ -166,7 +164,7 @@ HTTP/2
   "ListingKey": "ABC123",
   "Provenance": [
     {
-      "OwnerUrn": "urn:reso:uoi:2.0:T00000012:50022:T00000012",
+      "OwnerUrn": "urn:reso:uoi:2.0:50022:T00000012",
       "SystemKeyValue": "ABC123",
       "SystemModificationTimestamp": "2024-09-05T02:27:51Z"
     }
@@ -195,12 +193,12 @@ HTTP/2
   "ListingKey": "DEF456",
   "Provenance": [
     {
-      "OwnerUrn": "urn:reso:uoi:2.0:T00000012:50022:T00000012",
+      "OwnerUrn": "urn:reso:uoi:2.0:50022:T00000012",
       "SystemKeyValue": "ABC123",
       "SystemModificationTimestamp": "2024-09-05T02:27:51Z"
     },
     {
-      "OwnerUrn": "urn:reso:uoi:2.0:T00000010:50000:T00000012",
+      "OwnerUrn": "urn:reso:uoi:2.0:50000:T00000012",
       "SystemKeyValue": "DEF456",
       "SystemModificationTimestamp": "2024-09-05T02:31:21Z"
     }
@@ -264,12 +262,12 @@ GET https://example.api.com/Property('DEF456')?$expand=Provenance,Media/Provenan
   "ListingKey": "DEF456",
   "Provenance": [
     {
-      "OwnerUrn": "urn:reso:uoi:2.0:T00000012:50022:T00000012",
+      "OwnerUrn": "urn:reso:uoi:2.0:50022:T00000012",
       "SystemKeyValue": "ABC123",
       "SystemModificationTimestamp": "2024-09-05T02:27:51Z"
     },
     {
-      "OwnerUrn": "urn:reso:uoi:2.0:T00000010:50000:T00000012",
+      "OwnerUrn": "urn:reso:uoi:2.0:50000:T00000012",
       "SystemKeyValue": "DEF456",
       "SystemModificationTimestamp": "2024-09-05T02:31:21Z"
     }
@@ -280,12 +278,12 @@ GET https://example.api.com/Property('DEF456')?$expand=Provenance,Media/Provenan
       "MediaKey": "XYZ222",
       "Provenance": [
         {
-          "OwnerUrn": "urn:reso:uoi:2.0:T00000012:50022:T00000012",
+          "OwnerUrn": "urn:reso:uoi:2.0:50022:T00000012",
           "SystemKeyValue": "UVW111",
           "SystemModificationTimestamp": "2024-09-05T02:27:51Z"
         },
         {
-          "OwnerUrn": "urn:reso:uoi:2.0:T00000010:50000:T00000012",
+          "OwnerUrn": "urn:reso:uoi:2.0:50000:T00000012",
           "SystemKeyValue": "XYZ222",
           "SystemModificationTimestamp": "2024-09-05T02:31:21Z"
         }
