@@ -1,15 +1,14 @@
 <img src="https://github.com/user-attachments/assets/979f288a-54dd-443a-ab44-282e7a9cf943" width="200">
 
-<a href="https://github.com/RESOStandards/transport" align="middle"><img src="https://github.com/user-attachments/assets/7bffbbff-0ddb-40f3-a1ec-8dbe984194c5" width="24" height="24" align="top" /><b>View on GitHub</b>
-
-[**TRANSPORT DISCUSSION FORUM**](https://github.com/RESOStandards/transport/discussions)
-
-
 # RESO Endorsements
 **RESO Endorsements** are modular specifications that are associated with a given transport protocol.
 
 * Specifications use [**semantic versioning**](https://semver.org/)
 * All Endorsements start as [**RESO Change Proposals (RCPs)**](./reso-rcp-process.md#reso-change-proposal-rcp-process)
+
+# Related Information
+* [**TRANSPORT DISCUSSION FORUM**](https://github.com/RESOStandards/transport/discussions)
+* <a href="https://github.com/RESOStandards/transport" align="middle"><img src="https://github.com/user-attachments/assets/7bffbbff-0ddb-40f3-a1ec-8dbe984194c5" width="24" height="24" align="top" /><b>View on GitHub</b>
 
 # RESO Change Proposal Process
 
@@ -18,8 +17,6 @@
 [**CREATE NEW CHANGE PROPOSAL**](./reso-rcp-process.md#new-change-proposals).
 
 ---
-
-<br />
 
 # RATIFIED STANDARDS
 Ratified standards have been adopted by the Transport Workgroup and RESO as an organization.
@@ -66,7 +63,7 @@ In progress proposals are ones that are in review by Transport and Certification
 | [**RCP-47**](https://github.com/RESOStandards/transport/blob/015bd6181a3a9f56b1c5b767685761a842e0284c/proposals/related-lookups.md) | **RelatedLookup Resource** | **DD 2.1** | **March 2024** |
 | [**RCP-48**](https://github.com/RESOStandards/transport/blob/fc35c711487bcd59ffecd02780feb56269fabd73/proposals/web-api-add-edit-with-media.md) | **Add/Edit with Media** | **DD 2.1** | **April 2024** |
 | [**RCP-49**](https://github.com/RESOStandards/transport/issues/142) | **EntityEvent Subscriptions and Filtering** | **DD 2.1** | **March 2024** |
-| [**RCP-50**](https://github.com/RESOStandards/transport/blob/c66994f02571e0013f16168c26fbdcbcf77f4357/proposals/data-provenance.md) | **Data Provenance** | **DD 2.2** | **March 2024** |
+| [**RCP-50**](https://github.com/RESOStandards/transport/blob/rcp-50-data-provenance/proposals/data-provenance.md) | **Data Provenance** | **DD 2.2** | **March 2024** |
 
 ---
 
