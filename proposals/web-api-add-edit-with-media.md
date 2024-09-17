@@ -34,7 +34,11 @@ This End User License Agreement (the "EULA") is entered into by and between the 
   - [Media Add/Edit Examples](#media-addedit-examples)
     - [Create Initial Media Resource](#create-initial-media-resource)
     - [Upload the Media Byte Array](#upload-the-media-byte-array)
+      - [Example with non-WebApi Endpoint](#example-with-non-webapi-endpoint)
+      - [Example with WebApi endpoint](#example-with-webapi-endpoint)
     - [Successful Media Upload](#successful-media-upload)
+      - [Example with External Media Endpoint](#example-with-external-media-endpoint)
+      - [Example with WebApi Endpoint](#example-with-webapi-endpoint-1)
     - [Media Record Created but no Byte Stream Provided](#media-record-created-but-no-byte-stream-provided)
     - [Error Uploading Media](#error-uploading-media)
     - [Media Uploaded but Byte Stream Rejected](#media-uploaded-but-byte-stream-rejected)
@@ -209,6 +213,8 @@ The return from the POST will return the Media record with the object in an `Inc
 
 The byte stream upload is a simple HTTP POST transaction to the provided to the endpoint.  If it is an request outside the Web API domain, then all required data (authentication, etc.) MUST be provided in the `@odata.mediaEditLink` URL.  If `@odata.mediaEditLink` is not in WebApi domain, then the established authentication (cookies, authentication headers, etc.) MUST continue to be provided.
 
+#### Example with non-WebApi Endpoint
+
 **REQUEST - External Target**
 ```http
 POST https://storage.my-webapi.io/media/12345.jpg?authentication_token=my-one-time-use-auth-token=12345-zyxwut
@@ -221,6 +227,8 @@ Content-Type: image/jpeg
 ```http
 HTTP/2 200 OK
 ```
+
+#### Example with WebApi endpoint
 
 **REQUEST - WebApi Target**
 ```http
@@ -236,8 +244,10 @@ HTTP/2 200 OK
 ```
 
 
-### Successful Media Upload
+### Successful Media Upload 
 The media record can be queried to confirm the media has successfully been processed.
+
+#### Example with External Media Endpoint
 
 **REQUEST**
 ```http
@@ -248,7 +258,7 @@ Accept: application/json
 Prefer: return=representation
 ```
 
-**RESPONSE - Through External Resource**
+**RESPONSE**
 ```http
 HTTP/2 200
 OData-Version: 4.01
@@ -276,7 +286,9 @@ Preference-Applied: return=representation
 }
 ```
 
-**RESPONSE - Through WebApi**
+#### Example with WebApi Endpoint
+
+**RESPONSE**
 ```http
 HTTP/2 200
 OData-Version: 4.01
