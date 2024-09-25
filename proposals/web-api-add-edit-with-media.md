@@ -142,9 +142,9 @@ Prefer: return=representation
 ```
 ```json
 {
- "Caption": "Ipsum Lorum",
+ "ShortDescription": "Ipsum Lorum",
  "Order": 1,
- "ImageType": "image/jpeg",
+ "MediaType": "image/jpeg",
  
 }
 ```
@@ -168,9 +168,9 @@ Preference-Applied: return=representation
   "@odata.mediaEditLink": "https://storage.my-webapi.io/media/12345.jpg?authentication_token=my-one-time-use-auth-token-12345-zyxwut",
   "@odata.etag": "W/\"aBcDeFgHiJkLmNoPqRsTuVwXyz\"",
   "MediaObjectID": "12345",
-  "Caption": "Ipsum Lorum",
+  "ShortDescription": "Ipsum Lorum",
   "Order": 1,
-  "ImageType": "image/jpeg",
+  "MediaType": "image/jpeg",
   
   "MediaStatus": "Incomplete",
   "MediaStatusDescription": "Awaiting Byte Stream",
@@ -198,9 +198,9 @@ Preference-Applied: return=representation
   "@odata.mediaReadLink": "https://api-my-webapi.io/image/not_available.jpg",
   "@odata.etag": "W/\"aBcDeFgHiJkLmNoPqRsTuVwXyz\"",
   "MediaObjectID": "12345",
-  "Caption": "Ipsum Lorum",
+  "ShortDescription": "Ipsum Lorum",
   "Order": 1,
-  "ImageType": "image/jpeg",
+  "MediaType": "image/jpeg",
   
   "MediaStatus": "Incomplete",
   "MediaStatusDescription": "Awaiting Byte Stream",
@@ -277,9 +277,9 @@ Preference-Applied: return=representation
   "@odata.mediaEditLink": "https://storage.my-webapi.io/media/12345.jpg?authentication_token=my-one-time-use-auth-token-12345-zyxwut",
   "@odata.etag": "W/\"aBcDeFgHiJkLmNoPqRsTuVwXyz\"",
   "MediaObjectID": "12345",
-  "Caption": "Ipsum Lorum",
+  "ShortDescription": "Ipsum Lorum",
   "Order": 1,
-  "ImageType": "image/jpeg",
+  "MediaType": "image/jpeg",
   
   "MediaStatus": "Complete",
   "MediaStatusDescription": "Processing Complete",
@@ -306,9 +306,9 @@ Preference-Applied: return=representation
   "@odata.mediaReadLink": "https://api.webapi.io/Media('12345')/$value",
   "@odata.etag": "W/\"aBcDeFgHiJkLmNoPqRsTuVwXyz\"",
   "MediaObjectID": "12345",
-  "Caption": "Ipsum Lorum",
+  "ShortDescription": "Ipsum Lorum",
   "Order": 1,
-  "ImageType": "image/jpeg",
+  "MediaType": "image/jpeg",
   
   "MediaStatus": "Complete",
   "MediaStatusDescription": "Processing Complete",
@@ -347,9 +347,9 @@ Preference-Applied: return=representation
   "@odata.mediaEditLink": "https://storage.my-webapi.io/media/12345.jpg?authentication_token=my-one-time-use-auth-token-12345-zyxwut",
   "@odata.etag": "W/\"aBcDeFgHiJkLmNoPqRsTuVwXyz\"",
   "MediaObjectID": "12345",
-  "Caption": "Ipsum Lorum",
+  "ShortDescription": "Ipsum Lorum",
   "Order": 1,
-  "ImageType": "image/jpeg",
+  "MediaType": "image/jpeg",
   
   "MediaStatus": "Incomplete",
   "MediaStatusDescription": "Awaiting Byte Stream",
@@ -409,9 +409,9 @@ Preference-Applied: return=representation
   "@odata.mediaEditLink": "https://storage.my-webapi.io/media/12345.jpg?authentication_token=my-one-time-use-auth-token-12345-take2",
   "@odata.etag": "W/\"aBcDeFgHiJkLmNoPqRsTuVwXyz\"",
   "MediaObjectID": "12345",
-  "Caption": "Ipsum Lorum",
+  "ShortDescription": "Ipsum Lorum",
   "Order": 1,
-  "ImageType": "image/jpeg",
+  "MediaType": "image/jpeg",
   
   "MediaStatus": "Incomplete",
   "MediaStatusDescription": "Awaiting Byte Stream",
@@ -462,9 +462,9 @@ Preference-Applied: return=representation
   "@odata.editLink": "https://api.webapi.io/Media('12345')",
   "@odata.etag": "W/\"aBcDeFgHiJkLmNoPqRsTuVwXyz\"",
   "MediaObjectID": "12345",
-  "Caption": "Ipsum Lorum",
+  "ShortDescription": "Ipsum Lorum",
   "Order": 1,
-  "ImageType": "image/jpeg",
+  "MediaType": "image/jpeg",
   
   "MediaStatus": "Rejected",
   "MediaStatusDescription": "Media record has timed out",
@@ -519,9 +519,9 @@ Preference-Applied: return=representation
   "@odata.mediaEditLink": "https://storage.my-webapi.io/media/12345.jpg?authentication_token=my-one-time-use-auth-token-12345-take2",
   "@odata.etag": "W/\"aBcDeFgHiJkLmNoPqRsTuVwXyz\"",
   "MediaObjectID": "12345",
-  "Caption": "Ipsum Lorum",
+  "ShortDescription": "Ipsum Lorum",
   "Order": 1,
-  "ImageType": "image/jpeg",
+  "MediaType": "image/jpeg",
   
   "MediaStatus": "Rejected",
   "MediaStatusDescription": "Byte stream is not of type image/jpeg",
@@ -571,9 +571,9 @@ Preference-Applied: return=representation
   "@odata.editLink":"https://api.webapi.io/Media('12345')",
   "@odata.etag": "W/\"aBcDeFgHiJkLmNoPqRsTuVwXyz\"",
   "MediaObjectID": "12345",
-  "Caption": "Ipsum Lorum",
+  "ShortDescription": "Ipsum Lorum",
   "Order": 1,
-  "ImageType": "image/jpeg",
+  "MediaType": "image/jpeg",
   
   "MediaStatus": "Rejected",
   "MediaStatusDescription": "Byte stream is not of type image/jpeg",
