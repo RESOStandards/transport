@@ -54,13 +54,13 @@ While there is still more work to do, such as the addition of a scope resolution
 
 # Section 2: Specification
 This specification consists of the following:
-* [Rules grammar](#section-212-validation-expression-bnf) expressed in [Backus-Naur Form (BNF)](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form)
+* [Rules grammar](#section-212-validation-expressions) expressed in [Backus-Naur Form (BNF)](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form)
 * [Rules Resource](https://ddwiki.reso.org/display/DDW17/Rules+Resource) to provide transport of business rules 
 
 
 ## Section 2.1: Validation Expression Language
 
-The [RESO Validation Expression Grammar](./artifacts/grammars/rcp-19/rcp-19.g4) is used in conjunction with a data structure of `FieldName`, `RuleAction`, `RuleExpression` tuples to provide an ordered list of instructions that can be used to convey business rules in a system independent way.
+The [RESO Validation Expression Grammar](./artifacts/grammars/rcp-19/ValidationExpression.g4) is used in conjunction with a data structure of `FieldName`, `RuleAction`, `RuleExpression` tuples to provide an ordered list of instructions that can be used to convey business rules in a system independent way.
 
 These rules are intended to be written from the perspective of the business object being validated, such as a listing record in the Property Resource, and would be run as-needed before the client sends the record back to the system using the [RESO Add/Edit](./proposals/web-api-add-edit.md) specification.
 
@@ -91,9 +91,9 @@ The following actions are defined by this specification:
 
 ### Section 2.1.2: Validation Expressions
 
-There are two files that define the Validation Expressions grammar:
-* [**ANTLR 4 grammar**](./artifacts/grammars/rcp-19/rcp-19.g4) - contains [non-terminal symbols](https://en.wikipedia.org/wiki/Terminal_and_nonterminal_symbols#Nonterminal_symbols).
-* [**ANTLR 4 lexer**](./artifacts/grammars/rcp-19/rcp-19-lexer.g4) - contains [terminal symbols](https://en.wikipedia.org/wiki/Terminal_and_nonterminal_symbols#Terminal_symbols).
+For detailed information, please see the [Validation Expressions grammar](./artifacts/grammars/rcp-19/ValidationExpression.g4).
+
+This section contains examples to help illustrate how Validatine Expressions can be used.
 
 #### Basic Examples
 
@@ -136,9 +136,9 @@ _Functions MUST NOT use any FIELD_NAMEs or reserved words._
 `ListPrice > 5.01 .AND. (1, 2, 3) .CONTAINS. 3 .OR. Status .IN. ('Active', 'Pending') .AND. .MEMBER_MLS_SECURITY_CLASS. != 'Admin'`
     
 ##### Collection Support
-This proposal adds support for `LIST()` and `SET()`.
+The RESO Validation Expression proposal added support for `LIST()` and `SET()`.
 
-These functions take 0 or more items.
+These functions take 0 or more items where 0 items would mean an empty list or set.
 
 | Expression  | Result |  Comments |
 | :--- | :--- | :--- |
@@ -238,7 +238,7 @@ GET /Rules?$select=RuleKey,FieldName,RuleAction,RuleExpression,RuleWarningText,R
 # Section 3: Certification
 Testing rules consists of the following steps:
 * Retrieve rules from the [Rules Resource](https://ddwiki.reso.org/display/DDW17/Rules+Resource) or have them provided in [RESO Common Format](./proposals/reso-common-format.md), and validate they're in the correct format.
-* Parse the [RESO Validation Expression grammar](./artifacts/grammars/rcp-19/rcp-19.g4) and make sure it's correct. A set of rules and test payloads will be provided in RESO Common Format during testing which will be used to validate the provider's rule implementation.
+* Parse the [RESO Validation Expression grammar](./artifacts/grammars/rcp-19/ValidationExpression.g4) and make sure it's correct. A set of rules and test payloads will be provided in RESO Common Format during testing which will be used to validate the provider's rule implementation.
 * Make local changes to a record and validate both success and failure scenarios
   * Those being tested will provide several tests for both scenarios, along with the expected output
   * Testing tools will run the rule set and ensure the output matches
@@ -251,7 +251,7 @@ Certification tools will be developed so a user can perform all these steps in a
 # Section 4. Contributors
 This document was adapted from the original by [Joshua Darnell](mailto:josh@kurotek.com), and originally written by Joshua Darnell and [Paul Stusiak](mailto:pstusiak@falcontechnologies.com).
 
-Parts of this proposal are based on the RETS Validation Expression language as expressed in RETS 1.9 and RCP 61. Thanks to Libor Viktorin, Mark Sleeman, Sergio Del Rio, and Paul Stusiak for that work. Thanks to Rob Larson for his collaboration on the Rules Resource proposal and also to Bryan Burgers and Zenlist for providing additional feedback during implementation as well as [**compliance tests**](https://github.com/zenlist/reso-rcp19-compliance-tests).
+Parts of this proposal are based on the RETS Validation Expression language as expressed in RETS 1.9 and RCP 61. Thanks to Libor Viktorin, Mark Sleeman, Sergio Del Rio, and Paul Stusiak for that work. Thanks to Rob Larson for his collaboration on the Rules Resource proposal and also to Bryan Burgers and Zenlist for providing additional feedback during implementation as well as [compliance tests](https://github.com/zenlist/reso-rcp19-compliance-tests).
 
 <br /><br />
 
@@ -261,7 +261,7 @@ Please see the following references for more information regarding topics covere
 * [Rules Resource [DD Wiki]](https://ddwiki.reso.org/display/DDW17/Rules+Resource)
 * [Original RCP-19 Proposal (Confluence Login Required)](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2250178749/RCP+-+WEBAPI-019+Validation+Expression+in+the+WebAPI)
 * [PDF of original RCP-19 Proposal](https://github.com/RESOStandards/reso-transport-specifications/files/8384860/RESOWebAPIRCP-RCP-WEBAPI-019ValidationExpressionintheWebAPI-300322-2353.pdf)
-* [RESO Validation Expression Grammar](./artifacts/grammars/rcp-19/rcp-19.g4)
+* [RESO Validation Expression Grammar](./artifacts/grammars/rcp-19/ValidationExpression.g4)
 * [RESO Common Format](./proposals/reso-common-format.md)
 * [Formal Grammar (Wikipedia)](https://en.wikipedia.org/wiki/Formal_grammar)
 * [Backus-Naur form (BNF) [Wikipedia]](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form)
