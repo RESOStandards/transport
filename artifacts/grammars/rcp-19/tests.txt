@@ -1,0 +1,493 @@
+IIF(ExpirationDate != LAST ExpirationDate, .EMPTY., ZL_ExpirationReminderSentTimestamp)
+MlsStatus = "Closed"
+.TRUE.
+
+                    (OriginalEntryTimestamp < ""2023-06-15T16:00:00Z"")
+                    .OR.
+                    (.NOT. MlsStatus .IN. SET(""Active"",""Active Under Contract"",""Coming Soon"",""Hold"",""Pending""))
+                    .OR.
+                    (ExpirationDate >= .TODAY.)
+
+LAST MlsStatus = .EMPTY.
+MlsStatus = 'Closed'
+ListPrice != .EMPTY. .AND. ListPrice >= 10000000
+BuyerBrokerageCompensation != .EMPTY.
+CoolingYN = .TRUE.
+IIF(ParkingTotal != .EMPTY., ParkingTotal, 0) = IIF(GarageSpaces != .EMPTY., GarageSpaces, 0) + IIF(OpenParkingSpaces != .EMPTY., OpenParkingSpaces, 0)
+IIF(ParkingTotal != .EMPTY., ParkingTotal, 0) = IIF(GarageSpaces != .EMPTY., GarageSpaces, 0) + IIF(OpenParkingSpaces != .EMPTY., OpenParkingSpaces, 0)
+IIF(ParkingTotal != .EMPTY., ParkingTotal, 0) = IIF(GarageSpaces != .EMPTY., GarageSpaces, 0) + IIF(OpenParkingSpaces != .EMPTY., OpenParkingSpaces, 0)
+IIF(   NumberOfUnitsLeased = .EMPTY. .AND. NumberOfUnitsVacant = .EMPTY.,   .EMPTY.,   IIF(NumberOfUnitsLeased = .EMPTY., 0, NumberOfUnitsLeased) + IIF(NumberOfUnitsVacant = .EMPTY., 0, NumberOfUnitsVacant) )
+2
+NumberOfUnitsLeased != .EMPTY. .OR. NumberOfUnitsVacant != .EMPTY.
+"Big"
+.TRUE.
+SpaYN = .TRUE.
+SpaYN = .FALSE.
+LETE = "OTHR"
+county = "Yuba"
+PCTY = "AGNT" .OR. PCTY = "CARE" .OR. PCTY = "LOFF" .OR. PCTY = "OWNR" .OR. PCTY = "PMNG" .OR. PCTY = "TENT" .OR. PCTY = "OTHR"
+propertySubtypes = "DPLX" .OR. propertySubtypes = "TPLX" .OR. propertySubtypes = "FPLX" .OR. propertySubtypes = "OTHR"
+schoolDistrict = "CR"
+county = "Fresno"
+propertySubtypes .CONTAINS. "OTHR"
+NOPS >= 1
+schoolDistrict = "SF"
+county = "Sierra"
+county = "Sacramento"
+county = "Amador"
+yearBuiltException = 5
+schoolDistrict = "CA"
+statusId = "O"
+county = "Kings"
+schoolDistrict = "SI"
+county = "Plumas"
+ADU2 = "YESY"
+county = "El Dorado"
+county = "San Benito"
+U3BD >= 1
+ADU2 = "YESY"
+county = "Glenn"
+county = "San Joaquin"
+county = "Orange"
+propertySubtypes = "DPLX" .OR. propertySubtypes = "TPLX" .OR. propertySubtypes = "FPLX" .OR. propertySubtypes = "OTHR"
+county = "Yolo"
+ADU2 = "YESY"
+county = "Calaveras"
+schoolDistrict = "CO"
+propertySubtypes = "FLOT"
+county = "Trinity"
+county = "Monterey"
+propertySubtypes = "DPLX" .OR. propertySubtypes = "TPLX" .OR. propertySubtypes = "FPLX" .OR. propertySubtypes = "OTHR"
+ADU2 = "YESY"
+U3BD >= 1
+schoolDistrict = "SU"
+county = "San Francisco"
+county = "Placer"
+county = "Napa"
+HOAA = "YESY"
+schoolDistrict = "GL"
+county = "Santa Clara"
+county = "Lake"
+schoolDistrict = "AM"
+schoolDistrict = "SB"
+U3BD >= 1
+county = "Imperial"
+statusId = "A" .AND. SALE .CONTAINS. "RCLS"
+propertySubtypes = "HSL2" .OR. propertySubtypes = "HSL3" .OR. propertySubtypes = "TCLA" .OR. propertySubtypes = "CNDO" .OR. propertySubtypes = "TWNH"
+area = "2"
+U4BD >= 1
+propertySubtypes = "DPLX" .OR. propertySubtypes = "TPLX" .OR. propertySubtypes = "FPLX" .OR. propertySubtypes = "OTHR"
+schoolDistrict = "EL"
+area = "9"
+county = "Contra Costa"
+propertySubtypes = "DPLX" .OR. propertySubtypes = "TPLX" .OR. propertySubtypes = "FPLX" .OR. propertySubtypes = "OTHR"
+HOAA = "YESY"
+U4BD >= 1
+U4BD >= 1
+squareFootageSource = "Z"
+county = "Inyo"
+county = "Stanislaus"
+PATY = "LAOS" .OR. PATY = "LAOF"
+NOPS >= 1
+schoolDistrict = "ME"
+propertySubtypes = "DPLX" .OR. propertySubtypes = "TPLX" .OR. propertySubtypes = "FPLX" .OR. propertySubtypes = "OTHR"
+county = "Butte"
+schoolDistrict = "TU"
+county = "San Mateo"
+schoolDistrict = "ST"
+county = "Humboldt"
+PCTY = "AGNT" .OR. PCTY = "CARE" .OR. PCTY = "LOFF" .OR. PCTY = "OWNR" .OR. PCTY = "PMNG" .OR. PCTY = "TENT" .OR. PCTY = "OTHR"
+U3BD >= 1
+HOLI = "YESY"
+county = "Tulare"
+county = "Shasta"
+county = "Del Norte"
+schoolDistrict = "SA"
+schoolDistrict = "YU"
+county = "San Francisco"
+propertySubtypes = "HSL2" .OR. propertySubtypes = "HSL3" .OR. propertySubtypes = "TCLA" .OR. propertySubtypes = "CNDO" .OR. propertySubtypes = "TWNH"
+schoolDistrict = "OT"
+county = "Nevada"
+county = "Marin"
+area = "7"
+schoolDistrict = "MN"
+HOAA = "YESY"
+propertySubtypes = "HSL2" .OR. propertySubtypes = "HSL3" .OR. propertySubtypes = "TCLA" .OR. propertySubtypes = "CNDO" .OR. propertySubtypes = "TWNH"
+schoolDistrict = "SM"
+schoolDistrict = "AP"
+MFYN = "YESY"
+county = "San Luis Obispo"
+CONC = "YESY"
+U3BD >= 1
+propertySubtypes = "HSL2" .OR. propertySubtypes = "HSL3" .OR. propertySubtypes = "TCLA" .OR. propertySubtypes = "CNDO" .OR. propertySubtypes = "TWNH"
+county = "Lassen"
+area = "8"
+county = "Tuolumne"
+area = "1"
+PATY = "LAOS"
+NOPS >= 1
+area = "0"
+county = "Mendocino"
+schoolDistrict = "MT"
+schoolDistrict = "SJ"
+CONC = "YESY"
+NOPS >= 1
+county = "Colusa"
+propertySubtypes = "HSL2" .OR. propertySubtypes = "HSL3" .OR. propertySubtypes = "TCLA" .OR. propertySubtypes = "CNDO" .OR. propertySubtypes = "TWNH"
+NFRP >= 1
+propertySubtypes = "HSL2" .OR. propertySubtypes = "HSL3" .OR. propertySubtypes = "TCLA" .OR. propertySubtypes = "CNDO" .OR. propertySubtypes = "TWNH"
+county = "Los Angeles"
+propertySubtypes = "DPLX" .OR. propertySubtypes = "TPLX" .OR. propertySubtypes = "FPLX" .OR. propertySubtypes = "OTHR"
+propertySubtypes = "DPLX" .OR. propertySubtypes = "TPLX" .OR. propertySubtypes = "FPLX" .OR. propertySubtypes = "OTHR"
+ADU2 = "YESY"
+schoolDistrict = "FR"
+schoolDistrict = "BU"
+schoolDistrict = "NE"
+county = "Santa Cruz"
+ADU2 = "YESY"
+schoolDistrict = "SN"
+schoolDistrict = "MD"
+area = "5"
+county = "Kern"
+yearBuilt >= 1
+MELO = "YESY"
+schoolDistrict = "YO"
+statusId = "O"
+U3BD >= 1
+area = "4"
+U4BD >= 1
+schoolDistrict = "CN"
+area = "6"
+county = "Solano"
+county = "Ventura"
+propertySubtypes = "HSL2" .OR. propertySubtypes = "HSL3" .OR. propertySubtypes = "TCLA" .OR. propertySubtypes = "CNDO" .OR. propertySubtypes = "TWNH"
+SSCT = "AGNT" .OR. SSCT = "CARE" .OR. SSCT = "LOFF" .OR. SSCT = "OWNR" .OR. SSCT = "PMNG" .OR. SSCT = "TENT" .OR. SSCT = "OTHR"
+county = "San Bernardino"
+schoolDistrict = "NA"
+county = "Sonoma"
+schoolDistrict = "LK"
+yearBuiltException = 6
+statusId != "Z" .AND. onMarketDate != .EMPTY.
+U4BD >= 1
+schoolDistrict = "MR"
+county = "Merced"
+LAST statusId = "Z" .AND. statusId = "A" .AND. onMarketDate != .TODAY.
+ADU2 = "YESY"
+HOAD >= 1
+POOL = "YESY"
+propertySubtypes = "HSL2" .OR. propertySubtypes = "HSL3" .OR. propertySubtypes = "TCLA" .OR. propertySubtypes = "CNDO" .OR. propertySubtypes = "TWNH"
+propertySubtypes = "HSL2" .OR. propertySubtypes = "HSL3" .OR. propertySubtypes = "TCLA" .OR. propertySubtypes = "CNDO" .OR. propertySubtypes = "TWNH"
+HOAA = "YESY"
+U4BD >= 1
+NOPS >= 1
+county = "Outside California"
+schoolDistrict = "TE"
+area = "10"
+propertySubtypes = "FLOT"
+statusId = "Z" .AND. onMarketDate >= expirationDate
+county = "Madera"
+propertySubtypes = "DPLX" .OR. propertySubtypes = "TPLX" .OR. propertySubtypes = "FPLX" .OR. propertySubtypes = "OTHR"
+schoolDistrict = "PM"
+propertySubtypes = "DPLX" .OR. propertySubtypes = "TPLX" .OR. propertySubtypes = "FPLX" .OR. propertySubtypes = "OTHR"
+county = "San Francisco"
+propertySubtypes = "FLOT"
+county = "Riverside"
+schoolDistrict = "PL"
+county = "Santa Barbara"
+schoolDistrict = "MA"
+county = "Tehama"
+SSCT = "AGNT" .OR. SSCT = "CARE" .OR. SSCT = "LOFF" .OR. SSCT = "OWNR" .OR. SSCT = "PMNG" .OR. SSCT = "TENT" .OR. SSCT = "OTHR"
+ADU2 = "YESY"
+county = "Alameda"
+county = "San Diego"
+schoolDistrict = "CL"
+schoolDistrict = "SO"
+county = "Mono"
+county = "Mariposa"
+area = "3"
+county = "Modoc"
+propertySubtypes = "DPLX" .OR. propertySubtypes = "TPLX" .OR. propertySubtypes = "FPLX" .OR. propertySubtypes = "OTHR"
+propertySubtypes = "HSL2" .OR. propertySubtypes = "HSL3" .OR. propertySubtypes = "TCLA" .OR. propertySubtypes = "CNDO" .OR. propertySubtypes = "TWNH"
+schoolDistrict = "AL"
+DLYT = "ONEK" .OR. DLYT = "FIFT" .OR. DLYT = "TWNT" .OR. DLYT = "THRT" .OR. DLYT = "FIVK" .OR. DLYT = "FRTY" .OR. DLYT = "FFTY" .OR. DLYT = "SIXX" .OR. DLYT = "SEVN" .OR. DLYT = "TENK" .OR. DLYT = "EEGH" .OR. DLYT = "EGTY"
+county = "Siskiyou"
+propertySubtypes = "DPLX" .OR. propertySubtypes = "TPLX" .OR. propertySubtypes = "FPLX" .OR. propertySubtypes = "OTHR"
+county = "Alpine"
+propertySubtypes = "HSL2" .OR. propertySubtypes = "HSL3" .OR. propertySubtypes = "TCLA" .OR. propertySubtypes = "CNDO" .OR. propertySubtypes = "TWNH"
+county = "Sutter"
+MATCH(PublicRemarks, '\\D?\\d{3}-\\d{4}\\D?')
+MATCH(PublicRemarks, '(http|ftp|https):\\/\\/([\\w\\-_]+(?:(?:\\.[\\w\\-_]+)+))([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])')
+MATCH(PublicRemarks, '\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b')
+MATCH(AgentRemarks, "</?\\w+((\\s+\\w+(\\s*=\\s*(?:\".*?\"|'.*?'|[^'\">\\s]+))?)+\\s*|\\s*)/?>")
+MATCH(PublicRemarks, "</?\\w+((\\s+\\w+(\\s*=\\s*(?:\".*?\"|'.*?'|[^'\">\\s]+))?)+\\s*|\\s*)/?>")
+Number
+Bool
+String
+[Number]
+[Bool]
+[String]
+LAST Number
+LAST Bool
+LAST String
+[LAST Number]
+[LAST Bool]
+[LAST String]
+Number = Number
+Bool = Bool
+String = String
+Two + Three
+Three - Two
+Two * Three
+Six / Two
+Tau + Two
+Tau / Two
+Tau * Euler > 17.079 .AND. Tau * Euler < 17.081
+Six .MOD. Two
+Three .MOD. Two
+Greeting || Subject
+Greeting || ', ' || Subject
+Greeting || ", " || Subject
+Date + 1
+1 + Date
+Date - 1
+Timestamp + 1
+1 + Timestamp
+Timestamp - 1
+Timestamp + 1.0
+1.0 + Timestamp
+Timestamp - 1.0
+Timestamp + (1.0 / (24 * 60))
+Timestamp - (1.0 / (24 * 60))
+Date - DateTwo
+(Timestamp - TimestampTwo) > (0.9 / (24 * 60)) .AND. (Timestamp - TimestampTwo) < (1.1 / (24 * 60))
+T .AND. F
+T .AND. T
+T .OR. F
+F .OR. F
+One = 1 .AND. Two = 1
+One = 1 .AND. Two = 2
+One = 1 .OR. Two = 1
+Two = 1 .OR. Two = 1
+T .OR. F .AND. F
+(T .OR. F) .AND. F
+T .OR. (F .AND. F)
+.NOT. T
+.NOT. F
+.NOT. .NOT. T
+.NOT. .NOT. (T .OR. F)
+.NOT..NOT.T
+.NOT..NOT.(T.OR.F)
+.NOT. F .AND. T
+(.NOT. F) .AND. T
+.NOT. (F .AND. T)
+.NOT. T .OR. F
+(.NOT. T) .OR. F
+.NOT. (T .OR. F)
+.TRUE. .OR. 1 / 0
+.FALSE. .AND. 1 / 0
+UnspecifiedField != .EMPTY. .AND. UnspecifiedField > 0
+UnspecifiedField = .EMPTY. .OR. UnspecifiedField > 0
+IIF(Two > 1, 1+2, 1+4)
+IIF(Two < 1, 1+2, 1+4)
+IIF(Two > 1, 1, 1/0)
+IIF(UnspecifiedField = .EMPTY., 1, UnspecifiedField)
+IIF(Two = .EMPTY., 1, Two)
+BOOL(.TRUE.)
+BOOL(.FALSE.)
+BOOL('0')
+BOOL('1')
+BOOL('NO')
+BOOL('no')
+BOOL('YES')
+BOOL('yes')
+BOOL('faLSE')
+BOOL('True')
+CHAR('1')
+CHAR(1)
+CHAR(.FALSE.)
+CHAR(.TRUE.)
+CHARF(1.1, 1)
+CHARF(1, 1)
+TIME('2023-04-21')
+TIME('2023-04-21T01:02:03Z')
+DATE('2023-04-21')
+DATE('2023-04-21T01:02:03Z')
+INT(.TRUE.)
+INT(.FALSE.)
+INT(7)
+INT(7.32)
+INT('7')
+INT('7.32')
+FLOAT(.TRUE.)
+FLOAT(.FALSE.)
+FLOAT(7)
+FLOAT(7.32)
+FLOAT('7')
+FLOAT('7.32')
+SUBSTR('Example', 1, 1)
+SUBSTR('Example', 1, 2)
+SUBSTR('Example', 1, 4)
+SUBSTR('Example', 6, 8)
+SUBSTR('Example', 6, 10)
+SUBSTR('Example', 9, 10)
+STRLEN('')
+STRLEN('A')
+STRLEN('Example')
+LOWER('Example')
+UPPER('Example')
+YEAR(Date)
+YEAR(Timestamp)
+MONTH(Date)
+MONTH(Timestamp)
+DAY(Date)
+DAY(Timestamp)
+WEEKDAY(Date)
+WEEKDAY(Timestamp)
+TYPEOF(.TRUE.)
+TYPEOF(1)
+TYPEOF(1.1)
+TYPEOF('2023-04-21T01:02:03Z')
+TYPEOF('2023-04-21')
+TYPEOF('Example')
+SET()
+SET('1')
+SET('1', '2')
+SET('2', '1')
+SET('1', '2', '1')
+SET('a' || 'b' || 'c', 4 + 5, 'd' || 'e', 2 + 7)
+LIST()
+LIST('1')
+LIST('1', '2')
+LIST('2', '1')
+LIST('1', '2', '1')
+LIST('a' || 'b' || 'c', 4 + 5, 'd' || 'e', 2 + 7)
+()
+('1')
+('1', '2')
+('2', '1')
+('1', '2', '1')
+('a' || 'b' || 'c', 4 + 5, 'd' || 'e', 2 + 7)
+UNION(LIST(1, 2, 3), LIST(4, 5, 6), LIST(7, 8, 9))
+DIFFERENCE(LIST(1, 2, 3), LIST(1, 2, 4))
+INTERSECTION(LIST(1, 2, 3), LIST(1, 2, 4))
+LIST(1, 2, 3) .CONTAINS. 1
+LIST(1, 2, 3) .CONTAINS. 5
+1 .IN. LIST(1, 2, 3)
+5 .IN. LIST(1, 2, 3)
+(1, 2, 3) .CONTAINS. 1
+(1, 2, 3) .CONTAINS. 5
+1 .IN. (1, 2, 3)
+5 .IN. (1, 2, 3)
+IIF(SingleCategory = 'One', SET('One A', 'One B'), SET())
+IIF(SingleCategory = 'Two', SET('Two A', 'Two B'), SET())
+IIF(SingleCategory = 'Three', SET('Three A', 'Three B'), SET())
+UNION(IIF(SingleCategory = 'One', SET('One A', 'One B'), SET()), IIF(SingleCategory = 'Two', SET('Two A', 'Two B'), SET()), IIF(SingleCategory = 'Three', SET('Three A', 'Three B'), SET()))
+IIF(MultiCategory .CONTAINS. 'One', SET('One A', 'One B'), SET())
+IIF(MultiCategory .CONTAINS. 'Two', SET('Two A', 'Two B'), SET())
+IIF(MultiCategory .CONTAINS. 'Three', SET('Three A', 'Three B'), SET())
+UNION(IIF(MultiCategory .CONTAINS. 'One', SET('One A', 'One B'), SET()), IIF(MultiCategory .CONTAINS. 'Two', SET('Two A', 'Two B'), SET()), IIF(MultiCategory .CONTAINS. 'Three', SET('Three A', 'Three B'), SET()))
+LENGTH(EmptyList)
+LENGTH(OneItemList)
+LENGTH(TwoItemList)
+One = Two
+One != Two
+One > Two
+One >= Two
+One < Two
+One <= Two
+Two = One
+Two != One
+Two > One
+Two >= One
+Two < One
+Two <= One
+One = Two
+One != Two
+One > Two
+One >= Two
+One < Two
+One <= Two
+Two = One
+Two != One
+Two > One
+Two >= One
+Two < One
+Two <= One
+False = True
+False != True
+False > True
+False >= True
+False < True
+False <= True
+True = False
+True != False
+True > False
+True >= False
+True < False
+True <= False
+Null = .EMPTY.
+Number = .EMPTY.
+String = .EMPTY.
+True = .EMPTY.
+False = .EMPTY.
+UnspecifiedField = .EMPTY.
+Null != .EMPTY.
+Number != .EMPTY.
+String != .EMPTY.
+True != .EMPTY.
+False != .EMPTY.
+UnspecifiedField != .EMPTY.
+Null > .EMPTY.
+Number > .EMPTY.
+String > .EMPTY.
+True > .EMPTY.
+False > .EMPTY.
+UnspecifiedField > .EMPTY.
+Null >= .EMPTY.
+Number >= .EMPTY.
+String >= .EMPTY.
+True >= .EMPTY.
+False >= .EMPTY.
+UnspecifiedField >= .EMPTY.
+Null < .EMPTY.
+Number < .EMPTY.
+String < .EMPTY.
+True < .EMPTY.
+False < .EMPTY.
+UnspecifiedField < .EMPTY.
+Null <= .EMPTY.
+Number <= .EMPTY.
+String <= .EMPTY.
+True <= .EMPTY.
+False <= .EMPTY.
+UnspecifiedField <= .EMPTY.
+IIF(ParkingTotal = .EMPTY., 0, ParkingTotal) = IIF(GarageSpaces = .EMPTY., 0, GarageSpaces) + IIF(OpenParkingSpaces = .EMPTY., 0, OpenParkingSpaces)
+IIF(ParkingTotal = .EMPTY., 0, ParkingTotal) > IIF(GarageSpaces = .EMPTY., 0, GarageSpaces) + IIF(OpenParkingSpaces = .EMPTY., 0, OpenParkingSpaces)
+IIF(ParkingTotal = .EMPTY., 0, ParkingTotal) >= IIF(GarageSpaces = .EMPTY., 0, GarageSpaces) + IIF(OpenParkingSpaces = .EMPTY., 0, OpenParkingSpaces)
+IIF(ParkingTotal = .EMPTY., 0, ParkingTotal) < IIF(GarageSpaces = .EMPTY., 0, GarageSpaces) + IIF(OpenParkingSpaces = .EMPTY., 0, OpenParkingSpaces)
+IIF(ParkingTotal = .EMPTY., 0, ParkingTotal) <= IIF(GarageSpaces = .EMPTY., 0, GarageSpaces) + IIF(OpenParkingSpaces = .EMPTY., 0, OpenParkingSpaces)
+.TRUE.
+.FALSE.
+.EMPTY.
+"abc"
+'abc'
+""
+''
+100
+100.0
+3.14159
+()
+(1)
+LIST(1)
+(1, 2)
+MATCH(String, 'is the')
+MATCH(String, 'not in there')
+MATCH(String, 'is\\s+the')
+MATCH(String, '^This')
+MATCH(String, '^is')
+MATCH(String, 'This is (the test|prod)')
+MATCH(String, '[0-9]{3,}$')
+MATCH(NotExists, 'anything')
+.NOW.
+.TODAY.
+.TODAY.
