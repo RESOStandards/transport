@@ -4,7 +4,7 @@
 | :--- | :--- |
 | **Version** | 1.0.0 |
 | **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org))<br />Paul Stusiak ([Falcon Technologies](mailto:pstusiak@falcontechnologies.com)) |
-| **Specification** | [LINK TO RCP](./web-api-validation-expression.md) |
+| **Specification** | [View on GitHub](https://github.com/RESOStandards/transport/blob/main/proposals/validation-expressions.md) |
 | **Status** | **RATIFIED** |
 | **Date Ratified** | December 2023 |
 | **Dependencies** | [Validation Expression grammar](./artifacts/grammars/rcp-19) <br /> [Data Dictionary 1.7+](./proposals/data-dictionary.md)<br />[Web API 2.0.0+](./web-api-core.md)<br /> |
