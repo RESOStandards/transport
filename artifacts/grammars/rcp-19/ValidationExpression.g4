@@ -19,63 +19,207 @@
 
 grammar ValidationExpression;
 
-// TODO: import https://github.com/antlr/grammars-v4/blob/master/pcre/PCRE.g4
+exp
+  : orExp
+  | collectionExp
+  | funcExp
+  ;
 
-options {
-	tokenVocab = ValidationExpressionLexer;
-}
+orExp
+  : andExp (OR andExp)*
+  ;
 
-exp: orExp | collectionExp | funcExp;
+andExp
+  : notExp (AND notExp)*
+  ;
 
-orExp: andExp (OR andExp)*;
+notExp
+  : NOT notExp
+  | eqExp
+  ;
 
-andExp: notExp (AND notExp)*;
+eqExp
+  : cmpExp
+  | cmpExp (NE | EQ) cmpExp
+  ;
 
-notExp: NOT notExp | eqExp;
+cmpExp
+  : cntExp
+  | cntExp (LTE | GTE | LT | GT) cntExp
+  ;
 
-eqExp: cmpExp | cmpExp (NE | EQ) cmpExp;
+cntExp
+  : sumExp
+  | sumExp (CONTAINS | IN) sumExp
+  ;
 
-cmpExp: cntExp | cntExp (LTE | GTE | LT | GT) cntExp;
+sumExp
+  : prodExp ((PLUS | MINUS | CONCAT) prodExp)*
+  ;
 
-cntExp: sumExp | sumExp (CONTAINS | IN) sumExp;
+prodExp
+  : atomExp ((ASTERISK | SLASH | MOD) atomExp)*
+  ;
 
-sumExp: prodExp ((PLUS | MINUS | CONCAT) prodExp)*;
-
-prodExp: atomExp ((ASTERISK | SLASH | MOD) atomExp)*;
-
-// NOTE: original VE writing had that all lists of size 1 were atomExp, not list. LIST() and SET()
-// were created as a top-level item called 'collection' and should be used instead.
-atomExp: LPAREN exp RPAREN | listExp | value;
+// NOTE:  original VE writing had that all lists of size 1 were atomExp, not list.
+// LIST() and SET() were created instead as a top-level item called 'collection' and should be used instead.
+atomExp
+  : LPAREN exp RPAREN
+  | list
+  | value
+  ;
 
 // this was left in for backwards compatibility with the first production rule, LPAREN exp RPAREN
-listExp: LPAREN (exp (COMMA exp)*)? RPAREN;
+list
+  : LPAREN (exp (COMMA exp)*)? RPAREN
+  ;
 
 // this was previously an atomExp, but was moved to the top-level for faster parsing (10x speedup)
-funcExp: func LPAREN (param (COMMA param)*)? RPAREN;
+funcExp
+  : func LPAREN (param (COMMA param)*)? RPAREN
+  ;
 
-collectionExp: (LIST | SET) LPAREN (exp (COMMA exp)*)? RPAREN
-	| (UNION | INTERSECTION | DIFFERENCE) LPAREN (
-		collectionExp COMMA collectionExp (COMMA collectionExp)*
-	)? RPAREN;
-
-param: exp;
-
-value:
-	fieldName
-	| specValue
-	| charValue
-	| intValue
-	| floatValue
-	| timeValue;
-
-fieldName: (LAST)? FIELD_NAME
-	| LBRACKET (LAST)? FIELD_NAME RBRACKET;
-
-specValue: DOT FIELD_NAME DOT;
-charValue: QUOTED_TERM;
-timeValue: HASH ISO_TIMESTAMP HASH;
-intValue: (PLUS | MINUS)? DIGIT+;
-floatValue: intValue DOT DIGIT+;
+collectionExp
+  : (LIST | SET) LPAREN (exp (COMMA exp)*)? RPAREN
+  | (UNION | INTERSECTION | DIFFERENCE) LPAREN (collectionExp COMMA collectionExp (COMMA collectionExp)*)? RPAREN
+  ;
 
 // SPECFUNC was added. LOCALFUNC could be added as well, with corresponding known local functions
-func: SPECFUNC | ALPHANUM;
+func
+  : SPECFUNC
+  | ALPHANUM
+  ;
+
+param
+  : exp
+  ;
+
+value
+  : fieldName
+  | specValue
+  | charValue
+  | intValue
+  | floatValue
+  | timeValue
+  ;
+
+fieldName
+  : (LAST)? RETSNAME
+  | LBRACKET (LAST)? RETSNAME RBRACKET
+  ;
+
+specValue : DOT RETSNAME DOT;
+charValue : QUOTED_TERM;
+timeValue : HASH RETSDATETIME HASH;
+intValue : (PLUS | MINUS)? DIGIT+ ;
+floatValue : intValue DOT DIGIT+;
+
+// Tokens - may be moved to lexer file
+CONCAT : PIPE;
+LPAREN : '(' ;
+RPAREN : ')' ;
+SQUOTE : '\'' ;
+QUOTE : '"' ;
+DOT : '.' ;
+ASTERISK : '*';
+SLASH : '/';
+EXCLAMATION : '!';
+
+OR  : '.OR.';
+AND : '.AND.';
+NOT : '.NOT.';
+
+EQ  : '=';
+NE  : EXCLAMATION EQ;
+LT  : '<';
+LTE : LT EQ;
+GT  : '>';
+GTE : GT EQ;
+
+CONTAINS : '.CONTAINS.';
+IN : '.IN.';
+COMMA: ',';
+PLUS: '+';
+MINUS: '-';
+MOD: '.MOD.';
+PIPE: '|';
+LBRACKET: '[';
+RBRACKET: ']';
+HASH: '#';
+
+IIF: 'IIF';
+LAST: 'LAST';
+LIST: 'LIST';
+SET: 'SET';
+DIFFERENCE: 'DIFFERENCE';
+INTERSECTION: 'INTERSECTION';
+UNION: 'UNION';
+TRUE: 'TRUE';
+FALSE: 'FALSE';
+EMPTY: 'EMPTY';
+TODAY: 'TODAY';
+NOW: 'NOW';
+ENTRY: 'ENTRY';
+OLDVALUE: 'OLDVALUE';
+USERID: 'USERID';
+USERCLASS: 'USERCLASS';
+USERLEVEL: 'USERLEVEL';
+AGENTCODE: 'AGENTCODE';
+BROKERCODE: 'BROKERCODE';
+BROKERBRANCH: 'BROKERBRANCH';
+UPDATEACTION: 'UPDATEACTION';
+ANY: 'any';
+
+// special tokens
+RETSNAME
+  : DICTNAME
+  | SPECOP
+  ;
+
+// TODO: dynamically fill in your dictnames here
+DICTNAME
+  : 'ListPrice'
+  | 'Status'
+  | 'CloseDate'
+  | 'Bedrooms'
+  | 'Bathrooms'
+  ;
+
+SPECFUNC
+  : IIF
+  ;
+
+SPECOP
+  : EMPTY
+  | TRUE
+  | FALSE
+  | TODAY
+  | NOW
+  | ENTRY
+  | OLDVALUE
+  | USERID
+  | USERCLASS
+  | USERLEVEL
+  | AGENTCODE
+  | BROKERCODE
+  | BROKERBRANCH
+  | UPDATEACTION
+  | ANY
+  ;
+
+RETSDATETIME: '##TODO##';
+ALPHA: ('a'..'z' | 'A'..'Z');
+DIGIT: ('0'..'9');
+
+ALPHANUM: ALPHA (ALPHA|DIGIT)*;
+
+QUOTED_TERM
+    :   QUOTE (~[\\"])*? QUOTE
+    |   SQUOTE (~[\\'])*? SQUOTE
+    ;
+
+//added support for c++ style comments
+SLASH_STAR_COMMENT  : '/*' .+? '*/' -> skip ;
+SLASH_SLASH_COMMENT : '//' .+? ('\n'|EOF) -> skip ;
+
+WS : [ \t\n\r]+ -> skip ;
