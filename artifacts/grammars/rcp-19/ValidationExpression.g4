@@ -1,12 +1,12 @@
 /*
  RESO RCP-19 Validation Expression Grammar
- 
+
  By downloading this resource, you agree to the RESO EULA: https://www.reso.org/eula/ Contact
  dev@reso.org if you have questions
- 
+
  Taken from: https://github.com/darnjo/rcp019/blob/master/LICENSE Copyright (c) 2018 Joshua Darnell
  (josh@kurotek.com)
- 
+
  NOTE: This file is written with the intent of preserving the structure of the original RETS 1.9 VE
  grammar so that anyone who has implemented their systems using it shouldn't have to make any
  changes unless they are wanting to support the new features. In other words, all changes made to
@@ -104,50 +104,56 @@ value
   ;
 
 fieldName
-  : (LAST)? RETSNAME
-  | LBRACKET (LAST)? RETSNAME RBRACKET
+  : (LAST)? FIELD_NAME
+  | LBRACKET (LAST)? FIELD_NAME RBRACKET
   ;
 
-specValue : DOT RETSNAME DOT;
+specValue : DOT FIELD_NAME DOT;
 charValue : QUOTED_TERM;
-timeValue : HASH RETSDATETIME HASH;
+timeValue : HASH ISO_TIMESTAMP HASH;
 intValue : (PLUS | MINUS)? DIGIT+ ;
 floatValue : intValue DOT DIGIT+;
 
 // Tokens - may be moved to lexer file
-CONCAT : PIPE;
-LPAREN : '(' ;
-RPAREN : ')' ;
-SQUOTE : '\'' ;
-QUOTE : '"' ;
-DOT : '.' ;
-ASTERISK : '*';
-SLASH : '/';
-EXCLAMATION : '!';
-
-OR  : '.OR.';
-AND : '.AND.';
-NOT : '.NOT.';
-
-EQ  : '=';
-NE  : EXCLAMATION EQ;
-LT  : '<';
-LTE : LT EQ;
-GT  : '>';
-GTE : GT EQ;
-
-CONTAINS : '.CONTAINS.';
-IN : '.IN.';
-COMMA: ',';
-PLUS: '+';
-MINUS: '-';
-MOD: '.MOD.';
+CONCAT: PIPE;
+LPAREN: '(';
+RPAREN: ')';
+SQUOTE: '\'';
+QUOTE: '"';
+DOT: '.';
+ASTERISK: '*';
+SLASH: '/';
+EXCLAMATION: '!';
+DOLLAR: '$';
+CARET: '^';
+BACKSLASH: '\\';
+SINGLE_SPACE: ' ';
+COLON: ':';
 PIPE: '|';
 LBRACKET: '[';
 RBRACKET: ']';
 HASH: '#';
 
+OR: '.OR.';
+AND: '.AND.';
+NOT: '.NOT.';
+
+EQ: '=';
+NE: EXCLAMATION EQ;
+LT: '<';
+LTE: LT EQ;
+GT: '>';
+GTE: GT EQ;
+
+CONTAINS: '.CONTAINS.';
+IN: '.IN.';
+COMMA: ',';
+PLUS: '+';
+MINUS: '-';
+MOD: '.MOD.';
+
 IIF: 'IIF';
+MATCH: 'MATCH';
 LAST: 'LAST';
 LIST: 'LIST';
 SET: 'SET';
@@ -157,69 +163,74 @@ UNION: 'UNION';
 TRUE: 'TRUE';
 FALSE: 'FALSE';
 EMPTY: 'EMPTY';
+NULL: 'NULL';
 TODAY: 'TODAY';
 NOW: 'NOW';
 ENTRY: 'ENTRY';
 OLDVALUE: 'OLDVALUE';
-USERID: 'USERID';
-USERCLASS: 'USERCLASS';
-USERLEVEL: 'USERLEVEL';
-AGENTCODE: 'AGENTCODE';
-BROKERCODE: 'BROKERCODE';
-BROKERBRANCH: 'BROKERBRANCH';
 UPDATEACTION: 'UPDATEACTION';
 ANY: 'any';
 
+// See: Data Dictionary Member and Office Resources
+MEMBER_LOGIN_ID: 'MEMBER_LOGIN_ID';
+MEMBER_MLS_SECURITY_CLASS: 'MEMBER_MLS_SECURITY_CLASS';
+MEMBER_TYPE: 'MEMBER_TYPE';
+MEMBER_MLS_ID: 'MEMBER_MLS_ID';
+OFFICE_BROKER_MLS_ID: 'OFFICE_BROKER_MLS_ID';
+OFFICE_MLS_ID: 'OFFICE_MLS_ID';
+
+ALPHA: ('a' ..'z' | 'A' ..'Z');
+DIGIT: ('0' ..'9');
+
 // special tokens
-RETSNAME
-  : DICTNAME
-  | SPECOP
-  ;
+RESO_SPECIAL_TOKENS: FIELD_NAME | SPECOP;
 
-// TODO: dynamically fill in your dictnames here
-DICTNAME
-  : 'ListPrice'
-  | 'Status'
-  | 'CloseDate'
-  | 'Bedrooms'
-  | 'Bathrooms'
-  ;
+// TODO: Dynamically fill in your FIELD_NAMEs here
+FIELD_NAME:
+	'ListPrice'
+	| 'Status'
+	| 'CloseDate'
+	| 'Bedrooms'
+	| 'Bathrooms';
 
-SPECFUNC
-  : IIF
-  ;
+SPECFUNC: IIF | MATCH;
 
-SPECOP
-  : EMPTY
-  | TRUE
-  | FALSE
-  | TODAY
-  | NOW
-  | ENTRY
-  | OLDVALUE
-  | USERID
-  | USERCLASS
-  | USERLEVEL
-  | AGENTCODE
-  | BROKERCODE
-  | BROKERBRANCH
-  | UPDATEACTION
-  | ANY
-  ;
+SPECOP:
+	EMPTY
+	| TRUE
+	| FALSE
+	| TODAY
+	| NOW
+	| ENTRY
+	| OLDVALUE
+	| MEMBER_LOGIN_ID
+	| MEMBER_MLS_SECURITY_CLASS
+	| MEMBER_TYPE
+	| MEMBER_MLS_ID
+	| OFFICE_BROKER_MLS_ID
+	| OFFICE_MLS_ID
+	| UPDATEACTION
+	| ANY;
 
-RETSDATETIME: '##TODO##';
-ALPHA: ('a'..'z' | 'A'..'Z');
-DIGIT: ('0'..'9');
+ALPHANUM: ALPHA (ALPHA | DIGIT)*;
 
-ALPHANUM: ALPHA (ALPHA|DIGIT)*;
+QUOTED_TERM: QUOTE (~[\\"])*? QUOTE | SQUOTE (~[\\'])*? SQUOTE;
 
-QUOTED_TERM
-    :   QUOTE (~[\\"])*? QUOTE
-    |   SQUOTE (~[\\'])*? SQUOTE
-    ;
+// #2023-12-04T06:12:24.00Z# #2023-12-04T06:12:24.00-7:00# #2023-12-04T06:12:24.00+7:00#
+ISO_TIMESTAMP:
+	HASH YEAR '-' MONTH '-' DAY 'T' [0-23] COLON [0-59] COLON [0-59] DOT (
+		DIGIT
+	)* ('Z' | (PLUS | MINUS) [0-12] COLON [0-59]) HASH;
+
+// #2023-12-04#
+ISO_DATE: HASH YEAR '-' MONTH '-' DAY HASH;
+
+YEAR: DIGIT DIGIT DIGIT DIGIT;
+MONTH: [0-12];
+DAY: [0-3] DIGIT;
 
 //added support for c++ style comments
-SLASH_STAR_COMMENT  : '/*' .+? '*/' -> skip ;
-SLASH_SLASH_COMMENT : '//' .+? ('\n'|EOF) -> skip ;
+SLASH_STAR_COMMENT: '/*' .+? '*/' -> skip;
+SLASH_SLASH_COMMENT: '//' .+? ('\n' | EOF) -> skip;
 
-WS : [ \t\n\r]+ -> skip ;
+WS: [ \t\n\r]+ -> skip;
