@@ -38,21 +38,23 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 <br />
 
 # Introduction
-Understanding the provenance of a given record, such as a listing, is important in cases where it's flowed through many different systems. This is becoming more common, and will increase with the addition of Add/Edit capabilities. 
+Understanding the provenance of a record, such as a listing, is important in cases where it's flowed through many different systems. This is becoming more common and will increase with the addition of Add/Edit capabilities. 
 
-Each system should also use standardized identifiers to describe where a record came from, which isn't the case currently and results in end users needing to maintain different sets of local organization mappings for each provider, even if they're both referencing the same originating or source system. This proposal uses RESO's Unique Organization Identifiers (UOIs) to address this issue. 
+Each system should use _standard identifiers_, when possible, to describe where a record came from, which isn't currently the case and results in end users needing to maintain different sets of local organization mappings for each provider even if they're referencing the same originating or source system. 
+
+This proposal uses the RESO Unique Organization and System Identifiers (UOIs and USIs) to address this issue. 
 
 
 <br />
 
 # Section 1: Purpose
-The RESO Data Dictionary currently includes OriginatingSystem and SourceSystem Key, ID, and Name fields in each resource in order to identify where a given record originated or where it was obtained from, respectively. 
+The RESO Data Dictionary includes OriginatingSystem and SourceSystem Key, ID, and Name fields in each resource to identify where a given record originated or where it was obtained from.
 
 However, there are a couple of challenges with the current approach:
 * If a record moves through more than two systems, the intermediate provenance is lost. 
-* The IDs being used to describe organizations and systems are not standardized, and therefore result in additional custom mapping and programming to manage them.
+* The IDs being used to describe organizations and systems are not standardized, which results in additional custom mapping and programming work.
 
-This proposal adds support for complete provenance records as well as a way to standardize IDs without affecting current OriginatingSystem or SourceSystem information, which are highly utilized at the moment but should be phased out over time in favor of the provenance record.
+This proposal adds support for complete provenance records as a way to standardize IDs without affecting current OriginatingSystem or SourceSystem ID/Name/Key information, which are highly utilized and should continue to exist as local fields as long as Provenance is also present.
 
 <br />
 
@@ -70,8 +72,10 @@ This specification defines a new resource called Provenance and a new navigation
   <Property Name="ProvenanceKey" Nullable="false" Type="Edm.String">
   <Property Name="ResourceName" Nullable="false" Type="Edm.String">
   <Property Name="ResourceRecordKey" Nullable="false" Type="Edm.String">
-  <Property Name="OwnerUrn" Nullable="false" Type="Edm.String" />
-  <Property Name="SystemKeyValue" Nullable="false" Type="Edm.String" />
+  <Property Name="ProviderUoi" Nullable="false" Type="Edm.String" />
+  <Property Name="ProviderUsi" Nullable="false" Type="Edm.String" />
+  <Property Name="OwnerUoi" Nullable="false" Type="Edm.String" />
+  <Property Name="EditedYN" Nullable="true" Type="Edm.Boolean" />
   <Property Name="SystemModificationTimestamp" Nullable="false" Type="Edm.DateTimeOffset" />
   <Property Name="ModificationTimestamp" Nullable="false" Type="Edm.DataTimeOffset">
 </EntityType>
@@ -87,58 +91,107 @@ This specification defines a new resource called Provenance and a new navigation
 </EntityType>
 ```
 
-Similar to Media, the Provenance Resource is not required to be present at the top level and implements a "belongs-to" relationship with its parent records based on ResourceName and ResourceRecordKey.
+Similar to Media, the Provenance Resource is not required to be present at the top level and can exist only as an expansion. It implements a "belongs-to" relationship with its parent records based on ResourceName and ResourceRecordKey.
 
-## Section 2.2: Definition of OwnerUrn
+## Section 2.2: Organization and System Identifiers
+RESO maintains identifiers for organizations and systems in both spreadsheet and JSON formats, which are used in Certification and RESO Analytics and are kept up to date. See the [**public RESO Certification site**](https://www.reso.org/certification) for more information. Records can be created, updated, or deactivated (but not removed) by [**contacting RESO**](mailto:info@reso.org).
 
-In order to accurately identify the source of a given record, two pieces of information are needed:
-* The Unique System Identifier (USI) of the specific product the record came from. Each provider has at least one system. 
-* The UOI of the owner whose records are being served by the given system. 
+### Section 2.2.1: Organization Resource 
+Organization identifiers currently use the [**OUID Resource**](https://ddwiki.reso.org/display/DDW20/OUID+Resource) schema. 
 
-This specification uses the [**Uniform Resource Name (URN) standard**](https://datatracker.ietf.org/doc/html/rfc8141) along with [**RESO's URN namespace**](https://www.iana.org/assignments/urn-formal/reso) to represent OwnerUrn as single string. 
- 
-<br />
+* **OrganizationKey** - String, non-nullable. The unique local key of the organization.
+* **OrganizationId** - String, non-nullable. The organization identifier
+* **OrganizationName** - String, nullable. The organization name. 
+* **ActiveYN** - Boolean, nullable. `true` if the system is active, `false` or `null` otherwise.
+* **ModificationTimestamp** - Timestamp, non-nullable. The timestamp when the organization record was last updated.
+* Any relevant OUID Resource attributes.
 
-> **Definition**: _OwnerUrn_
-> 
-> `urn:reso:uoi:2.0:{ProviderUsi}:{TenantUoi}`
+The OUID Resource will be deprecated in favor the new _Organization Resource_ and language updated to reflect the changes to use Unique Organization Identifiers (UOIs) based on that resource. 
 
-Where:
-* `ProviderUsi` is the USI of the vendor system the record came from. This could be a provider's internal system or public/private API, including certified RESO Web APIs.
-* `TenantUoi` is the UOI of the tenant whose data is being hosted (e.g., an MLS).
+### Section 2.2.2: System Resource 
+A System Resource will be created to model system data. 
 
-Note that in many cases, knowing the ProviderUsi is sufficient. However, in some cases systems change from one provider to another. For example, if a system is sold to another company. 
+The existing USI sheet that RESO maintains contains UniqueSystemId, SystemName, and IsActive columns. These will become the following to adhere to current Data Dictionary conventions:
+* **SystemKey** - String, non-nullable. The unique local key of the system.
+* **SystemId** - String, non-nullable. The system identifier.
+* **SystemName** - String, nullable. The system name. 
+* **ActiveYN** - Boolean, nullable. `true` if the system is active, `false` or `null` otherwise.
+* **ModificationTimestamp** - Timestamp, non-nullable. The timestamp when the system record was last updated.
+
+OrganizationKey and SystemKey, which RESO doesn't currently provide, would be the local key of the Organization or System records and SystemId would be the well-known RESO key, when applicable. Other attributes may be added as separate proposals.
+
+### Section 2.2.3: TenantUoi and SubtenantUoi
+While the Provenance Resource provides a mechanism to query the most recent record in order to filter tenants in multi-tenant systems, there may be cases where the tenant is separate from the record owner and it's much easier to query the top-level record rather than filtering by provenance records.
+
+There are also cases where there may be subtenants within a given TenantUoi. 
+
+This proposal adds two new fields to handle these cases:
+* **TenantUoi** - String, nullable. The OrganizationId of the tenant. 
+* **SubtenantUoi** - String, nullable. The OrganizationId of the subtenant. This is optional, but if SubtenantUoi is provided then TenantUoi MUST be present.
+
+**Deprecation Notice**: TenantUoi and Subtenant will replace the existing OriginatingSystemKey, OriginatingSystemName, OriginatingSystemId, SourceSystemKey, SourceSystemName, SourceSystemId fields as the mechanism for querying a given organizations data set at the top level and the existing fields will be deprecated. They can still be present in a system as long as the TenantUoi, SubtenantUoi, and Provenance records are provided, when applicable.
+
+There are also OriginatingSystem and SourceSystem expansions defined. They will be deprecated in favor for Tenant and Subtenant expansions and additional system information can be found in the Provenance record.
 
 
-### Section 2.2.1: Authoritative and Local Identifiers
-RESO maintains authoritative Unique Organization and System Identifiers for certification. This addresses a large percentage of those who would implement this proposal, which are mainly MLSs and their vendors. For RESO-based identifiers, please [**contact RESO**](mailto:dev@reso.org). 
+### Section 2.3: Authoritative and Local Identifiers
 
-There may also be scenarios that require allowing well-known organizations to define their own UOIs. This is covered in the next section.
+This proposal allows local extension for organizations and systems. 
 
-### Section 2.2.2: Assigning Local Identifiers
-If an organization cannot have an ID assigned by RESO for some reason, a provider with an existing UOI can issue their own tenant UOI. 
+RESO maintains authoritative Unique Organization and System Identifiers for certification, which mainly consist of MLSs and their technology providers. 
 
-In these cases, the provider MUST also host an instance of the [**RESO OUID Resource**](https://ddwiki.reso.org/display/DDW20/OUID+Resource) with an OrganizationUniqueId that matches the one assigned by the provider, and the following request should be successful:
+New identifiers can be added by [**contacting RESO**](mailto:info@reso.org). 
+
+### Section 2.3.1: Assigning Local Identifiers
+If RESO organization or system identifiers cannot be used for some reason, providers MAY create identifiers of their own. 
+
+In these cases, providers MUST host an instance of the Organization and System resources with OrganizationKey, OrganizationId and SystemKey, SystemId attributes (where the ID can be the key), along with ModificationTimestamp. OrganizationName and SystemName could potentially be null.
+
+**Organization Resource**
 
 **REQUEST**
 ```
-GET https://example.api.com/OUID?$select=OrganizationUniqueId&$filter=OrganizationUniqueId eq '{TenantUoi}'
+GET https://example.api.com/Organization?$select=OrganizationId,OrganizationName,ModificationTimestamp&$filter=OrganizationId eq '{LocalUoi}>'
 HTTP/2
 ```
 
 **RESPONSE**
 ```json
 {
-  "@odata.context": "https://example.api.com/OUID?$select=OrganizationUniqueId$filter=OrganizationUniqueId eq '{TenantUoi}'",
+  "@odata.context": "https://example.api.com/Organization?$select=OrganizationId,OrganizationName,ModificationTimestamp&$filter=OrganizationId eq '{LocalUoi}>'",
   "value": [
-    {
-      "OrganizationUniqueId": "{TenantUoi}"
+    { 
+      "OrganizationId": "{LocalUoi}",
+      "OrganizationName": "{Name of local organization}",
+      "ModificationTimestamp": "2024-12-16T20:34:47Z"
     }
   ]
 }
 ```
 
-In practice, `{TenantUoi}` would be replaced with the local OrganizationUniqueId.
+In practice, `{LocalUoi}` would be replaced with the local OrganizationId.
+
+**System Resource**
+
+**REQUEST**
+```
+GET https://example.api.com/System?$select=SystemId,SystemName,ModificationTimestamp&$filter=SystemId eq '{LocalUsi}>'
+HTTP/2
+```
+
+**RESPONSE**
+```json
+{
+  "@odata.context": "https://example.api.com/System?$select=SystemId,SystemName,ModificationTimestamp&$filter=SystemId eq '{LocalUsi}>",
+  "value": [
+    { 
+      "OrganizationId": "{LocalUsi}",
+      "OrganizationName": "{Name of local organization}",
+      "ModificationTimestamp": "2024-12-16T20:34:47Z"
+    }
+  ]
+}
+```
 
 **Notes**
 * A new System Resource will be needed if providers also need to define their own system. 
@@ -164,7 +217,9 @@ HTTP/2
   "ListingKey": "ABC123",
   "Provenance": [
     {
-      "OwnerUrn": "urn:reso:uoi:2.0:50022:T00000012",
+      "ProviderUsi": "T00000012",
+      "ProviderUoi": "50022",
+      "OwnerUoi": "T00000012",
       "SystemKeyValue": "ABC123",
       "SystemModificationTimestamp": "2024-09-05T02:27:51Z"
     }
