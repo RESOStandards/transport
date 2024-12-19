@@ -75,6 +75,7 @@ This specification defines a new resource called Provenance and a new navigation
   <Property Name="ProviderUoi" Nullable="false" Type="Edm.String" />
   <Property Name="ProviderUsi" Nullable="false" Type="Edm.String" />
   <Property Name="TenantUoi" Nullable="false" Type="Edm.String" />
+  <Property Name="SubtenantUoi" Nullable="true" Type="Edm.String" />
   <Property Name="EditedYN" Nullable="true" Type="Edm.Boolean" />
   <Property Name="SystemModificationTimestamp" Nullable="false" Type="Edm.DateTimeOffset" />
   <Property Name="ModificationTimestamp" Nullable="false" Type="Edm.DataTimeOffset">
@@ -196,7 +197,7 @@ HTTP/2
 
 When local organizations or systems are created, end users of the data may not have access to the local Organization and System resources. However, the organization that provided those identifiers will have a well-known UOI issued by RESO that will appear in the Provenance record. Clients can contact the provider if more information is needed. 
 
-## Section 2.3: Examples
+## Section 2.4: Examples
 This section contains a number of examples related to provenance records. 
 
 ### Example: Adding an Initial Record to a System
@@ -217,9 +218,10 @@ HTTP/2
   "Provenance": [
     {
       "SequenceNumber": 0,
-      "ProviderUsi": "T00000012",
-      "ProviderUoi": "50022",
+      "ProviderUoi": "T00000012",
+      "ProviderUsi": "50022",
       "TenantUoi": "T00000012",
+      "SubtenantUoi": null,
       "SystemKeyValue": "ABC123",
       "SystemModificationTimestamp": "2024-09-05T02:27:51Z",
       "EditedYN": true,
@@ -231,29 +233,34 @@ HTTP/2
 
 The first entry in the provenance record conveys the originating system information, as it's currently known in the Data Dictionary.
 
-### Example: Obtaining a Record from Another Provider
-When a record is ingested into another system, its provenance record should be updated. 
+**Notes**
+* Both ProviderUoi and ProviderUsi are present since systems can migrate between providers during acquisitions, reincorporation, or for other reasons.
+* The organization the record is being hosted for is called the _TenantUoi_ in this specification rather than _OwnerUoi_, since ownership can involve other factors that are not intended to be represented here.
+
+### Example: Obtaining a Record from Another Provider Besides the Originating System
+When a record is ingested into another system, its provenance record should reflect that.
 
 Assume that the record from the previous example was replicated by a consumer with a ProviderUoi of T00000010, ProviderUsi of 50000, and TenantUoi of T00000012 (since the record corresponds to the same well-known tenant UOI) and, in the process, the ListingKey also changed to DEF456.
 
 **REQUEST**
 ```
-GET https://example.api.com/Property('DEF456')?$expand=Provenance&$select=ListingKey,ModificationTimestamp,Provenance/OwnerUrn,Provenance/SystemKeyValue,Provenance/SystemModificationTimestamp
+GET https://example.api.com/Property('DEF456')?$expand=Provenance&$select=ListingKey,ModificationTimestamp
 HTTP/2
 ```
 
 **RESPONSE**
 ```json
 {
-  "@odata.context": "https://example.api.com/Property('DEF456')?$expand=Provenance&$select=ListingKey,ModificationTimestamp,Provenance/OwnerUrn,Provenance/SystemKeyValue,Provenance/SystemModificationTimestamp",
+  "@odata.context": "https://example.api.com/Property('DEF456')?$expand=Provenance&$select=ListingKey,ModificationTimestamp",
   "ListingKey": "DEF456",
   "ModificationTimestamp": "2024-09-05T02:31:21Z",
   "Provenance": [
     {
       "SequenceNumber": 0,
-      "ProviderUsi": "T00000012",
-      "ProviderUoi": "50022",
+      "ProviderUoi": "T00000012",
+      "ProviderUsi": "50022",
       "TenantUoi": "T00000012",
+      "SubtenantUoi": null,
       "SystemKeyValue": "ABC123",
       "SystemModificationTimestamp": "2024-09-05T02:27:51Z",
       "EditedYN": true,
@@ -261,9 +268,10 @@ HTTP/2
     },
     {
       "SequenceNumber": 1,
-      "ProviderUsi": "T00000012",
-      "ProviderUoi": "50000",
+      "ProviderUoi": "T00000012",
+      "ProviderUsi": "50000",
       "TenantUoi": "T00000012",
+      "SubtenantUoi": null,
       "SystemKeyValue": "DEF456",
       "SystemModificationTimestamp": "2024-09-05T02:31:21Z",
       "EditedYN": false,
@@ -274,6 +282,8 @@ HTTP/2
 ```
 
 The first provenance record is the originating system. The latest one is the source system.
+
+Note that `EditedYN` could have been `true` for the source system if the record had changed since it was obtained from the originating system.
 
 <br />
 
@@ -314,43 +324,67 @@ For example, the provenance for a Property record with expanded Media might be a
 
 **REQUEST**
 ```
-GET https://example.api.com/Property('DEF456')?$expand=Provenance,Media/Provenance&$select=ListingKey,ModificationTimestamp,Provenance/OwnerUrn,Provenance/SystemKeyValue,Provenance/SystemModificationTimestamp,Media/Provenance/OwnerUrn,Media/Provenance/SystemKeyValue,Media/Provenance/SystemModificationTimestamp
+GET https://example.api.com/Property('DEF456')?$expand=Provenance,Media,Media/Provenance&$select=ListingKey,ModificationTimestamp
 ```
 
 **RESPONSE**
 ```json
 {
-  "@odata.context": "https://example.api.com/Property('DEF456')?$expand=Provenance,Media/Provenance&$select=ListingKey,ModificationTimestamp,Provenance/OwnerUrn,Provenance/SystemKeyValue,Provenance/SystemModificationTimestamp,Media/Provenance/OwnerUrn,Media/Provenance/SystemKeyValue,Media/Provenance/SystemModificationTimestamp",
+  "@odata.context": "https://example.api.com/Property('DEF456')?$expand=Provenance,Media,Media/Provenance&$select=ListingKey,ModificationTimestamp",
   "ListingKey": "DEF456",
+  "ModificationTimestamp": "2024-09-05T02:31:21Z",
   "Provenance": [
     {
-      "OwnerUrn": "urn:reso:uoi:2.0:50022:T00000012",
+      "SequenceNumber": 0,
+      "ProviderUoi": "T00000012",
+      "ProviderUsi": "50022",
+      "TenantUoi": "T00000012",
+      "SubtenantUoi": null,
       "SystemKeyValue": "ABC123",
-      "SystemModificationTimestamp": "2024-09-05T02:27:51Z"
+      "SystemModificationTimestamp": "2024-09-05T02:27:51Z",
+      "EditedYN": true,
+      "ModificationTimestamp": "2024-09-05T02:28:51Z"
     },
     {
-      "OwnerUrn": "urn:reso:uoi:2.0:50000:T00000012",
+      "SequenceNumber": 1,
+      "ProviderUoi": "T00000010",
+      "ProviderUsi": "50000",
+      "TenantUoi": "T00000012",
+      "SubtenantUoi": null,
       "SystemKeyValue": "DEF456",
-      "SystemModificationTimestamp": "2024-09-05T02:31:21Z"
+      "SystemModificationTimestamp": "2024-09-05T02:31:21Z",
+      "EditedYN": false,
+      "ModificationTimestamp": "2024-09-05T02:31:21Z"
     }
   ],
-  "ModificationTimestamp": "2024-09-05T02:31:21Z",
   "Media": [
     {
       "MediaKey": "XYZ222",
+      "ModificationTimestamp": "2024-09-05T03:32:31Z"
       "Provenance": [
         {
-          "OwnerUrn": "urn:reso:uoi:2.0:50022:T00000012",
+          "SequenceNumber": 0,
+          "ProviderUoi": "T00000012",
+          "ProviderUsi": "50022",
+          "TenantUoi": "T00000012",
+          "SubtenantUoi": null,
           "SystemKeyValue": "UVW111",
-          "SystemModificationTimestamp": "2024-09-05T02:27:51Z"
+          "SystemModificationTimestamp": "2024-09-05T02:27:51Z",
+          "EditedYN": true,
+          "ModificationTimestamp": "2024-09-05T02:28:51Z"
         },
         {
-          "OwnerUrn": "urn:reso:uoi:2.0:50000:T00000012",
+          "SequenceNumber": 1,
+          "ProviderUoi": "T00000010",
+          "ProviderUsi": "50000",
+          "TenantUoi": "T00000012",
+          "SubtenantUoi": null,
           "SystemKeyValue": "XYZ222",
-          "SystemModificationTimestamp": "2024-09-05T02:31:21Z"
+          "SystemModificationTimestamp": "2024-09-05T02:31:21Z",
+          "EditedYN": true,
+          "ModificationTimestamp": "2024-09-05T02:31:21Z"
         }
-      ],
-      "ModificationTimestamp": "2024-09-05T03:32:31Z"
+      ]
     }
   ]
 }
