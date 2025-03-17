@@ -64,6 +64,7 @@ In progress proposals are ones that are in review by Transport and Certification
 | [**RCP-48**](https://github.com/RESOStandards/transport/blob/fc35c711487bcd59ffecd02780feb56269fabd73/proposals/web-api-add-edit-with-media.md) | **Add/Edit with Media** | **DD 2.1** | **April 2024** |
 | [**RCP-49**](https://github.com/RESOStandards/transport/issues/142) | **EntityEvent Subscriptions and Filtering** | **DD 2.1** | **March 2024** |
 | [**RCP-50**](https://github.com/RESOStandards/transport/blob/rcp-50-data-provenance/proposals/data-provenance.md) | **Data Provenance** | **DD 2.2** | **March 2024** |
+| [**RCP-51**](https://github.com/RESOStandards/transport/blob/3e805ce5f63816ed6e386c27f1a7aba365d4b873/proposals/rcp-51-dom-increment.md) | **DOM Increment** | **DD 2.2** | **December 2024** |
 
 ---
 
