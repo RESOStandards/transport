@@ -278,7 +278,7 @@ Tests 7–10 exist to check that `DaysOnMarket` and DOM Increment give the same 
 
 # Section 4. Contributors
 
-This document was written by Bryan Burgers.
+This document was written by Bryan Burgers (Zenlist), Al McElmon (CoreLogic), and Sergio Del Rio (Templates 4 Business, Inc.),
 
 Thanks to the following contributors for their help with this specification:
 
