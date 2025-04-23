@@ -3,7 +3,7 @@
 | **RCP** | 51 |
 | :--- | :--- |
 | **Version** | **1.0.0** |
-| **Authors** | Bryan Burgers, Zenlist<br />Al McElmon, CoreLogic<br />Sergio Del Rio, T4BI |
+| **Authors** | Bryan Burgers ([Zenlist](mailto:bryan@zenlist.com))<br />Al McElmon ([Cotality](amcelmon@cotality.com))<br />Sergio Del Rio ([T4BI](sergio.del.rio@t4bi.com)) |
 | **Specification** | [**LINK TO RCP**](#) |
 | **Status** | IN PROGRESS |
 | **Date Ratified** | Month YYYY |
@@ -278,7 +278,7 @@ Tests 7–10 exist to check that `DaysOnMarket` and DOM Increment give the same 
 
 # Section 4. Contributors
 
-This document was written by Bryan Burgers (Zenlist), Al McElmon (CoreLogic), and Sergio Del Rio (Templates 4 Business, Inc.),
+This document was written by Bryan Burgers (Zenlist), Al McElmon (Cotality), and Sergio Del Rio (Templates 4 Business, Inc.),
 
 Thanks to the following contributors for their help with this specification:
 
