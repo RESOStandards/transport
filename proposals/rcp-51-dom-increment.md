@@ -126,8 +126,10 @@ Consumers of a listing MUST use the following algorithm to calculate the "curren
 3. Retrieve the current timestamp in UTC.
 4. Retrieve the value of `DaysOnMarketIncrementTimestamp`, in UTC.
 5. If [PropertyTimeZoneName] is set, convert both timestamps to the timezone represented.
-6. Calculate the number of full days between the two timestamps. *(See note below.)*
-7. Add the number of full days to DaysOnMarketIncrementBase.
+6. If the timestamp for `DaysOnMarketIncrementTimestamp` is further into the future than the current timestamp, continue to step 7. Otherwise, skip to step 8.
+7. The calculated DOM is the value of `DaysOnMarketIncrementBase`. Stop.
+8. Calculate the number of full days between the two timestamps. *(See note below.)*
+9. Add the number of full days to DaysOnMarketIncrementBase.
 
 Or, in pseudocode
 
@@ -140,11 +142,13 @@ else:
     if PropertyTimeZoneName:
         now = now.withTimeZone(PropertyTimeZoneName)
         timestamp = timestamp.withTimeZone(PropertyTimeZoneName)
+    if now < timestamp:
+        return DaysOnMarketIncrementBase
     let diff = DateDifferenceDays(timestamp, now)
     return DaysOnMarketIncrementBase + diff
 ```
 
-*Note on step 6*: partial days are truncated down. This allows the calculated Days on Market value to remain the same throughout the day until it gets incremented on the day "anniversary" of `DaysOnMarketIncrementTimestamp`.
+*Note on step 8*: partial days are truncated down. This allows the calculated Days on Market value to remain the same throughout the day until it gets incremented on the day "anniversary" of `DaysOnMarketIncrementTimestamp`.
 
 ## Payload examples
 
