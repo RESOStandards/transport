@@ -7,7 +7,7 @@
 | **Specification** | [**LINK TO RCP**](#) |
 | **Status** | IN PROGRESS |
 | **Date Ratified** | Month YYYY |
-| **Dependencies** | [Data Dictionary][RCP-40] |
+| **Dependencies** | [Data Dictionary][RCP-36] |
 | **Related Links** | [RESO Common Format][RCP-25]<br />[EntityEvent][RCP-27]<br />[Webhooks][RCP-28]<br /> |
 
 
@@ -321,4 +321,4 @@ Please [contact RESO](mailto:info@reso.org) if you have any questions.
 [RCP-25]: https://github.com/RESOStandards/transport/blob/a99fb6ca307208280ac51bca1f573e89cb67b202/proposals/reso-common-format.md
 [RCP-27]: https://github.com/RESOStandards/transport/blob/1091f1e82b2108c5a6712af65a417c8db6c76c4c/proposals/entity-events.md
 [RCP-28]: https://github.com/RESOStandards/transport/blob/main/proposals/webhooks-push.md
-[RCP-40]: https://github.com/RESOStandards/transport/blob/a99fb6ca307208280ac51bca1f573e89cb67b202/proposals/data-dictionary.md
+[RCP-36]: https://github.com/RESOStandards/transport/blob/a99fb6ca307208280ac51bca1f573e89cb67b202/proposals/data-dictionary.md
