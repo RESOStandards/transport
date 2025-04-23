@@ -3,7 +3,7 @@
 | **RCP** | 51 |
 | :--- | :--- |
 | **Version** | **1.0.0** |
-| **Authors** | Bryan Burgers ([Zenlist](mailto:bryan@zenlist.com))<br />Al McElmon ([Cotality](amcelmon@cotality.com))<br />Sergio Del Rio ([T4BI](sergio.del.rio@t4bi.com)) |
+| **Authors** | Bryan Burgers ([Zenlist](mailto:bryan@zenlist.com))<br />Al McElmon ([Cotality](mailto:amcelmon@cotality.com))<br />Sergio Del Rio ([T4BI](mailto:sergio.del.rio@t4bi.com)) |
 | **Specification** | [**LINK TO RCP**](#) |
 | **Status** | IN PROGRESS |
 | **Date Ratified** | Month YYYY |
