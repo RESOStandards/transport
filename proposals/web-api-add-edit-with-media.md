@@ -6,7 +6,7 @@
 | **Authors** | [Geoff Rispin (T4bi)](grispin@t4bi.com)<br /> [Cody Gustafson (FBS)](cody.gustafson@fbs.com)|
 | **Status** | IN PROGRESS |
 | **Date Ratified** | |
-| **Dependencies** | [Data Dictionary 2.0+](./data-dictionary.md)<br />[Web API 2.0.0+](./web-api-core.md) |
+| **Dependencies** | [Data Dictionary 2.0+](./data-dictionary.md)<br />[Web API 2.0.0+](./web-api-core.md)<br />[Web API Add/Edit 2.0.0+](./web-api-add-edit.md) |
 | **Related Links** | [Open Data Protocol (OData)](https://www.odata.org/documentation/) <br /> [OData streams](https://docs.oasis-open.org/odata/odata-json-format/v4.02/odata-json-format-v4.02.html)<br /> |
 
 The keywords "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC 2119](https://www.ietf.org/rfc/rfc2119.txt).
@@ -68,11 +68,9 @@ Solutions using the RESO Web API need a way to add or edit media data such as ph
 
 # Section 2: Specification
 
-This specification relies heavily on the [OData streams](https://docs.oasis-open.org/odata/odata-json-format/v4.02/odata-json-format-v4.02.html) specification for the transport interaction with the server.
+This specification relies heavily on the [OData streams](https://docs.oasis-open.org/odata/odata-json-format/v4.02/odata-json-format-v4.02.html) specification for the transport interaction with the server.  It focuses on the addition of communication of the binary byte stream that makes up the attached media.  The management of `Media` records and their consituant fields is already established as part of the [RESO WebApi Add/Edit specification](./web-api-add-edit.md).
 
-While OData streams works for the communication of the data, there are some media operations that cannot be preformed in real 
-time and are deferred post-processing that could prevent the successful publishing of the media.  This could include format
-validation, transcoding (resizing, reformatting) for different displays/devices, compliance validation, copyright validation and/or content delivery distribution to name a few identified scenarios.  
+While OData streams works for the communication of the data, there are some media operations that cannot be preformed in real time and are deferred post-processing that could prevent the successful publishing of the media.  This could include format validation, transcoding (resizing, reformatting) for different displays/devices, compliance validation, copyright validation and/or content delivery distribution to name a few identified scenarios.  
 As a result of this need to allow for background operations to occur after the media has been received, a method to communicate the progression of the media is required.  The existing [field `MediaStatus`](https://ddwiki.reso.org/display/DDW20/MediaStatus+Field) will be used to comminucate the status and `MediaStatusDescription` will be introduced to provide contextual information when available.  This will assist clients in know why media has been rejected without having to contact the server provider outside of the transport.
 
 ## Data Representation
@@ -109,7 +107,7 @@ Some examples of `Rejected` status reason could be:
 
 ## Media Add/Edit Process
 
-The creation of the Media Resource will be done using as a standard RESO Web API 2.0.0 Add/Edit process. The post SHOULD include all known resource record fields for the media with the exception of only the media byte stream.
+The creation of the Media Resource will be done using the [RESO WebApi Add/Edit specification](./web-api-add-edit.md). The post SHOULD include all known resource record fields for the media with the exception of only the media byte stream.
 
 The response object MAY contain `mediaReadLink` and `mediaEditLink` annotations which the client MUST respect as per the [OData specification](https://docs.oasis-open.org/odata/odata-json-format/v4.02/odata-json-format-v4.02.html) when communicating the byte stream to the server. If fields are not provided the implicit URLs per the [OData specification](https://docs.oasis-open.org/odata/odata-json-format/v4.02/odata-json-format-v4.02.html) MUST then be used.  
 
@@ -130,7 +128,7 @@ Rules MAY be written against the `MediaStatus` field to handle the order of oper
 ## Media Add/Edit Examples
 
 ### Create Initial Media Resource
-Create the initial media record using the OData standard. This could be an expanded record on another resource as a secondary approach but the example will be with Media as a tier 1 Resource/Model.
+Create the initial media record using the [RESO WebApi Add/Edit specification](./web-api-add-edit.md). This could be an expanded record on another resource as a secondary approach but the example will be with Media as a tier 1 Resource/Model.
 
 **REQUEST**
 ```http
@@ -142,6 +140,8 @@ Prefer: return=representation
 ```
 ```json
 {
+ "ResourceName": "Property",
+ "ResourceID": "1122334455",
  "ShortDescription": "Ipsum Lorum",
  "Order": 1,
  "MediaType": "image/jpeg",
@@ -168,6 +168,8 @@ Preference-Applied: return=representation
   "@odata.mediaEditLink": "https://storage.my-webapi.io/media/12345.jpg?authentication_token=my-one-time-use-auth-token-12345-zyxwut",
   "@odata.etag": "W/\"aBcDeFgHiJkLmNoPqRsTuVwXyz\"",
   "MediaObjectID": "12345",
+  "ResourceName": "Property",
+  "ResourceID": "1122334455",
   "ShortDescription": "Ipsum Lorum",
   "Order": 1,
   "MediaType": "image/jpeg",
@@ -198,6 +200,8 @@ Preference-Applied: return=representation
   "@odata.mediaReadLink": "https://api-my-webapi.io/image/not_available.jpg",
   "@odata.etag": "W/\"aBcDeFgHiJkLmNoPqRsTuVwXyz\"",
   "MediaObjectID": "12345",
+  "ResourceName": "Property",
+  "ResourceID": "1122334455",
   "ShortDescription": "Ipsum Lorum",
   "Order": 1,
   "MediaType": "image/jpeg",
@@ -277,6 +281,8 @@ Preference-Applied: return=representation
   "@odata.mediaEditLink": "https://storage.my-webapi.io/media/12345.jpg?authentication_token=my-one-time-use-auth-token-12345-zyxwut",
   "@odata.etag": "W/\"aBcDeFgHiJkLmNoPqRsTuVwXyz\"",
   "MediaObjectID": "12345",
+  "ResourceName": "Property",
+  "ResourceID": "1122334455",
   "ShortDescription": "Ipsum Lorum",
   "Order": 1,
   "MediaType": "image/jpeg",
@@ -306,6 +312,8 @@ Preference-Applied: return=representation
   "@odata.mediaReadLink": "https://api.webapi.io/Media('12345')/$value",
   "@odata.etag": "W/\"aBcDeFgHiJkLmNoPqRsTuVwXyz\"",
   "MediaObjectID": "12345",
+  "ResourceName": "Property",
+  "ResourceID": "1122334455",
   "ShortDescription": "Ipsum Lorum",
   "Order": 1,
   "MediaType": "image/jpeg",
@@ -347,6 +355,8 @@ Preference-Applied: return=representation
   "@odata.mediaEditLink": "https://storage.my-webapi.io/media/12345.jpg?authentication_token=my-one-time-use-auth-token-12345-zyxwut",
   "@odata.etag": "W/\"aBcDeFgHiJkLmNoPqRsTuVwXyz\"",
   "MediaObjectID": "12345",
+  "ResourceName": "Property",
+  "ResourceID": "1122334455",
   "ShortDescription": "Ipsum Lorum",
   "Order": 1,
   "MediaType": "image/jpeg",
@@ -409,6 +419,8 @@ Preference-Applied: return=representation
   "@odata.mediaEditLink": "https://storage.my-webapi.io/media/12345.jpg?authentication_token=my-one-time-use-auth-token-12345-take2",
   "@odata.etag": "W/\"aBcDeFgHiJkLmNoPqRsTuVwXyz\"",
   "MediaObjectID": "12345",
+  "ResourceName": "Property",
+  "ResourceID": "1122334455",
   "ShortDescription": "Ipsum Lorum",
   "Order": 1,
   "MediaType": "image/jpeg",
@@ -462,6 +474,8 @@ Preference-Applied: return=representation
   "@odata.editLink": "https://api.webapi.io/Media('12345')",
   "@odata.etag": "W/\"aBcDeFgHiJkLmNoPqRsTuVwXyz\"",
   "MediaObjectID": "12345",
+  "ResourceName": "Property",
+  "ResourceID": "1122334455",
   "ShortDescription": "Ipsum Lorum",
   "Order": 1,
   "MediaType": "image/jpeg",
@@ -519,6 +533,8 @@ Preference-Applied: return=representation
   "@odata.mediaEditLink": "https://storage.my-webapi.io/media/12345.jpg?authentication_token=my-one-time-use-auth-token-12345-take2",
   "@odata.etag": "W/\"aBcDeFgHiJkLmNoPqRsTuVwXyz\"",
   "MediaObjectID": "12345",
+  "ResourceName": "Property",
+  "ResourceID": "1122334455",
   "ShortDescription": "Ipsum Lorum",
   "Order": 1,
   "MediaType": "image/jpeg",
@@ -571,6 +587,8 @@ Preference-Applied: return=representation
   "@odata.editLink":"https://api.webapi.io/Media('12345')",
   "@odata.etag": "W/\"aBcDeFgHiJkLmNoPqRsTuVwXyz\"",
   "MediaObjectID": "12345",
+  "ResourceName": "Property",
+  "ResourceID": "1122334455",
   "ShortDescription": "Ipsum Lorum",
   "Order": 1,
   "MediaType": "image/jpeg",
@@ -595,8 +613,8 @@ HTTP/2 409 Conflict
 ```
 
 The resolution to this behaviour is as follows.  
-* Creation new record is done using the above examples
-* Deletion of the old record uses the standard Add/Edit behaviour on the media resource
+* Creation new record is done following the above example
+* Deletion of the old record is done using the [RESO WebApi Add/Edit specification](./web-api-add-edit.md) 
 
 # Section 3: Certification
 
@@ -610,6 +628,8 @@ For solutions that want the add/edit with media endorsement, the follow operatio
   * Confirm a new media record including the byte stream can be added
   * Confirm a media byte stream can be updated or the response follows the write-once behaviour
   * Confirm a media record that has been added with no byte stream attached shows up in as `Incomplete` in the `MediaStatus` field
+  * Validate media URLs return valid HTTP response codes for the state of Media Record
+    * URLs must be valid format and return a machine parsable HTTP response code that respects the state of the `Media` record.
   * Confirm a complete and successful media uploaded record shows as `Complete` in the `MediaStatus` field
 
 # Section 4: Contributors
@@ -620,6 +640,7 @@ For solutions that want the add/edit with media endorsement, the follow operatio
 # Section 5: References
 * [Open Data Protocol (OData)](https://www.odata.org/documentation/)
 * [OData streams](https://docs.oasis-open.org/odata/odata-json-format/v4.0/os/odata-json-format-v4.0-os.html)
+* [Web API Add/Edit Specification](./web-api-add-edit.md)
 
 # Section 6: Appendices
 
