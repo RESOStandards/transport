@@ -69,7 +69,7 @@ Patches are backwards compatible bug fixes. This usually means corrections to te
 Patches include changes to any of the following columns in the [**Data Dictionary specification**](https://docs.google.com/spreadsheets/d/1eOB4Nv3wrAayB1av7n2AWPBRWDeB-UkiDa8h8cdsIEI/edit?gid=1912290910#gid=1912290910):
 
 * BEDES
-* Definition
+* Definition\*
 * DisplayName
 * FrenchCanadianDisplayName
 * FrenchCanadianLookupValue
@@ -89,6 +89,10 @@ Patches include changes to any of the following columns in the [**Data Dictionar
 * WikiPageId
 * WikiPageTitle
 * WikiPageUrl
+
+<br />
+
+\* **Definition changes** that don't materially change what the field represents are considered patches. Changes to definitions that significantly change the meaning of a data element may result in a MAJOR or MINOR change.
 
 Suggested max precision and length are considered patches since they're suggestions and will not result in failure during certification. If the attributes used by the provider differ from the suggested values, they will receive an informational message. 
 
