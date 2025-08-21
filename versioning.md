@@ -92,7 +92,7 @@ Patches include changes to any of the following columns in the [**Data Dictionar
 
 <br />
 
-\* **Definition changes** that don't materially change what the field represents are considered patches. Changes to definitions that significantly change the meaning of a data element may result in a MAJOR or MINOR change.
+\***Definition changes** that don't materially change what a data element represents are considered patches. Changes to definitions that significantly change the meaning of a data element may result in a MAJOR or MINOR change.
 
 Suggested max precision and length are considered patches since they're suggestions and will not result in failure during certification. If the attributes used by the provider differ from the suggested values, they will receive an informational message. 
 
