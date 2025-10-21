@@ -54,17 +54,18 @@ Minor changes preserve compatibility with current Data Dictionary and Transport 
 
 ## Data Dictionary
 * Data elements such as resources, fields, or lookups (enumerations) are added to or removed from the specification.
-* Existing data elements are renamed, as long as the old ones aren't disallowed.
 * There are changes to classifications of PropertyType and PropertySubType groupings.
 
-When items are added or removed from the specification, providers don't have to make changes on their current systems to reflect those changes.
+When items are added to or removed (deprecated) from the specification, providers don't have to make changes to their systems to reflect those changes.
 
-In some cases, it's possible that adding something to a future version of the Data Dictionary will cause a current local data element to fail in certification. However, if the provider has both the standard and local value, they will pass testing in those cases. This is also true when something is renamed in the Data Dictionary.
+Information about new additions and deprecated elements is available in the [**DD Wiki change log**](https://ddwiki.reso.org/display/DDW20/Change+Log+Summary) for each version and also included in new draft Data Dictionary specifications, such as [**DD 2.1**](https://docs.google.com/spreadsheets/d/1xKER4mvGwn9jeHQK86_fovuiCKnPQOmaLTiMw1qLWsU/edit?gid=889323793#gid=889323793).  
 
-RESO does not validate related PropertyType and PropertySubType usage currently, but plans to do so in the future with warnings beginning in version 2.1. These classifications are used enough in practice that they should be made in a future version rather than as a patch to the current one.
+When data elements are deprecated from the RESO Data Dictionary, providers may still use them in their system as long as they don't become disallowed synonyms or are part of an enumeration that is closed. 
+
+It's important to note that RESO does not validate related PropertyType and PropertySubType usage. There was some discussion about doing so in Certification, however the community felt it wasn't necessary at this time. As such, providers may not implement these relationships as intendend. Since systems and end users do utilize these fields in practice, however, changes to them have some impact. Therefore they are considered minor and are planned rather than being patches to the current version. 
 
 ## Transport
-Minor changes in transport usually mean adding something to the API specifications, such as a new kind of query or server-driven paging. Clients don't have to support those queries or new kinds of paging unless we force deprecation of the prior standard, which is uncommon. With RESO Common Format, the versioning is handled by Data Dictionary versioning rules outside of the `@reso.context` variable.
+Minor changes in Transport usually mean adding something to the API specifications, such as a new kind of query or server-driven paging. Clients don't have to support those queries or new kinds of paging unless we force deprecation of the prior standard, which is uncommon. With RESO Common Format, changes are automatically accounted for as part of the corresponding Data Dictionary release and the version is communicated using the `@reso.context` variable so end users can track them.
 
 # Patches
 Patches are backwards compatible bug fixes. This usually means corrections to terms or wording in a specification, and includes changes to certain columns in the Data Dictionary reference sheets.
@@ -109,7 +110,7 @@ Any changes to current testing rules are not patches and will be considered majo
 
 ---
 
-_Last updated on October 20, 2025._
+_Last updated on October 21, 2025._
 
 Questions? Please [**contact RESO**](mailto:transport@reso.org).
 
