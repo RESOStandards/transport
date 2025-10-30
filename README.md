@@ -59,7 +59,7 @@ In progress proposals are ones that are in review by Transport and Certification
 | [**RCP-35**](https://github.com/RESOStandards/transport/blob/e222c800f2e6ef091fe6c334ce5160456a4e5c56/proposals/rcp-035-single-feeds.md) | **Supporting Single Feeds** | **1.0.0** | **Sept 2023** |
 | [**RCP-42**](https://github.com/RESOStandards/transport/blob/b21579a147a476a95fb0a9457ab6b23d5b7afc0a/proposals/model-and-field-resources.md) | **Model and Field Resources** | **1.0.0** | **Feb 2023** |
 | [**RCP-43**](https://github.com/RESOStandards/transport/issues/77) | **Local Fields and Predictability** | **1.0.0** | **Feb 2023** |
-| [**RCP-44**](https://github.com/RESOStandards/transport/issues/67) | **Metadata Internationalization and Locale** | **1.0.0** | **Feb 2023** |
+| [**RCP-44**](https://github.com/RESOStandards/transport/blob/rcp-44-supporting-multiple-metadata-locales/proposals/metadata-locales.md) | **Metadata Internationalization and Locale** | **1.0.0** | **Feb 2023** |
 | [**RCP-45**](https://github.com/RESOStandards/transport/blob/ddb8bc9792173ef1a1d57eb5cb560af21d0fc558/proposals/rcp-45-legacy-deprecated-fields-lookups.md) | **Legacy and Deprecated Data Elements** | **1.0.0** | **Sept 2023** |
 | [**RCP-47**](https://github.com/RESOStandards/transport/blob/015bd6181a3a9f56b1c5b767685761a842e0284c/proposals/related-lookups.md) | **RelatedLookup Resource** | **1.0.0** | **March 2024** |
 | [**RCP-48**](https://github.com/RESOStandards/transport/blob/fc35c711487bcd59ffecd02780feb56269fabd73/proposals/web-api-add-edit-with-media.md) | **Add/Edit with Media** | **1.0.0** | **April 2024** |
