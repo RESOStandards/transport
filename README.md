@@ -13,7 +13,8 @@
 
 # RESO Change Proposal Process
 
-![Transport Specification Process](https://user-images.githubusercontent.com/535358/219707307-00067346-4c38-4488-b861-0cb22c8fd337.svg)
+<img width="1400" height="1059" alt="JD  Horizontal Transport Specification Process" src="https://github.com/user-attachments/assets/895e5995-4567-4aa4-aae1-ba498e982261" />
+
 
 [**CREATE NEW CHANGE PROPOSAL**](./reso-rcp-process.md#new-change-proposals).
 
