@@ -162,7 +162,6 @@ Each metadata resource supporting the `DisplayNames` collection MUST be searchab
 Filter models that have locale values of Canadian English (`en-CA`) or French Canadian `fr-CA`. 
 
 ```
-
 GET /Model?$filter=DisplayNames/any(item: item/Locale in ('en-CA', 'fr-CA'))
 
 {
@@ -193,7 +192,6 @@ GET /Model?$filter=DisplayNames/any(item: item/Locale in ('en-CA', 'fr-CA'))
 Filter fields that have locale values of Canadian English (`en-CA`) or French Canadian `fr-CA`. 
 
 ```
-
 GET /Field?$filter=DisplayNames/any(item: item/Locale in ('en-CA', 'fr-CA'))
 {
   "@odata.context": "/Field?$filter=DisplayNames/any(item: item/Locale in ('en-CA', 'fr-CA'))",
