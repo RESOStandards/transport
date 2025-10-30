@@ -33,7 +33,7 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 # Summary of Changes
 * Provides a way of communicating locale-specific display names for models, fields, and enumerations using standard ISO identifiers that's easily searchable.
 * Adds a new OData ComplexType (shape) called I18nString that encapsulates the locale and value of the display name. 
-* Adds a new OData ComplexType (shape) to the Model, Field, and Lookup resources called DisplayNames.
+* Adds a new field called `DisplayNames`, which is a collection of translations for each locale, to the Model, Field, and Lookup resources.
 
 <br />
 
@@ -110,14 +110,46 @@ Each metadata resource defines a new field called `DisplayNames`, which has a ty
 ```
 
 ## Section 2.2 Required Data Elements
+The following data elements are required.
 
-| ModelName | ModelType | FieldName | Data Type | Definition |
-|---|---|---|---|---|
-| I18nString | Shape | Locale | String | The ISO 639 and 3166 encoding of the locale (e.g., `en-US`).  |
-| I18nString | Shape | Value | String | The string value of the metadata element for the given locale. |
-| Model | Shape | `DisplayNames` | `Collection(I18nString)` | Collection of possible ISO 639/3166 locales for the given metadata element. Non-nullable. The absence of values is an empty collection. |
-| Field | Resource | `DisplayNames` | `Collection(I18nString)` | Collection of possible ISO 639/3166 locales for the given metadata element. Non-nullable. The absence of values is an empty collection. |
-| Lookup | Resource | `DisplayNames` | `Collection(I18nString)` | Collection of possible ISO 639/3166 locales for the given metadata element. Non-nullable. The absence of values is an empty collection. |
+
+**ModelName**: I18nString <br />
+**ModelType**: Shape  <br />
+**FieldName**: Locale  <br />
+**Type**: String <br />
+**Definition**: The ISO 639 and 3166 encoding of the locale (e.g., `en-US`).  <br />
+
+<br />
+
+**ModelName**: I18nString <br />
+**ModelType**: Shape  <br />
+**FieldName**: Value  <br />
+**Type**: String <br />
+**Definition**: The string value of the metadata element for the given locale. <br />
+
+<br />
+
+**ModelName**: Model <br />
+**ModelType**: Resource  <br />
+**FieldName**: DisplayNames <br />
+**Type**: `Collection(I18nString)` <br />
+**Definition**: Collection of possible ISO 639/3166 locales for the given metadata element. Non-nullable. The absence of values is an empty collection, []. <br />
+
+<br />
+ 
+**ModelName**: Field <br />
+**ModelType**: Resource <br />
+**FieldName**: DisplayNames  <br />
+**Type**: `Collection(I18nString)` <br />
+**Definition**: Collection of possible ISO 639/3166 locales for the given metadata element. Non-nullable. The absence of values is an empty collection, []. <br />
+
+<br />
+
+**ModelName**: Lookup <br />
+**ModelType**: Resource <br />
+**FieldName**: DisplayNames <br />
+**Type**: `Collection(I18nString)` <br />
+**Definition**: Collection of possible ISO 639/3166 locales for the given metadata element. Non-nullable. The absence of values is an empty collection, []. <br />
 
 **Note**: All data elements are non-nullable. For items with a type of `Collection(I18nString)`, the empty list `[]` is returned when there are no values. 
 
