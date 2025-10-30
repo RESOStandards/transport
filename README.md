@@ -13,7 +13,7 @@
 
 # RESO Change Proposal Process
 
-<img width="1400" height="1059" alt="Horizontal Transport Specification Process" src="https://github.com/user-attachments/assets/6405cf38-3044-4e38-8791-e4b721a7575f" />
+<img alt="Horizontal Transport Specification Process" src="https://github.com/user-attachments/assets/6405cf38-3044-4e38-8791-e4b721a7575f" />
 
 
 [**CREATE NEW CHANGE PROPOSAL**](./reso-rcp-process.md#new-change-proposals).
