@@ -8,7 +8,7 @@
 | **Status** | IN PROGRESS |
 | **Date Ratified** | Pending |
 | **Dependencies** | None |
-| **Related Links** | [Single Feed Discussion](https://github.com/RESOStandards/transport/discussions/71)|
+| **Related Links** | [Github Discussion - Supporting Single Feed](https://github.com/RESOStandards/transport/discussions/71)|
 
 
 <br /><br />
