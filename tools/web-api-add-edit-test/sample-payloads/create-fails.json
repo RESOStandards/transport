@@ -1,0 +1,10 @@
+{
+  "ListPrice": -123456.00,
+  "BedroomsTotal": 3,
+  "BathroomsTotalInteger": 3,
+  "AccessibilityFeatures": [
+    "Accessible Approach with Ramp",
+    "Accessible Entrance",
+    "Visitable"
+  ]
+}

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="org.reso.metadata" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="Property">
+        <Key>
+          <PropertyRef Name="ListingKey"/>
+        </Key>
+        <Property Name="ListingKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ListPrice" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="BedroomsTotal" Type="Edm.Int64"/>
+        <Property Name="BathroomsTotalInteger" Type="Edm.Int64"/>
+        <Property Name="StandardStatus" Type="Edm.String">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="StandardStatus"/>
+        </Property>
+        <Property Name="AccessibilityFeatures" Type="Collection(Edm.String)">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="AccessibilityFeatures"/>
+        </Property>
+        <Property Name="ModificationTimestamp" Precision="27" Type="Edm.DateTimeOffset"/>
+      </EntityType>
+      <EntityType Name="Lookup">
+        <Key>
+          <PropertyRef Name="LookupKey"/>
+        </Key>
+        <Property Name="LookupKey" Type="Edm.String" Nullable="false"/>
+        <Property Name="LookupName" Type="Edm.String" Nullable="false"/>
+        <Property Name="LookupValue" Type="Edm.String" Nullable="false"/>
+        <Property Name="StandardLookupValue" Type="Edm.String"/>
+        <Property Name="LegacyODataValue" Type="Edm.String"/>
+        <Property Name="ModificationTimestamp" Precision="27" Type="Edm.DateTimeOffset" Nullable="false"/>
+      </EntityType>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
