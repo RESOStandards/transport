@@ -67,15 +67,26 @@ export const generatePropertyRecords = (
     record.City = randomChoice(CITY_NAMES);
     record.PostalCode = String(randomInt(10000, 99999));
 
-    // Pricing
+    // Pricing — ListPrice >= ListPriceLow
     record.ListPrice = randomDecimal(50000, 10000000, 2);
+    record.ListPriceLow = randomDecimal((record.ListPrice as number) * 0.8, record.ListPrice as number, 2);
     record.OriginalListPrice = record.ListPrice;
 
-    // Property characteristics
+    // Bedrooms
     record.BedroomsTotal = randomInt(1, 6);
-    record.BathroomsTotalInteger = randomInt(1, 5);
-    record.BathroomsFull = Math.max(1, (record.BathroomsTotalInteger as number) - randomInt(0, 1));
-    record.BathroomsHalf = (record.BathroomsTotalInteger as number) - (record.BathroomsFull as number);
+
+    // Bathrooms — generate parts first, then compute total
+    record.BathroomsFull = randomInt(1, 4);
+    record.BathroomsHalf = randomInt(0, 2);
+    record.BathroomsPartial = Math.random() > 0.7 ? randomInt(0, 1) : 0;
+    record.BathroomsOneQuarter = 0;
+    record.BathroomsThreeQuarter = Math.random() > 0.8 ? randomInt(0, 1) : 0;
+    record.BathroomsTotalInteger =
+      (record.BathroomsFull as number) +
+      (record.BathroomsHalf as number) +
+      (record.BathroomsPartial as number) +
+      (record.BathroomsOneQuarter as number) +
+      (record.BathroomsThreeQuarter as number);
     record.LivingArea = randomDecimal(500, 8000, 2);
     record.LotSizeSquareFeet = randomDecimal(2000, 50000, 2);
     record.YearBuilt = randomInt(1950, 2024);

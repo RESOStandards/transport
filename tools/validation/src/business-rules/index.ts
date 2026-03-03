@@ -1,16 +1,24 @@
 import type { ValidationFailure } from '../metadata/types.js';
-import { PROPERTY_RULES } from './property-rules.js';
-import type { FieldRule } from './types.js';
+import { PROPERTY_CROSS_RULES, PROPERTY_RULES } from './property-rules.js';
+import type { CrossFieldRule, FieldRule } from './types.js';
 
-export type { FieldRule } from './types.js';
+export type { CrossFieldRule, FieldRule } from './types.js';
 
-/** Rule registry keyed by resource name. */
+/** Per-field rule registry keyed by resource name. */
 const RULES_BY_RESOURCE: Readonly<Record<string, ReadonlyArray<FieldRule>>> = {
   Property: PROPERTY_RULES
 };
 
-/** Returns the business rules for a given resource (empty array if none). */
+/** Cross-field rule registry keyed by resource name. */
+const CROSS_RULES_BY_RESOURCE: Readonly<Record<string, ReadonlyArray<CrossFieldRule>>> = {
+  Property: PROPERTY_CROSS_RULES
+};
+
+/** Returns the per-field business rules for a given resource (empty array if none). */
 export const getBusinessRules = (resourceName: string): ReadonlyArray<FieldRule> => RULES_BY_RESOURCE[resourceName] ?? [];
+
+/** Returns the cross-field business rules for a given resource (empty array if none). */
+export const getCrossFieldRules = (resourceName: string): ReadonlyArray<CrossFieldRule> => CROSS_RULES_BY_RESOURCE[resourceName] ?? [];
 
 /** Formats a default error message for a range violation. */
 const formatRangeMessage = (rule: FieldRule, value: number): string => {
@@ -26,26 +34,33 @@ const formatRangeMessage = (rule: FieldRule, value: number): string => {
 
 /**
  * Validates a record against business rules for the given resource.
+ * Checks per-field range rules first, then cross-field relationship rules.
  * Returns an array of failures (empty if valid).
  */
 export const validateBusinessRules = (resourceName: string, body: Readonly<Record<string, unknown>>): ReadonlyArray<ValidationFailure> => {
-  const rules = getBusinessRules(resourceName);
-  if (rules.length === 0) return [];
-
-  const ruleMap = new Map(rules.map(r => [r.fieldName, r]));
   const failures: ValidationFailure[] = [];
 
-  for (const [key, value] of Object.entries(body)) {
-    if (typeof value !== 'number') continue;
-
-    const rule = ruleMap.get(key);
-    if (!rule) continue;
-
-    if (rule.min !== undefined && value < rule.min) {
-      failures.push({ field: key, reason: formatRangeMessage(rule, value) });
-    } else if (rule.max !== undefined && value > rule.max) {
-      failures.push({ field: key, reason: formatRangeMessage(rule, value) });
+  // Per-field range rules
+  const rules = getBusinessRules(resourceName);
+  if (rules.length > 0) {
+    const ruleMap = new Map(rules.map(r => [r.fieldName, r]));
+    for (const [key, value] of Object.entries(body)) {
+      if (typeof value !== 'number') continue;
+      const rule = ruleMap.get(key);
+      if (!rule) continue;
+      if (rule.min !== undefined && value < rule.min) {
+        failures.push({ field: key, reason: formatRangeMessage(rule, value) });
+      } else if (rule.max !== undefined && value > rule.max) {
+        failures.push({ field: key, reason: formatRangeMessage(rule, value) });
+      }
     }
+  }
+
+  // Cross-field relationship rules
+  const crossRules = getCrossFieldRules(resourceName);
+  for (const crossRule of crossRules) {
+    const failure = crossRule.validate(body);
+    if (failure) failures.push(failure);
   }
 
   return failures;

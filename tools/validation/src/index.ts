@@ -1,4 +1,4 @@
-export type { FieldRule, ResoAnnotation, ResoField, ValidationFailure } from './metadata/index.js';
+export type { CrossFieldRule, FieldRule, ResoAnnotation, ResoField, ValidationFailure } from './metadata/index.js';
 export {
   getBusinessRules,
   isEnumType,

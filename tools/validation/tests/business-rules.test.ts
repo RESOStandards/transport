@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getBusinessRules, validateBusinessRules } from '../src/business-rules/index.js';
+import { getBusinessRules, getCrossFieldRules, validateBusinessRules } from '../src/business-rules/index.js';
 import type { ResoField } from '../src/metadata/types.js';
 import { validateRecord } from '../src/metadata/validate.js';
 
@@ -12,6 +12,7 @@ const makeField = (overrides: Partial<ResoField> & Pick<ResoField, 'fieldName' |
 
 const PROPERTY_FIELDS: ReadonlyArray<ResoField> = [
   makeField({ fieldName: 'ListPrice', type: 'Edm.Decimal', precision: 14, scale: 2 }),
+  makeField({ fieldName: 'ListPriceLow', type: 'Edm.Decimal', precision: 14, scale: 2 }),
   makeField({ fieldName: 'OriginalListPrice', type: 'Edm.Decimal', precision: 14, scale: 2 }),
   makeField({ fieldName: 'ClosePrice', type: 'Edm.Decimal', precision: 14, scale: 2 }),
   makeField({ fieldName: 'BedroomsTotal', type: 'Edm.Int32' }),
@@ -19,6 +20,9 @@ const PROPERTY_FIELDS: ReadonlyArray<ResoField> = [
   makeField({ fieldName: 'BathroomsTotalInteger', type: 'Edm.Int32' }),
   makeField({ fieldName: 'BathroomsFull', type: 'Edm.Int32' }),
   makeField({ fieldName: 'BathroomsHalf', type: 'Edm.Int32' }),
+  makeField({ fieldName: 'BathroomsPartial', type: 'Edm.Int32' }),
+  makeField({ fieldName: 'BathroomsOneQuarter', type: 'Edm.Int32' }),
+  makeField({ fieldName: 'BathroomsThreeQuarter', type: 'Edm.Int32' }),
   makeField({ fieldName: 'MainLevelBathrooms', type: 'Edm.Int32' }),
   makeField({ fieldName: 'City', type: 'Edm.String', maxLength: 50 })
 ];
@@ -139,6 +143,89 @@ describe('validateBusinessRules', () => {
   });
 });
 
+describe('getCrossFieldRules', () => {
+  it('returns cross-field rules for Property', () => {
+    const rules = getCrossFieldRules('Property');
+    expect(rules.length).toBeGreaterThan(0);
+    expect(rules.some(r => r.name.includes('ListPrice'))).toBe(true);
+    expect(rules.some(r => r.name.includes('Bathroom'))).toBe(true);
+  });
+
+  it('returns empty array for unknown resource', () => {
+    expect(getCrossFieldRules('Member')).toHaveLength(0);
+  });
+});
+
+describe('cross-field rules: ListPrice >= ListPriceLow', () => {
+  it('passes when ListPrice > ListPriceLow', () => {
+    const failures = validateBusinessRules('Property', { ListPrice: 500000, ListPriceLow: 400000 });
+    expect(failures.some(f => f.field === 'ListPrice' && f.reason.includes('ListPriceLow'))).toBe(false);
+  });
+
+  it('passes when ListPrice = ListPriceLow', () => {
+    const failures = validateBusinessRules('Property', { ListPrice: 500000, ListPriceLow: 500000 });
+    expect(failures.some(f => f.field === 'ListPrice' && f.reason.includes('ListPriceLow'))).toBe(false);
+  });
+
+  it('fails when ListPrice < ListPriceLow', () => {
+    const failures = validateBusinessRules('Property', { ListPrice: 300000, ListPriceLow: 400000 });
+    expect(failures.some(f => f.field === 'ListPrice' && f.reason.includes('ListPriceLow'))).toBe(true);
+  });
+
+  it('skips when ListPriceLow is absent', () => {
+    const failures = validateBusinessRules('Property', { ListPrice: 500000 });
+    expect(failures.some(f => f.reason.includes('ListPriceLow'))).toBe(false);
+  });
+
+  it('skips when ListPrice is absent', () => {
+    const failures = validateBusinessRules('Property', { ListPriceLow: 400000 });
+    expect(failures.some(f => f.reason.includes('ListPriceLow'))).toBe(false);
+  });
+});
+
+describe('cross-field rules: BathroomsTotalInteger = sum of parts', () => {
+  it('passes when total matches sum of all parts', () => {
+    const failures = validateBusinessRules('Property', {
+      BathroomsTotalInteger: 8,
+      BathroomsFull: 5,
+      BathroomsHalf: 1,
+      BathroomsPartial: 2,
+      BathroomsOneQuarter: 0,
+      BathroomsThreeQuarter: 0
+    });
+    expect(failures.some(f => f.field === 'BathroomsTotalInteger' && f.reason.includes('sum'))).toBe(false);
+  });
+
+  it('fails when total does not match sum of parts', () => {
+    const failures = validateBusinessRules('Property', {
+      BathroomsTotalInteger: 5,
+      BathroomsFull: 5,
+      BathroomsHalf: 1,
+      BathroomsPartial: 2
+    });
+    expect(failures.some(f => f.field === 'BathroomsTotalInteger' && f.reason.includes('sum'))).toBe(true);
+  });
+
+  it('sums only the parts that are present', () => {
+    const failures = validateBusinessRules('Property', {
+      BathroomsTotalInteger: 3,
+      BathroomsFull: 2,
+      BathroomsHalf: 1
+    });
+    expect(failures.some(f => f.field === 'BathroomsTotalInteger' && f.reason.includes('sum'))).toBe(false);
+  });
+
+  it('skips when BathroomsTotalInteger is absent', () => {
+    const failures = validateBusinessRules('Property', { BathroomsFull: 5, BathroomsHalf: 1 });
+    expect(failures.some(f => f.field === 'BathroomsTotalInteger')).toBe(false);
+  });
+
+  it('skips when no parts are present', () => {
+    const failures = validateBusinessRules('Property', { BathroomsTotalInteger: 5 });
+    expect(failures.some(f => f.field === 'BathroomsTotalInteger' && f.reason.includes('sum'))).toBe(false);
+  });
+});
+
 describe('validateRecord integration with business rules', () => {
   it('catches business rule violations during record validation', () => {
     const failures = validateRecord({ ListPrice: 2_000_000_000 }, PROPERTY_FIELDS);
@@ -155,5 +242,10 @@ describe('validateRecord integration with business rules', () => {
     expect(failures.some(f => f.field === 'ListPrice')).toBe(true);
     expect(failures.some(f => f.field === 'BedroomsTotal')).toBe(true);
     expect(failures.some(f => f.field === 'City')).toBe(false);
+  });
+
+  it('catches cross-field violations during record validation', () => {
+    const failures = validateRecord({ BathroomsTotalInteger: 3, BathroomsFull: 5, BathroomsHalf: 1 }, PROPERTY_FIELDS);
+    expect(failures.some(f => f.field === 'BathroomsTotalInteger' && f.reason.includes('sum'))).toBe(true);
   });
 });

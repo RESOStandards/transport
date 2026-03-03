@@ -20,9 +20,9 @@ export const ResultsCard = ({ resource, record, summaryFields, fieldMap, onClick
   // Build formatted address for Property resources
   const address = resource === 'Property' ? formatAddress(record) : null;
 
-  // Filter to fields that have data; hide individual address fields when a composed address is shown
+  // Show all summary fields in fixed order; hide individual address fields when a composed address is shown
   const hiddenFields = address ? ADDRESS_FIELDS : new Set<string>();
-  const displayFields = summaryFields.filter(f => f !== keyField && !hiddenFields.has(f) && record[f] !== undefined && record[f] !== null);
+  const displayFields = summaryFields.filter(f => f !== keyField && !hiddenFields.has(f));
 
   return (
     <button
