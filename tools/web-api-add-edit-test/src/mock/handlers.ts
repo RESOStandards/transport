@@ -48,19 +48,18 @@ const makeErrorResponse = (
 });
 
 /** Returns an Express handler that serves the OData XML metadata document at /$metadata. */
-export function handleMetadata(metadataXml: string) {
-  return (_req: Request, res: Response): void => {
+export const handleMetadata = (metadataXml: string) =>
+  (_req: Request, res: Response): void => {
     res.type("application/xml").send(metadataXml);
   };
-}
 
 /**
  * Handles POST requests to create a new record. Generates a timestamp-based key,
  * stores the record, and returns 201 (representation) or 204 (minimal) based on
  * the Prefer header. Returns 400 with OData error if any numeric field is negative.
  */
-export function handleCreate(resource: string) {
-  return (req: Request, res: Response): void => {
+export const handleCreate = (resource: string) =>
+  (req: Request, res: Response): void => {
     const prefer = req.headers["prefer"] as string | undefined;
     const body = req.body as Record<string, unknown>;
 
@@ -110,15 +109,14 @@ export function handleCreate(resource: string) {
       ...record,
     });
   };
-}
 
 /**
  * Handles PATCH requests to update an existing record. Merges the request body
  * with the existing record (or creates one if not found). Returns 200 (representation)
  * or 204 (minimal) based on the Prefer header. Returns 400 if any numeric field is negative.
  */
-export function handleUpdate(resource: string) {
-  return (req: Request, res: Response): void => {
+export const handleUpdate = (resource: string) =>
+  (req: Request, res: Response): void => {
     const prefer = req.headers["prefer"] as string | undefined;
     const body = req.body as Record<string, unknown>;
     const key = extractKey(req.path);
@@ -177,11 +175,10 @@ export function handleUpdate(resource: string) {
       ...record,
     });
   };
-}
 
 /** Handles DELETE requests. Removes the record from the store and returns 204, or 404 if not found. */
-export function handleDelete() {
-  return (req: Request, res: Response): void => {
+export const handleDelete = () =>
+  (req: Request, res: Response): void => {
     const key = extractKey(req.path);
 
     if (!key || !store.has(key)) {
@@ -195,11 +192,10 @@ export function handleDelete() {
     res.set("OData-Version", "4.01");
     res.status(204).send();
   };
-}
 
 /** Handles GET requests for a single record by key. Returns 200 with OData annotations, or 404 if not found. */
-export function handleGet(resource: string) {
-  return (req: Request, res: Response): void => {
+export const handleGet = (resource: string) =>
+  (req: Request, res: Response): void => {
     const key = extractKey(req.path);
 
     if (!key || !store.has(key)) {
@@ -221,29 +217,27 @@ export function handleGet(resource: string) {
       ...record,
     });
   };
-}
 
 /** Clears all records from the in-memory store. Used in tests to reset state between runs. */
-export function resetStore(): void {
+export const resetStore = (): void => {
   store.clear();
-}
+};
 
 /** Pre-populates a record in the store for testing. Used to set up known records before running update/delete scenarios. */
-export function seedStore(key: string, record: Record<string, unknown>): void {
+export const seedStore = (key: string, record: Record<string, unknown>): void => {
   store.set(key, record);
-}
+};
 
 /**
  * Handles OAuth2 Client Credentials token requests at /oauth/token.
  * Accepts any client_id/client_secret and returns a mock access token.
  * Used for testing the OAuth2 flow without a real authorization server.
  */
-export function handleTokenEndpoint() {
-  return (_req: Request, res: Response): void => {
+export const handleTokenEndpoint = () =>
+  (_req: Request, res: Response): void => {
     res.json({
       access_token: "mock-access-token",
       token_type: "Bearer",
       expires_in: 3600,
     });
   };
-}

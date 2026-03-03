@@ -118,7 +118,7 @@ program
  * Validates that either --auth-token OR all three of --client-id/--client-secret/--token-url are provided.
  * When --mock is used with client credentials, the token URL is automatically pointed to the mock server.
  */
-function buildAuthConfig(
+const buildAuthConfig = (
   opts: {
     authToken?: string;
     clientId?: string;
@@ -127,7 +127,7 @@ function buildAuthConfig(
     mock?: boolean;
   },
   serverUrl: string,
-): AuthConfig {
+): AuthConfig => {
   const hasToken = Boolean(opts.authToken);
   const hasClientCreds = Boolean(opts.clientId) || Boolean(opts.clientSecret) || Boolean(opts.tokenUrl);
 
@@ -169,15 +169,15 @@ function buildAuthConfig(
     clientSecret: opts.clientSecret,
     tokenUrl,
   };
-}
+};
 
 /** Loads the bundled sample-metadata.xml shipped with this package as a fallback for --mock without --metadata. */
-async function loadDefaultMetadata(): Promise<string> {
+const loadDefaultMetadata = async (): Promise<string> => {
   const defaultPath = resolve(
     import.meta.dirname,
     "../../sample-metadata.xml",
   );
   return readFile(defaultPath, "utf-8");
-}
+};
 
 program.parse();

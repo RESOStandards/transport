@@ -17,9 +17,9 @@ export interface RequestOptions {
  * Response headers are normalized to lowercase keys to avoid case-sensitivity issues
  * (HTTP headers are case-insensitive per RFC 7230).
  */
-export async function odataRequest(
+export const odataRequest = async (
   options: RequestOptions,
-): Promise<ODataResponse> {
+): Promise<ODataResponse> => {
   const headers: Record<string, string> = {
     "OData-Version": "4.01",
     "Content-Type": "application/json",
@@ -48,7 +48,7 @@ export async function odataRequest(
   });
 
   return { status: response.status, headers: responseHeaders, body, rawBody };
-}
+};
 
 /**
  * Builds an OData resource URL with optional key syntax.
@@ -57,11 +57,11 @@ export async function odataRequest(
  * Without a key: `https://api.reso.org/Property`
  * With a key:    `https://api.reso.org/Property('12345')`
  */
-export function buildResourceUrl(
+export const buildResourceUrl = (
   serverUrl: string,
   resource: string,
   key?: string,
-): string {
+): string => {
   const base = `${serverUrl.replace(/\/$/, "")}/${encodeURIComponent(resource)}`;
   return key ? `${base}('${encodeURIComponent(key)}')` : base;
-}
+};

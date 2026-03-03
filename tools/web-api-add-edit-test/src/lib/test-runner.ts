@@ -33,9 +33,9 @@ import * as V from "./validators.js";
  *    minimal, fails), delete (succeeds, fails)
  * 5. Returns a structured TestReport with per-scenario results and a summary
  */
-export async function runAllScenarios(
+export const runAllScenarios = async (
   config: TestConfig,
-): Promise<TestReport> {
+): Promise<TestReport> => {
   const authToken = await resolveAuthToken(config.auth);
 
   const metadataXml = config.metadataPath
@@ -95,7 +95,7 @@ export async function runAllScenarios(
       skipped: 0,
     },
   };
-}
+};
 
 // ── Payload Loading ──
 
@@ -104,7 +104,7 @@ export async function runAllScenarios(
  * create-succeeds.json, create-fails.json, update-succeeds.json,
  * update-fails.json, delete-succeeds.json, delete-fails.json
  */
-async function loadPayloads(payloadsDir: string): Promise<PayloadSet> {
+const loadPayloads = async (payloadsDir: string): Promise<PayloadSet> => {
   const loadJson = async (filename: string): Promise<Record<string, unknown>> => {
     const content = await readFile(join(payloadsDir, filename), "utf-8");
     return JSON.parse(content) as Record<string, unknown>;
@@ -118,7 +118,7 @@ async function loadPayloads(payloadsDir: string): Promise<PayloadSet> {
     deleteSucceeds: (await loadJson("delete-succeeds.json")) as unknown as DeletePayload,
     deleteFails: (await loadJson("delete-fails.json")) as unknown as DeletePayload,
   };
-}
+};
 
 // ── Helpers ──
 
@@ -186,12 +186,12 @@ const buildScenarioResult = (
 // ── Create Scenarios ──
 
 /** POST with Prefer: return=representation. Validates 201 response, OData annotations, and follow-up GET. */
-async function runCreateSucceedsRepresentation(
+const runCreateSucceedsRepresentation = async (
   config: TestConfig,
   authToken: string,
   payload: Record<string, unknown>,
   entityType: EntityType,
-): Promise<ScenarioResult> {
+): Promise<ScenarioResult> => {
   const start = Date.now();
   const assertions: TestAssertion[] = [];
 
@@ -239,15 +239,15 @@ async function runCreateSucceedsRepresentation(
     assertions,
     start,
   );
-}
+};
 
 /** POST with Prefer: return=minimal. Validates 204 response with headers only, and follow-up GET. */
-async function runCreateSucceedsMinimal(
+const runCreateSucceedsMinimal = async (
   config: TestConfig,
   authToken: string,
   payload: Record<string, unknown>,
   entityType: EntityType,
-): Promise<ScenarioResult> {
+): Promise<ScenarioResult> => {
   const start = Date.now();
   const assertions: TestAssertion[] = [];
 
@@ -287,15 +287,15 @@ async function runCreateSucceedsMinimal(
     assertions,
     start,
   );
-}
+};
 
 /** POST with known-bad payload. Validates 400 response and OData error format with field-level details. */
-async function runCreateFails(
+const runCreateFails = async (
   config: TestConfig,
   authToken: string,
   payload: Record<string, unknown>,
   entityType: EntityType,
-): Promise<ScenarioResult> {
+): Promise<ScenarioResult> => {
   const start = Date.now();
   const assertions: TestAssertion[] = [];
 
@@ -320,17 +320,17 @@ async function runCreateFails(
     assertions,
     start,
   );
-}
+};
 
 // ── Update Scenarios ──
 
 /** PATCH with Prefer: return=representation. Validates 200 response, @odata.etag, and follow-up GET. */
-async function runUpdateSucceedsRepresentation(
+const runUpdateSucceedsRepresentation = async (
   config: TestConfig,
   authToken: string,
   payload: Record<string, unknown>,
   entityType: EntityType,
-): Promise<ScenarioResult> {
+): Promise<ScenarioResult> => {
   const start = Date.now();
   const assertions: TestAssertion[] = [];
   const targetKey = extractPrimaryKey(payload, entityType);
@@ -381,15 +381,15 @@ async function runUpdateSucceedsRepresentation(
     assertions,
     start,
   );
-}
+};
 
 /** PATCH with Prefer: return=minimal. Validates 204 response with headers only, and follow-up GET. */
-async function runUpdateSucceedsMinimal(
+const runUpdateSucceedsMinimal = async (
   config: TestConfig,
   authToken: string,
   payload: Record<string, unknown>,
   entityType: EntityType,
-): Promise<ScenarioResult> {
+): Promise<ScenarioResult> => {
   const start = Date.now();
   const assertions: TestAssertion[] = [];
   const targetKey = extractPrimaryKey(payload, entityType);
@@ -430,15 +430,15 @@ async function runUpdateSucceedsMinimal(
     assertions,
     start,
   );
-}
+};
 
 /** PATCH with known-bad payload. Validates 400 response and OData error format with field-level details. */
-async function runUpdateFails(
+const runUpdateFails = async (
   config: TestConfig,
   authToken: string,
   payload: Record<string, unknown>,
   entityType: EntityType,
-): Promise<ScenarioResult> {
+): Promise<ScenarioResult> => {
   const start = Date.now();
   const assertions: TestAssertion[] = [];
   const targetKey = extractPrimaryKey(payload, entityType);
@@ -465,7 +465,7 @@ async function runUpdateFails(
     assertions,
     start,
   );
-}
+};
 
 // ── Delete Scenarios ──
 
@@ -474,12 +474,12 @@ async function runUpdateFails(
  * a follow-up GET to confirm the resource returns 404 (actually deleted).
  * The delete URL is built from either the payload's `url` field or its `id` + the resource name.
  */
-async function runDeleteSucceeds(
+const runDeleteSucceeds = async (
   config: TestConfig,
   authToken: string,
   deletePayload: DeletePayload,
   entityType: EntityType,
-): Promise<ScenarioResult> {
+): Promise<ScenarioResult> => {
   const start = Date.now();
   const assertions: TestAssertion[] = [];
 
@@ -513,17 +513,17 @@ async function runDeleteSucceeds(
     assertions,
     start,
   );
-}
+};
 
 /**
  * DELETE to a non-existent resource URL. Validates that the server returns
- * a 4xx status code (400–499) and the OData-Version header.
+ * a 4xx status code (400-499) and the OData-Version header.
  */
-async function runDeleteFails(
+const runDeleteFails = async (
   config: TestConfig,
   authToken: string,
   deletePayload: DeletePayload,
-): Promise<ScenarioResult> {
+): Promise<ScenarioResult> => {
   const start = Date.now();
   const assertions: TestAssertion[] = [];
 
@@ -546,4 +546,4 @@ async function runDeleteFails(
     assertions,
     start,
   );
-}
+};

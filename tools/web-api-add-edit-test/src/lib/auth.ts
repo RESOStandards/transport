@@ -5,12 +5,12 @@ import type { AuthConfig } from "./types.js";
  * For "token" mode, returns the token directly.
  * For "client_credentials" mode, performs the OAuth2 token exchange.
  */
-export async function resolveAuthToken(auth: AuthConfig): Promise<string> {
+export const resolveAuthToken = async (auth: AuthConfig): Promise<string> => {
   if (auth.mode === "token") {
     return auth.authToken;
   }
   return fetchAccessToken(auth.clientId, auth.clientSecret, auth.tokenUrl);
-}
+};
 
 /**
  * Performs an OAuth2 Client Credentials grant to obtain an access token.
@@ -19,11 +19,11 @@ export async function resolveAuthToken(auth: AuthConfig): Promise<string> {
  * and the client credentials as application/x-www-form-urlencoded body.
  * Returns the access_token from the JSON response.
  */
-export async function fetchAccessToken(
+export const fetchAccessToken = async (
   clientId: string,
   clientSecret: string,
   tokenUrl: string,
-): Promise<string> {
+): Promise<string> => {
   const body = new URLSearchParams({
     grant_type: "client_credentials",
     client_id: clientId,
@@ -55,4 +55,4 @@ export async function fetchAccessToken(
   }
 
   return accessToken;
-}
+};

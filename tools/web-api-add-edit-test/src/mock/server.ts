@@ -22,9 +22,9 @@ import {
  * Returns the HTTP server instance and the resolved URL (including the actual port).
  * Use port 0 for an OS-assigned ephemeral port (recommended for tests).
  */
-export async function startMockServer(
+export const startMockServer = async (
   options: MockServerOptions,
-): Promise<{ readonly server: Server; readonly url: string }> {
+): Promise<{ readonly server: Server; readonly url: string }> => {
   const app = express();
   app.use(express.json());
 
@@ -56,11 +56,10 @@ export async function startMockServer(
       });
     });
   });
-}
+};
 
 /** Gracefully shuts down the mock server and releases the port. */
-export async function stopMockServer(server: Server): Promise<void> {
-  return new Promise((resolve, reject) => {
+export const stopMockServer = async (server: Server): Promise<void> =>
+  new Promise((resolve, reject) => {
     server.close((err) => (err ? reject(err) : resolve()));
   });
-}

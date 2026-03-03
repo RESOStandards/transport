@@ -40,7 +40,7 @@ const formatScenario = (s: ScenarioResult): string => {
  * Includes a header with server/resource info, each scenario with its assertions,
  * and a summary footer with pass/fail/skip counts.
  */
-export function formatConsoleReport(report: TestReport): string {
+export const formatConsoleReport = (report: TestReport): string => {
   const header = [
     "RESO Web API Add/Edit Compliance Test Report",
     "=".repeat(47),
@@ -59,9 +59,8 @@ export function formatConsoleReport(report: TestReport): string {
   ].join("\n");
 
   return `${header}${scenarios}${summary}\n`;
-}
+};
 
 /** Formats a test report as pretty-printed JSON. */
-export function formatJsonReport(report: TestReport): string {
-  return JSON.stringify(report, null, 2);
-}
+export const formatJsonReport = (report: TestReport): string =>
+  JSON.stringify(report, null, 2);

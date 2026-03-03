@@ -19,10 +19,10 @@ const xmlParserOptions = {
  * Requires a bearer token for authorization.
  * Returns the raw XML string.
  */
-export async function fetchMetadata(
+export const fetchMetadata = async (
   serverUrl: string,
   authToken: string,
-): Promise<string> {
+): Promise<string> => {
   const metadataUrl = `${serverUrl.replace(/\/$/, "")}/$metadata`;
   const response = await fetch(metadataUrl, {
     headers: {
@@ -38,12 +38,11 @@ export async function fetchMetadata(
   }
 
   return response.text();
-}
+};
 
 /** Reads OData XML metadata from a local file. */
-export async function loadMetadataFromFile(filePath: string): Promise<string> {
-  return readFile(filePath, "utf-8");
-}
+export const loadMetadataFromFile = async (filePath: string): Promise<string> =>
+  readFile(filePath, "utf-8");
 
 /**
  * Parses an OData EDMX XML metadata document into a structured representation.
@@ -54,7 +53,7 @@ export async function loadMetadataFromFile(filePath: string): Promise<string> {
  * Expects the standard EDMX 4.0 format:
  * `edmx:Edmx > edmx:DataServices > Schema > EntityType > Property`
  */
-export function parseMetadataXml(xml: string): ParsedMetadata {
+export const parseMetadataXml = (xml: string): ParsedMetadata => {
   const parser = new XMLParser(xmlParserOptions);
   const parsed = parser.parse(xml);
 
@@ -127,25 +126,24 @@ export function parseMetadataXml(xml: string): ParsedMetadata {
   );
 
   return { namespace, entityTypes };
-}
+};
 
 /** Finds an entity type by name in parsed metadata. Returns undefined if not found. */
-export function getEntityType(
+export const getEntityType = (
   metadata: ParsedMetadata,
   resourceName: string,
-): EntityType | undefined {
-  return metadata.entityTypes.find((et) => et.name === resourceName);
-}
+): EntityType | undefined =>
+  metadata.entityTypes.find((et) => et.name === resourceName);
 
 /**
  * Validates that all fields in a payload exist in the entity type's property definitions.
  * Keys prefixed with `@` (OData annotations) are ignored.
  * Returns the list of unknown fields, if any.
  */
-export function validatePayloadAgainstMetadata(
+export const validatePayloadAgainstMetadata = (
   payload: Record<string, unknown>,
   entityType: EntityType,
-): { readonly valid: boolean; readonly unknownFields: ReadonlyArray<string> } {
+): { readonly valid: boolean; readonly unknownFields: ReadonlyArray<string> } => {
   const propertyNames = new Set(entityType.properties.map((p) => p.name));
   const unknownFields = Object.keys(payload)
     .filter((key) => !key.startsWith("@"))
@@ -155,4 +153,4 @@ export function validatePayloadAgainstMetadata(
     valid: unknownFields.length === 0,
     unknownFields,
   };
-}
+};

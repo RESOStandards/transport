@@ -30,9 +30,9 @@ const isValidUrl = (value: string): boolean => {
 // and the Gherkin certification scenarios defined in RCP-010 Section 3.
 
 /** Validates the OData-Version response header is "4.0" or "4.01". */
-export function validateODataVersionHeader(
+export const validateODataVersionHeader = (
   response: ODataResponse,
-): TestAssertion {
+): TestAssertion => {
   const value = response.headers["odata-version"];
   const valid = value === "4.0" || value === "4.01";
   return assertion(
@@ -45,13 +45,13 @@ export function validateODataVersionHeader(
         'the response header "OData-Version" "equals" one of the following values',
     },
   );
-}
+};
 
 /** Validates the response status code is one of the allowed values. */
-export function validateStatusCode(
+export const validateStatusCode = (
   response: ODataResponse,
   allowed: ReadonlyArray<number>,
-): TestAssertion {
+): TestAssertion => {
   const valid = allowed.includes(response.status);
   return assertion(
     `Status code is one of [${allowed.join(", ")}]`,
@@ -62,14 +62,14 @@ export function validateStatusCode(
       gherkinStep: `the server responds with one of the following status codes`,
     },
   );
-}
+};
 
 /** Validates the response status code falls within an inclusive range (e.g. 400-499). */
-export function validateStatusCodeRange(
+export const validateStatusCodeRange = (
   response: ODataResponse,
   min: number,
   max: number,
-): TestAssertion {
+): TestAssertion => {
   const valid = response.status >= min && response.status <= max;
   return assertion(
     `Status code is between ${min} and ${max}`,
@@ -80,16 +80,16 @@ export function validateStatusCodeRange(
       gherkinStep: `the server responds with a status code between ${min} and ${max}`,
     },
   );
-}
+};
 
 /**
  * Validates the EntityId header is present when the response status is 204.
  * Per OData, EntityId MUST be present on 204 responses for create/update so the
  * client can identify the affected resource. Skipped for non-204 responses.
  */
-export function validateEntityIdHeader(
+export const validateEntityIdHeader = (
   response: ODataResponse,
-): TestAssertion {
+): TestAssertion => {
   if (response.status !== 204) {
     return assertion(
       "EntityId header check (not applicable for non-204)",
@@ -112,7 +112,7 @@ export function validateEntityIdHeader(
         'the response header "EntityId" "MUST" "be present" if the response code was 204',
     },
   );
-}
+};
 
 /**
  * Validates the Location response header:
@@ -122,10 +122,10 @@ export function validateEntityIdHeader(
  *
  * Returns up to 3 assertions. If the header is missing, only the presence check is returned.
  */
-export function validateLocationHeader(
+export const validateLocationHeader = (
   response: ODataResponse,
   resource: string,
-): ReadonlyArray<TestAssertion> {
+): ReadonlyArray<TestAssertion> => {
   const value = response.headers["location"];
 
   const presentAssertion = assertion(
@@ -164,13 +164,13 @@ export function validateLocationHeader(
   );
 
   return [presentAssertion, urlAssertion, resourceAssertion];
-}
+};
 
 /** Validates the Preference-Applied header matches the expected value (return=representation or return=minimal). */
-export function validatePreferenceApplied(
+export const validatePreferenceApplied = (
   response: ODataResponse,
   expected: "return=representation" | "return=minimal",
-): TestAssertion {
+): TestAssertion => {
   const value = response.headers["preference-applied"];
   const valid = value === expected;
   return assertion(
@@ -182,15 +182,15 @@ export function validatePreferenceApplied(
       gherkinStep: `the Preference-Applied response header is \`${expected}\``,
     },
   );
-}
+};
 
 // ── Body Validators ──
 // Each function validates the structure or content of the JSON response body.
 
 /** Validates that the response body was successfully parsed as a JSON object. */
-export function validateJsonResponse(
+export const validateJsonResponse = (
   response: ODataResponse,
-): TestAssertion {
+): TestAssertion => {
   const valid = response.body !== null && typeof response.body === "object";
   return assertion("Response is valid JSON", valid ? "pass" : "fail", {
     expected: "(valid JSON object)",
@@ -198,12 +198,12 @@ export function validateJsonResponse(
       response.body === null ? "(null/empty)" : typeof response.body,
     gherkinStep: "the response is valid JSON",
   });
-}
+};
 
 /** Validates that the response body is empty (used for delete success verification). */
-export function validateEmptyResponse(
+export const validateEmptyResponse = (
   response: ODataResponse,
-): TestAssertion {
+): TestAssertion => {
   const empty =
     response.rawBody.trim() === "" ||
     response.rawBody.trim() === "{}" ||
@@ -216,7 +216,7 @@ export function validateEmptyResponse(
         : response.rawBody,
     gherkinStep: 'the JSON response "MUST" be empty',
   });
-}
+};
 
 /**
  * Validates an OData annotation in the response body (e.g. @odata.context, @odata.editLink).
@@ -227,11 +227,11 @@ export function validateEmptyResponse(
  *
  * Returns one or more assertions depending on the annotation type.
  */
-export function validateODataAnnotation(
+export const validateODataAnnotation = (
   response: ODataResponse,
   annotationName: string,
   requirement: "MUST" | "MAY",
-): ReadonlyArray<TestAssertion> {
+): ReadonlyArray<TestAssertion> => {
   const body = response.body as Record<string, unknown> | null;
   if (!body || typeof body !== "object") {
     if (requirement === "MUST") {
@@ -311,17 +311,17 @@ export function validateODataAnnotation(
   }
 
   return results;
-}
+};
 
 /**
  * Validates that every field in the request payload appears in the response body with a matching value.
  * Keys prefixed with `@` (OData annotations like @odata.context) are excluded from comparison.
  * Uses deep equality for arrays and objects, with numeric tolerance for decimal representation.
  */
-export function validateResponseContainsPayload(
+export const validateResponseContainsPayload = (
   responseBody: unknown,
   payload: Readonly<Record<string, unknown>>,
-): ReadonlyArray<TestAssertion> {
+): ReadonlyArray<TestAssertion> => {
   if (!responseBody || typeof responseBody !== "object") {
     return [
       assertion(
@@ -353,7 +353,7 @@ export function validateResponseContainsPayload(
         },
       );
     });
-}
+};
 
 // ── Error Response Validators ──
 
@@ -368,10 +368,10 @@ export function validateResponseContainsPayload(
  *   (handles nested paths like "Media[1].Category" by extracting the root field name)
  * - Each detail's `message` is a non-empty string
  */
-export function validateODataError(
+export const validateODataError = (
   response: ODataResponse,
   entityType: EntityType,
-): ReadonlyArray<TestAssertion> {
+): ReadonlyArray<TestAssertion> => {
   const results: TestAssertion[] = [];
   const body = response.body as Record<string, unknown> | null;
 
@@ -482,7 +482,7 @@ export function validateODataError(
   }
 
   return results;
-}
+};
 
 // ── Utility ──
 
@@ -491,7 +491,7 @@ export function validateODataError(
  * Uses Number.EPSILON tolerance for numeric comparisons to handle
  * floating-point representation differences (e.g. 123456.00 vs 123456).
  */
-function deepEqual(a: unknown, b: unknown): boolean {
+const deepEqual = (a: unknown, b: unknown): boolean => {
   if (a === b) return true;
 
   // Numeric comparison with tolerance for decimal representation
@@ -522,4 +522,4 @@ function deepEqual(a: unknown, b: unknown): boolean {
   }
 
   return false;
-}
+};
