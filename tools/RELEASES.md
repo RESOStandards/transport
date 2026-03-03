@@ -2,6 +2,69 @@
 
 ---
 
+## v0.0.8 — 2026-03-03
+
+### Required Address Fields
+
+Enforced required address fields across all address-bearing resources. City,
+StateOrProvince, PostalCode, and Country (with resource-specific prefixes for
+Member and Office) must always be present.
+
+- **Validation**: Added `required` flag to `FieldRule` interface, with required
+  address rules for Property, Member (`MemberCity`, etc.), and Office
+  (`OfficeCity`, etc.)
+- **Data generators**: Property now always generates `StateOrProvince` and
+  `Country`; Office now generates `OfficeStateOrProvince` and `OfficeCountry`;
+  Member now generates full address fields (`MemberAddress1`, `MemberCity`,
+  `MemberStateOrProvince`, `MemberPostalCode`, `MemberCountry`)
+
+### Cross-Field Validation Rules
+
+Added relationship constraints between fields in the Property resource:
+
+- **ListPrice >= ListPriceLow** — when both are present, ListPrice must be
+  greater than or equal to ListPriceLow
+- **BathroomsTotalInteger = sum of parts** — when BathroomsTotalInteger and any
+  bathroom part fields (BathroomsFull, BathroomsHalf, BathroomsPartial,
+  BathroomsOneQuarter, BathroomsThreeQuarter) are present, the total must equal
+  the sum of the parts
+- New `CrossFieldRule` interface with callback-based validators
+
+### Data Generator Consistency
+
+- Bathroom fields generated parts-first (BathroomsFull, BathroomsHalf, etc.),
+  then BathroomsTotalInteger computed as their sum
+- ListPriceLow generated as 80–100% of ListPrice
+
+### Address Formatting Fix
+
+Fixed USPS-format address separators in the UI:
+
+- Added comma between City and StateOrProvince (was missing)
+- Added space between StateOrProvince and PostalCode (was missing)
+- Fixed StreetDirSuffix separator (was comma, should be space — it's part of
+  the street line)
+- Addresses now render correctly: `8653 Main Blvd, Salem, OR 45241`
+
+### Summary Display
+
+- Summary cards now show all configured fields in fixed order, displaying `—`
+  for missing values instead of hiding empty fields
+
+### Test Summary
+
+| Package | Tests |
+|---------|------:|
+| `@reso/validation` | 91 |
+| `@reso/odata-filter-parser` | 97 |
+| `@reso/odata-client` | 101 |
+| `@reso/data-generator` | 71 |
+| `@reso/reference-server` | 76 |
+| `@reso/certification-add-edit` | 49 |
+| **Total** | **485** |
+
+---
+
 ## v0.0.7 — 2026-03-03
 
 ### Business Rules Validation

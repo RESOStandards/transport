@@ -18,8 +18,19 @@ const roomCountRule = (fieldName: string): FieldRule => ({
   max: MAX_ROOM_COUNT
 });
 
-/** Per-field range rules for the Property resource. */
+const requiredRule = (fieldName: string): FieldRule => ({
+  fieldName,
+  required: true
+});
+
+/** Per-field rules for the Property resource. */
 export const PROPERTY_RULES: ReadonlyArray<FieldRule> = [
+  // Required address fields
+  requiredRule('City'),
+  requiredRule('StateOrProvince'),
+  requiredRule('PostalCode'),
+  requiredRule('Country'),
+
   // Price fields
   priceRule('ListPrice'),
   priceRule('OriginalListPrice'),

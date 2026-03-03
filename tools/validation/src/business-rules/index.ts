@@ -1,4 +1,6 @@
 import type { ValidationFailure } from '../metadata/types.js';
+import { MEMBER_RULES } from './member-rules.js';
+import { OFFICE_RULES } from './office-rules.js';
 import { PROPERTY_CROSS_RULES, PROPERTY_RULES } from './property-rules.js';
 import type { CrossFieldRule, FieldRule } from './types.js';
 
@@ -6,7 +8,9 @@ export type { CrossFieldRule, FieldRule } from './types.js';
 
 /** Per-field rule registry keyed by resource name. */
 const RULES_BY_RESOURCE: Readonly<Record<string, ReadonlyArray<FieldRule>>> = {
-  Property: PROPERTY_RULES
+  Property: PROPERTY_RULES,
+  Member: MEMBER_RULES,
+  Office: OFFICE_RULES
 };
 
 /** Cross-field rule registry keyed by resource name. */
@@ -40,10 +44,21 @@ const formatRangeMessage = (rule: FieldRule, value: number): string => {
 export const validateBusinessRules = (resourceName: string, body: Readonly<Record<string, unknown>>): ReadonlyArray<ValidationFailure> => {
   const failures: ValidationFailure[] = [];
 
-  // Per-field range rules
+  // Per-field rules
   const rules = getBusinessRules(resourceName);
   if (rules.length > 0) {
     const ruleMap = new Map(rules.map(r => [r.fieldName, r]));
+
+    // Required field checks — iterate rules looking for missing fields
+    for (const rule of rules) {
+      if (!rule.required) continue;
+      const value = body[rule.fieldName];
+      if (value === undefined || value === null || value === '') {
+        failures.push({ field: rule.fieldName, reason: rule.message ?? `${rule.fieldName} is required.` });
+      }
+    }
+
+    // Range checks — iterate body fields looking for out-of-range values
     for (const [key, value] of Object.entries(body)) {
       if (typeof value !== 'number') continue;
       const rule = ruleMap.get(key);

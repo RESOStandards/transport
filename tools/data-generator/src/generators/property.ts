@@ -48,6 +48,31 @@ const CITY_NAMES = [
 
 const PROPERTY_TYPES = ['Residential', 'Commercial', 'Land', 'Farm'];
 
+const US_STATES = [
+  'AL',
+  'AZ',
+  'CA',
+  'CO',
+  'CT',
+  'FL',
+  'GA',
+  'IL',
+  'MA',
+  'MD',
+  'MI',
+  'MN',
+  'NC',
+  'NJ',
+  'NY',
+  'OH',
+  'OR',
+  'PA',
+  'RI',
+  'TX',
+  'VA',
+  'WA'
+];
+
 const PROPERTY_SUBTYPES = ['SingleFamilyResidence', 'Condominium', 'Townhouse', 'Apartment', 'ManufacturedHome', 'MultiFamily'];
 
 /** Generates realistic Property records with domain-specific overrides. */
@@ -65,7 +90,9 @@ export const generatePropertyRecords = (
     record.StreetSuffix = randomChoice(STREET_SUFFIXES);
     record.UnparsedAddress = `${record.StreetNumber} ${record.StreetName} ${record.StreetSuffix}`;
     record.City = randomChoice(CITY_NAMES);
+    record.StateOrProvince = randomChoice(US_STATES);
     record.PostalCode = String(randomInt(10000, 99999));
+    record.Country = 'US';
 
     // Pricing — ListPrice >= ListPriceLow
     record.ListPrice = randomDecimal(50000, 10000000, 2);

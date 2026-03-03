@@ -1,11 +1,12 @@
 import type { ValidationFailure } from '../metadata/types.js';
 
-/** A range constraint for a specific field within a resource. */
+/** A per-field constraint for a specific field within a resource. */
 export interface FieldRule {
   readonly fieldName: string;
+  readonly required?: boolean;
   readonly min?: number;
   readonly max?: number;
-  /** Custom error message. If omitted, a default is generated from min/max. */
+  /** Custom error message. If omitted, a default is generated from min/max or required. */
   readonly message?: string;
 }
 

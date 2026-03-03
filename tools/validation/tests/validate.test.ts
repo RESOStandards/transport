@@ -10,12 +10,18 @@ const makeField = (overrides: Partial<ResoField> & Pick<ResoField, 'fieldName' |
   ...overrides
 });
 
+/** Base record satisfying all required address fields for Property. */
+const VALID_ADDRESS = { City: 'Austin', StateOrProvince: 'TX', PostalCode: '78701', Country: 'US' };
+
 const fields: ResoField[] = [
   makeField({ fieldName: 'ListingKey', type: 'Edm.String', maxLength: 255 }),
   makeField({ fieldName: 'ListPrice', type: 'Edm.Decimal', precision: 14, scale: 2 }),
   makeField({ fieldName: 'BedroomsTotal', type: 'Edm.Int32' }),
   makeField({ fieldName: 'LivingAreaTotal', type: 'Edm.Int64' }),
   makeField({ fieldName: 'City', type: 'Edm.String' }),
+  makeField({ fieldName: 'StateOrProvince', type: 'Edm.String', maxLength: 2 }),
+  makeField({ fieldName: 'PostalCode', type: 'Edm.String', maxLength: 10 }),
+  makeField({ fieldName: 'Country', type: 'Edm.String', maxLength: 2 }),
   makeField({ fieldName: 'StandardStatus', type: 'org.reso.metadata.enums.StandardStatus' }),
   makeField({
     fieldName: 'AccessibilityFeatures',
@@ -32,55 +38,57 @@ const fields: ResoField[] = [
 describe('validateRecord', () => {
   it('returns empty array for a valid payload', () => {
     const body = {
+      ...VALID_ADDRESS,
       ListPrice: 250000,
-      City: 'Austin',
       BedroomsTotal: 3
     };
     expect(validateRecord(body, fields)).toHaveLength(0);
   });
 
-  it('returns empty array for an empty body', () => {
-    expect(validateRecord({}, fields)).toHaveLength(0);
+  it('returns required field failures for an empty body', () => {
+    const failures = validateRecord({}, fields);
+    expect(failures).toHaveLength(4);
+    expect(failures.every(f => f.reason.includes('required'))).toBe(true);
   });
 
   it('detects unknown fields', () => {
-    const failures = validateRecord({ UnknownField: 'value' }, fields);
+    const failures = validateRecord({ ...VALID_ADDRESS, UnknownField: 'value' }, fields);
     expect(failures).toHaveLength(1);
     expect(failures[0].field).toBe('UnknownField');
     expect(failures[0].reason).toContain('not a recognized field');
   });
 
   it('skips OData annotations', () => {
-    const failures = validateRecord({ '@odata.context': 'something', ListPrice: 100 }, fields);
+    const failures = validateRecord({ ...VALID_ADDRESS, '@odata.context': 'something', ListPrice: 100 }, fields);
     expect(failures).toHaveLength(0);
   });
 
-  it('allows null values', () => {
-    expect(validateRecord({ City: null }, fields)).toHaveLength(0);
+  it('allows null values for non-required fields', () => {
+    expect(validateRecord({ ...VALID_ADDRESS, Remarks: null }, fields)).toHaveLength(0);
   });
 
-  it('allows undefined values', () => {
-    expect(validateRecord({ City: undefined }, fields)).toHaveLength(0);
+  it('allows undefined values for non-required fields', () => {
+    expect(validateRecord({ ...VALID_ADDRESS, Remarks: undefined }, fields)).toHaveLength(0);
   });
 
-  it('allows empty string values', () => {
-    expect(validateRecord({ City: '' }, fields)).toHaveLength(0);
+  it('allows empty string values for non-required fields', () => {
+    expect(validateRecord({ ...VALID_ADDRESS, Remarks: '' }, fields)).toHaveLength(0);
   });
 
   describe('string validation', () => {
     it('accepts valid strings', () => {
-      expect(validateRecord({ City: 'Austin' }, fields)).toHaveLength(0);
+      expect(validateRecord({ ...VALID_ADDRESS }, fields)).toHaveLength(0);
     });
 
     it('rejects non-string values for Edm.String fields', () => {
-      const failures = validateRecord({ City: 12345 }, fields);
+      const failures = validateRecord({ ...VALID_ADDRESS, Remarks: 12345 }, fields);
       expect(failures).toHaveLength(1);
-      expect(failures[0].field).toBe('City');
+      expect(failures[0].field).toBe('Remarks');
       expect(failures[0].reason).toBe('Must be text.');
     });
 
     it('enforces maxLength', () => {
-      const failures = validateRecord({ Remarks: 'x'.repeat(51) }, fields);
+      const failures = validateRecord({ ...VALID_ADDRESS, Remarks: 'x'.repeat(51) }, fields);
       expect(failures).toHaveLength(1);
       expect(failures[0].field).toBe('Remarks');
       expect(failures[0].reason).toContain('maximum length of 50');
@@ -88,28 +96,28 @@ describe('validateRecord', () => {
     });
 
     it('allows strings at exactly maxLength', () => {
-      expect(validateRecord({ Remarks: 'x'.repeat(50) }, fields)).toHaveLength(0);
+      expect(validateRecord({ ...VALID_ADDRESS, Remarks: 'x'.repeat(50) }, fields)).toHaveLength(0);
     });
   });
 
   describe('numeric validation', () => {
     it('accepts valid decimals', () => {
-      expect(validateRecord({ ListPrice: 250000.5 }, fields)).toHaveLength(0);
+      expect(validateRecord({ ...VALID_ADDRESS, ListPrice: 250000.5 }, fields)).toHaveLength(0);
     });
 
     it('accepts valid doubles', () => {
-      expect(validateRecord({ LotSizeAcres: 1.5 }, fields)).toHaveLength(0);
+      expect(validateRecord({ ...VALID_ADDRESS, LotSizeAcres: 1.5 }, fields)).toHaveLength(0);
     });
 
     it('rejects non-number values for numeric fields', () => {
-      const failures = validateRecord({ ListPrice: 'not-a-number' }, fields);
+      const failures = validateRecord({ ...VALID_ADDRESS, ListPrice: 'not-a-number' }, fields);
       expect(failures).toHaveLength(1);
       expect(failures[0].field).toBe('ListPrice');
       expect(failures[0].reason).toBe('Must be a number.');
     });
 
     it('rejects negative numbers', () => {
-      const failures = validateRecord({ ListPrice: -100 }, fields);
+      const failures = validateRecord({ ...VALID_ADDRESS, ListPrice: -100 }, fields);
       expect(failures).toHaveLength(1);
       expect(failures[0].field).toBe('ListPrice');
       expect(failures[0].reason).toContain('greater than or equal to 0');
@@ -118,29 +126,29 @@ describe('validateRecord', () => {
 
   describe('integer validation', () => {
     it('accepts valid integers for Int32', () => {
-      expect(validateRecord({ BedroomsTotal: 3 }, fields)).toHaveLength(0);
+      expect(validateRecord({ ...VALID_ADDRESS, BedroomsTotal: 3 }, fields)).toHaveLength(0);
     });
 
     it('accepts valid integers for Int64', () => {
-      expect(validateRecord({ LivingAreaTotal: 2500 }, fields)).toHaveLength(0);
+      expect(validateRecord({ ...VALID_ADDRESS, LivingAreaTotal: 2500 }, fields)).toHaveLength(0);
     });
 
     it('rejects non-number values for integer fields', () => {
-      const failures = validateRecord({ BedroomsTotal: 'three' }, fields);
+      const failures = validateRecord({ ...VALID_ADDRESS, BedroomsTotal: 'three' }, fields);
       expect(failures).toHaveLength(1);
       expect(failures[0].field).toBe('BedroomsTotal');
       expect(failures[0].reason).toBe('Must be a whole number.');
     });
 
     it('rejects decimal values for integer fields', () => {
-      const failures = validateRecord({ BedroomsTotal: 3.5 }, fields);
+      const failures = validateRecord({ ...VALID_ADDRESS, BedroomsTotal: 3.5 }, fields);
       expect(failures).toHaveLength(1);
       expect(failures[0].field).toBe('BedroomsTotal');
       expect(failures[0].reason).toBe('Must be a whole number (no decimals).');
     });
 
     it('rejects negative integers', () => {
-      const failures = validateRecord({ BedroomsTotal: -1 }, fields);
+      const failures = validateRecord({ ...VALID_ADDRESS, BedroomsTotal: -1 }, fields);
       expect(failures).toHaveLength(1);
       expect(failures[0].field).toBe('BedroomsTotal');
       expect(failures[0].reason).toContain('greater than or equal to 0');
@@ -149,15 +157,15 @@ describe('validateRecord', () => {
 
   describe('boolean validation', () => {
     it('accepts true', () => {
-      expect(validateRecord({ ActiveYN: true }, fields)).toHaveLength(0);
+      expect(validateRecord({ ...VALID_ADDRESS, ActiveYN: true }, fields)).toHaveLength(0);
     });
 
     it('accepts false', () => {
-      expect(validateRecord({ ActiveYN: false }, fields)).toHaveLength(0);
+      expect(validateRecord({ ...VALID_ADDRESS, ActiveYN: false }, fields)).toHaveLength(0);
     });
 
     it('rejects non-boolean values', () => {
-      const failures = validateRecord({ ActiveYN: 'yes' }, fields);
+      const failures = validateRecord({ ...VALID_ADDRESS, ActiveYN: 'yes' }, fields);
       expect(failures).toHaveLength(1);
       expect(failures[0].field).toBe('ActiveYN');
       expect(failures[0].reason).toBe('Must be true or false.');
@@ -166,11 +174,11 @@ describe('validateRecord', () => {
 
   describe('date validation', () => {
     it('accepts valid date strings', () => {
-      expect(validateRecord({ CloseDate: '2024-01-15' }, fields)).toHaveLength(0);
+      expect(validateRecord({ ...VALID_ADDRESS, CloseDate: '2024-01-15' }, fields)).toHaveLength(0);
     });
 
     it('rejects non-string values for Edm.Date', () => {
-      const failures = validateRecord({ CloseDate: 20240115 }, fields);
+      const failures = validateRecord({ ...VALID_ADDRESS, CloseDate: 20240115 }, fields);
       expect(failures).toHaveLength(1);
       expect(failures[0].field).toBe('CloseDate');
       expect(failures[0].reason).toBe('Must be a date (YYYY-MM-DD).');
@@ -179,11 +187,11 @@ describe('validateRecord', () => {
 
   describe('datetime validation', () => {
     it('accepts valid datetime strings', () => {
-      expect(validateRecord({ ModificationTimestamp: '2024-01-15T10:30:00Z' }, fields)).toHaveLength(0);
+      expect(validateRecord({ ...VALID_ADDRESS, ModificationTimestamp: '2024-01-15T10:30:00Z' }, fields)).toHaveLength(0);
     });
 
     it('rejects non-string values for Edm.DateTimeOffset', () => {
-      const failures = validateRecord({ ModificationTimestamp: 1705312200 }, fields);
+      const failures = validateRecord({ ...VALID_ADDRESS, ModificationTimestamp: 1705312200 }, fields);
       expect(failures).toHaveLength(1);
       expect(failures[0].field).toBe('ModificationTimestamp');
       expect(failures[0].reason).toBe('Must be a date and time.');
@@ -192,15 +200,15 @@ describe('validateRecord', () => {
 
   describe('enum validation', () => {
     it('accepts string enum values', () => {
-      expect(validateRecord({ StandardStatus: 'Active' }, fields)).toHaveLength(0);
+      expect(validateRecord({ ...VALID_ADDRESS, StandardStatus: 'Active' }, fields)).toHaveLength(0);
     });
 
     it('accepts numeric enum values', () => {
-      expect(validateRecord({ StandardStatus: 1 }, fields)).toHaveLength(0);
+      expect(validateRecord({ ...VALID_ADDRESS, StandardStatus: 1 }, fields)).toHaveLength(0);
     });
 
     it('rejects non-string/number values for enum fields', () => {
-      const failures = validateRecord({ StandardStatus: true }, fields);
+      const failures = validateRecord({ ...VALID_ADDRESS, StandardStatus: true }, fields);
       expect(failures).toHaveLength(1);
       expect(failures[0].field).toBe('StandardStatus');
       expect(failures[0].reason).toBe('Please select a valid option from the list.');
@@ -209,15 +217,15 @@ describe('validateRecord', () => {
 
   describe('collection validation', () => {
     it('accepts arrays for collection fields', () => {
-      expect(validateRecord({ AccessibilityFeatures: ['Wheelchair', 'Ramp'] }, fields)).toHaveLength(0);
+      expect(validateRecord({ ...VALID_ADDRESS, AccessibilityFeatures: ['Wheelchair', 'Ramp'] }, fields)).toHaveLength(0);
     });
 
     it('accepts empty arrays', () => {
-      expect(validateRecord({ AccessibilityFeatures: [] }, fields)).toHaveLength(0);
+      expect(validateRecord({ ...VALID_ADDRESS, AccessibilityFeatures: [] }, fields)).toHaveLength(0);
     });
 
     it('rejects non-array values for collection fields', () => {
-      const failures = validateRecord({ AccessibilityFeatures: 'not-an-array' }, fields);
+      const failures = validateRecord({ ...VALID_ADDRESS, AccessibilityFeatures: 'not-an-array' }, fields);
       expect(failures).toHaveLength(1);
       expect(failures[0].field).toBe('AccessibilityFeatures');
       expect(failures[0].reason).toBe('Must be a list of values.');
@@ -228,17 +236,16 @@ describe('validateRecord', () => {
     it('reports all failures at once', () => {
       const failures = validateRecord(
         {
+          ...VALID_ADDRESS,
           UnknownField: 'value',
-          City: 12345,
           BedroomsTotal: 'three',
           ActiveYN: 'yes'
         },
         fields
       );
-      expect(failures).toHaveLength(4);
+      expect(failures).toHaveLength(3);
       const fieldNames = failures.map(f => f.field);
       expect(fieldNames).toContain('UnknownField');
-      expect(fieldNames).toContain('City');
       expect(fieldNames).toContain('BedroomsTotal');
       expect(fieldNames).toContain('ActiveYN');
     });
@@ -247,11 +254,11 @@ describe('validateRecord', () => {
   describe('valid complex payload', () => {
     it('passes with all field types populated correctly', () => {
       const body = {
+        ...VALID_ADDRESS,
         ListingKey: 'abc-123',
         ListPrice: 350000.0,
         BedroomsTotal: 4,
         LivingAreaTotal: 2800,
-        City: 'Denver',
         StandardStatus: 'Active',
         AccessibilityFeatures: ['Wheelchair'],
         ActiveYN: true,

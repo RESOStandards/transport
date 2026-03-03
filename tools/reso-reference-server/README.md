@@ -5,12 +5,23 @@ A metadata-driven OData 4.01 reference server for the [RESO Data Dictionary](htt
 ## Quick Start (Docker)
 
 ```bash
-docker-compose up -d
+cd tools/reso-reference-server
+docker compose up -d
 ```
 
 This starts:
-- **Server** at `http://localhost:8080`
+- **UI** at `http://localhost:5173` (React SPA with nginx reverse proxy)
+- **Server** at `http://localhost:8080` (OData API)
 - **PostgreSQL** at `localhost:5432`
+
+### Seed with Test Data
+
+```bash
+docker compose --profile seed up seed
+```
+
+This generates 50 Property records (with Media, OpenHouse, Showing), 20 Members,
+and 10 Offices using the built-in data generator.
 
 ### Verify
 
@@ -21,15 +32,27 @@ curl http://localhost:8080/health
 # OData metadata
 curl http://localhost:8080/\$metadata
 
-# OpenAPI docs
-open http://localhost:8080/api-docs
+# Browse the UI
+open http://localhost:5173
+
+# Query Property records via the API
+curl -H 'Accept: application/json' 'http://localhost:8080/Property?\$top=5&\$select=ListPrice,City,StateOrProvince'
 
 # Create a Property record
 curl -X POST http://localhost:8080/Property \
   -H "Content-Type: application/json" \
   -H "Prefer: return=representation" \
   -H "Authorization: Bearer test" \
-  -d '{"ListPrice": 250000, "City": "Austin", "BedroomsTotal": 3}'
+  -d '{"ListPrice": 250000, "City": "Austin", "StateOrProvince": "TX", "PostalCode": "78701", "Country": "US", "BedroomsTotal": 3}'
+```
+
+### Reseed (drop existing data)
+
+```bash
+docker compose down -v
+docker compose up -d
+docker compose --profile seed rm -f seed
+docker compose --profile seed up seed
 ```
 
 ## Architecture
@@ -37,12 +60,12 @@ curl -X POST http://localhost:8080/Property \
 ```
 reso-reference-server/
 ├── server/          # Node/Express/TypeScript OData server
-├── ui/              # React UI for browsing records (Stage 2)
+├── ui/              # React SPA for browsing/editing records (Vite + Tailwind)
 ├── docker-compose.yml
 └── CLAUDE.md        # Coding conventions
 ```
 
-The server is **metadata-driven**: it reads `server-metadata.json` (RESO Data Dictionary v1.7) at startup and dynamically:
+The server is **metadata-driven**: it reads `server-metadata.json` (RESO Data Dictionary 2.0) at startup and dynamically:
 
 1. Creates PostgreSQL tables for each target resource (Property, Member, Office, Media, OpenHouse, Showing)
 2. Registers OData CRUD routes with proper headers, annotations, and error format
@@ -53,12 +76,12 @@ The server is **metadata-driven**: it reads `server-metadata.json` (RESO Data Di
 
 | Resource | Primary Key | Fields |
 |----------|-------------|--------|
-| Property | ListingKey | 300+ |
-| Member | MemberKey | 70+ |
-| Office | OfficeKey | 50+ |
-| Media | MediaKey | 30+ |
-| OpenHouse | OpenHouseKey | 30+ |
-| Showing | ShowingKey | 20+ |
+| Property | ListingKey | 652 |
+| Member | MemberKey | 87 |
+| Office | OfficeKey | 73 |
+| Media | MediaKey | 35 |
+| OpenHouse | OpenHouseKey | 34 |
+| Showing | ShowingKey | 22 |
 
 ## OData Compliance
 

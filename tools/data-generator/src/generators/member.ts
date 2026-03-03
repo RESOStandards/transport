@@ -70,6 +70,48 @@ const LAST_NAMES = [
   'Walker'
 ];
 
+const CITY_NAMES = [
+  'Springfield',
+  'Fairview',
+  'Madison',
+  'Georgetown',
+  'Arlington',
+  'Salem',
+  'Franklin',
+  'Clinton',
+  'Greenville',
+  'Bristol'
+];
+
+const US_STATES = [
+  'AL',
+  'AZ',
+  'CA',
+  'CO',
+  'CT',
+  'FL',
+  'GA',
+  'IL',
+  'MA',
+  'MD',
+  'MI',
+  'MN',
+  'NC',
+  'NJ',
+  'NY',
+  'OH',
+  'OR',
+  'PA',
+  'RI',
+  'TX',
+  'VA',
+  'WA'
+];
+
+const STREET_NAMES = ['Main', 'Oak', 'Maple', 'Cedar', 'Elm', 'Pine', 'Washington', 'Park'];
+
+const STREET_SUFFIXES = ['St', 'Ave', 'Blvd', 'Dr', 'Ln', 'Rd'];
+
 const EMAIL_DOMAINS = ['realestate.example.com', 'homes.example.com', 'property.example.com', 'realty.example.com', 'broker.example.com'];
 
 const DESIGNATIONS = ['CRS', 'ABR', 'GRI', 'SRES', 'SRS', 'CIPS'];
@@ -103,6 +145,13 @@ export const generateMemberRecords = (
     record.MemberDirectPhone = randomPhone();
     record.MemberOfficePhone = randomPhone();
     record.MemberMobilePhone = randomPhone();
+
+    // Address
+    record.MemberAddress1 = `${randomInt(100, 9999)} ${randomChoice(STREET_NAMES)} ${randomChoice(STREET_SUFFIXES)}`;
+    record.MemberCity = randomChoice(CITY_NAMES);
+    record.MemberStateOrProvince = randomChoice(US_STATES);
+    record.MemberPostalCode = String(randomInt(10000, 99999));
+    record.MemberCountry = 'US';
 
     // Designations
     const numDesignations = randomInt(0, 3);

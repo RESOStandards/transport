@@ -40,6 +40,31 @@ const CITY_NAMES = [
   'Bristol'
 ];
 
+const US_STATES = [
+  'AL',
+  'AZ',
+  'CA',
+  'CO',
+  'CT',
+  'FL',
+  'GA',
+  'IL',
+  'MA',
+  'MD',
+  'MI',
+  'MN',
+  'NC',
+  'NJ',
+  'NY',
+  'OH',
+  'OR',
+  'PA',
+  'RI',
+  'TX',
+  'VA',
+  'WA'
+];
+
 const STREET_NAMES = ['Commerce', 'Business', 'Corporate', 'Center', 'Market', 'Trade'];
 
 /** Generates a realistic phone number. */
@@ -70,7 +95,9 @@ export const generateOfficeRecords = (
     // Address
     record.OfficeAddress1 = `${randomInt(100, 9999)} ${randomChoice(STREET_NAMES)} Blvd`;
     record.OfficeCity = randomChoice(CITY_NAMES);
+    record.OfficeStateOrProvince = randomChoice(US_STATES);
     record.OfficePostalCode = String(randomInt(10000, 99999));
+    record.OfficeCountry = 'US';
 
     // Status — prefer Active
     const statusValues = lookups['org.reso.metadata.enums.OfficeStatus'];

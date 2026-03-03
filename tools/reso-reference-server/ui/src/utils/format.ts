@@ -93,10 +93,10 @@ const ADDRESS_PARTS: ReadonlyArray<{ readonly field: string; readonly separator:
   { field: 'StreetDirPrefix', separator: ' ' },
   { field: 'StreetName', separator: ' ' },
   { field: 'StreetSuffix', separator: ' ' },
-  { field: 'StreetDirSuffix', separator: ', ' },
+  { field: 'StreetDirSuffix', separator: ' ' },
   { field: 'City', separator: ', ' },
-  { field: 'StateOrProvince', separator: ' ' },
-  { field: 'PostalCode', separator: '' }
+  { field: 'StateOrProvince', separator: ', ' },
+  { field: 'PostalCode', separator: ' ' }
 ];
 
 /**
