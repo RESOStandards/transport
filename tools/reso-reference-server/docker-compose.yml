@@ -1,0 +1,35 @@
+services:
+  server:
+    build:
+      context: ..
+      dockerfile: reso-reference-server/server/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: 8080
+      DATABASE_URL: postgresql://reso:reso@db:5432/reso_reference
+      METADATA_PATH: ./server-metadata.json
+      BASE_URL: http://localhost:8080
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: reso
+      POSTGRES_PASSWORD: reso
+      POSTGRES_DB: reso_reference
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U reso -d reso_reference"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:

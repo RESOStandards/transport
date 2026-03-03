@@ -1,3 +1,11 @@
+/**
+ * OData HTTP client — delegates to @reso/odata-client.
+ *
+ * Preserves the same exported interface (odataRequest, buildResourceUrl)
+ * so that test-runner.ts and validators.ts require no changes.
+ */
+
+import { createClient, buildUri } from "@reso/odata-client";
 import type { ODataResponse } from "./types.js";
 
 /** Options for making an OData HTTP request. */
@@ -12,42 +20,21 @@ export interface RequestOptions {
 /**
  * Sends an HTTP request with OData-standard headers and returns a normalized response.
  *
- * Automatically sets OData-Version, Content-Type, Accept, and Authorization headers.
- * Custom headers passed in `options.headers` override the defaults.
- * Response headers are normalized to lowercase keys to avoid case-sensitivity issues
- * (HTTP headers are case-insensitive per RFC 7230).
+ * Uses @reso/odata-client's createClient under the hood. Creates a lightweight
+ * client per call since the auth token may vary between requests.
  */
 export const odataRequest = async (
   options: RequestOptions,
 ): Promise<ODataResponse> => {
-  const headers: Record<string, string> = {
-    "OData-Version": "4.01",
-    "Content-Type": "application/json",
-    Accept: "application/json",
-    Authorization: `Bearer ${options.authToken}`,
-    ...options.headers,
-  };
-
-  const response = await fetch(options.url, {
-    method: options.method,
-    headers,
-    body: options.body ? JSON.stringify(options.body) : undefined,
+  const client = await createClient({
+    baseUrl: "",
+    auth: { mode: "token", authToken: options.authToken },
   });
 
-  const rawBody = await response.text();
-  let body: unknown = null;
-  try {
-    body = JSON.parse(rawBody);
-  } catch {
-    // Empty body is expected for 204 No Content
-  }
-
-  const responseHeaders: Record<string, string> = {};
-  response.headers.forEach((value, key) => {
-    responseHeaders[key.toLowerCase()] = value;
+  return client.request(options.method, options.url, {
+    body: options.body,
+    headers: options.headers,
   });
-
-  return { status: response.status, headers: responseHeaders, body, rawBody };
 };
 
 /**
@@ -62,6 +49,6 @@ export const buildResourceUrl = (
   resource: string,
   key?: string,
 ): string => {
-  const base = `${serverUrl.replace(/\/$/, "")}/${encodeURIComponent(resource)}`;
-  return key ? `${base}('${encodeURIComponent(key)}')` : base;
+  const builder = buildUri(serverUrl.replace(/\/$/, ""), resource);
+  return key ? builder.key(key).build() : builder.build();
 };
