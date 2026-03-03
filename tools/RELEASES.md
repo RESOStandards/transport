@@ -2,6 +2,104 @@
 
 ---
 
+## v0.0.5 — 2026-03-03
+
+### Data Generator: `@reso/data-generator`
+
+New standalone package at `tools/data-generator/` that generates realistic RESO Data
+Dictionary records for seeding OData servers with test data.
+
+#### Three Output Modes
+
+- **HTTP** — POSTs records directly to a running OData server via the Add/Edit API
+- **JSON** — Writes records as JSON files to a directory structure (`<resource>/<key>.json`)
+- **curl** — Generates a `seed.sh` script with curl commands for later execution
+
+#### Resource Generators
+
+Six resource-specific generators produce realistic field values:
+
+- **Property** — addresses, pricing ($50k–$10M), bedrooms, bathrooms, coordinates (US bounds), public remarks
+- **Member** — first/last name pools, email patterns, phone numbers, designations
+- **Office** — brokerage names, office phones, addresses, national association IDs
+- **Media** — image URLs, sequential ordering, MIME types, linked to parent via ResourceName/ResourceRecordKey
+- **OpenHouse** — future-dated events with weekend preference, time ranges, linked to parent Property
+- **Showing** — future-dated appointments with time ranges, instructions, linked to parent Property
+
+A generic field generator handles all Edm types (String, Boolean, Int16/32/64, Decimal,
+Date, DateTimeOffset, TimeOfDay, Guid) and enum/collection lookups from metadata.
+
+#### CLI
+
+Interactive mode with `@inquirer/prompts`:
+```bash
+npx reso-data-generator
+```
+
+Non-interactive mode with flags:
+```bash
+npx reso-data-generator -r Property -n 50 -f json -o ./seed-data \
+  --related Media:5,OpenHouse:2,Showing:2 -t admin-token
+```
+
+#### 69 tests across 4 test files
+
+### Auth System for Reference Server
+
+Added role-based authentication to `@reso/reference-server`.
+
+- **Three roles**: `read`, `write`, `admin` with hierarchy (admin > write > read)
+- **Static tokens** from environment variables (`ADMIN_TOKEN`, `WRITE_TOKEN`, `READ_TOKEN`)
+  with development defaults
+- **Dynamic tokens** issued by the mock OAuth2 endpoint with optional `role` query parameter
+- **Express middleware** (`requireAuth`) — 401 for missing/invalid token, 403 for insufficient role
+- **Backward compatible** — auth is optional by default (`AUTH_REQUIRED=false`) so existing
+  workflows continue without tokens
+- **9 auth tests**
+
+### Admin API and UI
+
+#### Server: Admin Data Generator Endpoint
+
+- `POST /admin/data-generator` — generates records using the DAL directly (requires admin role)
+- `GET /admin/data-generator/status` — returns available resources with field and record counts
+- Admin router mounted at `/admin` with admin auth middleware
+
+#### UI: Data Generator Page
+
+- Resource selector dropdown with field and record counts
+- Record count input (1–10,000)
+- Related record checkboxes with per-resource count inputs
+- Generation plan summary showing total records to be created
+- Progress indicator and results display (created/failed/duration)
+- Amber-themed admin section with auth token input
+
+### Seed Script and Docker
+
+- `seed.sh` — executable bash script that waits for server health, then seeds
+  50 Properties (with Media, OpenHouse, Showing), 20 Members, and 10 Offices
+- Docker Compose updated with server healthcheck and optional seed service
+  (`docker-compose --profile seed up`)
+
+### Root Tooling
+
+- Lefthook pre-commit hooks updated with `typecheck-data-generator` and `test-data-generator`
+- Root `package.json` updated with `test:data-generator` script
+
+### Test Summary
+
+| Package | Tests |
+|---------|------:|
+| `@reso/validation` | 41 |
+| `@reso/odata-filter-parser` | 97 |
+| `@reso/odata-client` | 101 |
+| `@reso/data-generator` | 69 |
+| `@reso/reference-server` | 76 |
+| `@reso/certification-add-edit` | 49 |
+| **Total** | **433** |
+
+---
+
 ## v0.0.4 — 2026-03-03
 
 ### Certification Test Runner: `@reso/certification-test-runner`

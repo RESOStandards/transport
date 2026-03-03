@@ -16,6 +16,7 @@
     "node": ">=22.0.0"
   },
   "dependencies": {
+    "@reso/data-generator": "file:../../data-generator",
     "@reso/odata-filter-parser": "file:../../odata-filter-parser",
     "@reso/validation": "file:../../validation",
     "express": "^4.21.0",

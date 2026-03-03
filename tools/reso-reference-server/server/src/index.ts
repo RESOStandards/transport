@@ -1,6 +1,8 @@
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import express from 'express';
+import { createAdminRouter } from './admin/router.js';
+import { loadAuthConfig } from './auth/config.js';
 import { createMockOAuthRouter } from './auth/mock-oauth.js';
 import { loadConfig } from './config.js';
 import { runMigrations } from './db/migrate.js';
@@ -42,6 +44,9 @@ const main = async (): Promise<void> => {
   // Create data access layer
   const dal = createPostgresDal(pool);
 
+  // Load auth configuration
+  const authConfig = loadAuthConfig();
+
   // Generate EDMX metadata
   const edmxXml = generateEdmx(metadata, TARGET_RESOURCES);
 
@@ -75,6 +80,10 @@ const main = async (): Promise<void> => {
   // OData CRUD + collection routes (using DAL instead of direct pool access)
   const odataRouter = createODataRouter(metadata, dal, config.baseUrl, TARGET_RESOURCES);
   app.use(odataRouter);
+
+  // Admin endpoints (data generator, etc.)
+  const adminRouter = createAdminRouter(metadata, dal, authConfig);
+  app.use(adminRouter);
 
   // Swagger UI
   app.use(createSwaggerRouter(openApiSpec));

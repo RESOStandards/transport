@@ -1,0 +1,38 @@
+{
+  "name": "@reso/data-generator",
+  "version": "0.1.0",
+  "description": "RESO Data Dictionary test data generator — creates realistic OData records via the Add/Edit API",
+  "type": "module",
+  "bin": {
+    "reso-data-generator": "./dist/cli.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@inquirer/prompts": "^7.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "~5.6.0",
+    "vitest": "^3.0.0"
+  }
+}

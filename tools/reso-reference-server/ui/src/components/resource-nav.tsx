@@ -45,6 +45,22 @@ export const ResourceNav = () => {
           );
         })}
       </ul>
+
+      {/* Admin section */}
+      <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">Admin</h2>
+        <NavLink
+          to="/admin/data-generator"
+          className={({ isActive }) =>
+            `block px-3 py-1.5 rounded text-sm whitespace-nowrap ${
+              isActive
+                ? 'bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 font-medium'
+                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+            }`
+          }>
+          Data Generator
+        </NavLink>
+      </div>
     </div>
   );
 };

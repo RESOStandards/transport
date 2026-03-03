@@ -1,0 +1,209 @@
+import { mkdir, writeFile } from 'node:fs/promises';
+import { dirname, join } from 'node:path';
+import type { AuthConfig } from './generators/types.js';
+
+/** Result of creating a single record. */
+export interface CreateResult {
+  readonly success: boolean;
+  readonly key?: string;
+  readonly error?: string;
+}
+
+/** Result of a batch create operation. */
+export interface BatchCreateResult {
+  readonly created: number;
+  readonly failed: number;
+  readonly keys: ReadonlyArray<string>;
+  readonly errors: ReadonlyArray<string>;
+}
+
+/** Output format for generated data. */
+export type OutputFormat = 'http' | 'json' | 'curl';
+
+/** Options for the HTTP output mode. */
+export interface HttpOutputOptions {
+  readonly format: 'http';
+  readonly serverUrl: string;
+  readonly auth: AuthConfig;
+}
+
+/** Options for the JSON file output mode. */
+export interface JsonOutputOptions {
+  readonly format: 'json';
+  readonly outputDir: string;
+}
+
+/** Options for the curl script output mode. */
+export interface CurlOutputOptions {
+  readonly format: 'curl';
+  readonly serverUrl: string;
+  readonly auth: AuthConfig;
+  readonly outputFile: string;
+}
+
+export type OutputOptions = HttpOutputOptions | JsonOutputOptions | CurlOutputOptions;
+
+/**
+ * Creates a single record via HTTP POST to the OData server.
+ * Returns the created record (with server-generated key).
+ */
+const postRecord = async (
+  serverUrl: string,
+  resource: string,
+  record: Record<string, unknown>,
+  authToken: string
+): Promise<CreateResult> => {
+  try {
+    const url = `${serverUrl}/${resource}`;
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        'OData-Version': '4.01',
+        Prefer: 'return=representation',
+        Authorization: `Bearer ${authToken}`
+      },
+      body: JSON.stringify(record)
+    });
+
+    if (!res.ok) {
+      const body = await res.text();
+      return { success: false, error: `HTTP ${res.status}: ${body.slice(0, 200)}` };
+    }
+
+    const created = (await res.json()) as Record<string, unknown>;
+    // Extract key from response — look for common key field patterns
+    const keyField = Object.keys(created).find(k => k.endsWith('Key') && typeof created[k] === 'string');
+    const key = keyField ? String(created[keyField]) : undefined;
+
+    return { success: true, key };
+  } catch (err) {
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
+  }
+};
+
+/**
+ * Creates multiple records via HTTP POST to the OData server.
+ * POSTs sequentially to avoid overwhelming the server.
+ */
+export const createRecordsViaHttp = async (
+  serverUrl: string,
+  resource: string,
+  records: ReadonlyArray<Record<string, unknown>>,
+  auth: AuthConfig,
+  onProgress?: (completed: number, total: number) => void
+): Promise<BatchCreateResult> => {
+  const keys: string[] = [];
+  const errors: string[] = [];
+  let created = 0;
+  let failed = 0;
+
+  for (let i = 0; i < records.length; i++) {
+    const result = await postRecord(serverUrl, resource, records[i], auth.authToken);
+    if (result.success) {
+      created++;
+      if (result.key) keys.push(result.key);
+    } else {
+      failed++;
+      errors.push(`Record ${i + 1}: ${result.error}`);
+    }
+    onProgress?.(i + 1, records.length);
+  }
+
+  return { created, failed, keys, errors };
+};
+
+/**
+ * Writes records as individual JSON files to a directory structure.
+ * Creates `<outputDir>/<resource>/<index>.json` for each record.
+ */
+export const writeRecordsAsJson = async (
+  outputDir: string,
+  resource: string,
+  records: ReadonlyArray<Record<string, unknown>>,
+  onProgress?: (completed: number, total: number) => void
+): Promise<BatchCreateResult> => {
+  const resourceDir = join(outputDir, resource.toLowerCase());
+  await mkdir(resourceDir, { recursive: true });
+
+  const keys: string[] = [];
+  const errors: string[] = [];
+  let created = 0;
+  let failed = 0;
+
+  for (let i = 0; i < records.length; i++) {
+    try {
+      const filename = `${String(i + 1).padStart(4, '0')}.json`;
+      const filePath = join(resourceDir, filename);
+      await writeFile(filePath, `${JSON.stringify(records[i], null, 2)}\n`, 'utf-8');
+      created++;
+      keys.push(filename);
+    } catch (err) {
+      failed++;
+      errors.push(`Record ${i + 1}: ${err instanceof Error ? err.message : 'Write failed'}`);
+    }
+    onProgress?.(i + 1, records.length);
+  }
+
+  return { created, failed, keys, errors };
+};
+
+/**
+ * Generates a seed.sh script with curl commands to insert all records.
+ */
+export const generateCurlScript = async (
+  outputFile: string,
+  serverUrl: string,
+  auth: AuthConfig,
+  recordsByResource: ReadonlyArray<{ resource: string; records: ReadonlyArray<Record<string, unknown>> }>
+): Promise<void> => {
+  const lines: string[] = [
+    '#!/usr/bin/env bash',
+    '# RESO Reference Server — Seed Data Script',
+    '# Generated by @reso/data-generator',
+    '#',
+    '# Usage:',
+    '#   chmod +x seed.sh',
+    '#   ./seed.sh                           # Uses defaults',
+    '#   ./seed.sh http://localhost:8080      # Custom server URL',
+    '#   ./seed.sh http://server:8080 mytoken # Custom URL and token',
+    '',
+    `URL="\${1:-${serverUrl}}"`,
+    `TOKEN="\${2:-${auth.authToken}}"`,
+    '',
+    '# Wait for server to be ready',
+    'echo "Waiting for server at $URL..."',
+    'until curl -sf "$URL/health" > /dev/null 2>&1; do',
+    '  sleep 2',
+    'done',
+    'echo "Server is ready."',
+    ''
+  ];
+
+  for (const { resource, records } of recordsByResource) {
+    lines.push(`# --- ${resource} (${records.length} records) ---`);
+    lines.push(`echo "Creating ${records.length} ${resource} records..."`);
+    lines.push('');
+
+    for (let i = 0; i < records.length; i++) {
+      const json = JSON.stringify(records[i]);
+      lines.push(`curl -sf -X POST "$URL/${resource}" \\`);
+      lines.push('  -H "Content-Type: application/json" \\');
+      lines.push('  -H "Accept: application/json" \\');
+      lines.push('  -H "OData-Version: 4.01" \\');
+      lines.push('  -H "Prefer: return=minimal" \\');
+      lines.push('  -H "Authorization: Bearer $TOKEN" \\');
+      lines.push(`  -d '${json}' > /dev/null`);
+      lines.push('');
+    }
+
+    lines.push(`echo "${resource}: done."`);
+    lines.push('');
+  }
+
+  lines.push('echo "Seed complete."');
+
+  await mkdir(dirname(outputFile), { recursive: true });
+  await writeFile(outputFile, `${lines.join('\n')}\n`, 'utf-8');
+};

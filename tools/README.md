@@ -32,6 +32,26 @@ cd odata-client && npm install && npm test  # 101 tests
 
 ### Tools
 
+#### [@reso/data-generator](data-generator/)
+
+Generates realistic RESO Data Dictionary test data. Supports three output modes: HTTP (POST to an OData server), JSON files, and curl script generation. Includes resource-specific generators for Property, Member, Office, Media, OpenHouse, and Showing with domain-appropriate values.
+
+```bash
+cd data-generator && npm install && npm test  # 69 tests
+
+# Interactive CLI
+npx reso-data-generator
+
+# Non-interactive
+npx reso-data-generator -r Property -n 50 --related Media:5,OpenHouse:2 -t admin-token
+
+# Generate JSON files
+npx reso-data-generator -r Property -n 10 -f json -o ./seed-data
+
+# Generate curl seed script
+npx reso-data-generator -r Property -n 10 -f curl -o ./seed.sh -t admin-token
+```
+
 #### [certification/](certification/)
 
 RESO certification testing tools. Each subdirectory implements an independent certification module.
@@ -82,7 +102,19 @@ cd reso-reference-server/server
 npm install
 npm run build
 npm start
-npm test  # 67 tests
+npm test  # 76 tests
+```
+
+**Seed with test data:**
+
+```bash
+# Docker
+cd reso-reference-server
+docker-compose --profile seed up
+
+# Local (with server running)
+./seed.sh
+./seed.sh http://localhost:8080 admin-token
 ```
 
 ## Build Order
@@ -92,9 +124,10 @@ Packages have `file:` dependencies. Build in this order:
 1. `validation` — no dependencies
 2. `odata-filter-parser` — no dependencies
 3. `odata-client` — depends on `odata-filter-parser`
-4. `reso-reference-server/server` — depends on `validation` + `odata-filter-parser`
-5. `certification/test-runner` — depends on `odata-client` + `validation`
-6. `certification/add-edit` — depends on `certification/test-runner` + `odata-client` + `validation`
+4. `data-generator` — no package dependencies (uses metadata from server at runtime)
+5. `reso-reference-server/server` — depends on `validation` + `odata-filter-parser` + `data-generator`
+6. `certification/test-runner` — depends on `odata-client` + `validation`
+7. `certification/add-edit` — depends on `certification/test-runner` + `odata-client` + `validation`
 
 ## Development
 

@@ -2,8 +2,15 @@
 FROM node:22-alpine AS build
 WORKDIR /app
 
+# Copy file: dependency
+COPY validation/ /deps/validation/
+
 COPY reso-reference-server/ui/package.json reso-reference-server/ui/package-lock.json* ./
-RUN npm ci
+
+# Rewrite file: dependency path for the Docker build context
+RUN sed -i 's|file:../../validation|file:/deps/validation|' package.json
+
+RUN npm ci --ignore-scripts || npm install
 
 COPY reso-reference-server/ui/ ./
 RUN npm run build
@@ -18,7 +25,7 @@ server {
     listen 80;
 
     # API proxy to the reference server
-    location ~ ^/(Property|Member|Office|Media|OpenHouse|Showing|ui-config|field-groups|api|health|images|\$metadata) {
+    location ~ ^/(Property|Member|Office|Media|OpenHouse|Showing|ui-config|field-groups|api|admin|health|images|oauth|\$metadata) {
         proxy_pass http://server:8080;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;

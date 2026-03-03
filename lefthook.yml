@@ -20,6 +20,11 @@ pre-commit:
       run: npx tsc --noEmit
       priority: 2
 
+    typecheck-data-generator:
+      root: "tools/data-generator/"
+      run: npx tsc --noEmit
+      priority: 2
+
     typecheck-server:
       root: "tools/reso-reference-server/server/"
       run: npx tsc --noEmit
@@ -52,6 +57,11 @@ pre-commit:
 
     test-client:
       root: "tools/odata-client/"
+      run: npx vitest run
+      priority: 4
+
+    test-data-generator:
+      root: "tools/data-generator/"
       run: npx vitest run
       priority: 4
 

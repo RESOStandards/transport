@@ -4,6 +4,8 @@ import { Navigate, RouterProvider, createBrowserRouter } from 'react-router';
 import { Layout } from './components/layout';
 import './index.css';
 import { AddPage } from './pages/add-page';
+import { AdminLayout } from './pages/admin/admin-layout';
+import { DataGeneratorPage } from './pages/admin/data-generator-page';
 import { DeletePage } from './pages/delete-page';
 import { DetailPage } from './pages/detail-page';
 import { EditPage } from './pages/edit-page';
@@ -16,6 +18,14 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       { index: true, element: <Navigate to="/Property" replace /> },
+      {
+        path: 'admin',
+        element: <AdminLayout />,
+        children: [
+          { index: true, element: <Navigate to="/admin/data-generator" replace /> },
+          { path: 'data-generator', element: <DataGeneratorPage /> }
+        ]
+      },
       { path: ':resource', element: <SearchPage /> },
       { path: ':resource/add', element: <AddPage /> },
       { path: ':resource/edit', element: <EditPage /> },
