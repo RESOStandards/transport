@@ -1,0 +1,2428 @@
+{
+  "Property": {
+    "AboveGradeFinishedArea": [
+      "Structure"
+    ],
+    "AboveGradeFinishedAreaSource": [
+      "Structure"
+    ],
+    "AboveGradeFinishedAreaUnits": [
+      "Structure"
+    ],
+    "AboveGradeUnfinishedArea": [
+      "Structure"
+    ],
+    "AboveGradeUnfinishedAreaSource": [
+      "Structure"
+    ],
+    "AboveGradeUnfinishedAreaUnits": [
+      "Structure"
+    ],
+    "AccessCode": [
+      "Listing",
+      "Showing"
+    ],
+    "AccessibilityFeatures": [
+      "Structure"
+    ],
+    "ActivationDate": [
+      "Listing",
+      "Dates"
+    ],
+    "AdditionalParcelsDescription": [
+      "Tax"
+    ],
+    "AdditionalParcelsYN": [
+      "Tax"
+    ],
+    "AnchorsCoTenants": [
+      "Characteristics"
+    ],
+    "Appliances": [
+      "Equipment"
+    ],
+    "ArchitecturalStyle": [
+      "Structure"
+    ],
+    "AssociationAmenities": [
+      "HOA"
+    ],
+    "AssociationFee": [
+      "HOA"
+    ],
+    "AssociationFee2": [
+      "HOA"
+    ],
+    "AssociationFee2Frequency": [
+      "HOA"
+    ],
+    "AssociationFeeFrequency": [
+      "HOA"
+    ],
+    "AssociationFeeIncludes": [
+      "HOA"
+    ],
+    "AssociationName": [
+      "HOA"
+    ],
+    "AssociationName2": [
+      "HOA"
+    ],
+    "AssociationPhone": [
+      "HOA"
+    ],
+    "AssociationPhone2": [
+      "HOA"
+    ],
+    "AssociationYN": [
+      "HOA"
+    ],
+    "AttachedGarageYN": [
+      "Structure"
+    ],
+    "AttributionContact": [
+      "Listing",
+      "AgentOffice",
+      "ListOffice"
+    ],
+    "AvailabilityDate": [
+      "Listing",
+      "Closing"
+    ],
+    "AvailableLeaseType": [
+      "Characteristics"
+    ],
+    "BackOnMarketDate": [
+      "Listing",
+      "Dates"
+    ],
+    "Basement": [
+      "Structure"
+    ],
+    "BasementYN": [
+      "Structure"
+    ],
+    "BathroomsFull": [
+      "Structure"
+    ],
+    "BathroomsHalf": [
+      "Structure"
+    ],
+    "BathroomsOneQuarter": [
+      "Structure"
+    ],
+    "BathroomsPartial": [
+      "Structure"
+    ],
+    "BathroomsThreeQuarter": [
+      "Structure"
+    ],
+    "BathroomsTotalInteger": [
+      "Structure"
+    ],
+    "BedroomsPossible": [
+      "Structure"
+    ],
+    "BedroomsTotal": [
+      "Structure"
+    ],
+    "BelowGradeFinishedArea": [
+      "Structure"
+    ],
+    "BelowGradeFinishedAreaSource": [
+      "Structure"
+    ],
+    "BelowGradeFinishedAreaUnits": [
+      "Structure"
+    ],
+    "BelowGradeUnfinishedArea": [
+      "Structure"
+    ],
+    "BelowGradeUnfinishedAreaSource": [
+      "Structure"
+    ],
+    "BelowGradeUnfinishedAreaUnits": [
+      "Structure"
+    ],
+    "BodyType": [
+      "Structure"
+    ],
+    "BuilderModel": [
+      "Structure"
+    ],
+    "BuilderName": [
+      "Structure"
+    ],
+    "BuildingAreaSource": [
+      "Structure"
+    ],
+    "BuildingAreaTotal": [
+      "Structure"
+    ],
+    "BuildingAreaUnits": [
+      "Structure"
+    ],
+    "BuildingFeatures": [
+      "Structure"
+    ],
+    "BuildingName": [
+      "Structure"
+    ],
+    "BusinessName": [
+      "Business"
+    ],
+    "BusinessType": [
+      "Business"
+    ],
+    "BuyerAgent": [
+      "Listing",
+      "AgentOffice",
+      "BuyerAgent"
+    ],
+    "BuyerAgentAOR": [
+      "Listing",
+      "AgentOffice",
+      "BuyerAgent"
+    ],
+    "BuyerAgentDesignation": [
+      "Listing",
+      "AgentOffice",
+      "BuyerAgent"
+    ],
+    "BuyerAgentDirectPhone": [
+      "Listing",
+      "AgentOffice",
+      "BuyerAgent"
+    ],
+    "BuyerAgentEmail": [
+      "Listing",
+      "AgentOffice",
+      "BuyerAgent"
+    ],
+    "BuyerAgentFax": [
+      "Listing",
+      "AgentOffice",
+      "BuyerAgent"
+    ],
+    "BuyerAgentFirstName": [
+      "Listing",
+      "AgentOffice",
+      "BuyerAgent"
+    ],
+    "BuyerAgentFullName": [
+      "Listing",
+      "AgentOffice",
+      "BuyerAgent"
+    ],
+    "BuyerAgentHomePhone": [
+      "Listing",
+      "AgentOffice",
+      "BuyerAgent"
+    ],
+    "BuyerAgentKey": [
+      "Listing",
+      "AgentOffice",
+      "BuyerAgent"
+    ],
+    "BuyerAgentLastName": [
+      "Listing",
+      "AgentOffice",
+      "BuyerAgent"
+    ],
+    "BuyerAgentMiddleName": [
+      "Listing",
+      "AgentOffice",
+      "BuyerAgent"
+    ],
+    "BuyerAgentMlsId": [
+      "Listing",
+      "AgentOffice",
+      "BuyerAgent"
+    ],
+    "BuyerAgentMobilePhone": [
+      "Listing",
+      "AgentOffice",
+      "BuyerAgent"
+    ],
+    "BuyerAgentNamePrefix": [
+      "Listing",
+      "AgentOffice",
+      "BuyerAgent"
+    ],
+    "BuyerAgentNameSuffix": [
+      "Listing",
+      "AgentOffice",
+      "BuyerAgent"
+    ],
+    "BuyerAgentNationalAssociationId": [
+      "Listing",
+      "AgentOffice",
+      "BuyerAgent"
+    ],
+    "BuyerAgentOfficePhone": [
+      "Listing",
+      "AgentOffice",
+      "BuyerAgent"
+    ],
+    "BuyerAgentOfficePhoneExt": [
+      "Listing",
+      "AgentOffice",
+      "BuyerAgent"
+    ],
+    "BuyerAgentPager": [
+      "Listing",
+      "AgentOffice",
+      "BuyerAgent"
+    ],
+    "BuyerAgentPreferredPhone": [
+      "Listing",
+      "AgentOffice",
+      "BuyerAgent"
+    ],
+    "BuyerAgentPreferredPhoneExt": [
+      "Listing",
+      "AgentOffice",
+      "BuyerAgent"
+    ],
+    "BuyerAgentStateLicense": [
+      "Listing",
+      "AgentOffice",
+      "BuyerAgent"
+    ],
+    "BuyerAgentTollFreePhone": [
+      "Listing",
+      "AgentOffice",
+      "BuyerAgent"
+    ],
+    "BuyerAgentURL": [
+      "Listing",
+      "AgentOffice",
+      "BuyerAgent"
+    ],
+    "BuyerAgentVoiceMail": [
+      "Listing",
+      "AgentOffice",
+      "BuyerAgent"
+    ],
+    "BuyerAgentVoiceMailExt": [
+      "Listing",
+      "AgentOffice",
+      "BuyerAgent"
+    ],
+    "BuyerBrokerageCompensation": [
+      "Listing",
+      "Compensation"
+    ],
+    "BuyerBrokerageCompensationType": [
+      "Listing",
+      "Compensation"
+    ],
+    "BuyerFinancing": [
+      "Listing",
+      "Closing"
+    ],
+    "BuyerOffice": [
+      "Listing",
+      "AgentOffice",
+      "BuyerAgent"
+    ],
+    "BuyerOfficeAOR": [
+      "Listing",
+      "AgentOffice",
+      "BuyerOffice"
+    ],
+    "BuyerOfficeEmail": [
+      "Listing",
+      "AgentOffice",
+      "BuyerOffice"
+    ],
+    "BuyerOfficeFax": [
+      "Listing",
+      "AgentOffice",
+      "BuyerOffice"
+    ],
+    "BuyerOfficeKey": [
+      "Listing",
+      "AgentOffice",
+      "BuyerOffice"
+    ],
+    "BuyerOfficeMlsId": [
+      "Listing",
+      "AgentOffice",
+      "BuyerOffice"
+    ],
+    "BuyerOfficeName": [
+      "Listing",
+      "AgentOffice",
+      "BuyerOffice"
+    ],
+    "BuyerOfficeNationalAssociationId": [
+      "Listing",
+      "AgentOffice",
+      "BuyerOffice"
+    ],
+    "BuyerOfficePhone": [
+      "Listing",
+      "AgentOffice",
+      "BuyerOffice"
+    ],
+    "BuyerOfficePhoneExt": [
+      "Listing",
+      "AgentOffice",
+      "BuyerOffice"
+    ],
+    "BuyerOfficeURL": [
+      "Listing",
+      "AgentOffice",
+      "BuyerOffice"
+    ],
+    "BuyerTeam": [
+      "Listing",
+      "AgentOffice",
+      "BuyerTeam"
+    ],
+    "BuyerTeamKey": [
+      "Listing",
+      "AgentOffice",
+      "Team"
+    ],
+    "BuyerTeamName": [
+      "Listing",
+      "AgentOffice",
+      "Team"
+    ],
+    "CableTvExpense": [
+      "Financial"
+    ],
+    "CancellationDate": [
+      "Listing",
+      "Dates"
+    ],
+    "CapRate": [
+      "Financial"
+    ],
+    "CarportSpaces": [
+      "Structure"
+    ],
+    "CarportYN": [
+      "Structure"
+    ],
+    "CarrierRoute": [
+      "Location",
+      "Address"
+    ],
+    "City": [
+      "Location",
+      "Address"
+    ],
+    "CityRegion": [
+      "Location",
+      "Area"
+    ],
+    "CloseDate": [
+      "Listing",
+      "Dates"
+    ],
+    "ClosePrice": [
+      "Listing",
+      "Price"
+    ],
+    "CoBuyerAgent": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerAgent"
+    ],
+    "CoBuyerAgentAOR": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerAgent"
+    ],
+    "CoBuyerAgentDesignation": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerAgent"
+    ],
+    "CoBuyerAgentDirectPhone": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerAgent"
+    ],
+    "CoBuyerAgentEmail": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerAgent"
+    ],
+    "CoBuyerAgentFax": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerAgent"
+    ],
+    "CoBuyerAgentFirstName": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerAgent"
+    ],
+    "CoBuyerAgentFullName": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerAgent"
+    ],
+    "CoBuyerAgentHomePhone": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerAgent"
+    ],
+    "CoBuyerAgentKey": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerAgent"
+    ],
+    "CoBuyerAgentLastName": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerAgent"
+    ],
+    "CoBuyerAgentMiddleName": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerAgent"
+    ],
+    "CoBuyerAgentMlsId": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerAgent"
+    ],
+    "CoBuyerAgentMobilePhone": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerAgent"
+    ],
+    "CoBuyerAgentNamePrefix": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerAgent"
+    ],
+    "CoBuyerAgentNameSuffix": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerAgent"
+    ],
+    "CoBuyerAgentNationalAssociationId": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerAgent"
+    ],
+    "CoBuyerAgentOfficePhone": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerAgent"
+    ],
+    "CoBuyerAgentOfficePhoneExt": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerAgent"
+    ],
+    "CoBuyerAgentPager": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerAgent"
+    ],
+    "CoBuyerAgentPreferredPhone": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerAgent"
+    ],
+    "CoBuyerAgentPreferredPhoneExt": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerAgent"
+    ],
+    "CoBuyerAgentStateLicense": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerAgent"
+    ],
+    "CoBuyerAgentTollFreePhone": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerAgent"
+    ],
+    "CoBuyerAgentURL": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerAgent"
+    ],
+    "CoBuyerAgentVoiceMail": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerAgent"
+    ],
+    "CoBuyerAgentVoiceMailExt": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerAgent"
+    ],
+    "CoBuyerOffice": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerOffice"
+    ],
+    "CoBuyerOfficeAOR": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerOffice"
+    ],
+    "CoBuyerOfficeEmail": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerOffice"
+    ],
+    "CoBuyerOfficeFax": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerOffice"
+    ],
+    "CoBuyerOfficeKey": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerOffice"
+    ],
+    "CoBuyerOfficeMlsId": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerOffice"
+    ],
+    "CoBuyerOfficeName": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerOffice"
+    ],
+    "CoBuyerOfficeNationalAssociationId": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerOffice"
+    ],
+    "CoBuyerOfficePhone": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerOffice"
+    ],
+    "CoBuyerOfficePhoneExt": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerOffice"
+    ],
+    "CoBuyerOfficeURL": [
+      "Listing",
+      "AgentOffice",
+      "CoBuyerOffice"
+    ],
+    "CoListAgent": [
+      "Listing",
+      "AgentOffice",
+      "CoListAgent"
+    ],
+    "CoListAgentAOR": [
+      "Listing",
+      "AgentOffice",
+      "CoListAgent"
+    ],
+    "CoListAgentDesignation": [
+      "Listing",
+      "AgentOffice",
+      "CoListAgent"
+    ],
+    "CoListAgentDirectPhone": [
+      "Listing",
+      "AgentOffice",
+      "CoListAgent"
+    ],
+    "CoListAgentEmail": [
+      "Listing",
+      "AgentOffice",
+      "CoListAgent"
+    ],
+    "CoListAgentFax": [
+      "Listing",
+      "AgentOffice",
+      "CoListAgent"
+    ],
+    "CoListAgentFirstName": [
+      "Listing",
+      "AgentOffice",
+      "CoListAgent"
+    ],
+    "CoListAgentFullName": [
+      "Listing",
+      "AgentOffice",
+      "CoListAgent"
+    ],
+    "CoListAgentHomePhone": [
+      "Listing",
+      "AgentOffice",
+      "CoListAgent"
+    ],
+    "CoListAgentKey": [
+      "Listing",
+      "AgentOffice",
+      "CoListAgent"
+    ],
+    "CoListAgentLastName": [
+      "Listing",
+      "AgentOffice",
+      "CoListAgent"
+    ],
+    "CoListAgentMiddleName": [
+      "Listing",
+      "AgentOffice",
+      "CoListAgent"
+    ],
+    "CoListAgentMlsId": [
+      "Listing",
+      "AgentOffice",
+      "CoListAgent"
+    ],
+    "CoListAgentMobilePhone": [
+      "Listing",
+      "AgentOffice",
+      "CoListAgent"
+    ],
+    "CoListAgentNamePrefix": [
+      "Listing",
+      "AgentOffice",
+      "CoListAgent"
+    ],
+    "CoListAgentNameSuffix": [
+      "Listing",
+      "AgentOffice",
+      "CoListAgent"
+    ],
+    "CoListAgentNationalAssociationId": [
+      "Listing",
+      "AgentOffice",
+      "CoListAgent"
+    ],
+    "CoListAgentOfficePhone": [
+      "Listing",
+      "AgentOffice",
+      "CoListAgent"
+    ],
+    "CoListAgentOfficePhoneExt": [
+      "Listing",
+      "AgentOffice",
+      "CoListAgent"
+    ],
+    "CoListAgentPager": [
+      "Listing",
+      "AgentOffice",
+      "CoListAgent"
+    ],
+    "CoListAgentPreferredPhone": [
+      "Listing",
+      "AgentOffice",
+      "CoListAgent"
+    ],
+    "CoListAgentPreferredPhoneExt": [
+      "Listing",
+      "AgentOffice",
+      "CoListAgent"
+    ],
+    "CoListAgentStateLicense": [
+      "Listing",
+      "AgentOffice",
+      "CoListAgent"
+    ],
+    "CoListAgentTollFreePhone": [
+      "Listing",
+      "AgentOffice",
+      "CoListAgent"
+    ],
+    "CoListAgentURL": [
+      "Listing",
+      "AgentOffice",
+      "CoListAgent"
+    ],
+    "CoListAgentVoiceMail": [
+      "Listing",
+      "AgentOffice",
+      "CoListAgent"
+    ],
+    "CoListAgentVoiceMailExt": [
+      "Listing",
+      "AgentOffice",
+      "CoListAgent"
+    ],
+    "CoListOffice": [
+      "Listing",
+      "AgentOffice",
+      "CoListOffice"
+    ],
+    "CoListOfficeAOR": [
+      "Listing",
+      "AgentOffice",
+      "CoListOffice"
+    ],
+    "CoListOfficeEmail": [
+      "Listing",
+      "AgentOffice",
+      "CoListOffice"
+    ],
+    "CoListOfficeFax": [
+      "Listing",
+      "AgentOffice",
+      "CoListOffice"
+    ],
+    "CoListOfficeKey": [
+      "Listing",
+      "AgentOffice",
+      "CoListOffice"
+    ],
+    "CoListOfficeMlsId": [
+      "Listing",
+      "AgentOffice",
+      "CoListOffice"
+    ],
+    "CoListOfficeName": [
+      "Listing",
+      "AgentOffice",
+      "CoListOffice"
+    ],
+    "CoListOfficeNationalAssociationId": [
+      "Listing",
+      "AgentOffice",
+      "CoListOffice"
+    ],
+    "CoListOfficePhone": [
+      "Listing",
+      "AgentOffice",
+      "CoListOffice"
+    ],
+    "CoListOfficePhoneExt": [
+      "Listing",
+      "AgentOffice",
+      "CoListOffice"
+    ],
+    "CoListOfficeURL": [
+      "Listing",
+      "AgentOffice",
+      "CoListOffice"
+    ],
+    "CommonInterest": [
+      "Listing",
+      "Contract"
+    ],
+    "CommonWalls": [
+      "Structure"
+    ],
+    "CommunityFeatures": [
+      "Characteristics"
+    ],
+    "CompensationComments": [
+      "Listing",
+      "Compensation"
+    ],
+    "CompSaleYN": [
+      "Listing"
+    ],
+    "Concessions": [
+      "Listing",
+      "Closing"
+    ],
+    "ConcessionsAmount": [
+      "Listing",
+      "Closing"
+    ],
+    "ConcessionsComments": [
+      "Listing",
+      "Closing"
+    ],
+    "ConstructionMaterials": [
+      "Structure"
+    ],
+    "ContinentRegion": [
+      "Location",
+      "Area"
+    ],
+    "Contingency": [
+      "Listing",
+      "Closing"
+    ],
+    "ContingentDate": [
+      "Listing",
+      "Dates"
+    ],
+    "ContractStatusChangeDate": [
+      "Listing",
+      "Dates"
+    ],
+    "Cooling": [
+      "Structure"
+    ],
+    "CoolingYN": [
+      "Structure"
+    ],
+    "CopyrightNotice": [
+      "Listing"
+    ],
+    "Country": [
+      "Location",
+      "Address"
+    ],
+    "CountryRegion": [
+      "Location",
+      "Area"
+    ],
+    "CountyOrParish": [
+      "Location",
+      "Address"
+    ],
+    "CoveredSpaces": [
+      "Structure"
+    ],
+    "CropsIncludedYN": [
+      "Farming"
+    ],
+    "CrossStreet": [
+      "Location",
+      "GIS"
+    ],
+    "CultivatedArea": [
+      "Farming"
+    ],
+    "CumulativeDaysOnMarket": [
+      "Listing",
+      "Dates"
+    ],
+    "CurrentFinancing": [
+      "Listing",
+      "Contract"
+    ],
+    "CurrentUse": [
+      "Characteristics"
+    ],
+    "DaysInMls": [
+      "Listing",
+      "Dates"
+    ],
+    "DaysOnMarket": [
+      "Listing",
+      "Dates"
+    ],
+    "DaysOnSite": [
+      "Listing",
+      "Dates"
+    ],
+    "DevelopmentStatus": [
+      "Characteristics"
+    ],
+    "DirectionFaces": [
+      "Structure"
+    ],
+    "Directions": [
+      "Location",
+      "GIS"
+    ],
+    "Disclaimer": [
+      "Listing"
+    ],
+    "Disclosures": [
+      "Listing",
+      "Contract"
+    ],
+    "DistanceToBusComments": [
+      "Location"
+    ],
+    "DistanceToBusNumeric": [
+      "Location"
+    ],
+    "DistanceToBusUnits": [
+      "Location"
+    ],
+    "DistanceToElectricComments": [
+      "Utilities"
+    ],
+    "DistanceToElectricNumeric": [
+      "Utilities"
+    ],
+    "DistanceToElectricUnits": [
+      "Utilities"
+    ],
+    "DistanceToFreewayComments": [
+      "Location"
+    ],
+    "DistanceToFreewayNumeric": [
+      "Location"
+    ],
+    "DistanceToFreewayUnits": [
+      "Location"
+    ],
+    "DistanceToGasComments": [
+      "Utilities"
+    ],
+    "DistanceToGasNumeric": [
+      "Utilities"
+    ],
+    "DistanceToGasUnits": [
+      "Utilities"
+    ],
+    "DistanceToPhoneServiceComments": [
+      "Utilities"
+    ],
+    "DistanceToPhoneServiceNumeric": [
+      "Utilities"
+    ],
+    "DistanceToPhoneServiceUnits": [
+      "Utilities"
+    ],
+    "DistanceToPlaceofWorshipComments": [
+      "Location"
+    ],
+    "DistanceToPlaceofWorshipNumeric": [
+      "Location"
+    ],
+    "DistanceToPlaceofWorshipUnits": [
+      "Location"
+    ],
+    "DistanceToSchoolBusComments": [
+      "Location"
+    ],
+    "DistanceToSchoolBusNumeric": [
+      "Location"
+    ],
+    "DistanceToSchoolBusUnits": [
+      "Location"
+    ],
+    "DistanceToSchoolsComments": [
+      "Location"
+    ],
+    "DistanceToSchoolsNumeric": [
+      "Location"
+    ],
+    "DistanceToSchoolsUnits": [
+      "Location"
+    ],
+    "DistanceToSewerComments": [
+      "Utilities"
+    ],
+    "DistanceToSewerNumeric": [
+      "Utilities"
+    ],
+    "DistanceToSewerUnits": [
+      "Utilities"
+    ],
+    "DistanceToShoppingComments": [
+      "Location"
+    ],
+    "DistanceToShoppingNumeric": [
+      "Location"
+    ],
+    "DistanceToShoppingUnits": [
+      "Location"
+    ],
+    "DistanceToStreetComments": [
+      "Location"
+    ],
+    "DistanceToStreetNumeric": [
+      "Location"
+    ],
+    "DistanceToStreetUnits": [
+      "Location"
+    ],
+    "DistanceToWaterComments": [
+      "Utilities"
+    ],
+    "DistanceToWaterNumeric": [
+      "Utilities"
+    ],
+    "DistanceToWaterUnits": [
+      "Utilities"
+    ],
+    "DocumentsAvailable": [
+      "Listing",
+      "Media"
+    ],
+    "DocumentsChangeTimestamp": [
+      "Listing",
+      "Media"
+    ],
+    "DocumentsCount": [
+      "Listing",
+      "Media"
+    ],
+    "DocumentStatus": [
+      "Listing",
+      "Media"
+    ],
+    "DOH1": [
+      "Structure"
+    ],
+    "DOH2": [
+      "Structure"
+    ],
+    "DOH3": [
+      "Structure"
+    ],
+    "DoorFeatures": [
+      "Structure"
+    ],
+    "DualOrVariableRateCommissionYN": [
+      "Listing",
+      "Compensation"
+    ],
+    "Electric": [
+      "Utilities"
+    ],
+    "ElectricExpense": [
+      "Financial"
+    ],
+    "ElectricOnPropertyYN": [
+      "Utilities"
+    ],
+    "ElementarySchool": [
+      "Location",
+      "School"
+    ],
+    "ElementarySchoolDistrict": [
+      "Location",
+      "School"
+    ],
+    "Elevation": [
+      "Location",
+      "GIS"
+    ],
+    "ElevationUnits": [
+      "Location",
+      "GIS"
+    ],
+    "EntryLevel": [
+      "Structure"
+    ],
+    "EntryLocation": [
+      "Structure"
+    ],
+    "Exclusions": [
+      "Listing",
+      "Contract"
+    ],
+    "ExistingLeaseType": [
+      "Financial"
+    ],
+    "ExpirationDate": [
+      "Listing",
+      "Dates"
+    ],
+    "ExteriorFeatures": [
+      "Structure"
+    ],
+    "FarmCreditServiceInclYN": [
+      "Farming"
+    ],
+    "FarmLandAreaSource": [
+      "Farming"
+    ],
+    "FarmLandAreaUnits": [
+      "Farming"
+    ],
+    "Fencing": [
+      "Characteristics"
+    ],
+    "FhaEligibility": [
+      "Listing",
+      "Closing"
+    ],
+    "FinancialDataSource": [
+      "Financial"
+    ],
+    "FireplaceFeatures": [
+      "Structure"
+    ],
+    "FireplacesTotal": [
+      "Structure"
+    ],
+    "FireplaceYN": [
+      "Structure"
+    ],
+    "Flooring": [
+      "Structure"
+    ],
+    "FoundationArea": [
+      "Structure"
+    ],
+    "FoundationDetails": [
+      "Structure"
+    ],
+    "FrontageLength": [
+      "Characteristics"
+    ],
+    "FrontageType": [
+      "Characteristics"
+    ],
+    "FuelExpense": [
+      "Financial"
+    ],
+    "Furnished": [
+      "Characteristics"
+    ],
+    "FurnitureReplacementExpense": [
+      "Financial"
+    ],
+    "GarageSpaces": [
+      "Structure"
+    ],
+    "GarageYN": [
+      "Structure"
+    ],
+    "GardenerExpense": [
+      "Financial"
+    ],
+    "GrazingPermitsBlmYN": [
+      "Farming"
+    ],
+    "GrazingPermitsForestServiceYN": [
+      "Farming"
+    ],
+    "GrazingPermitsPrivateYN": [
+      "Farming"
+    ],
+    "GreenBuildingVerification": [
+      "Structure",
+      "Performance",
+      "GreenVerification"
+    ],
+    "GreenBuildingVerificationType": [
+      "Structure",
+      "Performance",
+      "GreenVerification"
+    ],
+    "GreenEnergyEfficient": [
+      "Structure",
+      "Performance",
+      "GreenMarketing"
+    ],
+    "GreenEnergyGeneration": [
+      "Structure",
+      "Performance",
+      "GreenMarketing"
+    ],
+    "GreenIndoorAirQuality": [
+      "Structure",
+      "Performance",
+      "GreenMarketing"
+    ],
+    "GreenLocation": [
+      "Structure",
+      "Performance",
+      "GreenMarketing"
+    ],
+    "GreenSustainability": [
+      "Structure",
+      "Performance",
+      "GreenMarketing"
+    ],
+    "GreenVerificationYN": [
+      "Structure",
+      "Performance",
+      "GreenVerification"
+    ],
+    "GreenWaterConservation": [
+      "Structure",
+      "Performance",
+      "GreenMarketing"
+    ],
+    "GrossIncome": [
+      "Financial"
+    ],
+    "GrossLivingAreaAnsi": [
+      "Structure"
+    ],
+    "GrossScheduledIncome": [
+      "Financial"
+    ],
+    "HabitableResidenceYN": [
+      "Structure"
+    ],
+    "Heating": [
+      "Structure"
+    ],
+    "HeatingYN": [
+      "Structure"
+    ],
+    "HighSchool": [
+      "Location",
+      "School"
+    ],
+    "HighSchoolDistrict": [
+      "Location",
+      "School"
+    ],
+    "HistoryTransactional": [
+      "Listing"
+    ],
+    "HomeWarrantyYN": [
+      "Listing"
+    ],
+    "HorseAmenities": [
+      "Characteristics"
+    ],
+    "HorseYN": [
+      "Characteristics"
+    ],
+    "HoursDaysOfOperation": [
+      "Business"
+    ],
+    "HoursDaysOfOperationDescription": [
+      "Business"
+    ],
+    "Inclusions": [
+      "Listing",
+      "Contract"
+    ],
+    "IncomeIncludes": [
+      "Financial"
+    ],
+    "InsuranceExpense": [
+      "Financial"
+    ],
+    "InteriorFeatures": [
+      "Structure"
+    ],
+    "InternetAddressDisplayYN": [
+      "Listing",
+      "Marketing"
+    ],
+    "InternetAutomatedValuationDisplayYN": [
+      "Listing",
+      "Marketing"
+    ],
+    "InternetConsumerCommentYN": [
+      "Listing",
+      "Marketing"
+    ],
+    "InternetEntireListingDisplayYN": [
+      "Listing",
+      "Marketing"
+    ],
+    "IrrigationSource": [
+      "Utilities"
+    ],
+    "IrrigationWaterRightsAcres": [
+      "Utilities"
+    ],
+    "IrrigationWaterRightsYN": [
+      "Utilities"
+    ],
+    "LaborInformation": [
+      "Business"
+    ],
+    "LandLeaseAmount": [
+      "Characteristics"
+    ],
+    "LandLeaseAmountFrequency": [
+      "Characteristics"
+    ],
+    "LandLeaseExpirationDate": [
+      "Characteristics"
+    ],
+    "LandLeaseYN": [
+      "Characteristics"
+    ],
+    "Latitude": [
+      "Location",
+      "GIS"
+    ],
+    "LaundryFeatures": [
+      "Characteristics"
+    ],
+    "LeasableArea": [
+      "Structure"
+    ],
+    "LeasableAreaUnits": [
+      "Structure"
+    ],
+    "LeaseAmount": [
+      "Business"
+    ],
+    "LeaseAmountFrequency": [
+      "Business"
+    ],
+    "LeaseAssignableYN": [
+      "Business"
+    ],
+    "LeaseConsideredYN": [
+      "Listing"
+    ],
+    "LeaseExpiration": [
+      "Business"
+    ],
+    "LeaseRenewalCompensation": [
+      "Listing",
+      "Compensation"
+    ],
+    "LeaseRenewalOptionYN": [
+      "Business"
+    ],
+    "LeaseTerm": [
+      "Characteristics"
+    ],
+    "Levels": [
+      "Structure"
+    ],
+    "License1": [
+      "Structure"
+    ],
+    "License2": [
+      "Structure"
+    ],
+    "License3": [
+      "Structure"
+    ],
+    "LicensesExpense": [
+      "Financial"
+    ],
+    "ListAgent": [
+      "Listing",
+      "AgentOffice",
+      "ListAgent"
+    ],
+    "ListAgentAOR": [
+      "Listing",
+      "AgentOffice",
+      "ListAgent"
+    ],
+    "ListAgentDesignation": [
+      "Listing",
+      "AgentOffice",
+      "ListAgent"
+    ],
+    "ListAgentDirectPhone": [
+      "Listing",
+      "AgentOffice",
+      "ListAgent"
+    ],
+    "ListAgentEmail": [
+      "Listing",
+      "AgentOffice",
+      "ListAgent"
+    ],
+    "ListAgentFax": [
+      "Listing",
+      "AgentOffice",
+      "ListAgent"
+    ],
+    "ListAgentFirstName": [
+      "Listing",
+      "AgentOffice",
+      "ListAgent"
+    ],
+    "ListAgentFullName": [
+      "Listing",
+      "AgentOffice",
+      "ListAgent"
+    ],
+    "ListAgentHomePhone": [
+      "Listing",
+      "AgentOffice",
+      "ListAgent"
+    ],
+    "ListAgentKey": [
+      "Listing",
+      "AgentOffice",
+      "ListAgent"
+    ],
+    "ListAgentLastName": [
+      "Listing",
+      "AgentOffice",
+      "ListAgent"
+    ],
+    "ListAgentMiddleName": [
+      "Listing",
+      "AgentOffice",
+      "ListAgent"
+    ],
+    "ListAgentMlsId": [
+      "Listing",
+      "AgentOffice",
+      "ListAgent"
+    ],
+    "ListAgentMobilePhone": [
+      "Listing",
+      "AgentOffice",
+      "ListAgent"
+    ],
+    "ListAgentNamePrefix": [
+      "Listing",
+      "AgentOffice",
+      "ListAgent"
+    ],
+    "ListAgentNameSuffix": [
+      "Listing",
+      "AgentOffice",
+      "ListAgent"
+    ],
+    "ListAgentNationalAssociationId": [
+      "Listing",
+      "AgentOffice",
+      "ListAgent"
+    ],
+    "ListAgentOfficePhone": [
+      "Listing",
+      "AgentOffice",
+      "ListAgent"
+    ],
+    "ListAgentOfficePhoneExt": [
+      "Listing",
+      "AgentOffice",
+      "ListAgent"
+    ],
+    "ListAgentPager": [
+      "Listing",
+      "AgentOffice",
+      "ListAgent"
+    ],
+    "ListAgentPreferredPhone": [
+      "Listing",
+      "AgentOffice",
+      "ListAgent"
+    ],
+    "ListAgentPreferredPhoneExt": [
+      "Listing",
+      "AgentOffice",
+      "ListAgent"
+    ],
+    "ListAgentStateLicense": [
+      "Listing",
+      "AgentOffice",
+      "ListAgent"
+    ],
+    "ListAgentTollFreePhone": [
+      "Listing",
+      "AgentOffice",
+      "ListAgent"
+    ],
+    "ListAgentURL": [
+      "Listing",
+      "AgentOffice",
+      "ListAgent"
+    ],
+    "ListAgentVoiceMail": [
+      "Listing",
+      "AgentOffice",
+      "ListAgent"
+    ],
+    "ListAgentVoiceMailExt": [
+      "Listing",
+      "AgentOffice",
+      "ListAgent"
+    ],
+    "ListAOR": [
+      "Listing"
+    ],
+    "ListingAgreement": [
+      "Listing"
+    ],
+    "ListingContractDate": [
+      "Listing",
+      "Dates"
+    ],
+    "ListingId": [
+      "Listing"
+    ],
+    "ListingKey": [
+      "Listing"
+    ],
+    "ListingService": [
+      "Listing"
+    ],
+    "ListingTerms": [
+      "Listing",
+      "Contract"
+    ],
+    "ListingURL": [
+      "Listing"
+    ],
+    "ListingURLDescription": [
+      "Listing"
+    ],
+    "ListOffice": [
+      "Listing",
+      "AgentOffice",
+      "ListOffice"
+    ],
+    "ListOfficeAOR": [
+      "Listing",
+      "AgentOffice",
+      "ListOffice"
+    ],
+    "ListOfficeEmail": [
+      "Listing",
+      "AgentOffice",
+      "ListOffice"
+    ],
+    "ListOfficeFax": [
+      "Listing",
+      "AgentOffice",
+      "ListOffice"
+    ],
+    "ListOfficeKey": [
+      "Listing",
+      "AgentOffice",
+      "ListOffice"
+    ],
+    "ListOfficeMlsId": [
+      "Listing",
+      "AgentOffice",
+      "ListOffice"
+    ],
+    "ListOfficeName": [
+      "Listing",
+      "AgentOffice",
+      "ListOffice"
+    ],
+    "ListOfficeNationalAssociationId": [
+      "Listing",
+      "AgentOffice",
+      "ListOffice"
+    ],
+    "ListOfficePhone": [
+      "Listing",
+      "AgentOffice",
+      "ListOffice"
+    ],
+    "ListOfficePhoneExt": [
+      "Listing",
+      "AgentOffice",
+      "ListOffice"
+    ],
+    "ListOfficeURL": [
+      "Listing",
+      "AgentOffice",
+      "ListOffice"
+    ],
+    "ListPrice": [
+      "Listing",
+      "Price"
+    ],
+    "ListPriceLow": [
+      "Listing",
+      "Price"
+    ],
+    "ListTeam": [
+      "Listing",
+      "AgentOffice",
+      "ListTeam"
+    ],
+    "ListTeamKey": [
+      "Listing",
+      "AgentOffice",
+      "Team"
+    ],
+    "ListTeamName": [
+      "Listing",
+      "AgentOffice",
+      "Team"
+    ],
+    "LivingArea": [
+      "Structure"
+    ],
+    "LivingAreaSource": [
+      "Structure"
+    ],
+    "LivingAreaUnits": [
+      "Structure"
+    ],
+    "LockBoxLocation": [
+      "Listing",
+      "Showing"
+    ],
+    "LockBoxSerialNumber": [
+      "Listing",
+      "Showing"
+    ],
+    "LockBoxType": [
+      "Listing",
+      "Showing"
+    ],
+    "Longitude": [
+      "Location",
+      "GIS"
+    ],
+    "LotDimensionsSource": [
+      "Characteristics"
+    ],
+    "LotFeatures": [
+      "Characteristics"
+    ],
+    "LotSizeAcres": [
+      "Characteristics"
+    ],
+    "LotSizeArea": [
+      "Characteristics"
+    ],
+    "LotSizeDimensions": [
+      "Characteristics"
+    ],
+    "LotSizeSource": [
+      "Characteristics"
+    ],
+    "LotSizeSquareFeet": [
+      "Characteristics"
+    ],
+    "LotSizeUnits": [
+      "Characteristics"
+    ],
+    "MainLevelBathrooms": [
+      "Structure"
+    ],
+    "MainLevelBedrooms": [
+      "Structure"
+    ],
+    "MaintenanceExpense": [
+      "Financial"
+    ],
+    "MajorChangeTimestamp": [
+      "Listing",
+      "Dates"
+    ],
+    "MajorChangeType": [
+      "Listing",
+      "Dates"
+    ],
+    "Make": [
+      "Structure"
+    ],
+    "ManagerExpense": [
+      "Financial"
+    ],
+    "MapCoordinate": [
+      "Location",
+      "GIS"
+    ],
+    "MapCoordinateSource": [
+      "Location",
+      "GIS"
+    ],
+    "MapURL": [
+      "Location",
+      "GIS"
+    ],
+    "Media": [
+      "Listing",
+      "Media"
+    ],
+    "MiddleOrJuniorSchool": [
+      "Location",
+      "School"
+    ],
+    "MiddleOrJuniorSchoolDistrict": [
+      "Location",
+      "School"
+    ],
+    "MLSAreaMajor": [
+      "Location",
+      "Area"
+    ],
+    "MLSAreaMinor": [
+      "Location",
+      "Area"
+    ],
+    "MlsStatus": [
+      "Listing"
+    ],
+    "MobileDimUnits": [
+      "Structure"
+    ],
+    "MobileHomeRemainsYN": [
+      "Characteristics"
+    ],
+    "MobileLength": [
+      "Structure"
+    ],
+    "MobileWidth": [
+      "Structure"
+    ],
+    "Model": [
+      "Structure"
+    ],
+    "ModificationTimestamp": [
+      "Listing",
+      "Dates"
+    ],
+    "NetOperatingIncome": [
+      "Financial"
+    ],
+    "NewConstructionYN": [
+      "Structure"
+    ],
+    "NewTaxesExpense": [
+      "Financial"
+    ],
+    "NumberOfBuildings": [
+      "Characteristics"
+    ],
+    "NumberOfFullTimeEmployees": [
+      "Business"
+    ],
+    "NumberOfLots": [
+      "Characteristics"
+    ],
+    "NumberOfPads": [
+      "Characteristics"
+    ],
+    "NumberOfPartTimeEmployees": [
+      "Business"
+    ],
+    "NumberOfSeparateElectricMeters": [
+      "Utilities"
+    ],
+    "NumberOfSeparateGasMeters": [
+      "Utilities"
+    ],
+    "NumberOfSeparateWaterMeters": [
+      "Utilities"
+    ],
+    "NumberOfUnitsInCommunity": [
+      "Characteristics"
+    ],
+    "NumberOfUnitsLeased": [
+      "Financial"
+    ],
+    "NumberOfUnitsMoMo": [
+      "Financial"
+    ],
+    "NumberOfUnitsTotal": [
+      "Characteristics"
+    ],
+    "NumberOfUnitsVacant": [
+      "Financial"
+    ],
+    "OccupantName": [
+      "OccupantOwner"
+    ],
+    "OccupantPhone": [
+      "OccupantOwner"
+    ],
+    "OccupantType": [
+      "OccupantOwner"
+    ],
+    "OffMarketDate": [
+      "Listing",
+      "Dates"
+    ],
+    "OffMarketTimestamp": [
+      "Listing",
+      "Dates"
+    ],
+    "OnMarketDate": [
+      "Listing",
+      "Dates"
+    ],
+    "OnMarketTimestamp": [
+      "Listing",
+      "Dates"
+    ],
+    "OpenHouse": [
+      "Listing"
+    ],
+    "OpenHouseModificationTimestamp": [
+      "Listing"
+    ],
+    "OpenParkingSpaces": [
+      "Structure"
+    ],
+    "OpenParkingYN": [
+      "Structure"
+    ],
+    "OperatingExpense": [
+      "Financial"
+    ],
+    "OperatingExpenseIncludes": [
+      "Financial"
+    ],
+    "OriginalEntryTimestamp": [
+      "Listing",
+      "Dates"
+    ],
+    "OriginalListPrice": [
+      "Listing",
+      "Price"
+    ],
+    "OriginatingSystem": [
+      "Listing"
+    ],
+    "OriginatingSystemID": [
+      "Listing"
+    ],
+    "OriginatingSystemKey": [
+      "Listing"
+    ],
+    "OriginatingSystemName": [
+      "Listing"
+    ],
+    "OtherEquipment": [
+      "Equipment"
+    ],
+    "OtherExpense": [
+      "Financial"
+    ],
+    "OtherParking": [
+      "Structure"
+    ],
+    "OtherStructures": [
+      "Structure"
+    ],
+    "OwnerName": [
+      "OccupantOwner"
+    ],
+    "OwnerPays": [
+      "Financial"
+    ],
+    "OwnerPhone": [
+      "OccupantOwner"
+    ],
+    "Ownership": [
+      "Listing",
+      "Contract"
+    ],
+    "OwnershipType": [
+      "Business"
+    ],
+    "ParcelNumber": [
+      "Tax"
+    ],
+    "ParkingFeatures": [
+      "Structure"
+    ],
+    "ParkingTotal": [
+      "Structure"
+    ],
+    "ParkManagerName": [
+      "Characteristics"
+    ],
+    "ParkManagerPhone": [
+      "Characteristics"
+    ],
+    "ParkName": [
+      "Characteristics"
+    ],
+    "PastureArea": [
+      "Farming"
+    ],
+    "PatioAndPorchFeatures": [
+      "Structure"
+    ],
+    "PendingTimestamp": [
+      "Listing",
+      "Dates"
+    ],
+    "PestControlExpense": [
+      "Financial"
+    ],
+    "PetsAllowed": [
+      "Characteristics"
+    ],
+    "PhotosChangeTimestamp": [
+      "Listing",
+      "Media"
+    ],
+    "PhotosCount": [
+      "Listing",
+      "Media"
+    ],
+    "PoolExpense": [
+      "Financial"
+    ],
+    "PoolFeatures": [
+      "Characteristics"
+    ],
+    "PoolPrivateYN": [
+      "Characteristics"
+    ],
+    "Possession": [
+      "Listing",
+      "Closing"
+    ],
+    "PossibleUse": [
+      "Characteristics"
+    ],
+    "PostalCity": [
+      "Location",
+      "Address"
+    ],
+    "PostalCode": [
+      "Location",
+      "Address"
+    ],
+    "PostalCodePlus4": [
+      "Location",
+      "Address"
+    ],
+    "PowerProduction": [
+      "Utilities"
+    ],
+    "PowerProductionType": [
+      "Utilities"
+    ],
+    "PowerProductionYN": [
+      "Utilities"
+    ],
+    "PreviousListPrice": [
+      "Listing",
+      "Price"
+    ],
+    "PriceChangeTimestamp": [
+      "Listing",
+      "Dates"
+    ],
+    "PrivateOfficeRemarks": [
+      "Listing",
+      "Remarks"
+    ],
+    "PrivateRemarks": [
+      "Listing",
+      "Remarks"
+    ],
+    "ProfessionalManagementExpense": [
+      "Financial"
+    ],
+    "PropertyAttachedYN": [
+      "Structure"
+    ],
+    "PropertyCondition": [
+      "Structure"
+    ],
+    "PropertyTimeZoneName": [
+      "Listing",
+      "Dates"
+    ],
+    "PropertyTimeZoneObservesDstYN": [
+      "Listing",
+      "Dates"
+    ],
+    "PropertyTimeZoneStandardOffset": [
+      "Listing",
+      "Dates"
+    ],
+    "PublicRemarks": [
+      "Listing",
+      "Remarks"
+    ],
+    "PublicSurveyRange": [
+      "Tax"
+    ],
+    "PublicSurveySection": [
+      "Tax"
+    ],
+    "PublicSurveyTownship": [
+      "Tax"
+    ],
+    "PurchaseContractDate": [
+      "Listing",
+      "Dates"
+    ],
+    "RangeArea": [
+      "Farming"
+    ],
+    "RentControlYN": [
+      "Financial"
+    ],
+    "RentIncludes": [
+      "Financial"
+    ],
+    "RoadFrontageType": [
+      "Characteristics"
+    ],
+    "RoadResponsibility": [
+      "Characteristics"
+    ],
+    "RoadSurfaceType": [
+      "Characteristics"
+    ],
+    "Roof": [
+      "Structure"
+    ],
+    "Rooms": [
+      "Structure",
+      "Rooms"
+    ],
+    "RoomsTotal": [
+      "Structure",
+      "Rooms"
+    ],
+    "RoomType": [
+      "Structure",
+      "Rooms"
+    ],
+    "RVParkingDimensions": [
+      "Structure"
+    ],
+    "SeatingCapacity": [
+      "Business"
+    ],
+    "SecurityFeatures": [
+      "Equipment"
+    ],
+    "SeniorCommunityYN": [
+      "Characteristics"
+    ],
+    "SerialU": [
+      "Structure"
+    ],
+    "SerialX": [
+      "Structure"
+    ],
+    "SerialXX": [
+      "Structure"
+    ],
+    "Sewer": [
+      "Utilities"
+    ],
+    "ShowingAdvanceNotice": [
+      "Listing",
+      "Showing"
+    ],
+    "ShowingAttendedYN": [
+      "Listing",
+      "Showing"
+    ],
+    "ShowingConsiderations": [
+      "Listing",
+      "Showing"
+    ],
+    "ShowingContactName": [
+      "Listing",
+      "Showing"
+    ],
+    "ShowingContactPhone": [
+      "Listing",
+      "Showing"
+    ],
+    "ShowingContactPhoneExt": [
+      "Listing",
+      "Showing"
+    ],
+    "ShowingContactType": [
+      "Listing",
+      "Showing"
+    ],
+    "ShowingDays": [
+      "Listing",
+      "Showing"
+    ],
+    "ShowingEndTime": [
+      "Listing",
+      "Showing"
+    ],
+    "ShowingInstructions": [
+      "Listing",
+      "Showing"
+    ],
+    "ShowingRequirements": [
+      "Listing",
+      "Showing"
+    ],
+    "ShowingServiceName": [
+      "Listing",
+      "Showing"
+    ],
+    "ShowingStartTime": [
+      "Listing",
+      "Showing"
+    ],
+    "SignOnPropertyYN": [
+      "Listing",
+      "Marketing"
+    ],
+    "SimpleDaysOnMarket": [
+      "Listing",
+      "Dates"
+    ],
+    "Skirt": [
+      "Structure"
+    ],
+    "SocialMedia": [
+      "Listing"
+    ],
+    "SourceSystem": [
+      "Listing"
+    ],
+    "SourceSystemID": [
+      "Listing"
+    ],
+    "SourceSystemKey": [
+      "Listing"
+    ],
+    "SourceSystemName": [
+      "Listing"
+    ],
+    "SpaFeatures": [
+      "Characteristics"
+    ],
+    "SpaYN": [
+      "Characteristics"
+    ],
+    "SpecialLicenses": [
+      "Business"
+    ],
+    "SpecialListingConditions": [
+      "Listing",
+      "Contract"
+    ],
+    "StandardStatus": [
+      "Listing"
+    ],
+    "StartShowingDate": [
+      "Listing",
+      "Showing"
+    ],
+    "StateOrProvince": [
+      "Location",
+      "Address"
+    ],
+    "StateRegion": [
+      "Location",
+      "Area"
+    ],
+    "StatusChangeTimestamp": [
+      "Listing",
+      "Dates"
+    ],
+    "Stories": [
+      "Structure"
+    ],
+    "StoriesTotal": [
+      "Structure"
+    ],
+    "StreetAdditionalInfo": [
+      "Location",
+      "Address"
+    ],
+    "StreetDirPrefix": [
+      "Location",
+      "Address"
+    ],
+    "StreetDirSuffix": [
+      "Location",
+      "Address"
+    ],
+    "StreetName": [
+      "Location",
+      "Address"
+    ],
+    "StreetNumber": [
+      "Location",
+      "Address"
+    ],
+    "StreetNumberNumeric": [
+      "Location",
+      "Address"
+    ],
+    "StreetSuffix": [
+      "Location",
+      "Address"
+    ],
+    "StreetSuffixModifier": [
+      "Location",
+      "Address"
+    ],
+    "StructureType": [
+      "Structure"
+    ],
+    "SubAgencyCompensation": [
+      "Listing",
+      "Compensation"
+    ],
+    "SubAgencyCompensationType": [
+      "Listing",
+      "Compensation"
+    ],
+    "SubdivisionName": [
+      "Location",
+      "Area"
+    ],
+    "SuppliesExpense": [
+      "Financial"
+    ],
+    "SyndicateTo": [
+      "Listing",
+      "Marketing"
+    ],
+    "SyndicationRemarks": [
+      "Listing",
+      "Remarks"
+    ],
+    "TaxAnnualAmount": [
+      "Tax"
+    ],
+    "TaxAnnualAmountPerLivingAreaUnit": [
+      "Tax"
+    ],
+    "TaxAnnualAmountPerSquareFoot": [
+      "Tax"
+    ],
+    "TaxAssessedValue": [
+      "Tax"
+    ],
+    "TaxBlock": [
+      "Tax"
+    ],
+    "TaxBookNumber": [
+      "Tax"
+    ],
+    "TaxLegalDescription": [
+      "Tax"
+    ],
+    "TaxLot": [
+      "Tax"
+    ],
+    "TaxMapNumber": [
+      "Tax"
+    ],
+    "TaxOtherAnnualAssessmentAmount": [
+      "Tax"
+    ],
+    "TaxParcelLetter": [
+      "Tax"
+    ],
+    "TaxStatusCurrent": [
+      "Tax"
+    ],
+    "TaxTract": [
+      "Tax"
+    ],
+    "TaxYear": [
+      "Tax"
+    ],
+    "TenantPays": [
+      "Financial"
+    ],
+    "Topography": [
+      "Characteristics"
+    ],
+    "TotalActualRent": [
+      "Financial"
+    ],
+    "Township": [
+      "Location",
+      "Address"
+    ],
+    "TransactionBrokerCompensation": [
+      "Listing",
+      "Compensation"
+    ],
+    "TransactionBrokerCompensationType": [
+      "Listing",
+      "Compensation"
+    ],
+    "TrashExpense": [
+      "Financial"
+    ],
+    "UnitNumber": [
+      "Location",
+      "Address"
+    ],
+    "UnitsFurnished": [
+      "Characteristics"
+    ],
+    "UnitTypes": [
+      "UnitTypes"
+    ],
+    "UnitTypeType": [
+      "UnitTypes"
+    ],
+    "UnparsedAddress": [
+      "Location",
+      "Address"
+    ],
+    "Utilities": [
+      "Utilities"
+    ],
+    "VacancyAllowance": [
+      "Financial"
+    ],
+    "VacancyAllowanceRate": [
+      "Financial"
+    ],
+    "Vegetation": [
+      "Farming"
+    ],
+    "VideosChangeTimestamp": [
+      "Listing",
+      "Media"
+    ],
+    "VideosCount": [
+      "Listing",
+      "Media"
+    ],
+    "View": [
+      "Characteristics"
+    ],
+    "ViewYN": [
+      "Characteristics"
+    ],
+    "VirtualTourURLBranded": [
+      "Listing",
+      "Marketing"
+    ],
+    "VirtualTourURLUnbranded": [
+      "Listing",
+      "Marketing"
+    ],
+    "WalkScore": [
+      "Structure",
+      "Performance",
+      "GreenMarketing"
+    ],
+    "WaterBodyName": [
+      "Characteristics"
+    ],
+    "WaterfrontFeatures": [
+      "Characteristics"
+    ],
+    "WaterfrontYN": [
+      "Characteristics"
+    ],
+    "WaterSewerExpense": [
+      "Financial"
+    ],
+    "WaterSource": [
+      "Utilities"
+    ],
+    "WindowFeatures": [
+      "Structure"
+    ],
+    "WithdrawnDate": [
+      "Listing",
+      "Dates"
+    ],
+    "WoodedArea": [
+      "Farming"
+    ],
+    "WorkmansCompensationExpense": [
+      "Financial"
+    ],
+    "YearBuilt": [
+      "Structure"
+    ],
+    "YearBuiltDetails": [
+      "Structure"
+    ],
+    "YearBuiltEffective": [
+      "Structure"
+    ],
+    "YearBuiltSource": [
+      "Structure"
+    ],
+    "YearEstablished": [
+      "Business"
+    ],
+    "YearsCurrentOwner": [
+      "Business"
+    ],
+    "Zoning": [
+      "Tax"
+    ],
+    "ZoningDescription": [
+      "Tax"
+    ]
+  }
+}

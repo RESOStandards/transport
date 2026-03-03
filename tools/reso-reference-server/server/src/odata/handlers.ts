@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 import type { RequestHandler } from 'express';
 import type { CollectionQueryOptions, DataAccessLayer, ResourceContext } from '../db/data-access.js';
 import { buildAnnotations } from './annotations.js';
-import { buildValidationError } from './errors.js';
+import { buildODataError, buildValidationError } from './errors.js';
 import { setODataHeaders } from './headers.js';
 import { validateRequestBody } from './validation.js';
 
@@ -32,7 +32,7 @@ export const createHandler =
       const failures = validateRequestBody(body, ctx.resourceCtx.fields);
       if (failures.length > 0) {
         setODataHeaders(res);
-        res.status(400).json(buildValidationError(failures));
+        res.status(400).json(buildValidationError(failures, 'Create'));
         return;
       }
 
@@ -68,13 +68,7 @@ export const createHandler =
       });
     } catch (err) {
       setODataHeaders(res);
-      res.status(500).json({
-        error: {
-          code: '50000',
-          message: err instanceof Error ? err.message : 'Internal server error',
-          details: []
-        }
-      });
+      res.status(500).json(buildODataError('50000', err instanceof Error ? err.message : 'Internal server error', [], 'Create'));
     }
   };
 
@@ -86,7 +80,9 @@ export const readHandler =
       const key = extractKey(req.path);
       if (!key) {
         setODataHeaders(res);
-        res.status(400).json(buildValidationError([{ field: 'key', reason: 'Missing resource key in URL' }]));
+        res
+          .status(400)
+          .json(buildValidationError([{ field: 'key', reason: "Missing resource key in URL. Use the format /Resource('key')." }], 'Read'));
         return;
       }
 
@@ -100,7 +96,7 @@ export const readHandler =
 
       if (!row) {
         setODataHeaders(res);
-        res.status(404).send();
+        res.status(404).json(buildODataError('40400', `No ${ctx.resourceCtx.resource} record found with key '${key}'.`, [], 'Read'));
         return;
       }
 
@@ -111,13 +107,7 @@ export const readHandler =
       });
     } catch (err) {
       setODataHeaders(res);
-      res.status(500).json({
-        error: {
-          code: '50000',
-          message: err instanceof Error ? err.message : 'Internal server error',
-          details: []
-        }
-      });
+      res.status(500).json(buildODataError('50000', err instanceof Error ? err.message : 'Internal server error', [], 'Read'));
     }
   };
 
@@ -129,7 +119,11 @@ export const updateHandler =
       const key = extractKey(req.path);
       if (!key) {
         setODataHeaders(res);
-        res.status(400).json(buildValidationError([{ field: 'key', reason: 'Missing resource key in URL' }]));
+        res
+          .status(400)
+          .json(
+            buildValidationError([{ field: 'key', reason: "Missing resource key in URL. Use the format /Resource('key')." }], 'Update')
+          );
         return;
       }
 
@@ -138,7 +132,7 @@ export const updateHandler =
       const failures = validateRequestBody(body, ctx.resourceCtx.fields);
       if (failures.length > 0) {
         setODataHeaders(res);
-        res.status(400).json(buildValidationError(failures));
+        res.status(400).json(buildValidationError(failures, 'Update'));
         return;
       }
 
@@ -198,13 +192,7 @@ export const updateHandler =
       });
     } catch (err) {
       setODataHeaders(res);
-      res.status(500).json({
-        error: {
-          code: '50000',
-          message: err instanceof Error ? err.message : 'Internal server error',
-          details: []
-        }
-      });
+      res.status(500).json(buildODataError('50000', err instanceof Error ? err.message : 'Internal server error', [], 'Update'));
     }
   };
 
@@ -216,14 +204,14 @@ export const deleteHandler =
       const key = extractKey(req.path);
       if (!key) {
         setODataHeaders(res);
-        res.status(400).send();
+        res.status(400).json(buildODataError('20100', "Missing resource key in URL. Use the format /Resource('key').", [], 'Delete'));
         return;
       }
 
       const deleted = await ctx.dal.deleteByKey(ctx.resourceCtx, key);
       if (!deleted) {
         setODataHeaders(res);
-        res.status(404).send();
+        res.status(404).json(buildODataError('40400', `No ${ctx.resourceCtx.resource} record found with key '${key}'.`, [], 'Delete'));
         return;
       }
 
@@ -231,13 +219,7 @@ export const deleteHandler =
       res.status(204).send();
     } catch (err) {
       setODataHeaders(res);
-      res.status(500).json({
-        error: {
-          code: '50000',
-          message: err instanceof Error ? err.message : 'Internal server error',
-          details: []
-        }
-      });
+      res.status(500).json(buildODataError('50000', err instanceof Error ? err.message : 'Internal server error', [], 'Delete'));
     }
   };
 
@@ -270,12 +252,6 @@ export const collectionHandler =
       res.status(200).json(body);
     } catch (err) {
       setODataHeaders(res);
-      res.status(500).json({
-        error: {
-          code: '50000',
-          message: err instanceof Error ? err.message : 'Internal server error',
-          details: []
-        }
-      });
+      res.status(500).json(buildODataError('50000', err instanceof Error ? err.message : 'Internal server error', [], 'Query'));
     }
   };

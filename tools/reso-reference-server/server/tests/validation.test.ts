@@ -39,7 +39,7 @@ describe('validateRequestBody', () => {
     const failures = validateRequestBody(body, fields);
     expect(failures).toHaveLength(1);
     expect(failures[0].field).toBe('UnknownField');
-    expect(failures[0].reason).toContain('Unknown field');
+    expect(failures[0].reason).toContain('not a recognized field');
   });
 
   it('detects negative numeric values', () => {

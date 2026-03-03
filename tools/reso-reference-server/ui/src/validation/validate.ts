@@ -1,5 +1,5 @@
-import { isEnumType } from '../metadata/loader.js';
-import type { ResoField } from '../metadata/types.js';
+import type { ResoField } from '../types';
+import { isEnumType, isNumericEdmType } from '../types';
 
 /** A validation failure for a single field. */
 export interface ValidationFailure {
@@ -8,16 +8,18 @@ export interface ValidationFailure {
 }
 
 /**
- * Validates a request body against the resource's field definitions.
+ * Validates a record against the resource's field definitions.
  *
- * Checks for:
+ * Port of server/src/odata/validation.ts — checks for:
  * - Unknown fields (not in metadata)
- * - Negative numeric values (convention for triggering 400 errors in test payloads)
  * - Basic type mismatches
+ * - Negative numeric values
+ * - MaxLength enforcement for strings
+ * - Precision/scale validation for decimals
  *
  * Returns an array of failures (empty if valid).
  */
-export const validateRequestBody = (
+export const validateRecord = (
   body: Readonly<Record<string, unknown>>,
   fields: ReadonlyArray<ResoField>
 ): ReadonlyArray<ValidationFailure> => {
@@ -25,26 +27,25 @@ export const validateRequestBody = (
   const failures: ValidationFailure[] = [];
 
   for (const [key, value] of Object.entries(body)) {
-    // Skip OData annotations
     if (key.startsWith('@')) continue;
 
     const field = fieldMap.get(key);
     if (!field) {
-      failures.push({
-        field: key,
-        reason: `'${key}' is not a recognized field for this resource. Check field name spelling or consult the $metadata document.`
-      });
+      failures.push({ field: key, reason: `'${key}' is not a recognized field. Check field name spelling or consult the metadata.` });
       continue;
     }
 
-    if (value === null || value === undefined) continue;
+    if (value === null || value === undefined || value === '') continue;
 
     // Check negative numerics
     if (typeof value === 'number' && value < 0 && isNumericEdmType(field.type)) {
-      failures.push({
-        field: key,
-        reason: `${key} must be greater than or equal to 0. Received: ${value}`
-      });
+      failures.push({ field: key, reason: 'Value must be greater than or equal to 0.' });
+      continue;
+    }
+
+    // MaxLength for strings
+    if (typeof value === 'string' && field.maxLength && value.length > field.maxLength) {
+      failures.push({ field: key, reason: `Exceeds maximum length of ${field.maxLength} characters (currently ${value.length}).` });
       continue;
     }
 
@@ -55,28 +56,23 @@ export const validateRequestBody = (
     }
   }
 
+  // TODO: Add executable business rules validation
+
   return failures;
 };
-
-/** Checks if an Edm type is numeric. */
-const isNumericEdmType = (type: string): boolean =>
-  ['Edm.Decimal', 'Edm.Int64', 'Edm.Int32', 'Edm.Int16', 'Edm.Double', 'Edm.Single', 'Edm.Byte'].includes(type);
 
 /** Validates a single field value against its expected Edm type. */
 const validateFieldType = (fieldName: string, value: unknown, field: ResoField): ValidationFailure | undefined => {
   if (field.isCollection) {
     if (!Array.isArray(value)) {
-      return { field: fieldName, reason: `${fieldName} must be an array (collection type). Received: ${typeof value}` };
+      return { field: fieldName, reason: 'Must be a list of values.' };
     }
     return undefined;
   }
 
   if (isEnumType(field.type)) {
     if (typeof value !== 'string' && typeof value !== 'number') {
-      return {
-        field: fieldName,
-        reason: `${fieldName} must be a valid lookup value (string or number) for type ${field.type}. Received: ${typeof value}`
-      };
+      return { field: fieldName, reason: 'Please select a valid option from the list.' };
     }
     return undefined;
   }
@@ -84,33 +80,40 @@ const validateFieldType = (fieldName: string, value: unknown, field: ResoField):
   switch (field.type) {
     case 'Edm.String':
       if (typeof value !== 'string') {
-        return { field: fieldName, reason: `${fieldName} must be a string. Received: ${typeof value}` };
+        return { field: fieldName, reason: 'Must be text.' };
       }
       break;
     case 'Edm.Boolean':
       if (typeof value !== 'boolean') {
-        return { field: fieldName, reason: `${fieldName} must be true or false. Received: ${typeof value}` };
+        return { field: fieldName, reason: 'Must be true or false.' };
       }
       break;
     case 'Edm.Int64':
     case 'Edm.Int32':
     case 'Edm.Int16':
     case 'Edm.Byte':
+      if (typeof value !== 'number') {
+        return { field: fieldName, reason: 'Must be a whole number.' };
+      }
+      if (!Number.isInteger(value)) {
+        return { field: fieldName, reason: 'Must be a whole number (no decimals).' };
+      }
+      break;
     case 'Edm.Decimal':
     case 'Edm.Double':
     case 'Edm.Single':
       if (typeof value !== 'number') {
-        return { field: fieldName, reason: `${fieldName} must be a number (${field.type}). Received: ${typeof value}` };
+        return { field: fieldName, reason: 'Must be a number.' };
       }
       break;
     case 'Edm.Date':
       if (typeof value !== 'string') {
-        return { field: fieldName, reason: `${fieldName} must be a date string in YYYY-MM-DD format. Received: ${typeof value}` };
+        return { field: fieldName, reason: 'Must be a date (YYYY-MM-DD).' };
       }
       break;
     case 'Edm.DateTimeOffset':
       if (typeof value !== 'string') {
-        return { field: fieldName, reason: `${fieldName} must be a date-time string in ISO 8601 format. Received: ${typeof value}` };
+        return { field: fieldName, reason: 'Must be a date and time.' };
       }
       break;
   }

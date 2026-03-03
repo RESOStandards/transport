@@ -1,3 +1,5 @@
+import { readFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
 import express from 'express';
 import { createMockOAuthRouter } from './auth/mock-oauth.js';
 import { loadConfig } from './config.js';
@@ -7,7 +9,7 @@ import { createPostgresDal } from './db/postgres-dal.js';
 import { generateSchema } from './db/schema-generator.js';
 import { createSwaggerRouter } from './docs/swagger.js';
 import { generateEdmx } from './metadata/edmx-generator.js';
-import { getFieldsForResource, getKeyFieldForResource, loadMetadata } from './metadata/loader.js';
+import { getFieldsForResource, getKeyFieldForResource, getLookupsForType, isEnumType, loadMetadata } from './metadata/loader.js';
 import { generateOpenApiSpec } from './metadata/openapi-generator.js';
 import { TARGET_RESOURCES } from './metadata/types.js';
 import { createODataRouter } from './odata/router.js';
@@ -76,6 +78,63 @@ const main = async (): Promise<void> => {
 
   // Swagger UI
   app.use(createSwaggerRouter(openApiSpec));
+
+  // Static file serving (mock images for UI media carousel)
+  const publicDir = resolve(import.meta.dirname, '../public');
+  app.use(express.static(publicDir));
+
+  // UI config endpoint — serves summary field configuration for the UI
+  const uiConfigPath = resolve(import.meta.dirname, './ui-config.json');
+  const uiConfig = JSON.parse(await readFile(uiConfigPath, 'utf-8'));
+  app.get('/ui-config', (_req, res) => {
+    res.json(uiConfig);
+  });
+
+  // Field groups endpoint — serves RESO Data Dictionary field groupings for the UI
+  const fieldGroupsPath = resolve(import.meta.dirname, './field-groups.json');
+  const fieldGroups = JSON.parse(await readFile(fieldGroupsPath, 'utf-8'));
+  app.get('/field-groups', (_req, res) => {
+    res.json(fieldGroups);
+  });
+
+  // Metadata JSON API — lightweight JSON alternatives to EDMX XML for UI consumption
+  app.get('/api/metadata/fields', (req, res) => {
+    const resource = req.query.resource as string | undefined;
+    if (!resource) {
+      res.status(400).json({ error: 'Missing required query parameter: resource' });
+      return;
+    }
+    const fields = getFieldsForResource(metadata, resource);
+    res.json(fields);
+  });
+
+  app.get('/api/metadata/lookups', (req, res) => {
+    const type = req.query.type as string | undefined;
+    if (!type) {
+      res.status(400).json({ error: 'Missing required query parameter: type' });
+      return;
+    }
+    const lookups = getLookupsForType(metadata, type);
+    res.json(lookups);
+  });
+
+  app.get('/api/metadata/lookups-for-resource', (req, res) => {
+    const resource = req.query.resource as string | undefined;
+    if (!resource) {
+      res.status(400).json({ error: 'Missing required query parameter: resource' });
+      return;
+    }
+    const fields = getFieldsForResource(metadata, resource);
+    const enumFields = fields.filter(f => isEnumType(f.type));
+    const result: Record<string, unknown> = {};
+    for (const field of enumFields) {
+      const lookupName = field.type;
+      if (!result[lookupName]) {
+        result[lookupName] = getLookupsForType(metadata, lookupName);
+      }
+    }
+    res.json(result);
+  });
 
   // Health check
   app.get('/health', (_req, res) => {

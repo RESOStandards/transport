@@ -1,7 +1,7 @@
 pre-commit:
   commands:
     lint-fix:
-      glob: "tools/**/*.ts"
+      glob: "tools/**/*.{ts,tsx}"
       run: npx biome check --fix --staged {staged_files}
       stage_fixed: true
 
@@ -22,6 +22,11 @@ pre-commit:
 
     typecheck-web-api:
       root: "tools/web-api-add-edit-test/"
+      run: npx tsc --noEmit
+      priority: 2
+
+    typecheck-ui:
+      root: "tools/reso-reference-server/ui/"
       run: npx tsc --noEmit
       priority: 2
 

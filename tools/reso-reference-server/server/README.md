@@ -142,6 +142,47 @@ The server uses a `DataAccessLayer` interface to abstract persistence from query
 
 Navigation bindings are auto-detected via the RESO convention: child tables have `ResourceName` and `ResourceRecordKey` columns. The router discovers these at startup and logs them.
 
+## UI Configuration
+
+The server exposes additional endpoints for the React UI:
+
+### `GET /ui-config`
+
+Returns the UI summary field configuration from `src/ui-config.json`. This controls which fields appear in the search results summary cards.
+
+```json
+{
+  "resources": {
+    "Property": {
+      "summaryFields": ["ListingKey", "ListingId", "ListPrice", "BedroomsTotal", ...]
+    },
+    "Member": { "summaryFields": "__all__" }
+  }
+}
+```
+
+Use `"__all__"` to show all fields for a resource. Use an explicit array to pick specific fields.
+
+### `GET /field-groups`
+
+Returns RESO Data Dictionary field group mappings from `src/field-groups.json`. Used by the UI to organize detail views, forms, and advanced search into collapsible sections.
+
+### `GET /api/metadata/fields?resource=Property`
+
+Returns `ResoField[]` for the specified resource (JSON alternative to the EDMX `$metadata` endpoint).
+
+### `GET /api/metadata/lookups?type=StandardStatus`
+
+Returns `ResoLookup[]` for a specific enum type.
+
+### `GET /api/metadata/lookups-for-resource?resource=Property`
+
+Returns all lookup values for all enum fields in a resource as `Record<string, ResoLookup[]>`. Used by the UI to populate dropdown menus in one request.
+
+### Mock Images
+
+Placeholder SVG images are served from `public/images/` for the media carousel during development. These are referenced by Media records that don't have a `MediaURL`.
+
 ## Key Design Decisions
 
 1. **Metadata-driven** — No code generation. Routes, tables, and validation are built dynamically from `server-metadata.json` at startup.

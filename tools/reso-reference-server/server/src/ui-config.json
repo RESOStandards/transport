@@ -1,0 +1,26 @@
+{
+  "resources": {
+    "Property": {
+      "summaryFields": [
+        "ListingKey",
+        "ListingId",
+        "ListPrice",
+        "BedroomsTotal",
+        "BathroomsTotalInteger",
+        "BathroomsFull",
+        "BathroomsHalf",
+        "BathroomsThreeQuarter",
+        "BathroomsPartial",
+        "ModificationTimestamp",
+        "StandardStatus",
+        "ListAgentKey",
+        "ListOfficeKey"
+      ]
+    },
+    "Member": { "summaryFields": "__all__" },
+    "Office": { "summaryFields": "__all__" },
+    "Media": { "summaryFields": "__all__" },
+    "OpenHouse": { "summaryFields": "__all__" },
+    "Showing": { "summaryFields": "__all__" }
+  }
+}

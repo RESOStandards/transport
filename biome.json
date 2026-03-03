@@ -1,7 +1,7 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.9.0/schema.json",
   "files": {
-    "include": ["tools/**/*.ts"],
+    "include": ["tools/**/*.ts", "tools/**/*.tsx"],
     "ignore": ["**/node_modules", "**/dist", "**/*.d.ts", "**/*.example.ts"]
   },
   "linter": {
