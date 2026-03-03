@@ -1,13 +1,13 @@
-# @reso/web-api-add-edit-test
+# @reso/certification-add-edit
 
 RESO Web API Add/Edit Endorsement (RCP-010) compliance testing tool. Sends known-good and known-bad JSON payloads to OData 4.01 servers and validates responses against 8 Gherkin BDD certification scenarios.
 
-Uses [`@reso/odata-client`](../odata-client/) for HTTP requests, authentication, and CSDL metadata parsing.
+Uses [`@reso/odata-client`](../../odata-client/) for HTTP requests, authentication, and CSDL metadata parsing.
 
 ## Install
 
 ```bash
-npm install @reso/web-api-add-edit-test
+npm install @reso/certification-add-edit
 ```
 
 ## Usage
@@ -16,14 +16,14 @@ npm install @reso/web-api-add-edit-test
 
 ```bash
 # Run against a live server
-npx testWebApiAddEdit \
+npx reso-cert-add-edit \
   --url https://api.example.com \
   --resource Property \
   --payloads ./sample-payloads \
   --auth-token <token>
 
 # Run against the built-in mock server
-npx testWebApiAddEdit \
+npx reso-cert-add-edit \
   --url http://localhost:8800 \
   --resource Property \
   --payloads ./sample-payloads \
@@ -96,30 +96,30 @@ The `--mock` flag starts a built-in Express-based OData mock server on port 8800
 ## Programmatic API
 
 ```typescript
-import { runAllScenarios } from "@reso/web-api-add-edit-test";
+import { runAllScenarios } from '@reso/certification-add-edit';
 
 const results = await runAllScenarios({
-  serverUrl: "http://localhost:8080",
-  resource: "Property",
-  payloadDir: "./sample-payloads",
-  auth: { mode: "token", authToken: "test" },
+  serverUrl: 'http://localhost:8080',
+  resource: 'Property',
+  payloadDir: './sample-payloads',
+  auth: { mode: 'token', authToken: 'test' }
 });
 
 for (const scenario of results) {
-  console.log(`${scenario.name}: ${scenario.passed ? "PASS" : "FAIL"}`);
+  console.log(`${scenario.name}: ${scenario.passed ? 'PASS' : 'FAIL'}`);
 }
 ```
 
 ## Cross-Tool Validation
 
-Run the compliance tests against the [RESO Reference Server](../reso-reference-server/):
+Run the compliance tests against the [RESO Reference Server](../../reso-reference-server/):
 
 ```bash
 # Start the reference server
-cd ../reso-reference-server && docker-compose up -d
+cd ../../reso-reference-server && docker-compose up -d
 
 # Run compliance tests
-npx testWebApiAddEdit \
+npx reso-cert-add-edit \
   --url http://localhost:8080 \
   --resource Property \
   --payloads ./sample-payloads \
@@ -136,4 +136,4 @@ npm test        # 49 tests
 
 ## License
 
-See [LICENSE](../../License.txt) in the repository root.
+See [LICENSE](../../../License.txt) in the repository root.

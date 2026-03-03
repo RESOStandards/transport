@@ -27,7 +27,7 @@ const DEFAULT_MOCK_PORT = 8800;
 const program = new Command();
 
 program
-  .name('testWebApiAddEdit')
+  .name('reso-cert-add-edit')
   .description('RESO Web API Add/Edit Endorsement (RCP-010) compliance testing tool')
   .requiredOption('--url <url>', 'Server base URL (e.g., https://api.reso.org)')
   .requiredOption('--resource <name>', 'OData resource name (e.g., Property)')

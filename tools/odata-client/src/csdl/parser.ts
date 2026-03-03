@@ -1,7 +1,7 @@
 /**
  * CSDL/EDMX XML parser — converts OData metadata XML into structured types.
  *
- * Moved from web-api-add-edit-test/src/lib/metadata.ts and enhanced with
+ * Moved from certification/add-edit/src/lib/metadata.ts and enhanced with
  * enum type, entity container, and NavigationProperty extraction. Uses
  * fast-xml-parser with the same options for compatibility with existing
  * RESO tooling.

@@ -6,6 +6,14 @@ Testing, client SDK, and reference implementation tools for the RESO Web API spe
 
 ### Libraries
 
+#### [@reso/validation](validation/)
+
+Isomorphic validation library for RESO metadata-driven field validation. Works in any JS runtime (Node.js, browser, edge). Used by both the reference server API and the React UI.
+
+```bash
+cd validation && npm install && npm test  # 41 tests
+```
+
 #### [@reso/odata-filter-parser](odata-filter-parser/)
 
 Standalone, zero-dependency library for parsing OData 4.01 `$filter` expressions into a typed AST. Used by both the client SDK (query validation) and the reference server (SQL translation).
@@ -24,22 +32,26 @@ cd odata-client && npm install && npm test  # 101 tests
 
 ### Tools
 
-#### [web-api-add-edit-test](web-api-add-edit-test/)
+#### [certification/](certification/)
 
-RESO Web API Add/Edit Endorsement (RCP-010) compliance testing tool. Sends known-good and known-bad JSON payloads to OData servers and validates responses against 8 Gherkin BDD certification scenarios.
+RESO certification testing tools. Each subdirectory implements an independent certification module.
+
+##### [certification/add-edit/](certification/add-edit/) — Web API Add/Edit (RCP-010)
+
+Compliance testing tool for the RESO Web API Add/Edit Endorsement. Validates OData CRUD operations against 8 Gherkin BDD certification scenarios.
 
 ```bash
-cd web-api-add-edit-test && npm install && npm test  # 49 tests
+cd certification/add-edit && npm install && npm test  # 49 tests
 
 # Run against a server
-npx testWebApiAddEdit \
+npx reso-cert-add-edit \
   --url https://api.example.com \
   --resource Property \
   --payloads ./sample-payloads \
   --auth-token <token>
 
 # Run against the built-in mock server
-npx testWebApiAddEdit \
+npx reso-cert-add-edit \
   --url http://localhost:8800 \
   --resource Property \
   --payloads ./sample-payloads \
@@ -49,7 +61,7 @@ npx testWebApiAddEdit \
 
 #### [reso-reference-server](reso-reference-server/)
 
-Metadata-driven OData 4.01 reference server backed by PostgreSQL. Reads the RESO Data Dictionary JSON metadata and dynamically generates database tables, OData CRUD endpoints, EDMX metadata, and OpenAPI documentation for Property, Member, Office, Media, OpenHouse, and Showing resources.
+Metadata-driven OData 4.01 reference server backed by PostgreSQL. Reads the RESO Data Dictionary JSON metadata and dynamically generates database tables, OData CRUD endpoints, EDMX metadata, and OpenAPI documentation for Property, Member, Office, Media, OpenHouse, and Showing resources. Includes a React UI for browsing and editing records.
 
 **Build and run with Docker:**
 
@@ -77,10 +89,12 @@ npm test  # 67 tests
 
 Packages have `file:` dependencies. Build in this order:
 
-1. `odata-filter-parser` — no dependencies
-2. `odata-client` — depends on `odata-filter-parser`
-3. `reso-reference-server/server` — depends on `odata-filter-parser`
-4. `web-api-add-edit-test` — depends on `odata-client`
+1. `validation` — no dependencies
+2. `odata-filter-parser` — no dependencies
+3. `odata-client` — depends on `odata-filter-parser`
+4. `reso-reference-server/server` — depends on `validation` + `odata-filter-parser`
+5. `certification/test-runner` — depends on `odata-client` + `validation`
+6. `certification/add-edit` — depends on `certification/test-runner` + `odata-client` + `validation`
 
 ## Development
 
@@ -98,9 +112,9 @@ npm run lint:fix      # Auto-fix issues
 
 [Lefthook](https://github.com/evilmartians/lefthook) runs pre-commit hooks automatically on every `git commit`:
 
-1. **Lint + auto-fix** — Biome checks and fixes staged `.ts` files, re-stages fixes
-2. **Type check** — `tsc --noEmit` in all 4 packages (respecting build order)
-3. **Tests** — `vitest run` in all 4 packages
+1. **Lint + auto-fix** — Biome checks and fixes staged `.ts`/`.tsx` files, re-stages fixes
+2. **Type check** — `tsc --noEmit` in all packages (respecting build order)
+3. **Tests** — `vitest run` in all packages
 
 To set up after cloning:
 
@@ -118,8 +132,8 @@ Run the compliance tests against the reference server:
 cd reso-reference-server && docker-compose up -d
 
 # Run compliance tests
-cd ../web-api-add-edit-test
-npx testWebApiAddEdit \
+cd ../certification/add-edit
+npx reso-cert-add-edit \
   --url http://localhost:8080 \
   --resource Property \
   --payloads ./sample-payloads \

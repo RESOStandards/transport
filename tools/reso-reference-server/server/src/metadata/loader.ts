@@ -1,6 +1,9 @@
 import { readFile } from 'node:fs/promises';
+import { isEnumType } from '@reso/validation';
 import type { ResoField, ResoLookup, ResoMetadata } from './types.js';
 import { KEY_FIELD_MAP } from './types.js';
+
+export { isEnumType };
 
 /** Reads and parses a RESO metadata JSON file from disk. */
 export const loadMetadata = async (filePath: string): Promise<ResoMetadata> => {
@@ -18,9 +21,6 @@ export const getLookupsForType = (metadata: ResoMetadata, lookupName: string): R
 
 /** Returns the primary key field name for a resource, or undefined if unknown. */
 export const getKeyFieldForResource = (resourceName: string): string | undefined => KEY_FIELD_MAP[resourceName];
-
-/** Checks whether a field type is an enum reference (not a primitive Edm type). */
-export const isEnumType = (type: string): boolean => !type.startsWith('Edm.');
 
 /** Extracts the lookup name from a field type string. For enums, returns the type itself. */
 export const getLookupNameFromType = (type: string): string => type;

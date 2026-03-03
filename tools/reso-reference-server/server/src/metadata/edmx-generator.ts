@@ -62,7 +62,7 @@ ${properties}
  * Generates a complete EDMX 4.0 XML metadata document from RESO JSON metadata.
  *
  * The output is compatible with fast-xml-parser using the same options as
- * web-api-add-edit-test/src/lib/metadata.ts (attributeNamePrefix: "@_",
+ * certification/add-edit/src/lib/metadata.ts (attributeNamePrefix: "@_",
  * isArray for EntityType/Property/PropertyRef/Annotation).
  */
 export const generateEdmx = (metadata: ResoMetadata, targetResources: ReadonlyArray<string>): string => {

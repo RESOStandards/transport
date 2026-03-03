@@ -2,6 +2,113 @@
 
 ---
 
+## v0.0.4 — 2026-03-03
+
+### Certification Test Runner: `@reso/certification-test-runner`
+
+Extracted generic OData certification test infrastructure from `certification/add-edit`
+into a reusable package at `tools/certification/test-runner/`. Future certification
+modules (e.g., read-only, search) can import the shared framework instead of
+duplicating test logic.
+
+- **OData protocol validators** — status codes, headers (OData-Version, Location,
+  EntityId, Preference-Applied), response body validators (JSON, annotations, etag,
+  error format), payload echo checks
+- **Reporter** — console (human-readable) and JSON output formats
+- **HTTP client** — OData request wrapper delegating to `@reso/odata-client`
+- **Auth helpers** — bearer token and OAuth2 Client Credentials resolution
+- **Metadata helpers** — CSDL parsing, entity type lookup, payload validation
+  against metadata using `@reso/validation`
+- **Generic test helpers** — primary key extraction, schema assertions, scenario
+  result building
+
+### Validation Integration in Certification
+
+`certification/add-edit` now uses `@reso/validation` for metadata-driven field
+validation. The `validatePayloadAgainstMetadata()` function performs full type
+checking (unknown fields, Edm type mismatches, negative numerics, MaxLength,
+integer enforcement, collection/enum checks) via the shared validation package.
+
+The certification scenario pre-flight check (`makeSchemaAssertion`) validates
+field existence only — value validation is the server's responsibility and is
+exercised by the failure test scenarios.
+
+### Package Restructure
+
+- `certification/add-edit` lib files are now thin re-exports from
+  `@reso/certification-test-runner`, keeping only add-edit-specific scenario
+  implementations (8 scenarios), types (PayloadSet, DeletePayload, ScenarioName),
+  mock server, and CLI
+- Updated build order: `test-runner` builds before `add-edit`
+- Lefthook pre-commit hooks updated with `typecheck-test-runner` at priority 2
+
+### Test Summary
+
+| Package | Tests |
+|---------|------:|
+| `@reso/validation` | 41 |
+| `@reso/odata-filter-parser` | 97 |
+| `@reso/odata-client` | 101 |
+| `@reso/reference-server` | 67 |
+| `@reso/certification-add-edit` | 49 |
+| **Total** | **355** |
+
+---
+
+## v0.0.3 — 2026-03-03
+
+### Shared Validation Package: `@reso/validation`
+
+Extracted field validation logic into a standalone isomorphic package at
+`tools/validation/`. Both the reference server API and the React UI now import
+from this single source of truth.
+
+- **Isomorphic** — no Node.js or browser APIs; works in any JS runtime
+- **Metadata-driven** field validation: unknown field detection, type checking
+  for all Edm types, negative number rejection, MaxLength enforcement,
+  integer-only enforcement for Int types, collection and enum validation
+- **Subpath exports** — `@reso/validation` (top-level barrel) and
+  `@reso/validation/metadata` (direct subpath) for future extensibility
+- **41 tests** — [tests/validate.test.ts](validation/tests/validate.test.ts)
+- `// TODO: Add executable business rules validation` placeholder for future
+  grammar-based rules engine
+
+### Reference Server UI
+
+Added a React UI for the reference server at `tools/reso-reference-server/ui/`.
+
+- **Tailwind CSS v4**, **React Router v7**, **Vite 6** dev server with proxy
+- Resource browser with infinite scroll pagination (`$top`/`$skip`)
+- Detail pages with fields grouped by RESO Data Dictionary "Groups" categories
+- Media carousel with mock placeholder images
+- Dynamic Add/Edit forms generated from RESO field metadata
+- Advanced search with grouped field filters that build OData `$filter` expressions
+- Delete confirmation with key prompt
+- Dark mode toggle (system preference + manual override)
+- Client-side validation using `@reso/validation` with per-field error display
+  that clears as fields are corrected
+
+### Improved Error Messages
+
+- **Server API** — OData error responses now include `target` (operation name)
+  at the top level, and per-field errors use human-friendly messages with
+  `target` (field name) and `message` properties in the `details` array
+- **UI** — Fixed client-server error mapping (`target`/`message` instead of
+  `field`/`reason`), added submit error banner with auto-clear
+
+### Test Summary
+
+| Package | Tests |
+|---------|------:|
+| `@reso/validation` | 41 |
+| `@reso/odata-filter-parser` | 97 |
+| `@reso/odata-client` | 101 |
+| `@reso/reference-server` | 67 |
+| `@reso/certification-add-edit` | 49 |
+| **Total** | **355** |
+
+---
+
 ## v0.0.2 — 2026-03-02
 
 ### Developer Tooling: Biome + Lefthook
@@ -128,7 +235,7 @@ EDMX metadata, and OpenAPI documentation.
   (1,316 fields, 2,951 lookup values)
 - **67 tests** across 5 test files
 
-#### `@reso/web-api-add-edit-test` — [web-api-add-edit-test/](web-api-add-edit-test/)
+#### `@reso/certification-add-edit` — [certification/add-edit/](certification/add-edit/)
 
 RESO Web API Add/Edit Endorsement (RCP-010) compliance testing tool. Sends
 known-good and known-bad JSON payloads to OData servers and validates responses
@@ -141,9 +248,13 @@ against 8 Gherkin BDD certification scenarios.
 ### Cross-Package Architecture
 
 ```
+validation (zero deps)
+    ├──> reso-reference-server (depends on validation + filter-parser)
+    └──> reso-reference-server/ui (depends on validation)
+
 odata-filter-parser (zero deps)
     ├──> odata-client (depends on filter-parser)
-    │       └──> web-api-add-edit-test (depends on odata-client)
+    │       └──> certification/add-edit (depends on odata-client)
     └──> reso-reference-server (depends on filter-parser)
 ```
 
@@ -172,5 +283,5 @@ tracked in [TODO.md](TODO.md).
 | `@reso/odata-filter-parser` | 97 |
 | `@reso/odata-client` | 101 |
 | `@reso/reference-server` | 67 |
-| `@reso/web-api-add-edit-test` | 49 |
+| `@reso/certification-add-edit` | 49 |
 | **Total** | **314** |

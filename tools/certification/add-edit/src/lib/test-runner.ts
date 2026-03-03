@@ -1,19 +1,30 @@
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { resolveAuthToken } from './auth.js';
-import { buildResourceUrl, odataRequest } from './client.js';
-import { fetchMetadata, getEntityType, loadMetadataFromFile, parseMetadataXml, validatePayloadAgainstMetadata } from './metadata.js';
-import type {
-  DeletePayload,
-  EntityType,
-  PayloadSet,
-  ScenarioName,
-  ScenarioResult,
-  TestAssertion,
-  TestConfig,
-  TestReport
-} from './types.js';
-import * as V from './validators.js';
+import {
+  buildResourceUrl,
+  buildScenarioResult,
+  extractPrimaryKey,
+  fetchMetadata,
+  getEntityType,
+  loadMetadataFromFile,
+  makeSchemaAssertion,
+  odataRequest,
+  parseMetadataXml,
+  resolveAuthToken,
+  stripPrimaryKey,
+  validateEntityIdHeader,
+  validateJsonResponse,
+  validateLocationHeader,
+  validateODataAnnotation,
+  validateODataError,
+  validateODataVersionHeader,
+  validatePreferenceApplied,
+  validateResponseContainsPayload,
+  validateStatusCode,
+  validateStatusCodeRange
+} from '@reso/certification-test-runner';
+import type { EntityType, ScenarioResult, TestAssertion, TestConfig, TestReport } from '@reso/certification-test-runner';
+import type { DeletePayload, PayloadSet, ScenarioName } from './types.js';
 
 // ── Public API ──
 
@@ -96,56 +107,6 @@ const loadPayloads = async (payloadsDir: string): Promise<PayloadSet> => {
   };
 };
 
-// ── Helpers ──
-
-/**
- * Extracts the primary key value from a payload using the entity type's key
- * property definition. For example, if the entity type has key "ListingKey"
- * and the payload contains { "ListingKey": "12345", "ListPrice": 100 },
- * this returns "12345".
- */
-const extractPrimaryKey = (payload: Readonly<Record<string, unknown>>, entityType: EntityType): string | undefined => {
-  if (entityType.keyProperties.length === 0) return undefined;
-  const keyProp = entityType.keyProperties[0];
-  const value = payload[keyProp];
-  return value !== undefined ? String(value) : undefined;
-};
-
-/**
- * Returns a copy of the payload without the primary key field.
- * The key is used in the URL for PATCH/DELETE, not in the request body.
- */
-const stripPrimaryKey = (payload: Readonly<Record<string, unknown>>, entityType: EntityType): Record<string, unknown> => {
-  const keyProps = new Set(entityType.keyProperties);
-  return Object.fromEntries(Object.entries(payload).filter(([key]) => !keyProps.has(key)));
-};
-
-/** Creates a test assertion that validates the payload fields exist in the entity type metadata. */
-const makeSchemaAssertion = (payload: Record<string, unknown>, entityType: EntityType): TestAssertion => {
-  const check = validatePayloadAgainstMetadata(payload, entityType);
-  return {
-    description: 'Payload schema matches metadata',
-    status: check.valid ? 'pass' : 'fail',
-    expected: '(all fields in metadata)',
-    actual: check.valid ? '(all fields valid)' : `Unknown fields: ${check.unknownFields.join(', ')}`,
-    gherkinStep: 'schema in payload matches the metadata'
-  };
-};
-
-/** Constructs a ScenarioResult from collected assertions. A scenario passes if all assertions pass, skip, or warn. */
-const buildScenarioResult = (
-  scenario: ScenarioName,
-  tags: ReadonlyArray<string>,
-  assertions: ReadonlyArray<TestAssertion>,
-  start: number
-): ScenarioResult => ({
-  scenario,
-  tags,
-  assertions,
-  passed: assertions.every(a => a.status === 'pass' || a.status === 'skip' || a.status === 'warn'),
-  duration: Date.now() - start
-});
-
 // ── Create Scenarios ──
 
 /** POST with Prefer: return=representation. Validates 201 response, OData annotations, and follow-up GET. */
@@ -169,18 +130,18 @@ const runCreateSucceedsRepresentation = async (
     headers: { Prefer: 'return=representation' }
   });
 
-  assertions.push(V.validateStatusCode(response, [201, 204]));
-  assertions.push(V.validateODataVersionHeader(response));
-  assertions.push(V.validateEntityIdHeader(response));
-  assertions.push(...V.validateLocationHeader(response, config.resource));
-  assertions.push(V.validatePreferenceApplied(response, 'return=representation'));
+  assertions.push(validateStatusCode(response, [201, 204]));
+  assertions.push(validateODataVersionHeader(response));
+  assertions.push(validateEntityIdHeader(response));
+  assertions.push(...validateLocationHeader(response, config.resource));
+  assertions.push(validatePreferenceApplied(response, 'return=representation'));
 
   if (response.status !== 204) {
-    assertions.push(V.validateJsonResponse(response));
-    assertions.push(...V.validateODataAnnotation(response, '@odata.context', 'MAY'));
-    assertions.push(...V.validateODataAnnotation(response, '@odata.id', 'MAY'));
-    assertions.push(...V.validateODataAnnotation(response, '@odata.editLink', 'MUST'));
-    assertions.push(...V.validateResponseContainsPayload(response.body, payload));
+    assertions.push(validateJsonResponse(response));
+    assertions.push(...validateODataAnnotation(response, '@odata.context', 'MAY'));
+    assertions.push(...validateODataAnnotation(response, '@odata.id', 'MAY'));
+    assertions.push(...validateODataAnnotation(response, '@odata.editLink', 'MUST'));
+    assertions.push(...validateResponseContainsPayload(response.body, payload));
   }
 
   // Follow-up GET
@@ -191,9 +152,9 @@ const runCreateSucceedsRepresentation = async (
       url: locationUrl,
       authToken
     });
-    assertions.push(V.validateStatusCode(getResponse, [200]));
-    assertions.push(V.validateODataVersionHeader(getResponse));
-    assertions.push(...V.validateResponseContainsPayload(getResponse.body, payload));
+    assertions.push(validateStatusCode(getResponse, [200]));
+    assertions.push(validateODataVersionHeader(getResponse));
+    assertions.push(...validateResponseContainsPayload(getResponse.body, payload));
   }
 
   return buildScenarioResult(
@@ -225,11 +186,11 @@ const runCreateSucceedsMinimal = async (
     headers: { Prefer: 'return=minimal' }
   });
 
-  assertions.push(V.validateStatusCode(response, [201, 204]));
-  assertions.push(V.validateODataVersionHeader(response));
-  assertions.push(V.validateEntityIdHeader(response));
-  assertions.push(...V.validateLocationHeader(response, config.resource));
-  assertions.push(V.validatePreferenceApplied(response, 'return=minimal'));
+  assertions.push(validateStatusCode(response, [201, 204]));
+  assertions.push(validateODataVersionHeader(response));
+  assertions.push(validateEntityIdHeader(response));
+  assertions.push(...validateLocationHeader(response, config.resource));
+  assertions.push(validatePreferenceApplied(response, 'return=minimal'));
 
   // Follow-up GET
   const locationUrl = response.headers.location;
@@ -239,9 +200,9 @@ const runCreateSucceedsMinimal = async (
       url: locationUrl,
       authToken
     });
-    assertions.push(V.validateStatusCode(getResponse, [200]));
-    assertions.push(V.validateODataVersionHeader(getResponse));
-    assertions.push(...V.validateResponseContainsPayload(getResponse.body, payload));
+    assertions.push(validateStatusCode(getResponse, [200]));
+    assertions.push(validateODataVersionHeader(getResponse));
+    assertions.push(...validateResponseContainsPayload(getResponse.body, payload));
   }
 
   return buildScenarioResult(
@@ -273,9 +234,9 @@ const runCreateFails = async (
     headers: { Prefer: 'return=representation' }
   });
 
-  assertions.push(V.validateStatusCode(response, [400]));
-  assertions.push(V.validateODataVersionHeader(response));
-  assertions.push(...V.validateODataError(response, entityType));
+  assertions.push(validateStatusCode(response, [400]));
+  assertions.push(validateODataVersionHeader(response));
+  assertions.push(...validateODataError(response, entityType));
 
   return buildScenarioResult(
     'create-fails',
@@ -310,19 +271,19 @@ const runUpdateSucceedsRepresentation = async (
     headers: { Prefer: 'return=representation' }
   });
 
-  assertions.push(V.validateStatusCode(response, [200, 204]));
-  assertions.push(V.validateODataVersionHeader(response));
-  assertions.push(V.validateEntityIdHeader(response));
-  assertions.push(...V.validateLocationHeader(response, config.resource));
-  assertions.push(V.validatePreferenceApplied(response, 'return=representation'));
+  assertions.push(validateStatusCode(response, [200, 204]));
+  assertions.push(validateODataVersionHeader(response));
+  assertions.push(validateEntityIdHeader(response));
+  assertions.push(...validateLocationHeader(response, config.resource));
+  assertions.push(validatePreferenceApplied(response, 'return=representation'));
 
   if (response.status !== 204) {
-    assertions.push(V.validateJsonResponse(response));
-    assertions.push(...V.validateODataAnnotation(response, '@odata.etag', 'MUST'));
-    assertions.push(...V.validateODataAnnotation(response, '@odata.context', 'MAY'));
-    assertions.push(...V.validateODataAnnotation(response, '@odata.id', 'MAY'));
-    assertions.push(...V.validateODataAnnotation(response, '@odata.editLink', 'MUST'));
-    assertions.push(...V.validateResponseContainsPayload(response.body, sendPayload));
+    assertions.push(validateJsonResponse(response));
+    assertions.push(...validateODataAnnotation(response, '@odata.etag', 'MUST'));
+    assertions.push(...validateODataAnnotation(response, '@odata.context', 'MAY'));
+    assertions.push(...validateODataAnnotation(response, '@odata.id', 'MAY'));
+    assertions.push(...validateODataAnnotation(response, '@odata.editLink', 'MUST'));
+    assertions.push(...validateResponseContainsPayload(response.body, sendPayload));
   }
 
   // Follow-up GET
@@ -333,9 +294,9 @@ const runUpdateSucceedsRepresentation = async (
       url: locationUrl,
       authToken
     });
-    assertions.push(V.validateStatusCode(getResponse, [200]));
-    assertions.push(V.validateODataVersionHeader(getResponse));
-    assertions.push(...V.validateResponseContainsPayload(getResponse.body, sendPayload));
+    assertions.push(validateStatusCode(getResponse, [200]));
+    assertions.push(validateODataVersionHeader(getResponse));
+    assertions.push(...validateResponseContainsPayload(getResponse.body, sendPayload));
   }
 
   return buildScenarioResult(
@@ -369,10 +330,10 @@ const runUpdateSucceedsMinimal = async (
     headers: { Prefer: 'return=minimal' }
   });
 
-  assertions.push(V.validateStatusCode(response, [200, 204]));
-  assertions.push(V.validateODataVersionHeader(response));
-  assertions.push(V.validateEntityIdHeader(response));
-  assertions.push(...V.validateLocationHeader(response, config.resource));
+  assertions.push(validateStatusCode(response, [200, 204]));
+  assertions.push(validateODataVersionHeader(response));
+  assertions.push(validateEntityIdHeader(response));
+  assertions.push(...validateLocationHeader(response, config.resource));
 
   // Follow-up GET
   const locationUrl = response.headers.location;
@@ -382,9 +343,9 @@ const runUpdateSucceedsMinimal = async (
       url: locationUrl,
       authToken
     });
-    assertions.push(V.validateStatusCode(getResponse, [200]));
-    assertions.push(V.validateODataVersionHeader(getResponse));
-    assertions.push(...V.validateResponseContainsPayload(getResponse.body, sendPayload));
+    assertions.push(validateStatusCode(getResponse, [200]));
+    assertions.push(validateODataVersionHeader(getResponse));
+    assertions.push(...validateResponseContainsPayload(getResponse.body, sendPayload));
   }
 
   return buildScenarioResult(
@@ -418,9 +379,9 @@ const runUpdateFails = async (
     headers: { Prefer: 'return=representation' }
   });
 
-  assertions.push(V.validateStatusCode(response, [400]));
-  assertions.push(V.validateODataVersionHeader(response));
-  assertions.push(...V.validateODataError(response, entityType));
+  assertions.push(validateStatusCode(response, [400]));
+  assertions.push(validateODataVersionHeader(response));
+  assertions.push(...validateODataError(response, entityType));
 
   return buildScenarioResult(
     'update-fails',
@@ -458,8 +419,8 @@ const runDeleteSucceeds = async (
     authToken
   });
 
-  assertions.push(V.validateStatusCode(response, [204]));
-  assertions.push(V.validateODataVersionHeader(response));
+  assertions.push(validateStatusCode(response, [204]));
+  assertions.push(validateODataVersionHeader(response));
 
   // Follow-up GET should return 404
   const getResponse = await odataRequest({
@@ -467,8 +428,8 @@ const runDeleteSucceeds = async (
     url: deleteUrl,
     authToken
   });
-  assertions.push(V.validateStatusCode(getResponse, [404]));
-  assertions.push(V.validateODataVersionHeader(getResponse));
+  assertions.push(validateStatusCode(getResponse, [404]));
+  assertions.push(validateODataVersionHeader(getResponse));
 
   return buildScenarioResult(
     'delete-succeeds',
@@ -496,8 +457,8 @@ const runDeleteFails = async (config: TestConfig, authToken: string, deletePaylo
     authToken
   });
 
-  assertions.push(V.validateStatusCodeRange(response, 400, 499));
-  assertions.push(V.validateODataVersionHeader(response));
+  assertions.push(validateStatusCodeRange(response, 400, 499));
+  assertions.push(validateODataVersionHeader(response));
 
   return buildScenarioResult(
     'delete-fails',

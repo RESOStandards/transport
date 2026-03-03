@@ -5,6 +5,11 @@ pre-commit:
       run: npx biome check --fix --staged {staged_files}
       stage_fixed: true
 
+    typecheck-validation:
+      root: "tools/validation/"
+      run: npx tsc --noEmit
+      priority: 1
+
     typecheck-filter-parser:
       root: "tools/odata-filter-parser/"
       run: npx tsc --noEmit
@@ -20,15 +25,25 @@ pre-commit:
       run: npx tsc --noEmit
       priority: 2
 
-    typecheck-web-api:
-      root: "tools/web-api-add-edit-test/"
+    typecheck-test-runner:
+      root: "tools/certification/test-runner/"
       run: npx tsc --noEmit
       priority: 2
+
+    typecheck-certification:
+      root: "tools/certification/add-edit/"
+      run: npx tsc --noEmit
+      priority: 3
 
     typecheck-ui:
       root: "tools/reso-reference-server/ui/"
       run: npx tsc --noEmit
       priority: 2
+
+    test-validation:
+      root: "tools/validation/"
+      run: npx vitest run
+      priority: 3
 
     test-filter-parser:
       root: "tools/odata-filter-parser/"
@@ -45,7 +60,7 @@ pre-commit:
       run: npx vitest run
       priority: 4
 
-    test-web-api:
-      root: "tools/web-api-add-edit-test/"
+    test-certification:
+      root: "tools/certification/add-edit/"
       run: npx vitest run
-      priority: 4
+      priority: 5

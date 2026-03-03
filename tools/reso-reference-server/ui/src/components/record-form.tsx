@@ -1,7 +1,7 @@
+import { type ValidationFailure, validateRecord } from '@reso/validation';
 import { type FormEvent, useCallback, useState } from 'react';
 import type { FieldGroups, ResoField, ResoLookup, ResourceName } from '../types';
 import { KEY_FIELD_MAP } from '../types';
-import { type ValidationFailure, validateRecord } from '../validation/validate';
 import { FieldGroupSection } from './field-group-section';
 import { FieldInput } from './field-input';
 

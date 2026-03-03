@@ -42,8 +42,8 @@ const formatScenario = (s: ScenarioResult): string => {
  */
 export const formatConsoleReport = (report: TestReport): string => {
   const header = [
-    'RESO Web API Add/Edit Compliance Test Report',
-    '='.repeat(47),
+    'RESO Certification Compliance Test Report',
+    '='.repeat(43),
     `Server:    ${report.serverUrl}`,
     `Resource:  ${report.resource}`,
     `Timestamp: ${report.timestamp}`,
@@ -54,7 +54,7 @@ export const formatConsoleReport = (report: TestReport): string => {
 
   const summary = [
     '',
-    '-'.repeat(47),
+    '-'.repeat(43),
     `Total: ${report.summary.total}  Passed: ${report.summary.passed}  Failed: ${report.summary.failed}  Skipped: ${report.summary.skipped}`
   ].join('\n');
 

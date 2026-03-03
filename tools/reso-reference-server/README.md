@@ -90,8 +90,8 @@ The server implements OData 4.01 features required by the RESO Web API Add/Edit 
 This server is designed to pass the RESO Web API Add/Edit compliance test tool:
 
 ```bash
-cd ../web-api-add-edit-test
-npx testWebApiAddEdit \
+cd ../certification/add-edit
+npx reso-cert-add-edit \
   --url http://localhost:8080 \
   --resource Property \
   --payloads ./sample-payloads \

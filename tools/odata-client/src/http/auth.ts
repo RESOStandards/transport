@@ -1,6 +1,6 @@
 /**
  * Authentication helpers — OAuth2 Client Credentials grant and bearer token
- * resolution. Adapted from web-api-add-edit-test/src/lib/auth.ts.
+ * resolution. Adapted from certification/add-edit/src/lib/auth.ts.
  */
 
 import type { AuthConfig } from '../types.js';

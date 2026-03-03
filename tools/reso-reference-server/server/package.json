@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@reso/odata-filter-parser": "file:../../odata-filter-parser",
+    "@reso/validation": "file:../../validation",
     "express": "^4.21.0",
     "pg": "^8.13.0",
     "swagger-ui-express": "^5.0.1"

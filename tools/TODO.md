@@ -32,13 +32,6 @@ PostgreSQL implementation exists. Future backends to consider:
 - SQLite (lightweight local testing)
 - In-memory (unit testing without database)
 
-### Refactor `web-api-add-edit-test` to Use `@reso/odata-client`
-**Package:** `web-api-add-edit-test`
-
-Replace raw `fetch` calls (`odataRequest()`) with CRUD helpers from
-`@reso/odata-client`. Replace `fetchMetadata()`/`parseMetadataXml()` with
-`fetchAndParseMetadata()`. All 49 existing tests must continue to pass.
-
 ---
 
 ## Medium Priority

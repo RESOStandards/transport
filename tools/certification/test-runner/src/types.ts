@@ -17,7 +17,7 @@ export interface TestConfig {
   readonly serverUrl: string;
   /** OData resource name, e.g. "Property" */
   readonly resource: string;
-  /** Path to directory containing the 6 payload JSON files */
+  /** Path to directory containing payload JSON files */
   readonly payloadsDir: string;
   /** Authentication configuration (bearer token or OAuth2 Client Credentials) */
   readonly auth: AuthConfig;
@@ -25,24 +25,6 @@ export interface TestConfig {
   readonly metadataPath?: string;
   /** If true, start mock server instead of hitting real server */
   readonly useMock?: boolean;
-}
-
-// ── Payloads ──
-
-export interface PayloadSet {
-  readonly createSucceeds: Record<string, unknown>;
-  readonly createFails: Record<string, unknown>;
-  readonly updateSucceeds: Record<string, unknown>;
-  readonly updateFails: Record<string, unknown>;
-  readonly deleteSucceeds: DeletePayload;
-  readonly deleteFails: DeletePayload;
-}
-
-export interface DeletePayload {
-  /** Full URL or relative path to the resource to delete, e.g. "Property('12345')" */
-  readonly url?: string;
-  /** Alternative: just the key value */
-  readonly id?: string;
 }
 
 // ── Metadata ──
@@ -82,18 +64,8 @@ export interface TestAssertion {
   readonly gherkinStep?: string;
 }
 
-export type ScenarioName =
-  | 'create-succeeds-representation'
-  | 'create-succeeds-minimal'
-  | 'create-fails'
-  | 'update-succeeds-representation'
-  | 'update-succeeds-minimal'
-  | 'update-fails'
-  | 'delete-succeeds'
-  | 'delete-fails';
-
 export interface ScenarioResult {
-  readonly scenario: ScenarioName;
+  readonly scenario: string;
   readonly tags: ReadonlyArray<string>;
   readonly assertions: ReadonlyArray<TestAssertion>;
   readonly passed: boolean;

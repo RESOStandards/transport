@@ -533,7 +533,7 @@ describe('getEnumType', () => {
 
 describe('parseCsdlXml — sample-metadata.xml compatibility', () => {
   it("parses the test tool's sample metadata", async () => {
-    const samplePath = resolve(import.meta.dirname, '../../web-api-add-edit-test/sample-metadata.xml');
+    const samplePath = resolve(import.meta.dirname, '../../certification/add-edit/sample-metadata.xml');
     let xml: string;
     try {
       xml = await readFile(samplePath, 'utf-8');

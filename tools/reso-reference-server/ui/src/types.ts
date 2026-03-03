@@ -82,9 +82,4 @@ export const ID_FIELD_MAP: Readonly<Partial<Record<ResourceName, string>>> = {
   Office: 'OfficeId'
 };
 
-/** Checks whether a field type is an enum reference (not a primitive Edm type). */
-export const isEnumType = (type: string): boolean => !type.startsWith('Edm.');
-
-/** Checks if an Edm type is numeric. */
-export const isNumericEdmType = (type: string): boolean =>
-  ['Edm.Decimal', 'Edm.Int64', 'Edm.Int32', 'Edm.Int16', 'Edm.Double', 'Edm.Single', 'Edm.Byte'].includes(type);
+export { isEnumType, isNumericEdmType } from '@reso/validation';

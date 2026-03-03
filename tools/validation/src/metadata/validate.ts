@@ -1,21 +1,16 @@
-import type { ResoField } from '../types';
-import { isEnumType, isNumericEdmType } from '../types';
-
-/** A validation failure for a single field. */
-export interface ValidationFailure {
-  readonly field: string;
-  readonly reason: string;
-}
+import { isEnumType, isIntegerEdmType, isNumericEdmType } from './helpers.js';
+import type { ResoField, ValidationFailure } from './types.js';
 
 /**
  * Validates a record against the resource's field definitions.
  *
- * Port of server/src/odata/validation.ts — checks for:
+ * Checks for:
  * - Unknown fields (not in metadata)
- * - Basic type mismatches
+ * - Null/undefined/empty-string passthrough (no error)
  * - Negative numeric values
  * - MaxLength enforcement for strings
- * - Precision/scale validation for decimals
+ * - Integer-only enforcement for Int types
+ * - Basic type mismatches (string, number, boolean, date, enum, collection)
  *
  * Returns an array of failures (empty if valid).
  */
@@ -27,14 +22,19 @@ export const validateRecord = (
   const failures: ValidationFailure[] = [];
 
   for (const [key, value] of Object.entries(body)) {
+    // Skip OData annotations
     if (key.startsWith('@')) continue;
 
     const field = fieldMap.get(key);
     if (!field) {
-      failures.push({ field: key, reason: `'${key}' is not a recognized field. Check field name spelling or consult the metadata.` });
+      failures.push({
+        field: key,
+        reason: `'${key}' is not a recognized field. Check field name spelling or consult the metadata.`
+      });
       continue;
     }
 
+    // Skip null, undefined, and empty string values
     if (value === null || value === undefined || value === '') continue;
 
     // Check negative numerics

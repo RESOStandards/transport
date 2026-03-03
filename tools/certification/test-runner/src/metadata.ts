@@ -1,11 +1,12 @@
 /**
  * Metadata loading, parsing, and validation — delegates XML parsing to
- * @reso/odata-client's CSDL parser and adapts the types for the test tool.
+ * @reso/odata-client's CSDL parser and type validation to @reso/validation.
  */
 
 import { readFile } from 'node:fs/promises';
 import { fetchRawMetadata, parseCsdlXml } from '@reso/odata-client';
 import type { CsdlEntityType, CsdlProperty, CsdlSchema } from '@reso/odata-client';
+import { type ResoField, type ValidationFailure, validateRecord } from '@reso/validation';
 import type { EntityProperty, EntityType, ParsedMetadata } from './types.js';
 
 // ── Type adapters (CsdlEntityType → EntityType) ──
@@ -34,7 +35,32 @@ const adaptSchema = (schema: CsdlSchema): ParsedMetadata => ({
   entityTypes: schema.entityTypes.map(adaptEntityType)
 });
 
-// ── Public API (same interface as before) ──
+/**
+ * Converts an EntityProperty to a ResoField for use with @reso/validation.
+ * Handles Collection() type syntax by extracting the inner type and setting isCollection.
+ */
+const toResoField = (prop: EntityProperty, resourceName: string): ResoField => {
+  const isCollection = prop.type.startsWith('Collection(');
+  const type = isCollection ? prop.type.slice(11, -1) : prop.type;
+
+  return {
+    resourceName,
+    fieldName: prop.name,
+    type,
+    nullable: prop.nullable,
+    isCollection: isCollection || undefined,
+    maxLength: prop.maxLength,
+    precision: prop.precision,
+    scale: prop.scale,
+    annotations: prop.annotations ? Object.entries(prop.annotations).map(([term, value]) => ({ term, value })) : []
+  };
+};
+
+/** Converts an EntityType's properties to ResoField[] for validation. */
+export const toResoFields = (entityType: EntityType): ReadonlyArray<ResoField> =>
+  entityType.properties.map(p => toResoField(p, entityType.name));
+
+// ── Public API ──
 
 /**
  * Fetches OData XML metadata from a server's `/$metadata` endpoint.
@@ -61,21 +87,30 @@ export const getEntityType = (metadata: ParsedMetadata, resourceName: string): E
   metadata.entityTypes.find(et => et.name === resourceName);
 
 /**
- * Validates that all fields in a payload exist in the entity type's property definitions.
+ * Validates a payload against the entity type's metadata using @reso/validation.
+ *
+ * Performs two levels of validation:
+ * 1. Unknown field detection (fields not in metadata)
+ * 2. Type/value validation via @reso/validation (type mismatches, negative numerics,
+ *    MaxLength, integer enforcement, collection/enum checks)
+ *
  * Keys prefixed with `@` (OData annotations) are ignored.
- * Returns the list of unknown fields, if any.
  */
 export const validatePayloadAgainstMetadata = (
   payload: Record<string, unknown>,
   entityType: EntityType
-): { readonly valid: boolean; readonly unknownFields: ReadonlyArray<string> } => {
-  const propertyNames = new Set(entityType.properties.map(p => p.name));
-  const unknownFields = Object.keys(payload)
-    .filter(key => !key.startsWith('@'))
-    .filter(key => !propertyNames.has(key));
+): {
+  readonly valid: boolean;
+  readonly unknownFields: ReadonlyArray<string>;
+  readonly failures: ReadonlyArray<ValidationFailure>;
+} => {
+  const resoFields = toResoFields(entityType);
+  const failures = validateRecord(payload, resoFields);
+  const unknownFields = failures.filter(f => f.reason.includes('not a recognized field')).map(f => f.field);
 
   return {
-    valid: unknownFields.length === 0,
-    unknownFields
+    valid: failures.length === 0,
+    unknownFields,
+    failures
   };
 };

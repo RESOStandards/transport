@@ -2,7 +2,7 @@
  * OData HTTP client — delegates to @reso/odata-client.
  *
  * Preserves the same exported interface (odataRequest, buildResourceUrl)
- * so that test-runner.ts and validators.ts require no changes.
+ * so that certification test scenarios require no changes.
  */
 
 import { buildUri, createClient } from '@reso/odata-client';
