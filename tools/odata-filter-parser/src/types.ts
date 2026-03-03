@@ -11,10 +11,10 @@
 // Comparison operators (OData 4.01 §5.1.1.1)
 // ---------------------------------------------------------------------------
 
-export type ComparisonOperator = "eq" | "ne" | "gt" | "ge" | "lt" | "le" | "has" | "in";
+export type ComparisonOperator = 'eq' | 'ne' | 'gt' | 'ge' | 'lt' | 'le' | 'has' | 'in';
 
 export interface ComparisonExpr {
-  readonly type: "comparison";
+  readonly type: 'comparison';
   readonly operator: ComparisonOperator;
   readonly left: FilterExpression;
   readonly right: FilterExpression;
@@ -24,17 +24,17 @@ export interface ComparisonExpr {
 // Logical operators (OData 4.01 §5.1.1.2)
 // ---------------------------------------------------------------------------
 
-export type LogicalOperator = "and" | "or";
+export type LogicalOperator = 'and' | 'or';
 
 export interface LogicalExpr {
-  readonly type: "logical";
+  readonly type: 'logical';
   readonly operator: LogicalOperator;
   readonly left: FilterExpression;
   readonly right: FilterExpression;
 }
 
 export interface NotExpr {
-  readonly type: "not";
+  readonly type: 'not';
   readonly operand: FilterExpression;
 }
 
@@ -42,10 +42,10 @@ export interface NotExpr {
 // Arithmetic operators (OData 4.01 §5.1.1.3)
 // ---------------------------------------------------------------------------
 
-export type ArithmeticOperator = "add" | "sub" | "mul" | "div" | "mod" | "divby";
+export type ArithmeticOperator = 'add' | 'sub' | 'mul' | 'div' | 'mod' | 'divby';
 
 export interface ArithmeticExpr {
-  readonly type: "arithmetic";
+  readonly type: 'arithmetic';
   readonly operator: ArithmeticOperator;
   readonly left: FilterExpression;
   readonly right: FilterExpression;
@@ -57,42 +57,42 @@ export interface ArithmeticExpr {
 
 export type FilterFunctionName =
   // String functions
-  | "contains"
-  | "startswith"
-  | "endswith"
-  | "length"
-  | "indexof"
-  | "substring"
-  | "tolower"
-  | "toupper"
-  | "trim"
-  | "concat"
-  | "matchesPattern"
+  | 'contains'
+  | 'startswith'
+  | 'endswith'
+  | 'length'
+  | 'indexof'
+  | 'substring'
+  | 'tolower'
+  | 'toupper'
+  | 'trim'
+  | 'concat'
+  | 'matchesPattern'
   // Date/Time functions
-  | "year"
-  | "month"
-  | "day"
-  | "hour"
-  | "minute"
-  | "second"
-  | "fractionalseconds"
-  | "totalseconds"
-  | "date"
-  | "time"
-  | "totaloffsetminutes"
-  | "now"
-  | "maxdatetime"
-  | "mindatetime"
+  | 'year'
+  | 'month'
+  | 'day'
+  | 'hour'
+  | 'minute'
+  | 'second'
+  | 'fractionalseconds'
+  | 'totalseconds'
+  | 'date'
+  | 'time'
+  | 'totaloffsetminutes'
+  | 'now'
+  | 'maxdatetime'
+  | 'mindatetime'
   // Math functions
-  | "round"
-  | "floor"
-  | "ceiling"
+  | 'round'
+  | 'floor'
+  | 'ceiling'
   // Type functions
-  | "cast"
-  | "isof";
+  | 'cast'
+  | 'isof';
 
 export interface FunctionCallExpr {
-  readonly type: "function";
+  readonly type: 'function';
   readonly name: FilterFunctionName;
   readonly args: ReadonlyArray<FilterExpression>;
 }
@@ -102,8 +102,8 @@ export interface FunctionCallExpr {
 // ---------------------------------------------------------------------------
 
 export interface LambdaExpr {
-  readonly type: "lambda";
-  readonly operator: "any" | "all";
+  readonly type: 'lambda';
+  readonly operator: 'any' | 'all';
   readonly variable: string;
   readonly source: FilterExpression;
   readonly predicate: FilterExpression;
@@ -114,19 +114,19 @@ export interface LambdaExpr {
 // ---------------------------------------------------------------------------
 
 export type LiteralDataType =
-  | "string"
-  | "number"
-  | "boolean"
-  | "null"
-  | "date"
-  | "datetimeoffset"
-  | "timeofday"
-  | "duration"
-  | "guid"
-  | "enum";
+  | 'string'
+  | 'number'
+  | 'boolean'
+  | 'null'
+  | 'date'
+  | 'datetimeoffset'
+  | 'timeofday'
+  | 'duration'
+  | 'guid'
+  | 'enum';
 
 export interface LiteralExpr {
-  readonly type: "literal";
+  readonly type: 'literal';
   readonly value: string | number | boolean | null;
   readonly dataType: LiteralDataType;
 }
@@ -136,7 +136,7 @@ export interface LiteralExpr {
 // ---------------------------------------------------------------------------
 
 export interface CollectionExpr {
-  readonly type: "collection";
+  readonly type: 'collection';
   readonly items: ReadonlyArray<FilterExpression>;
 }
 
@@ -145,7 +145,7 @@ export interface CollectionExpr {
 // ---------------------------------------------------------------------------
 
 export interface PropertyExpr {
-  readonly type: "property";
+  readonly type: 'property';
   readonly name: string;
 }
 
@@ -169,28 +169,28 @@ export type FilterExpression =
 // ---------------------------------------------------------------------------
 
 export type TokenType =
-  | "property"
-  | "literal_string"
-  | "literal_number"
-  | "literal_boolean"
-  | "literal_null"
-  | "literal_date"
-  | "literal_datetimeoffset"
-  | "literal_timeofday"
-  | "literal_duration"
-  | "literal_guid"
-  | "literal_enum"
-  | "comparison_op"
-  | "logical_op"
-  | "not_op"
-  | "arithmetic_op"
-  | "function"
-  | "lambda_op"
-  | "lparen"
-  | "rparen"
-  | "comma"
-  | "colon"
-  | "slash";
+  | 'property'
+  | 'literal_string'
+  | 'literal_number'
+  | 'literal_boolean'
+  | 'literal_null'
+  | 'literal_date'
+  | 'literal_datetimeoffset'
+  | 'literal_timeofday'
+  | 'literal_duration'
+  | 'literal_guid'
+  | 'literal_enum'
+  | 'comparison_op'
+  | 'logical_op'
+  | 'not_op'
+  | 'arithmetic_op'
+  | 'function'
+  | 'lambda_op'
+  | 'lparen'
+  | 'rparen'
+  | 'comma'
+  | 'colon'
+  | 'slash';
 
 export interface Token {
   readonly type: TokenType;

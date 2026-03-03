@@ -12,7 +12,7 @@
  * @see https://www.odata.org/documentation/ (OData 4.01)
  */
 
-import type { ResoField } from "../metadata/types.js";
+import type { ResoField } from '../metadata/types.js';
 
 // ---------------------------------------------------------------------------
 // Query options — the handler-level representation of OData system query opts
@@ -91,7 +91,7 @@ export interface NavigationForeignKey {
    * - "direct": Direct FK column on the target pointing to the parent key.
    *   e.g. target.ParentKey = parent.Key
    */
-  readonly strategy: "resource-record-key" | "direct";
+  readonly strategy: 'resource-record-key' | 'direct';
   /**
    * For "direct" strategy: the column on the target resource that holds the
    * parent's key value.
@@ -127,10 +127,7 @@ export interface DataAccessLayer {
    * Query a collection of entities with optional filtering, sorting,
    * pagination, field selection, and navigation property expansion.
    */
-  readonly queryCollection: (
-    ctx: ResourceContext,
-    options?: CollectionQueryOptions,
-  ) => Promise<CollectionResult>;
+  readonly queryCollection: (ctx: ResourceContext, options?: CollectionQueryOptions) => Promise<CollectionResult>;
 
   /**
    * Read a single entity by its primary key, optionally with $select
@@ -142,32 +139,22 @@ export interface DataAccessLayer {
     options?: {
       readonly $select?: string;
       readonly $expand?: string;
-    },
+    }
   ) => Promise<SingleResult>;
 
   /**
    * Insert a new entity record. Returns the full inserted row.
    */
-  readonly insert: (
-    ctx: ResourceContext,
-    record: Readonly<Record<string, unknown>>,
-  ) => Promise<EntityRecord>;
+  readonly insert: (ctx: ResourceContext, record: Readonly<Record<string, unknown>>) => Promise<EntityRecord>;
 
   /**
    * Update an existing entity (PATCH merge semantics). Returns the updated
    * row, or `undefined` if the record was not found.
    */
-  readonly update: (
-    ctx: ResourceContext,
-    keyValue: string,
-    updates: Readonly<Record<string, unknown>>,
-  ) => Promise<SingleResult>;
+  readonly update: (ctx: ResourceContext, keyValue: string, updates: Readonly<Record<string, unknown>>) => Promise<SingleResult>;
 
   /**
    * Delete an entity by key. Returns `true` if deleted, `false` if not found.
    */
-  readonly deleteByKey: (
-    ctx: ResourceContext,
-    keyValue: string,
-  ) => Promise<boolean>;
+  readonly deleteByKey: (ctx: ResourceContext, keyValue: string) => Promise<boolean>;
 }

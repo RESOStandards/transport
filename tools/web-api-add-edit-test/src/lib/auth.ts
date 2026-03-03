@@ -2,11 +2,8 @@
  * Authentication helpers — delegates to @reso/odata-client.
  */
 
-import {
-  resolveToken,
-  fetchAccessToken as clientFetchAccessToken,
-} from "@reso/odata-client";
-import type { AuthConfig } from "./types.js";
+import { fetchAccessToken as clientFetchAccessToken, resolveToken } from '@reso/odata-client';
+import type { AuthConfig } from './types.js';
 
 /**
  * Resolves an AuthConfig to a bearer token string.
@@ -14,14 +11,14 @@ import type { AuthConfig } from "./types.js";
  * For "client_credentials" mode, performs the OAuth2 token exchange.
  */
 export const resolveAuthToken = async (auth: AuthConfig): Promise<string> => {
-  if (auth.mode === "token") {
-    return resolveToken({ mode: "token", authToken: auth.authToken });
+  if (auth.mode === 'token') {
+    return resolveToken({ mode: 'token', authToken: auth.authToken });
   }
   return resolveToken({
-    mode: "client_credentials",
+    mode: 'client_credentials',
     clientId: auth.clientId,
     clientSecret: auth.clientSecret,
-    tokenUrl: auth.tokenUrl,
+    tokenUrl: auth.tokenUrl
   });
 };
 

@@ -40,17 +40,17 @@ export type {
   ClientConfig,
   PreferReturn,
   WriteOptions,
-  ODataClient,
-} from "./types.js";
+  ODataClient
+} from './types.js';
 
 // URI builder
-export { buildUri } from "./uri/builder.js";
-export type { UriBuilder } from "./uri/builder.js";
-export { parseQueryString } from "./uri/parser.js";
+export { buildUri } from './uri/builder.js';
+export type { UriBuilder } from './uri/builder.js';
+export { parseQueryString } from './uri/parser.js';
 
 // CSDL parser & validator
-export { parseCsdlXml, getEntityType, getEnumType } from "./csdl/parser.js";
-export { validateCsdl } from "./csdl/validator.js";
+export { parseCsdlXml, getEntityType, getEnumType } from './csdl/parser.js';
+export { validateCsdl } from './csdl/validator.js';
 export type {
   CsdlSchema,
   CsdlEntityType,
@@ -71,35 +71,35 @@ export type {
   CsdlAction,
   CsdlFunction,
   CsdlValidationError,
-  CsdlValidationResult,
-} from "./csdl/types.js";
+  CsdlValidationResult
+} from './csdl/types.js';
 
 // Query validator
-export { validateQueryOptions } from "./query/validator.js";
+export { validateQueryOptions } from './query/validator.js';
 export type {
   QueryValidationError,
-  QueryValidationResult,
-} from "./query/validator.js";
+  QueryValidationResult
+} from './query/validator.js';
 
 // HTTP client & auth
-export { createClient } from "./http/client.js";
-export { resolveToken, fetchAccessToken } from "./http/auth.js";
+export { createClient } from './http/client.js';
+export { resolveToken, fetchAccessToken } from './http/auth.js';
 
 // CRUD helpers
-export { createEntity } from "./crud/create.js";
-export { readEntity } from "./crud/read.js";
-export { updateEntity } from "./crud/update.js";
-export { replaceEntity } from "./crud/replace.js";
-export { deleteEntity } from "./crud/delete.js";
-export type { DeleteOptions } from "./crud/delete.js";
-export { queryEntities } from "./crud/query.js";
+export { createEntity } from './crud/create.js';
+export { readEntity } from './crud/read.js';
+export { updateEntity } from './crud/update.js';
+export { replaceEntity } from './crud/replace.js';
+export { deleteEntity } from './crud/delete.js';
+export type { DeleteOptions } from './crud/delete.js';
+export { queryEntities } from './crud/query.js';
 
 // Response parsing
-export { extractAnnotations, isODataCollection, extractEntityData, getNextLink, followAllPages } from "./response/parser.js";
-export { isODataError, parseODataError, getErrorTargets } from "./response/error.js";
+export { extractAnnotations, isODataCollection, extractEntityData, getNextLink, followAllPages } from './response/parser.js';
+export { isODataError, parseODataError, getErrorTargets } from './response/error.js';
 
 // Metadata fetcher
-export { fetchRawMetadata, fetchAndParseMetadata } from "./metadata/fetcher.js";
+export { fetchRawMetadata, fetchAndParseMetadata } from './metadata/fetcher.js';
 
 // Re-export filter parser types for convenience
 export type {
@@ -112,6 +112,6 @@ export type {
   LambdaExpr,
   CollectionExpr,
   LiteralExpr,
-  PropertyExpr,
-} from "@reso/odata-filter-parser";
-export { parseFilter } from "@reso/odata-filter-parser";
+  PropertyExpr
+} from '@reso/odata-filter-parser';
+export { parseFilter } from '@reso/odata-filter-parser';

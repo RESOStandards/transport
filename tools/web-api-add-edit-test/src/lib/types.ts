@@ -2,9 +2,9 @@
 
 /** Authentication configuration: either a pre-fetched bearer token or OAuth2 Client Credentials. */
 export type AuthConfig =
-  | { readonly mode: "token"; readonly authToken: string }
+  | { readonly mode: 'token'; readonly authToken: string }
   | {
-      readonly mode: "client_credentials";
+      readonly mode: 'client_credentials';
       readonly clientId: string;
       readonly clientSecret: string;
       readonly tokenUrl: string;
@@ -71,7 +71,7 @@ export interface ParsedMetadata {
 
 // ── Test Results ──
 
-export type TestStatus = "pass" | "fail" | "skip" | "warn";
+export type TestStatus = 'pass' | 'fail' | 'skip' | 'warn';
 
 export interface TestAssertion {
   readonly description: string;
@@ -83,14 +83,14 @@ export interface TestAssertion {
 }
 
 export type ScenarioName =
-  | "create-succeeds-representation"
-  | "create-succeeds-minimal"
-  | "create-fails"
-  | "update-succeeds-representation"
-  | "update-succeeds-minimal"
-  | "update-fails"
-  | "delete-succeeds"
-  | "delete-fails";
+  | 'create-succeeds-representation'
+  | 'create-succeeds-minimal'
+  | 'create-fails'
+  | 'update-succeeds-representation'
+  | 'update-succeeds-minimal'
+  | 'update-fails'
+  | 'delete-succeeds'
+  | 'delete-fails';
 
 export interface ScenarioResult {
   readonly scenario: ScenarioName;

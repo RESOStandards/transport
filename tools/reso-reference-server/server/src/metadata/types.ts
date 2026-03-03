@@ -45,31 +45,24 @@ export interface ResoMetadata {
 
 /** Map of resource names to their primary key field names. */
 export const KEY_FIELD_MAP: Readonly<Record<string, string>> = {
-  Property: "ListingKey",
-  Member: "MemberKey",
-  Office: "OfficeKey",
-  Media: "MediaKey",
-  OpenHouse: "OpenHouseKey",
-  Showing: "ShowingKey",
-  Contacts: "ContactKey",
-  ContactListings: "ContactListingsKey",
-  HistoryTransactional: "HistoryTransactionalKey",
-  InternetTracking: "InternetTrackingKey",
-  SavedSearch: "SavedSearchKey",
-  Prospecting: "ProspectingKey",
-  Queue: "QueueTransactionKey",
-  Rules: "RuleKey",
-  Teams: "TeamKey",
-  TeamMembers: "TeamMemberKey",
-  OUID: "OrganizationUniqueId",
+  Property: 'ListingKey',
+  Member: 'MemberKey',
+  Office: 'OfficeKey',
+  Media: 'MediaKey',
+  OpenHouse: 'OpenHouseKey',
+  Showing: 'ShowingKey',
+  Contacts: 'ContactKey',
+  ContactListings: 'ContactListingsKey',
+  HistoryTransactional: 'HistoryTransactionalKey',
+  InternetTracking: 'InternetTrackingKey',
+  SavedSearch: 'SavedSearchKey',
+  Prospecting: 'ProspectingKey',
+  Queue: 'QueueTransactionKey',
+  Rules: 'RuleKey',
+  Teams: 'TeamKey',
+  TeamMembers: 'TeamMemberKey',
+  OUID: 'OrganizationUniqueId'
 };
 
 /** Resources targeted for the reference server. */
-export const TARGET_RESOURCES: ReadonlyArray<string> = [
-  "Property",
-  "Member",
-  "Office",
-  "Media",
-  "OpenHouse",
-  "Showing",
-];
+export const TARGET_RESOURCES: ReadonlyArray<string> = ['Property', 'Member', 'Office', 'Media', 'OpenHouse', 'Showing'];

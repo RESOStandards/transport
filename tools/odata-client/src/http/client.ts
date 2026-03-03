@@ -3,8 +3,8 @@
  * normalized response handling. Inspired by Apache Olingo's ODataClient.
  */
 
-import type { ODataClient, ODataResponse, ClientConfig } from "../types.js";
-import { resolveToken } from "./auth.js";
+import type { ClientConfig, ODataClient, ODataResponse } from '../types.js';
+import { resolveToken } from './auth.js';
 
 /**
  * Create an OData client for the given configuration.
@@ -27,26 +27,26 @@ export const createClient = async (config: ClientConfig): Promise<ODataClient> =
   const token = await resolveToken(config.auth);
 
   const request = async (
-    method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
+    method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE',
     url: string,
     options?: {
       readonly body?: unknown;
       readonly headers?: Readonly<Record<string, string>>;
-    },
+    }
   ): Promise<ODataResponse> => {
     const headers: Record<string, string> = {
-      "OData-Version": "4.01",
-      "Content-Type": "application/json",
-      Accept: "application/json",
+      'OData-Version': '4.01',
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
       Authorization: `Bearer ${token}`,
       ...config.defaultHeaders,
-      ...options?.headers,
+      ...options?.headers
     };
 
     const response = await fetch(url, {
       method,
       headers,
-      body: options?.body ? JSON.stringify(options.body) : undefined,
+      body: options?.body ? JSON.stringify(options.body) : undefined
     });
 
     const rawBody = await response.text();
@@ -67,6 +67,6 @@ export const createClient = async (config: ClientConfig): Promise<ODataClient> =
 
   return {
     baseUrl: config.baseUrl,
-    request,
+    request
   };
 };

@@ -1,0 +1,21 @@
+{
+  "private": true,
+  "name": "@reso/transport",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "lint": "biome check tools/",
+    "lint:fix": "biome check --fix tools/",
+    "test": "npm run test:filter-parser && npm run test:client && npm run test:server && npm run test:web-api",
+    "test:filter-parser": "cd tools/odata-filter-parser && npx vitest run",
+    "test:client": "cd tools/odata-client && npx vitest run",
+    "test:server": "cd tools/reso-reference-server/server && npx vitest run",
+    "test:web-api": "cd tools/web-api-add-edit-test && npx vitest run"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.0",
+    "lefthook": "^1.9.0"
+  }
+}

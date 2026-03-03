@@ -2,8 +2,8 @@
  * OData entity collection query (GET with query options) helper.
  */
 
-import { buildUri } from "../uri/builder.js";
-import type { ODataClient, ODataResponse, ODataQueryOptions } from "../types.js";
+import type { ODataClient, ODataQueryOptions, ODataResponse } from '../types.js';
+import { buildUri } from '../uri/builder.js';
 
 /**
  * Query an entity collection with OData system query options.
@@ -13,18 +13,14 @@ import type { ODataClient, ODataResponse, ODataQueryOptions } from "../types.js"
  * @param options - OData query options ($filter, $select, $orderby, $top, $skip, $count)
  * @returns OData response with `{ value: [...], "@odata.count"?: n }`
  */
-export const queryEntities = async (
-  client: ODataClient,
-  resource: string,
-  options?: ODataQueryOptions,
-): Promise<ODataResponse> => {
+export const queryEntities = async (client: ODataClient, resource: string, options?: ODataQueryOptions): Promise<ODataResponse> => {
   let builder = buildUri(client.baseUrl, resource);
 
   if (options?.$filter) {
     builder = builder.filter(options.$filter);
   }
   if (options?.$select) {
-    builder = builder.select(...options.$select.split(",").map((s) => s.trim()));
+    builder = builder.select(...options.$select.split(',').map(s => s.trim()));
   }
   if (options?.$orderby) {
     builder = builder.orderby(options.$orderby);
@@ -52,5 +48,5 @@ export const queryEntities = async (
   }
 
   const url = builder.build();
-  return client.request("GET", url);
+  return client.request('GET', url);
 };

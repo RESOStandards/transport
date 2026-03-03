@@ -2,8 +2,8 @@
  * OData entity creation (POST) helper.
  */
 
-import { buildUri } from "../uri/builder.js";
-import type { ODataClient, ODataResponse, WriteOptions } from "../types.js";
+import type { ODataClient, ODataResponse, WriteOptions } from '../types.js';
+import { buildUri } from '../uri/builder.js';
 
 /**
  * Create a new entity via OData POST.
@@ -18,14 +18,14 @@ export const createEntity = async (
   client: ODataClient,
   resource: string,
   body: Readonly<Record<string, unknown>>,
-  options?: WriteOptions,
+  options?: WriteOptions
 ): Promise<ODataResponse> => {
   const url = buildUri(client.baseUrl, resource).build();
   const headers: Record<string, string> = {};
 
   if (options?.prefer) {
-    headers["Prefer"] = `return=${options.prefer}`;
+    headers.Prefer = `return=${options.prefer}`;
   }
 
-  return client.request("POST", url, { body, headers });
+  return client.request('POST', url, { body, headers });
 };

@@ -2,8 +2,8 @@
  * OData entity read (GET by key) helper.
  */
 
-import { buildUri } from "../uri/builder.js";
-import type { ODataClient, ODataResponse } from "../types.js";
+import type { ODataClient, ODataResponse } from '../types.js';
+import { buildUri } from '../uri/builder.js';
 
 /**
  * Read a single entity by its key value.
@@ -13,11 +13,7 @@ import type { ODataClient, ODataResponse } from "../types.js";
  * @param key - Entity key value
  * @returns OData response (200 with entity or 404)
  */
-export const readEntity = async (
-  client: ODataClient,
-  resource: string,
-  key: string,
-): Promise<ODataResponse> => {
+export const readEntity = async (client: ODataClient, resource: string, key: string): Promise<ODataResponse> => {
   const url = buildUri(client.baseUrl, resource).key(key).build();
-  return client.request("GET", url);
+  return client.request('GET', url);
 };

@@ -1,0 +1,46 @@
+pre-commit:
+  commands:
+    lint-fix:
+      glob: "tools/**/*.ts"
+      run: npx biome check --fix --staged {staged_files}
+      stage_fixed: true
+
+    typecheck-filter-parser:
+      root: "tools/odata-filter-parser/"
+      run: npx tsc --noEmit
+      priority: 1
+
+    typecheck-client:
+      root: "tools/odata-client/"
+      run: npx tsc --noEmit
+      priority: 2
+
+    typecheck-server:
+      root: "tools/reso-reference-server/server/"
+      run: npx tsc --noEmit
+      priority: 2
+
+    typecheck-web-api:
+      root: "tools/web-api-add-edit-test/"
+      run: npx tsc --noEmit
+      priority: 2
+
+    test-filter-parser:
+      root: "tools/odata-filter-parser/"
+      run: npx vitest run
+      priority: 3
+
+    test-client:
+      root: "tools/odata-client/"
+      run: npx vitest run
+      priority: 4
+
+    test-server:
+      root: "tools/reso-reference-server/server/"
+      run: npx vitest run
+      priority: 4
+
+    test-web-api:
+      root: "tools/web-api-add-edit-test/"
+      run: npx vitest run
+      priority: 4

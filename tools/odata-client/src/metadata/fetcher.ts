@@ -3,8 +3,8 @@
  * from an OData server's $metadata endpoint.
  */
 
-import { parseCsdlXml } from "../csdl/parser.js";
-import type { CsdlSchema } from "../csdl/types.js";
+import { parseCsdlXml } from '../csdl/parser.js';
+import type { CsdlSchema } from '../csdl/types.js';
 
 /**
  * Fetch raw EDMX XML metadata from an OData server.
@@ -13,22 +13,17 @@ import type { CsdlSchema } from "../csdl/types.js";
  * @param token - Bearer authentication token
  * @returns Raw XML metadata string
  */
-export const fetchRawMetadata = async (
-  baseUrl: string,
-  token: string,
-): Promise<string> => {
-  const metadataUrl = `${baseUrl.replace(/\/$/, "")}/$metadata`;
+export const fetchRawMetadata = async (baseUrl: string, token: string): Promise<string> => {
+  const metadataUrl = `${baseUrl.replace(/\/$/, '')}/$metadata`;
   const response = await fetch(metadataUrl, {
     headers: {
       Authorization: `Bearer ${token}`,
-      Accept: "application/xml",
-    },
+      Accept: 'application/xml'
+    }
   });
 
   if (!response.ok) {
-    throw new Error(
-      `Failed to fetch metadata from ${metadataUrl}: ${response.status} ${response.statusText}`,
-    );
+    throw new Error(`Failed to fetch metadata from ${metadataUrl}: ${response.status} ${response.statusText}`);
   }
 
   return response.text();
@@ -41,10 +36,7 @@ export const fetchRawMetadata = async (
  * @param token - Bearer authentication token
  * @returns Parsed CSDL schema
  */
-export const fetchAndParseMetadata = async (
-  baseUrl: string,
-  token: string,
-): Promise<CsdlSchema> => {
+export const fetchAndParseMetadata = async (baseUrl: string, token: string): Promise<CsdlSchema> => {
   const xml = await fetchRawMetadata(baseUrl, token);
   return parseCsdlXml(xml);
 };

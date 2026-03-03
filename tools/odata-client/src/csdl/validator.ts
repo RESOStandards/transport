@@ -3,52 +3,50 @@
  * OData metadata document.
  */
 
-import type { CsdlSchema, CsdlValidationResult, CsdlValidationError } from "./types.js";
+import type { CsdlSchema, CsdlValidationError, CsdlValidationResult } from './types.js';
 
 /** Valid OData primitive type prefixes. */
 const EDM_TYPES = new Set([
-  "Edm.Binary",
-  "Edm.Boolean",
-  "Edm.Byte",
-  "Edm.Date",
-  "Edm.DateTimeOffset",
-  "Edm.Decimal",
-  "Edm.Double",
-  "Edm.Duration",
-  "Edm.Guid",
-  "Edm.Int16",
-  "Edm.Int32",
-  "Edm.Int64",
-  "Edm.SByte",
-  "Edm.Single",
-  "Edm.Stream",
-  "Edm.String",
-  "Edm.TimeOfDay",
-  "Edm.Geography",
-  "Edm.GeographyPoint",
-  "Edm.GeographyLineString",
-  "Edm.GeographyPolygon",
-  "Edm.GeographyMultiPoint",
-  "Edm.GeographyMultiLineString",
-  "Edm.GeographyMultiPolygon",
-  "Edm.GeographyCollection",
-  "Edm.Geometry",
-  "Edm.GeometryPoint",
-  "Edm.GeometryLineString",
-  "Edm.GeometryPolygon",
-  "Edm.GeometryMultiPoint",
-  "Edm.GeometryMultiLineString",
-  "Edm.GeometryMultiPolygon",
-  "Edm.GeometryCollection",
+  'Edm.Binary',
+  'Edm.Boolean',
+  'Edm.Byte',
+  'Edm.Date',
+  'Edm.DateTimeOffset',
+  'Edm.Decimal',
+  'Edm.Double',
+  'Edm.Duration',
+  'Edm.Guid',
+  'Edm.Int16',
+  'Edm.Int32',
+  'Edm.Int64',
+  'Edm.SByte',
+  'Edm.Single',
+  'Edm.Stream',
+  'Edm.String',
+  'Edm.TimeOfDay',
+  'Edm.Geography',
+  'Edm.GeographyPoint',
+  'Edm.GeographyLineString',
+  'Edm.GeographyPolygon',
+  'Edm.GeographyMultiPoint',
+  'Edm.GeographyMultiLineString',
+  'Edm.GeographyMultiPolygon',
+  'Edm.GeographyCollection',
+  'Edm.Geometry',
+  'Edm.GeometryPoint',
+  'Edm.GeometryLineString',
+  'Edm.GeometryPolygon',
+  'Edm.GeometryMultiPoint',
+  'Edm.GeometryMultiLineString',
+  'Edm.GeometryMultiPolygon',
+  'Edm.GeometryCollection'
 ]);
 
 const isEdmPrimitive = (type: string): boolean => EDM_TYPES.has(type);
 
-const isCollectionType = (type: string): boolean =>
-  type.startsWith("Collection(") && type.endsWith(")");
+const isCollectionType = (type: string): boolean => type.startsWith('Collection(') && type.endsWith(')');
 
-const unwrapCollection = (type: string): string =>
-  type.slice("Collection(".length, -1);
+const unwrapCollection = (type: string): string => type.slice('Collection('.length, -1);
 
 /**
  * Validate a parsed CSDL schema for structural correctness.
@@ -68,16 +66,16 @@ export const validateCsdl = (schema: CsdlSchema): CsdlValidationResult => {
   // Check namespace
   if (!schema.namespace) {
     errors.push({
-      path: "Schema",
-      message: "Schema namespace is missing or empty",
+      path: 'Schema',
+      message: 'Schema namespace is missing or empty'
     });
   }
 
   // Build set of known type names for reference checking
   const knownTypeNames = new Set([
-    ...schema.entityTypes.map((et) => `${schema.namespace}.${et.name}`),
-    ...schema.enumTypes.map((et) => `${schema.namespace}.${et.name}`),
-    ...schema.complexTypes.map((ct) => `${schema.namespace}.${ct.name}`),
+    ...schema.entityTypes.map(et => `${schema.namespace}.${et.name}`),
+    ...schema.enumTypes.map(et => `${schema.namespace}.${et.name}`),
+    ...schema.complexTypes.map(ct => `${schema.namespace}.${ct.name}`)
   ]);
 
   /**
@@ -91,15 +89,12 @@ export const validateCsdl = (schema: CsdlSchema): CsdlValidationResult => {
       typeToCheck = unwrapCollection(typeToCheck);
     }
 
-    if (
-      !isEdmPrimitive(typeToCheck) &&
-      !knownTypeNames.has(typeToCheck)
-    ) {
+    if (!isEdmPrimitive(typeToCheck) && !knownTypeNames.has(typeToCheck)) {
       // Allow namespace-qualified types we haven't seen (external references)
-      if (!typeToCheck.includes(".")) {
+      if (!typeToCheck.includes('.')) {
         errors.push({
           path: propPath,
-          message: `Property type '${propType}' is not a valid Edm primitive or known type`,
+          message: `Property type '${propType}' is not a valid Edm primitive or known type`
         });
       }
     }
@@ -113,18 +108,18 @@ export const validateCsdl = (schema: CsdlSchema): CsdlValidationResult => {
     if (entityType.key.length === 0 && !entityType.abstract && !entityType.baseType) {
       errors.push({
         path: etPath,
-        message: "Entity type has no key properties defined",
+        message: 'Entity type has no key properties defined'
       });
     }
 
-    const propertyNames = new Set(entityType.properties.map((p) => p.name));
+    const propertyNames = new Set(entityType.properties.map(p => p.name));
 
     // Check key properties exist
     for (const keyProp of entityType.key) {
       if (!propertyNames.has(keyProp)) {
         errors.push({
           path: `${etPath}/Key`,
-          message: `Key property '${keyProp}' does not exist in entity type properties`,
+          message: `Key property '${keyProp}' does not exist in entity type properties`
         });
       }
     }
@@ -136,23 +131,21 @@ export const validateCsdl = (schema: CsdlSchema): CsdlValidationResult => {
 
     // Validate navigation property targets
     for (const navProp of entityType.navigationProperties) {
-      const targetType = isCollectionType(navProp.type)
-        ? unwrapCollection(navProp.type)
-        : navProp.type;
-      if (!knownTypeNames.has(targetType) && !targetType.includes(".")) {
+      const targetType = isCollectionType(navProp.type) ? unwrapCollection(navProp.type) : navProp.type;
+      if (!knownTypeNames.has(targetType) && !targetType.includes('.')) {
         errors.push({
           path: `${etPath}/NavigationProperty(${navProp.name})`,
-          message: `Navigation property references unknown entity type '${targetType}'`,
+          message: `Navigation property references unknown entity type '${targetType}'`
         });
       }
     }
 
     // Validate baseType reference (warning-level: only flag if not namespace-qualified)
     if (entityType.baseType && !knownTypeNames.has(entityType.baseType)) {
-      if (!entityType.baseType.includes(".")) {
+      if (!entityType.baseType.includes('.')) {
         errors.push({
           path: etPath,
-          message: `BaseType '${entityType.baseType}' is not a known entity type`,
+          message: `BaseType '${entityType.baseType}' is not a known entity type`
         });
       }
     }
@@ -167,13 +160,11 @@ export const validateCsdl = (schema: CsdlSchema): CsdlValidationResult => {
     }
 
     for (const navProp of complexType.navigationProperties) {
-      const targetType = isCollectionType(navProp.type)
-        ? unwrapCollection(navProp.type)
-        : navProp.type;
-      if (!knownTypeNames.has(targetType) && !targetType.includes(".")) {
+      const targetType = isCollectionType(navProp.type) ? unwrapCollection(navProp.type) : navProp.type;
+      if (!knownTypeNames.has(targetType) && !targetType.includes('.')) {
         errors.push({
           path: `${ctPath}/NavigationProperty(${navProp.name})`,
-          message: `Navigation property references unknown entity type '${targetType}'`,
+          message: `Navigation property references unknown entity type '${targetType}'`
         });
       }
     }
@@ -184,10 +175,10 @@ export const validateCsdl = (schema: CsdlSchema): CsdlValidationResult => {
     for (const entitySet of schema.entityContainer.entitySets) {
       if (!knownTypeNames.has(entitySet.entityType)) {
         // Only warn if the type doesn't look namespace-qualified
-        if (!entitySet.entityType.includes(".")) {
+        if (!entitySet.entityType.includes('.')) {
           errors.push({
             path: `EntityContainer/EntitySet(${entitySet.name})`,
-            message: `Entity set references unknown entity type '${entitySet.entityType}'`,
+            message: `Entity set references unknown entity type '${entitySet.entityType}'`
           });
         }
       }

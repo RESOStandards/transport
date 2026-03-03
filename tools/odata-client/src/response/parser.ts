@@ -3,51 +3,47 @@
  * OData JSON response bodies.
  */
 
-import type { ODataEntity, ODataAnnotations, ODataCollection, ODataClient } from "../types.js";
+import type { ODataAnnotations, ODataClient, ODataCollection, ODataEntity } from '../types.js';
 
 /**
  * Extract OData annotations from an entity response body.
  */
 export const extractAnnotations = (entity: ODataEntity): ODataAnnotations => ({
-  ...(typeof entity["@odata.context"] === "string" && {
-    context: entity["@odata.context"],
+  ...(typeof entity['@odata.context'] === 'string' && {
+    context: entity['@odata.context']
   }),
-  ...(typeof entity["@odata.id"] === "string" && {
-    id: entity["@odata.id"],
+  ...(typeof entity['@odata.id'] === 'string' && {
+    id: entity['@odata.id']
   }),
-  ...(typeof entity["@odata.editLink"] === "string" && {
-    editLink: entity["@odata.editLink"],
+  ...(typeof entity['@odata.editLink'] === 'string' && {
+    editLink: entity['@odata.editLink']
   }),
-  ...(typeof entity["@odata.etag"] === "string" && {
-    etag: entity["@odata.etag"],
-  }),
+  ...(typeof entity['@odata.etag'] === 'string' && {
+    etag: entity['@odata.etag']
+  })
 });
 
 /**
  * Type guard: check if a body is an OData collection response.
  */
 export const isODataCollection = (body: unknown): body is ODataCollection => {
-  if (typeof body !== "object" || body === null) return false;
-  return Array.isArray((body as Record<string, unknown>)["value"]);
+  if (typeof body !== 'object' || body === null) return false;
+  return Array.isArray((body as Record<string, unknown>).value);
 };
 
 /**
  * Extract entity data from a response body (stripping OData annotations).
  */
-export const extractEntityData = (
-  entity: ODataEntity,
-): Readonly<Record<string, unknown>> =>
-  Object.fromEntries(
-    Object.entries(entity).filter(([key]) => !key.startsWith("@")),
-  );
+export const extractEntityData = (entity: ODataEntity): Readonly<Record<string, unknown>> =>
+  Object.fromEntries(Object.entries(entity).filter(([key]) => !key.startsWith('@')));
 
 /**
  * Get the @odata.nextLink from a collection response body, if present.
  */
 export const getNextLink = (body: unknown): string | undefined => {
-  if (typeof body !== "object" || body === null) return undefined;
-  const link = (body as Record<string, unknown>)["@odata.nextLink"];
-  return typeof link === "string" ? link : undefined;
+  if (typeof body !== 'object' || body === null) return undefined;
+  const link = (body as Record<string, unknown>)['@odata.nextLink'];
+  return typeof link === 'string' ? link : undefined;
 };
 
 /**
@@ -60,7 +56,7 @@ export const getNextLink = (body: unknown): string | undefined => {
  */
 export const followAllPages = async (
   client: ODataClient,
-  firstResponse: { readonly body: unknown },
+  firstResponse: { readonly body: unknown }
 ): Promise<ReadonlyArray<ODataEntity>> => {
   const allEntities: ODataEntity[] = [];
 
@@ -71,7 +67,7 @@ export const followAllPages = async (
     }
     const nextLink = getNextLink(body);
     if (!nextLink) break;
-    const response = await client.request("GET", nextLink);
+    const response = await client.request('GET', nextLink);
     body = response.body;
   }
 

@@ -5,12 +5,12 @@
  * so that test-runner.ts and validators.ts require no changes.
  */
 
-import { createClient, buildUri } from "@reso/odata-client";
-import type { ODataResponse } from "./types.js";
+import { buildUri, createClient } from '@reso/odata-client';
+import type { ODataResponse } from './types.js';
 
 /** Options for making an OData HTTP request. */
 export interface RequestOptions {
-  readonly method: "GET" | "POST" | "PATCH" | "DELETE";
+  readonly method: 'GET' | 'POST' | 'PATCH' | 'DELETE';
   readonly url: string;
   readonly headers?: Readonly<Record<string, string>>;
   readonly body?: unknown;
@@ -23,17 +23,15 @@ export interface RequestOptions {
  * Uses @reso/odata-client's createClient under the hood. Creates a lightweight
  * client per call since the auth token may vary between requests.
  */
-export const odataRequest = async (
-  options: RequestOptions,
-): Promise<ODataResponse> => {
+export const odataRequest = async (options: RequestOptions): Promise<ODataResponse> => {
   const client = await createClient({
-    baseUrl: "",
-    auth: { mode: "token", authToken: options.authToken },
+    baseUrl: '',
+    auth: { mode: 'token', authToken: options.authToken }
   });
 
   return client.request(options.method, options.url, {
     body: options.body,
-    headers: options.headers,
+    headers: options.headers
   });
 };
 
@@ -44,11 +42,7 @@ export const odataRequest = async (
  * Without a key: `https://api.reso.org/Property`
  * With a key:    `https://api.reso.org/Property('12345')`
  */
-export const buildResourceUrl = (
-  serverUrl: string,
-  resource: string,
-  key?: string,
-): string => {
-  const builder = buildUri(serverUrl.replace(/\/$/, ""), resource);
+export const buildResourceUrl = (serverUrl: string, resource: string, key?: string): string => {
+  const builder = buildUri(serverUrl.replace(/\/$/, ''), resource);
   return key ? builder.key(key).build() : builder.build();
 };

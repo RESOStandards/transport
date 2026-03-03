@@ -72,11 +72,9 @@ export interface UriBuilder {
 const createBuilder = (state: UriBuilderState): UriBuilder => ({
   key: (value: string) => createBuilder({ ...state, keyValue: value }),
 
-  compoundKey: (keys: Readonly<Record<string, string>>) =>
-    createBuilder({ ...state, compoundKey: keys }),
+  compoundKey: (keys: Readonly<Record<string, string>>) => createBuilder({ ...state, compoundKey: keys }),
 
-  select: (...fields: ReadonlyArray<string>) =>
-    createBuilder({ ...state, selectFields: fields }),
+  select: (...fields: ReadonlyArray<string>) => createBuilder({ ...state, selectFields: fields }),
 
   filter: (expr: string) => createBuilder({ ...state, filterExpr: expr }),
 
@@ -97,13 +95,13 @@ const createBuilder = (state: UriBuilderState): UriBuilder => ({
   format: (value: string) => createBuilder({ ...state, formatValue: value }),
 
   build: () => {
-    const base = state.baseUrl.replace(/\/$/, "");
+    const base = state.baseUrl.replace(/\/$/, '');
     let path = `${base}/${state.resource}`;
 
     if (state.compoundKey !== undefined) {
       const keyParts = Object.entries(state.compoundKey)
         .map(([k, v]) => `${k}='${encodeURIComponent(v)}'`)
-        .join(",");
+        .join(',');
       path += `(${keyParts})`;
     } else if (state.keyValue !== undefined) {
       path += `('${encodeURIComponent(state.keyValue)}')`;
@@ -112,7 +110,7 @@ const createBuilder = (state: UriBuilderState): UriBuilder => ({
     const params: string[] = [];
 
     if (state.selectFields && state.selectFields.length > 0) {
-      params.push(`$select=${state.selectFields.join(",")}`);
+      params.push(`$select=${state.selectFields.join(',')}`);
     }
     if (state.filterExpr) {
       params.push(`$filter=${encodeURIComponent(state.filterExpr)}`);
@@ -142,12 +140,11 @@ const createBuilder = (state: UriBuilderState): UriBuilder => ({
       params.push(`$format=${encodeURIComponent(state.formatValue)}`);
     }
 
-    return params.length > 0 ? `${path}?${params.join("&")}` : path;
-  },
+    return params.length > 0 ? `${path}?${params.join('&')}` : path;
+  }
 });
 
 /**
  * Create an OData URI builder for the given base URL and resource name.
  */
-export const buildUri = (baseUrl: string, resource: string): UriBuilder =>
-  createBuilder({ baseUrl, resource });
+export const buildUri = (baseUrl: string, resource: string): UriBuilder => createBuilder({ baseUrl, resource });

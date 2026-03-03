@@ -1,15 +1,9 @@
-import { Router } from "express";
-import type { ResoMetadata } from "../metadata/types.js";
-import { getFieldsForResource, getKeyFieldForResource } from "../metadata/loader.js";
-import type { DataAccessLayer, ResourceContext, NavigationPropertyBinding } from "../db/data-access.js";
-import { KEY_FIELD_MAP } from "../metadata/types.js";
-import {
-  createHandler,
-  readHandler,
-  updateHandler,
-  deleteHandler,
-  collectionHandler,
-} from "./handlers.js";
+import { Router } from 'express';
+import type { DataAccessLayer, NavigationPropertyBinding, ResourceContext } from '../db/data-access.js';
+import { getFieldsForResource, getKeyFieldForResource } from '../metadata/loader.js';
+import type { ResoMetadata } from '../metadata/types.js';
+import { KEY_FIELD_MAP } from '../metadata/types.js';
+import { collectionHandler, createHandler, deleteHandler, readHandler, updateHandler } from './handlers.js';
 
 /**
  * Build navigation property bindings for a resource based on RESO conventions.
@@ -20,7 +14,7 @@ import {
 const buildNavigationBindings = (
   resource: string,
   metadata: ResoMetadata,
-  targetResources: ReadonlyArray<string>,
+  targetResources: ReadonlyArray<string>
 ): ReadonlyArray<NavigationPropertyBinding> => {
   const bindings: NavigationPropertyBinding[] = [];
 
@@ -30,8 +24,8 @@ const buildNavigationBindings = (
     if (targetResource === resource) continue;
 
     const targetFields = getFieldsForResource(metadata, targetResource);
-    const hasResourceName = targetFields.some((f) => f.fieldName === "ResourceName");
-    const hasResourceRecordKey = targetFields.some((f) => f.fieldName === "ResourceRecordKey");
+    const hasResourceName = targetFields.some(f => f.fieldName === 'ResourceName');
+    const hasResourceRecordKey = targetFields.some(f => f.fieldName === 'ResourceRecordKey');
 
     if (hasResourceName && hasResourceRecordKey) {
       const targetKeyField = KEY_FIELD_MAP[targetResource];
@@ -42,8 +36,8 @@ const buildNavigationBindings = (
         targetResource,
         targetKeyField,
         targetFields,
-        foreignKey: { strategy: "resource-record-key" },
-        isCollection: true,
+        foreignKey: { strategy: 'resource-record-key' },
+        isCollection: true
       });
     }
   }
@@ -65,7 +59,7 @@ export const createODataRouter = (
   metadata: ResoMetadata,
   dal: DataAccessLayer,
   baseUrl: string,
-  targetResources: ReadonlyArray<string>,
+  targetResources: ReadonlyArray<string>
 ): Router => {
   const router = Router();
 
@@ -83,17 +77,13 @@ export const createODataRouter = (
       continue;
     }
 
-    const navigationBindings = buildNavigationBindings(
-      resource,
-      metadata,
-      targetResources,
-    );
+    const navigationBindings = buildNavigationBindings(resource, metadata, targetResources);
 
     const resourceCtx: ResourceContext = {
       resource,
       keyField,
       fields,
-      navigationBindings,
+      navigationBindings
     };
 
     const ctx = { resourceCtx, dal, baseUrl };
@@ -109,7 +99,7 @@ export const createODataRouter = (
     router.delete(keyPattern, deleteHandler(ctx));
 
     console.log(
-      `  Registered routes for ${resource} (${fields.length} fields, key: ${keyField}, navProps: ${navigationBindings.map((b) => b.name).join(", ") || "none"})`,
+      `  Registered routes for ${resource} (${fields.length} fields, key: ${keyField}, navProps: ${navigationBindings.map(b => b.name).join(', ') || 'none'})`
     );
   }
 

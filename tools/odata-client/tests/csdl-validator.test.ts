@@ -1,252 +1,250 @@
-import { describe, it, expect } from "vitest";
-import { validateCsdl } from "../src/csdl/validator.js";
-import type { CsdlSchema } from "../src/csdl/types.js";
+import { describe, expect, it } from 'vitest';
+import type { CsdlSchema } from '../src/csdl/types.js';
+import { validateCsdl } from '../src/csdl/validator.js';
 
 const validSchema: CsdlSchema = {
-  namespace: "org.reso.metadata",
+  namespace: 'org.reso.metadata',
   entityTypes: [
     {
-      name: "Property",
-      key: ["ListingKey"],
+      name: 'Property',
+      key: ['ListingKey'],
       properties: [
-        { name: "ListingKey", type: "Edm.String" },
-        { name: "ListPrice", type: "Edm.Decimal" },
-        { name: "City", type: "Edm.String" },
+        { name: 'ListingKey', type: 'Edm.String' },
+        { name: 'ListPrice', type: 'Edm.Decimal' },
+        { name: 'City', type: 'Edm.String' }
       ],
-      navigationProperties: [],
-    },
+      navigationProperties: []
+    }
   ],
   enumTypes: [
     {
-      name: "StandardStatus",
+      name: 'StandardStatus',
       members: [
-        { name: "Active", value: "0" },
-        { name: "Pending", value: "1" },
-      ],
-    },
+        { name: 'Active', value: '0' },
+        { name: 'Pending', value: '1' }
+      ]
+    }
   ],
   complexTypes: [],
   actions: [],
   functions: [],
   entityContainer: {
-    name: "Default",
-    entitySets: [
-      { name: "Property", entityType: "org.reso.metadata.Property" },
-    ],
+    name: 'Default',
+    entitySets: [{ name: 'Property', entityType: 'org.reso.metadata.Property' }],
     singletons: [],
     actionImports: [],
-    functionImports: [],
-  },
+    functionImports: []
+  }
 };
 
-describe("validateCsdl", () => {
-  it("accepts a valid schema", () => {
+describe('validateCsdl', () => {
+  it('accepts a valid schema', () => {
     const result = validateCsdl(validSchema);
     expect(result.valid).toBe(true);
     expect(result.errors).toHaveLength(0);
   });
 
-  it("detects missing namespace", () => {
-    const schema: CsdlSchema = { ...validSchema, namespace: "" };
+  it('detects missing namespace', () => {
+    const schema: CsdlSchema = { ...validSchema, namespace: '' };
     const result = validateCsdl(schema);
     expect(result.valid).toBe(false);
-    expect(result.errors[0].message).toContain("namespace");
+    expect(result.errors[0].message).toContain('namespace');
   });
 
-  it("detects missing key properties", () => {
+  it('detects missing key properties', () => {
     const schema: CsdlSchema = {
       ...validSchema,
-      entityTypes: [{ name: "NoKey", key: [], properties: [], navigationProperties: [] }],
+      entityTypes: [{ name: 'NoKey', key: [], properties: [], navigationProperties: [] }]
     };
     const result = validateCsdl(schema);
     expect(result.valid).toBe(false);
-    expect(result.errors[0].message).toContain("no key");
+    expect(result.errors[0].message).toContain('no key');
   });
 
-  it("detects key property not in properties list", () => {
+  it('detects key property not in properties list', () => {
     const schema: CsdlSchema = {
       ...validSchema,
       entityTypes: [
         {
-          name: "BadKey",
-          key: ["MissingProp"],
-          properties: [{ name: "SomeField", type: "Edm.String" }],
-          navigationProperties: [],
-        },
-      ],
+          name: 'BadKey',
+          key: ['MissingProp'],
+          properties: [{ name: 'SomeField', type: 'Edm.String' }],
+          navigationProperties: []
+        }
+      ]
     };
     const result = validateCsdl(schema);
     expect(result.valid).toBe(false);
-    expect(result.errors[0].message).toContain("MissingProp");
+    expect(result.errors[0].message).toContain('MissingProp');
   });
 
-  it("detects invalid property types", () => {
+  it('detects invalid property types', () => {
     const schema: CsdlSchema = {
       ...validSchema,
       entityTypes: [
         {
-          name: "BadType",
-          key: ["Id"],
+          name: 'BadType',
+          key: ['Id'],
           properties: [
-            { name: "Id", type: "Edm.String" },
-            { name: "Broken", type: "InvalidType" },
+            { name: 'Id', type: 'Edm.String' },
+            { name: 'Broken', type: 'InvalidType' }
           ],
-          navigationProperties: [],
-        },
-      ],
+          navigationProperties: []
+        }
+      ]
     };
     const result = validateCsdl(schema);
     expect(result.valid).toBe(false);
-    expect(result.errors[0].message).toContain("InvalidType");
+    expect(result.errors[0].message).toContain('InvalidType');
   });
 
-  it("allows namespace-qualified types (enum references)", () => {
+  it('allows namespace-qualified types (enum references)', () => {
     const schema: CsdlSchema = {
       ...validSchema,
       entityTypes: [
         {
-          name: "WithEnum",
-          key: ["Id"],
+          name: 'WithEnum',
+          key: ['Id'],
           properties: [
-            { name: "Id", type: "Edm.String" },
-            { name: "Status", type: "org.reso.metadata.StandardStatus" },
+            { name: 'Id', type: 'Edm.String' },
+            { name: 'Status', type: 'org.reso.metadata.StandardStatus' }
           ],
-          navigationProperties: [],
-        },
-      ],
+          navigationProperties: []
+        }
+      ]
     };
     const result = validateCsdl(schema);
     expect(result.valid).toBe(true);
   });
 
-  it("allows Collection types", () => {
+  it('allows Collection types', () => {
     const schema: CsdlSchema = {
       ...validSchema,
       entityTypes: [
         {
-          name: "WithCollection",
-          key: ["Id"],
+          name: 'WithCollection',
+          key: ['Id'],
           properties: [
-            { name: "Id", type: "Edm.String" },
-            { name: "Tags", type: "Collection(Edm.String)" },
+            { name: 'Id', type: 'Edm.String' },
+            { name: 'Tags', type: 'Collection(Edm.String)' }
           ],
-          navigationProperties: [],
-        },
-      ],
+          navigationProperties: []
+        }
+      ]
     };
     const result = validateCsdl(schema);
     expect(result.valid).toBe(true);
   });
 
-  it("accepts Edm.Stream as a valid type", () => {
+  it('accepts Edm.Stream as a valid type', () => {
     const schema: CsdlSchema = {
       ...validSchema,
       entityTypes: [
         {
-          name: "Document",
-          key: ["Id"],
+          name: 'Document',
+          key: ['Id'],
           properties: [
-            { name: "Id", type: "Edm.String" },
-            { name: "Content", type: "Edm.Stream" },
+            { name: 'Id', type: 'Edm.String' },
+            { name: 'Content', type: 'Edm.Stream' }
           ],
-          navigationProperties: [],
-        },
-      ],
+          navigationProperties: []
+        }
+      ]
     };
     const result = validateCsdl(schema);
     expect(result.valid).toBe(true);
   });
 
-  it("validates schema with complex types correctly", () => {
+  it('validates schema with complex types correctly', () => {
     const schema: CsdlSchema = {
       ...validSchema,
       complexTypes: [
         {
-          name: "Address",
+          name: 'Address',
           properties: [
-            { name: "Street", type: "Edm.String" },
-            { name: "City", type: "Edm.String" },
+            { name: 'Street', type: 'Edm.String' },
+            { name: 'City', type: 'Edm.String' }
           ],
-          navigationProperties: [],
-        },
+          navigationProperties: []
+        }
       ],
       entityTypes: [
         {
-          name: "Customer",
-          key: ["Id"],
+          name: 'Customer',
+          key: ['Id'],
           properties: [
-            { name: "Id", type: "Edm.String" },
-            { name: "HomeAddress", type: "org.reso.metadata.Address" },
+            { name: 'Id', type: 'Edm.String' },
+            { name: 'HomeAddress', type: 'org.reso.metadata.Address' }
           ],
-          navigationProperties: [],
-        },
-      ],
+          navigationProperties: []
+        }
+      ]
     };
     const result = validateCsdl(schema);
     expect(result.valid).toBe(true);
   });
 
-  it("allows abstract entity types without keys", () => {
+  it('allows abstract entity types without keys', () => {
     const schema: CsdlSchema = {
       ...validSchema,
       entityTypes: [
         {
-          name: "BaseEntity",
+          name: 'BaseEntity',
           key: [],
-          properties: [{ name: "CreatedAt", type: "Edm.DateTimeOffset" }],
+          properties: [{ name: 'CreatedAt', type: 'Edm.DateTimeOffset' }],
           navigationProperties: [],
-          abstract: true,
-        },
-      ],
+          abstract: true
+        }
+      ]
     };
     const result = validateCsdl(schema);
     expect(result.valid).toBe(true);
   });
 
-  it("allows derived entity types without keys", () => {
+  it('allows derived entity types without keys', () => {
     const schema: CsdlSchema = {
       ...validSchema,
       entityTypes: [
         {
-          name: "BaseEntity",
-          key: ["Id"],
-          properties: [{ name: "Id", type: "Edm.Guid" }],
-          navigationProperties: [],
+          name: 'BaseEntity',
+          key: ['Id'],
+          properties: [{ name: 'Id', type: 'Edm.Guid' }],
+          navigationProperties: []
         },
         {
-          name: "DerivedEntity",
+          name: 'DerivedEntity',
           key: [],
-          properties: [{ name: "Extra", type: "Edm.String" }],
+          properties: [{ name: 'Extra', type: 'Edm.String' }],
           navigationProperties: [],
-          baseType: "org.reso.metadata.BaseEntity",
-        },
-      ],
+          baseType: 'org.reso.metadata.BaseEntity'
+        }
+      ]
     };
     const result = validateCsdl(schema);
     expect(result.valid).toBe(true);
   });
 
-  it("validates navigation property targets reference known entity types", () => {
+  it('validates navigation property targets reference known entity types', () => {
     const schema: CsdlSchema = {
       ...validSchema,
       entityTypes: [
         {
-          name: "Order",
-          key: ["Id"],
-          properties: [{ name: "Id", type: "Edm.String" }],
+          name: 'Order',
+          key: ['Id'],
+          properties: [{ name: 'Id', type: 'Edm.String' }],
           navigationProperties: [
             {
-              name: "Customer",
-              type: "UnknownType",
+              name: 'Customer',
+              type: 'UnknownType',
               isCollection: false,
-              entityTypeName: "UnknownType",
-            },
-          ],
-        },
-      ],
+              entityTypeName: 'UnknownType'
+            }
+          ]
+        }
+      ]
     };
     const result = validateCsdl(schema);
     expect(result.valid).toBe(false);
-    expect(result.errors.some((e) => e.message.includes("UnknownType"))).toBe(true);
+    expect(result.errors.some(e => e.message.includes('UnknownType'))).toBe(true);
   });
 });

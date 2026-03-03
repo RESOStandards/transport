@@ -45,9 +45,9 @@ export type ODataEntity = Readonly<Record<string, unknown>>;
 /** An OData entity collection response. */
 export interface ODataCollection {
   readonly value: ReadonlyArray<ODataEntity>;
-  readonly "@odata.context"?: string;
-  readonly "@odata.count"?: number;
-  readonly "@odata.nextLink"?: string;
+  readonly '@odata.context'?: string;
+  readonly '@odata.count'?: number;
+  readonly '@odata.nextLink'?: string;
 }
 
 /** Extracted OData annotations from an entity. */
@@ -84,13 +84,13 @@ export interface ODataErrorBody {
 
 /** Bearer token authentication. */
 export interface TokenAuth {
-  readonly mode: "token";
+  readonly mode: 'token';
   readonly authToken: string;
 }
 
 /** OAuth2 Client Credentials authentication. */
 export interface ClientCredentialsAuth {
-  readonly mode: "client_credentials";
+  readonly mode: 'client_credentials';
   readonly clientId: string;
   readonly clientSecret: string;
   readonly tokenUrl: string;
@@ -111,7 +111,7 @@ export interface ClientConfig {
 }
 
 /** Prefer header options for write operations. */
-export type PreferReturn = "representation" | "minimal";
+export type PreferReturn = 'representation' | 'minimal';
 
 /** Options for CRUD operations that support Prefer header and ETags. */
 export interface WriteOptions {
@@ -130,11 +130,11 @@ export interface WriteOptions {
 export interface ODataClient {
   readonly baseUrl: string;
   readonly request: (
-    method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
+    method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE',
     url: string,
     options?: {
       readonly body?: unknown;
       readonly headers?: Readonly<Record<string, string>>;
-    },
+    }
   ) => Promise<ODataResponse>;
 }

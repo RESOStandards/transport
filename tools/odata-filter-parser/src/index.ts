@@ -17,8 +17,8 @@
  * ```
  */
 
-export { parseFilter, ParseError, LexerError } from "./parser.js";
-export { tokenize } from "./lexer.js";
+export { parseFilter, ParseError, LexerError } from './parser.js';
+export { tokenize } from './lexer.js';
 export type {
   FilterExpression,
   ComparisonExpr,
@@ -36,5 +36,5 @@ export type {
   FilterFunctionName,
   LiteralDataType,
   Token,
-  TokenType,
-} from "./types.js";
+  TokenType
+} from './types.js';

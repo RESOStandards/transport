@@ -2,8 +2,8 @@
  * OData entity delete (DELETE) helper.
  */
 
-import { buildUri } from "../uri/builder.js";
-import type { ODataClient, ODataResponse } from "../types.js";
+import type { ODataClient, ODataResponse } from '../types.js';
+import { buildUri } from '../uri/builder.js';
 
 /** Options for delete operations. */
 export interface DeleteOptions {
@@ -20,18 +20,13 @@ export interface DeleteOptions {
  * @param options - Optional ETag settings
  * @returns OData response (204 on success, 404 if not found)
  */
-export const deleteEntity = async (
-  client: ODataClient,
-  resource: string,
-  key: string,
-  options?: DeleteOptions,
-): Promise<ODataResponse> => {
+export const deleteEntity = async (client: ODataClient, resource: string, key: string, options?: DeleteOptions): Promise<ODataResponse> => {
   const url = buildUri(client.baseUrl, resource).key(key).build();
   const headers: Record<string, string> = {};
 
   if (options?.ifMatch) {
-    headers["If-Match"] = options.ifMatch;
+    headers['If-Match'] = options.ifMatch;
   }
 
-  return client.request("DELETE", url, headers && Object.keys(headers).length > 0 ? { headers } : undefined);
+  return client.request('DELETE', url, headers && Object.keys(headers).length > 0 ? { headers } : undefined);
 };

@@ -2,6 +2,44 @@
 
 ---
 
+## v0.0.2 — 2026-03-02
+
+### Developer Tooling: Biome + Lefthook
+
+Added pre-commit hooks and a shared linter/formatter to enforce code quality across all packages.
+
+- **[Biome](https://biomejs.dev/)** for linting and formatting — configured to match the
+  [RESO certification-utils](https://github.com/RESOStandards/reso-certification-utils)
+  style (single quotes, semicolons, no trailing commas, 140 char line width, LF line
+  endings, arrow parens avoided)
+  — [biome.json](../biome.json)
+- **[Lefthook](https://github.com/evilmartians/lefthook)** for git pre-commit hooks
+  — [lefthook.yml](../lefthook.yml)
+- **Root `package.json`** with `lint`, `lint:fix`, and `test` convenience scripts
+  — [package.json](../package.json)
+
+#### Pre-commit Hook Flow
+
+1. **Lint + auto-fix** — Biome checks staged `.ts` files, auto-fixes formatting and lint
+   issues, and re-stages the fixed files
+2. **Type check** — `tsc --noEmit` in all 4 packages, respecting the build dependency
+   order (filter-parser first, then client/server/test-tool)
+3. **Tests** — `vitest run` in all 4 packages (314 tests)
+
+#### Codebase Reformatted
+
+All 79 TypeScript source files were reformatted to the RESO standard style. All 314
+tests pass after reformatting.
+
+#### Setup
+
+```bash
+npm install           # installs biome + lefthook
+npx lefthook install  # activates git hooks
+```
+
+---
+
 ## v0.0.1 — 2026-03-02
 
 Initial release of the RESO Transport tooling suite. Introduces four interconnected

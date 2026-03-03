@@ -82,6 +82,33 @@ Packages have `file:` dependencies. Build in this order:
 3. `reso-reference-server/server` — depends on `odata-filter-parser`
 4. `web-api-add-edit-test` — depends on `odata-client`
 
+## Development
+
+### Linting and Formatting
+
+The codebase uses [Biome](https://biomejs.dev/) for linting and formatting, configured to match the [RESO certification-utils](https://github.com/RESOStandards/reso-certification-utils) style (single quotes, semicolons, no trailing commas, 140 char line width).
+
+```bash
+# From the repo root
+npm run lint          # Check for lint/format issues
+npm run lint:fix      # Auto-fix issues
+```
+
+### Pre-commit Hooks
+
+[Lefthook](https://github.com/evilmartians/lefthook) runs pre-commit hooks automatically on every `git commit`:
+
+1. **Lint + auto-fix** — Biome checks and fixes staged `.ts` files, re-stages fixes
+2. **Type check** — `tsc --noEmit` in all 4 packages (respecting build order)
+3. **Tests** — `vitest run` in all 4 packages
+
+To set up after cloning:
+
+```bash
+npm install           # installs biome + lefthook
+npx lefthook install  # activates git hooks
+```
+
 ## Cross-Tool Validation
 
 Run the compliance tests against the reference server:

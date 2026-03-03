@@ -18,25 +18,23 @@ export interface ODataErrorBody {
 export const buildODataError = (
   code: string,
   message: string,
-  details: ReadonlyArray<{ readonly target: string; readonly message: string }>,
+  details: ReadonlyArray<{ readonly target: string; readonly message: string }>
 ): ODataErrorBody => ({
   error: {
     code,
     message,
-    details: details.map((d) => ({
-      code: "30212",
+    details: details.map(d => ({
+      code: '30212',
       target: d.target,
-      message: d.message,
-    })),
-  },
+      message: d.message
+    }))
+  }
 });
 
 /** Builds a validation error response for fields that failed validation. */
-export const buildValidationError = (
-  failures: ReadonlyArray<{ readonly field: string; readonly reason: string }>,
-): ODataErrorBody =>
+export const buildValidationError = (failures: ReadonlyArray<{ readonly field: string; readonly reason: string }>): ODataErrorBody =>
   buildODataError(
-    "20100",
-    "Validation failed",
-    failures.map((f) => ({ target: f.field, message: f.reason })),
+    '20100',
+    'Validation failed',
+    failures.map(f => ({ target: f.field, message: f.reason }))
   );

@@ -5,29 +5,29 @@
  * Run: npx tsx examples/oauth-flow.ts
  */
 
-import { createClient, queryEntities, isODataCollection } from "../src/index.js";
+import { createClient, isODataCollection, queryEntities } from '../src/index.js';
 
 const main = async (): Promise<void> => {
   // Create client with OAuth2 Client Credentials
   const client = await createClient({
-    baseUrl: "http://localhost:8080",
+    baseUrl: 'http://localhost:8080',
     auth: {
-      mode: "client_credentials",
-      clientId: "my-client",
-      clientSecret: "my-secret",
-      tokenUrl: "http://localhost:8080/oauth/token",
-    },
+      mode: 'client_credentials',
+      clientId: 'my-client',
+      clientSecret: 'my-secret',
+      tokenUrl: 'http://localhost:8080/oauth/token'
+    }
   });
 
-  console.log("Authenticated via OAuth2 Client Credentials");
-  console.log("Querying properties...");
+  console.log('Authenticated via OAuth2 Client Credentials');
+  console.log('Querying properties...');
 
-  const response = await queryEntities(client, "Property", { $top: 5 });
+  const response = await queryEntities(client, 'Property', { $top: 5 });
 
   if (response.status === 200 && isODataCollection(response.body)) {
     console.log(`Found ${response.body.value.length} properties`);
   } else {
-    console.log("Response:", response.status, response.body);
+    console.log('Response:', response.status, response.body);
   }
 };
 
