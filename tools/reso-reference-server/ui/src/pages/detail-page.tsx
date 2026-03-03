@@ -8,6 +8,7 @@ import { useMetadata } from '../hooks/use-metadata';
 import { useUiConfig } from '../hooks/use-ui-config';
 import type { ResoField, ResourceName } from '../types';
 import { KEY_FIELD_MAP, TARGET_RESOURCES } from '../types';
+import { formatAddress, formatFieldValue } from '../utils/format';
 
 /** Detail page showing a full record with fields grouped by RESO Data Dictionary categories. */
 export const DetailPage = () => {
@@ -97,19 +98,12 @@ export const DetailPage = () => {
 
   const sortedGroups = [...grouped.entries()].sort((a, b) => a[0].localeCompare(b[0]));
 
-  const formatValue = (value: unknown): string => {
-    if (value === null || value === undefined) return '—';
-    if (Array.isArray(value)) return value.join(', ');
-    if (typeof value === 'boolean') return value ? 'Yes' : 'No';
-    return String(value);
-  };
-
   const renderFieldTable = (fieldList: ResoField[]) => (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1">
       {fieldList.map(field => (
         <div key={field.fieldName} className="flex items-baseline gap-2 py-0.5 text-sm">
           <span className="text-gray-500 dark:text-gray-400 shrink-0 w-40 sm:w-52 truncate">{field.fieldName}</span>
-          <span className="text-gray-800 dark:text-gray-200 truncate">{formatValue(record[field.fieldName])}</span>
+          <span className="text-gray-800 dark:text-gray-200 truncate">{formatFieldValue(record[field.fieldName], field)}</span>
         </div>
       ))}
     </div>
@@ -141,8 +135,11 @@ export const DetailPage = () => {
         </div>
       </div>
 
-      {/* Pinned: Key + Timestamp */}
+      {/* Pinned: Key + Address + Timestamp */}
       <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+        {resourceName === 'Property' && formatAddress(record) && (
+          <div className="text-base font-medium text-gray-900 dark:text-gray-100 mb-2">{formatAddress(record)}</div>
+        )}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
           <div>
             <span className="text-gray-500 dark:text-gray-400">{keyField}: </span>

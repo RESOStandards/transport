@@ -1,2 +1,9 @@
-export type { ResoAnnotation, ResoField, ValidationFailure } from './metadata/index.js';
-export { isEnumType, isIntegerEdmType, isNumericEdmType, validateRecord } from './metadata/index.js';
+export type { FieldRule, ResoAnnotation, ResoField, ValidationFailure } from './metadata/index.js';
+export {
+  getBusinessRules,
+  isEnumType,
+  isIntegerEdmType,
+  isNumericEdmType,
+  validateBusinessRules,
+  validateRecord
+} from './metadata/index.js';

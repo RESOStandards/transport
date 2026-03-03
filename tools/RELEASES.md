@@ -2,6 +2,112 @@
 
 ---
 
+## v0.0.7 — 2026-03-03
+
+### Business Rules Validation
+
+Added field-specific business rules to the `@reso/validation` package in a new
+`business-rules/` subfolder. Rules are enforced on both the server API (POST/PATCH)
+and the UI input forms.
+
+- **Price fields** (ListPrice, OriginalListPrice, PreviousListPrice, ClosePrice,
+  ListPriceLow): must be between 0 and 1,000,000,000
+- **Bedroom fields** (BedroomsTotal, BedroomsPossible, MainLevelBedrooms): must be
+  between 0 and 100
+- **Bathroom fields** (BathroomsTotalInteger, BathroomsFull, BathroomsHalf,
+  BathroomsOneQuarter, BathroomsPartial, BathroomsThreeQuarter, MainLevelBathrooms):
+  must be between 0 and 100
+- Rule registry pattern (`getBusinessRules(resourceName)`) extensible to other resources
+- Integrated into `validateRecord` with deduplication — fields that already have
+  type-level failures skip business rule checks
+- **24 new tests** in `business-rules.test.ts`
+
+### Locale-Aware Formatting
+
+Added `formatFieldValue` utility in the UI for locale-aware display formatting:
+
+- **Currency fields** formatted as USD with `Intl.NumberFormat` (e.g., `$4,034,663.58`)
+- **Integer fields** formatted with thousands separators (e.g., `1,234`)
+- **Decimal fields** formatted with up to 2 fraction digits
+- **DateTimeOffset** fields formatted with `toLocaleString()`
+- **Booleans** displayed as `Yes` / `No`
+- Handles both numeric and string representations from the OData API (Edm.Decimal
+  values are serialized as JSON strings per OData 4.01 spec)
+
+### Address Display
+
+- **Summary cards**: Property records show a single composed USPS-format address line
+  (e.g., `123 Main St, Springfield, IL 60601`) instead of individual address fields
+- **Detail pages**: formatted address displayed in the pinned header section
+- `formatAddress` assembles addresses from StreetNumber, StreetDirPrefix, StreetName,
+  StreetSuffix, StreetDirSuffix, City, StateOrProvince, PostalCode; falls back to
+  UnparsedAddress if structured fields are empty
+
+### Nginx SPA Routing Fix
+
+Fixed browser refresh on SPA routes (e.g., `/Property`) returning raw JSON instead of
+the React app. The nginx config now uses the `Accept` header to distinguish API requests
+(`application/json`) from browser navigation (`text/html`), using the `error_page 418`
++ named location pattern for reliable proxying.
+
+### PostgreSQL Schema: TEXT instead of VARCHAR
+
+Changed the schema generator to use `TEXT` for all `Edm.String` columns instead of
+`VARCHAR(n)`. PostgreSQL stores TEXT and VARCHAR identically, but TEXT columns benefit
+from TOAST for large values.
+
+### Test Summary
+
+| Package | Tests |
+|---------|------:|
+| `@reso/validation` | 65 |
+| `@reso/odata-filter-parser` | 97 |
+| `@reso/odata-client` | 101 |
+| `@reso/data-generator` | 71 |
+| `@reso/reference-server` | 76 |
+| `@reso/certification-add-edit` | 49 |
+| **Total** | **459** |
+
+---
+
+## v0.0.6 — 2026-03-03
+
+### PostgreSQL Schema: TEXT instead of VARCHAR
+
+Changed the PostgreSQL schema generator to use `TEXT` for all `Edm.String` columns
+instead of `VARCHAR(n)`. PostgreSQL stores TEXT and VARCHAR identically, but TEXT
+columns benefit from TOAST (Transparent Oversized-Attribute Storage), which moves
+large values out-of-line and reduces the fixed-width row portion. This resolves
+"row is too big" errors when populating resources with many fields (e.g., DD 2.0
+Property has 652 fields).
+
+### Data Dictionary 2.0 Metadata
+
+Updated server metadata from DD 1.7 to DD 2.0 (1,727 fields, 3,256 lookups, 41
+resources vs 1,316 fields, 2,951 lookups in 1.7).
+
+### Data Generator Fixes
+
+- Decimal fields now respect RESO metadata `precision`/`scale` constraints
+  (e.g., NUMERIC(5,2) capped at 999.99 instead of 10,000)
+- All date/time fields use ISO 8601 format (no bare time strings)
+- Nullable fields randomly populated at 60% fill rate for realistic sparse records
+- Docker fixes: multi-dependency builds, Alpine wget healthcheck, nginx admin/oauth routes
+
+### Test Summary
+
+| Package | Tests |
+|---------|------:|
+| `@reso/validation` | 41 |
+| `@reso/odata-filter-parser` | 97 |
+| `@reso/odata-client` | 101 |
+| `@reso/data-generator` | 71 |
+| `@reso/reference-server` | 76 |
+| `@reso/certification-add-edit` | 49 |
+| **Total** | **435** |
+
+---
+
 ## v0.0.5 — 2026-03-03
 
 ### Data Generator: `@reso/data-generator`

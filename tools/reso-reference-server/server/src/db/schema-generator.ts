@@ -11,7 +11,7 @@ export const edmTypeToSql = (field: ResoField): string => {
 
   switch (type) {
     case 'Edm.String':
-      return field.maxLength ? `VARCHAR(${field.maxLength})` : 'TEXT';
+      return 'TEXT';
     case 'Edm.Int64':
       return 'BIGINT';
     case 'Edm.Int32':

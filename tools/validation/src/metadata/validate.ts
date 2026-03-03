@@ -1,3 +1,4 @@
+import { validateBusinessRules } from '../business-rules/index.js';
 import { isEnumType, isIntegerEdmType, isNumericEdmType } from './helpers.js';
 import type { ResoField, ValidationFailure } from './types.js';
 
@@ -56,7 +57,16 @@ export const validateRecord = (
     }
   }
 
-  // TODO: Add executable business rules validation
+  // Field-specific business rules (range constraints, etc.)
+  // Skip fields that already have type-level failures to avoid duplicate errors.
+  const resourceName = fields[0]?.resourceName;
+  if (resourceName) {
+    const failedFields = new Set(failures.map(f => f.field));
+    const ruleFailures = validateBusinessRules(resourceName, body);
+    for (const rf of ruleFailures) {
+      if (!failedFields.has(rf.field)) failures.push(rf);
+    }
+  }
 
   return failures;
 };

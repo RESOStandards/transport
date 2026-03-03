@@ -1,34 +1,15 @@
-import type { ResoField, ResourceName } from '../types';
+import type { ResourceName } from '../types';
 import { KEY_FIELD_MAP } from '../types';
+import { ADDRESS_FIELDS, formatAddress, formatFieldValue } from '../utils/format';
 import { MediaCarousel } from './media-carousel';
 
 interface ResultsCardProps {
   readonly resource: ResourceName;
   readonly record: Record<string, unknown>;
   readonly summaryFields: ReadonlyArray<string>;
-  readonly fieldMap: ReadonlyMap<string, ResoField>;
+  readonly fieldMap: ReadonlyMap<string, import('../types').ResoField>;
   readonly onClick: (key: string) => void;
 }
-
-/** Formats a field value for display based on its type. */
-const formatValue = (value: unknown, field: ResoField | undefined): string => {
-  if (value === null || value === undefined) return '—';
-  if (Array.isArray(value)) return value.join(', ');
-  if (typeof value === 'boolean') return value ? 'Yes' : 'No';
-  if (field?.type === 'Edm.DateTimeOffset' && typeof value === 'string') {
-    try {
-      return new Date(value).toLocaleString();
-    } catch {
-      return String(value);
-    }
-  }
-  if (field?.type === 'Edm.Decimal' || field?.type === 'Edm.Double') {
-    if (typeof value === 'number') {
-      return value.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 });
-    }
-  }
-  return String(value);
-};
 
 /** Summary result card with media thumbnail and configurable fields. */
 export const ResultsCard = ({ resource, record, summaryFields, fieldMap, onClick }: ResultsCardProps) => {
@@ -36,8 +17,12 @@ export const ResultsCard = ({ resource, record, summaryFields, fieldMap, onClick
   const key = String(record[keyField] ?? '');
   const media = Array.isArray(record.Media) ? (record.Media as Record<string, unknown>[]) : [];
 
-  // Filter to fields that have data
-  const displayFields = summaryFields.filter(f => f !== keyField && record[f] !== undefined && record[f] !== null);
+  // Build formatted address for Property resources
+  const address = resource === 'Property' ? formatAddress(record) : null;
+
+  // Filter to fields that have data; hide individual address fields when a composed address is shown
+  const hiddenFields = address ? ADDRESS_FIELDS : new Set<string>();
+  const displayFields = summaryFields.filter(f => f !== keyField && !hiddenFields.has(f) && record[f] !== undefined && record[f] !== null);
 
   return (
     <button
@@ -60,12 +45,17 @@ export const ResultsCard = ({ resource, record, summaryFields, fieldMap, onClick
             <span className="text-sm font-mono text-gray-700 dark:text-gray-300 truncate">{key}</span>
           </div>
 
+          {/* Address line for Property */}
+          {address && <div className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate mb-1">{address}</div>}
+
           {/* Summary fields in a responsive grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-0.5">
             {displayFields.slice(0, 9).map(fieldName => (
               <div key={fieldName} className="flex items-baseline gap-1 text-sm truncate">
                 <span className="text-gray-500 dark:text-gray-400 shrink-0">{fieldName}:</span>
-                <span className="text-gray-800 dark:text-gray-200 truncate">{formatValue(record[fieldName], fieldMap.get(fieldName))}</span>
+                <span className="text-gray-800 dark:text-gray-200 truncate">
+                  {formatFieldValue(record[fieldName], fieldMap.get(fieldName))}
+                </span>
               </div>
             ))}
           </div>

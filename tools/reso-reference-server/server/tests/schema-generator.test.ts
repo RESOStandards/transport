@@ -14,8 +14,8 @@ describe('edmTypeToSql', () => {
     expect(edmTypeToSql(makeField({ fieldName: 'City', type: 'Edm.String' }))).toBe('TEXT');
   });
 
-  it('maps Edm.String with maxLength to VARCHAR', () => {
-    expect(edmTypeToSql(makeField({ fieldName: 'City', type: 'Edm.String', maxLength: 255 }))).toBe('VARCHAR(255)');
+  it('maps Edm.String with maxLength to TEXT (Postgres uses TEXT for TOAST benefits)', () => {
+    expect(edmTypeToSql(makeField({ fieldName: 'City', type: 'Edm.String', maxLength: 255 }))).toBe('TEXT');
   });
 
   it('maps Edm.Int64 to BIGINT', () => {
@@ -62,7 +62,7 @@ describe('generateCreateTable', () => {
     const ddl = generateCreateTable('Property', 'ListingKey', fields);
 
     expect(ddl).toContain('CREATE TABLE IF NOT EXISTS "Property"');
-    expect(ddl).toContain('"ListingKey" VARCHAR(255) NOT NULL PRIMARY KEY');
+    expect(ddl).toContain('"ListingKey" TEXT NOT NULL PRIMARY KEY');
     expect(ddl).toContain('"ListPrice" NUMERIC(14,2)');
     expect(ddl).toContain('"City" TEXT');
   });
