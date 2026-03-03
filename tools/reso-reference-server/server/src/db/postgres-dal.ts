@@ -241,7 +241,6 @@ export const createPostgresDal = (pool: pg.Pool): DataAccessLayer => {
     let paramIndex = 1;
 
     // Determine which fields to select
-    const fieldNames = new Set(ctx.fields.map(f => f.fieldName));
     let selectedFields: ReadonlyArray<ResoField>;
     if (options?.$select) {
       const requested = new Set(parseSelect(options.$select));
@@ -251,15 +250,14 @@ export const createPostgresDal = (pool: pg.Pool): DataAccessLayer => {
       selectedFields = ctx.fields;
     }
 
-    // Build SELECT columns for parent
-    const selectCols: string[] = [...buildSelectColumns(ctx.fields, ctx.keyField, options?.$select, parentAlias)];
+    // Build SELECT columns for parent only
+    const parentSelectCols: ReadonlyArray<string> = buildSelectColumns(ctx.fields, ctx.keyField, options?.$select, parentAlias);
 
     // Resolve $expand bindings
     const expandBindings: Array<{
       readonly binding: NavigationPropertyBinding;
       readonly alias: string;
     }> = [];
-    const joinClauses: string[] = [];
 
     if (options?.$expand) {
       const expandNames = parseExpand(options.$expand);
@@ -268,19 +266,8 @@ export const createPostgresDal = (pool: pg.Pool): DataAccessLayer => {
       for (const name of expandNames) {
         const binding = bindingMap.get(name);
         if (!binding) continue;
-
-        const navAlias = `nav_${name}`;
-        expandBindings.push({ binding, alias: navAlias });
-
-        selectCols.push(...buildNavSelectColumns(binding, navAlias));
-        joinClauses.push(buildExpandJoin(ctx.resource, ctx.keyField, parentAlias, binding, navAlias));
+        expandBindings.push({ binding, alias: `nav_${name}` });
       }
-    }
-
-    // Build FROM clause
-    let fromClause = `"${ctx.resource}" ${parentAlias}`;
-    if (joinClauses.length > 0) {
-      fromClause += ` ${joinClauses.join(' ')}`;
     }
 
     // Build WHERE clause from $filter
@@ -292,7 +279,7 @@ export const createPostgresDal = (pool: pg.Pool): DataAccessLayer => {
       paramIndex += filterResult.values.length;
     }
 
-    // Build ORDER BY
+    // Build ORDER BY (references parent alias columns)
     let orderByClause = '';
     if (options?.$orderby) {
       const parsed = parseOrderBy(options.$orderby, ctx.fields, parentAlias);
@@ -316,34 +303,108 @@ export const createPostgresDal = (pool: pg.Pool): DataAccessLayer => {
       paramIndex++;
     }
 
-    // $count — use a window function so we get total count with the query
+    // $count — window function for total matching parent count
     const countCol = options?.$count ? `, COUNT(*) OVER() AS "__total_count"` : '';
 
-    // Assemble final SQL
-    const sql = [`SELECT ${selectCols.join(', ')}${countCol}`, `FROM ${fromClause}`, whereClause, orderByClause, limitClause, offsetClause]
+    // ===== Branch: $expand present — use CTE to paginate parents first =====
+    if (expandBindings.length > 0) {
+      // CTE: paginate parent rows only (no JOINs)
+      const cteSql = [
+        `SELECT ${parentSelectCols.join(', ')}${countCol}`,
+        `FROM "${ctx.resource}" ${parentAlias}`,
+        whereClause,
+        orderByClause,
+        limitClause,
+        offsetClause
+      ]
+        .filter(s => s.length > 0)
+        .join(' ');
+
+      const cteAlias = 'parent_page';
+
+      // Outer query: re-select parent columns from CTE + nav columns from JOINs
+      const outerParentCols = parentSelectCols.map(col => {
+        const match = col.match(/AS "(.+)"$/);
+        return match ? `${cteAlias}."${match[1]}"` : col;
+      });
+      const outerCountCol = options?.$count ? `, ${cteAlias}."__total_count"` : '';
+
+      // Build nav SELECT columns and JOIN clauses against the CTE
+      const outerNavCols: string[] = [];
+      const outerJoinClauses: string[] = [];
+      for (const { binding, alias: navAlias } of expandBindings) {
+        outerNavCols.push(...buildNavSelectColumns(binding, navAlias));
+        // Join against CTE using the aliased key column: parent_page."p.ListingKey"
+        outerJoinClauses.push(buildExpandJoin(ctx.resource, `${parentAlias}.${ctx.keyField}`, cteAlias, binding, navAlias));
+      }
+
+      // Outer ORDER BY references CTE columns for deterministic grouping order
+      let outerOrderBy = '';
+      if (options?.$orderby) {
+        const outerParts = options.$orderby
+          .split(',')
+          .map(part => {
+            const trimmed = part.trim();
+            const [field, ...rest] = trimmed.split(/\s+/);
+            if (!field || !ctx.fields.some(f => f.fieldName === field)) return undefined;
+            const dir = rest[0]?.toLowerCase();
+            return `${cteAlias}."${parentAlias}.${field}" ${dir === 'desc' ? 'DESC' : 'ASC'}`;
+          })
+          .filter((clause): clause is string => clause !== undefined);
+        if (outerParts.length > 0) outerOrderBy = `ORDER BY ${outerParts.join(', ')}`;
+      }
+      if (!outerOrderBy) {
+        // Default: order by key for deterministic grouping
+        outerOrderBy = `ORDER BY ${cteAlias}."${parentAlias}.${ctx.keyField}"`;
+      }
+
+      const outerSql = [
+        `SELECT ${[...outerParentCols, ...outerNavCols].join(', ')}${outerCountCol}`,
+        `FROM ${cteAlias}`,
+        ...outerJoinClauses,
+        outerOrderBy
+      ]
+        .filter(s => s.length > 0)
+        .join(' ');
+
+      const sql = `WITH ${cteAlias} AS (${cteSql}) ${outerSql}`;
+
+      const result = await pool.query(sql, values);
+      const rows = result.rows as Record<string, unknown>[];
+
+      let count: number | undefined;
+      if (options?.$count && rows.length > 0) {
+        count = Number(rows[0].__total_count);
+      }
+
+      const entities = groupRows(rows, parentAlias, ctx.keyField, ctx.fields, selectedFields, expandBindings);
+      return { value: entities, ...(count !== undefined ? { count } : {}) };
+    }
+
+    // ===== Branch: no $expand — simple query (unchanged) =====
+    const sql = [
+      `SELECT ${parentSelectCols.join(', ')}${countCol}`,
+      `FROM "${ctx.resource}" ${parentAlias}`,
+      whereClause,
+      orderByClause,
+      limitClause,
+      offsetClause
+    ]
       .filter(s => s.length > 0)
       .join(' ');
 
     const result = await pool.query(sql, values);
     const rows = result.rows as Record<string, unknown>[];
 
-    // Extract total count if requested
     let count: number | undefined;
     if (options?.$count && rows.length > 0) {
       count = Number(rows[0].__total_count);
     }
 
-    // If no $expand, skip grouping — just extract parent columns
-    if (expandBindings.length === 0) {
-      const entities = rows.map(row => {
-        const parent = extractParentColumns(row, parentAlias, selectedFields);
-        return deserializeRow(parent, [...ctx.fields]);
-      });
-      return { value: entities, ...(count !== undefined ? { count } : {}) };
-    }
-
-    // Group rows by parent key and nest expanded navprops
-    const entities = groupRows(rows, parentAlias, ctx.keyField, ctx.fields, selectedFields, expandBindings);
+    const entities = rows.map(row => {
+      const parent = extractParentColumns(row, parentAlias, selectedFields);
+      return deserializeRow(parent, [...ctx.fields]);
+    });
 
     return { value: entities, ...(count !== undefined ? { count } : {}) };
   };

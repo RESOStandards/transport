@@ -45,6 +45,7 @@ export type FieldGroups = Readonly<Record<string, Readonly<Record<string, Readon
 export interface ODataCollectionResponse {
   readonly '@odata.context'?: string;
   readonly '@odata.count'?: number;
+  readonly '@odata.nextLink'?: string;
   readonly value: ReadonlyArray<Record<string, unknown>>;
 }
 

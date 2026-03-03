@@ -192,6 +192,19 @@ const batchExpandNavigation = async (
  * - Add proper error handling and connection management
  * - Handle MongoDB _id field mapping
  * - Add indexes for ResourceName + ResourceRecordKey on child collections
+ *
+ * Pagination note: Unlike the PostgreSQL adapter (which requires a CTE to
+ * paginate parent rows before LEFT JOINing expanded navprops), the MongoDB
+ * adapter naturally handles this correctly — $skip/$limit apply to the parent
+ * cursor first, then batchExpandNavigation() resolves navigation properties
+ * against the already-paginated parent set. The @odata.nextLink is generated
+ * at the handler layer (handlers.ts) using the CollectionResult from the DAL,
+ * so no nextLink logic is needed here.
+ *
+ * TODO: Implement filterToMongoQuery() using @reso/odata-filter-parser AST
+ * TODO: Add $orderby validation against field definitions
+ * TODO: Ensure countDocuments uses the same filter for accurate $count
+ * TODO: Handle _id suppression in projection when no $select is specified
  */
 export const createMongoDal = (db: MongoDb): DataAccessLayer => {
   const queryCollection = async (

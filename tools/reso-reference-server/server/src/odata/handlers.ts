@@ -223,6 +223,20 @@ export const deleteHandler =
     }
   };
 
+/** Builds an @odata.nextLink URL for server-driven pagination. */
+const buildNextLink = (baseUrl: string, resource: string, query: CollectionQueryOptions, top: number, skip: number): string => {
+  const nextSkip = skip + top;
+  const params: string[] = [];
+  if (query.$filter) params.push(`$filter=${encodeURIComponent(query.$filter)}`);
+  if (query.$select) params.push(`$select=${encodeURIComponent(query.$select)}`);
+  if (query.$orderby) params.push(`$orderby=${encodeURIComponent(query.$orderby)}`);
+  params.push(`$top=${top}`);
+  params.push(`$skip=${nextSkip}`);
+  if (query.$count) params.push('$count=true');
+  if (query.$expand) params.push(`$expand=${encodeURIComponent(query.$expand)}`);
+  return `${baseUrl}/${resource}?${params.join('&')}`;
+};
+
 /** Creates a GET handler for querying a collection of entities. */
 export const collectionHandler =
   (ctx: HandlerContext): RequestHandler =>
@@ -246,6 +260,13 @@ export const collectionHandler =
       };
       if (result.count !== undefined) {
         body['@odata.count'] = result.count;
+      }
+
+      // Server-driven pagination: include @odata.nextLink when more pages exist
+      const top = options.$top;
+      const skip = options.$skip ?? 0;
+      if (top !== undefined && result.value.length === top) {
+        body['@odata.nextLink'] = buildNextLink(ctx.baseUrl, ctx.resourceCtx.resource, options, top, skip);
       }
 
       setODataHeaders(res);

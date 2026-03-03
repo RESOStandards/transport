@@ -51,6 +51,15 @@ export const queryCollection = async (resource: ResourceName, params: Collection
   return res.json();
 };
 
+/** Fetches a collection response from a raw URL (e.g., an @odata.nextLink). */
+export const fetchCollectionByUrl = async (url: string): Promise<ODataCollectionResponse> => {
+  const res = await fetch(url, {
+    headers: { Accept: 'application/json', 'OData-Version': '4.01' }
+  });
+  if (!res.ok) throw await parseError(res);
+  return res.json();
+};
+
 /** Reads a single entity by key. */
 export const readEntity = async (
   resource: ResourceName,

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { queryCollection } from '../api/client';
-import type { ResourceName } from '../types';
+import { fetchCollectionByUrl, queryCollection } from '../api/client.js';
+import type { ResourceName } from '../types.js';
 
 const PAGE_SIZE = 25;
 
@@ -13,7 +13,7 @@ export interface UseCollectionResult {
   readonly loadMore: () => void;
 }
 
-/** Fetches a resource collection with infinite scroll pagination. */
+/** Fetches a resource collection with infinite scroll pagination via @odata.nextLink. */
 export const useCollection = (
   resource: ResourceName,
   params: { $filter?: string; $orderby?: string; $select?: string; $expand?: string }
@@ -23,7 +23,7 @@ export const useCollection = (
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const skipRef = useRef(0);
+  const nextLinkRef = useRef<string | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
   // Reset when resource or params change
@@ -32,7 +32,7 @@ export const useCollection = (
     setCount(undefined);
     setHasMore(true);
     setError(null);
-    skipRef.current = 0;
+    nextLinkRef.current = null;
 
     const loadFirst = async () => {
       setIsLoading(true);
@@ -54,8 +54,9 @@ export const useCollection = (
         if (result['@odata.count'] !== undefined) {
           setCount(result['@odata.count']);
         }
-        setHasMore(result.value.length >= PAGE_SIZE);
-        skipRef.current = result.value.length;
+        // Use server-provided nextLink for pagination
+        nextLinkRef.current = result['@odata.nextLink'] ?? null;
+        setHasMore(nextLinkRef.current !== null);
       } catch (err) {
         const msg =
           err instanceof Error ? err.message : ((err as { error?: { message?: string } })?.error?.message ?? 'Failed to load data');
@@ -73,21 +74,15 @@ export const useCollection = (
   }, [resource, params.$filter, params.$orderby, params.$select, params.$expand]);
 
   const loadMore = useCallback(async () => {
-    if (isLoading || !hasMore) return;
+    if (isLoading || !hasMore || !nextLinkRef.current) return;
     setIsLoading(true);
     try {
-      const result = await queryCollection(resource, {
-        $filter: params.$filter || undefined,
-        $orderby: params.$orderby || undefined,
-        $select: params.$select || undefined,
-        $expand: params.$expand || undefined,
-        $top: PAGE_SIZE,
-        $skip: skipRef.current
-      });
+      // Follow the server-provided @odata.nextLink
+      const result = await fetchCollectionByUrl(nextLinkRef.current);
 
       setRows(prev => [...prev, ...result.value]);
-      setHasMore(result.value.length >= PAGE_SIZE);
-      skipRef.current += result.value.length;
+      nextLinkRef.current = result['@odata.nextLink'] ?? null;
+      setHasMore(nextLinkRef.current !== null);
     } catch (err) {
       const msg =
         err instanceof Error ? err.message : ((err as { error?: { message?: string } })?.error?.message ?? 'Failed to load more data');
@@ -95,7 +90,7 @@ export const useCollection = (
     } finally {
       setIsLoading(false);
     }
-  }, [resource, params.$filter, params.$orderby, params.$select, params.$expand, isLoading, hasMore]);
+  }, [isLoading, hasMore]);
 
   return { rows, count, isLoading, hasMore, error, loadMore };
 };

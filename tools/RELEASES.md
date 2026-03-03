@@ -2,6 +2,39 @@
 
 ---
 
+## v0.0.9 — 2026-03-03
+
+### Server-Driven Pagination with @odata.nextLink
+
+Fixed `$expand` + pagination bug and added OData `@odata.nextLink` support for
+server-driven infinite scroll.
+
+**Bug fix**: When `$expand=Media` was used with `$top`/`$skip`, the PostgreSQL
+adapter applied `LIMIT`/`OFFSET` to the flat LEFT JOIN result rows instead of
+parent entities. With 50 Properties × 5 Media each, `LIMIT 25` returned only 5
+unique Properties after grouping, and `COUNT(*) OVER()` reported 250 instead of
+50.
+
+**Fix**: The PostgreSQL adapter now uses a CTE (`WITH parent_page AS (...)`) to
+paginate parent rows first, then LEFT JOINs expanded navigation properties in
+the outer query. `COUNT` and `LIMIT`/`OFFSET` apply to parent entities only.
+
+**@odata.nextLink**: The collection handler now generates `@odata.nextLink` URLs
+when more pages exist (i.e., `result.value.length === $top`). The nextLink
+encodes `$top`/`$skip` along with all other query parameters ($filter, $select,
+$orderby, $count, $expand).
+
+**UI**: The `useCollection` hook now follows `@odata.nextLink` for infinite
+scroll instead of manually computing `$skip` offsets. The `fetchCollectionByUrl`
+client function fetches raw nextLink URLs.
+
+**DAL abstraction**: The `DataAccessLayer` interface (`data-access.ts`) is
+unchanged — the CTE logic is PostgreSQL-specific. The MongoDB adapter sketch
+already handles this correctly (cursor pagination + batch expand). The nextLink
+generation is OData protocol logic in the handler layer.
+
+---
+
 ## v0.0.8 — 2026-03-03
 
 ### Required Address Fields
