@@ -21,8 +21,12 @@ const generateProperty = (field: ResoField): string => {
   const type = toEdmxType(field);
   const attrs: string[] = [`Name="${escapeXml(field.fieldName)}"`, `Type="${escapeXml(type)}"`];
 
-  if (field.nullable !== undefined) {
-    attrs.push(`Nullable="${field.nullable}"`);
+  if (field.isCollection) {
+    // Collections return [] not null — always Nullable="false"
+    attrs.push('Nullable="false"');
+  } else if (field.nullable === false) {
+    // Nullable="true" is the OData default for non-collection properties — only emit when false
+    attrs.push('Nullable="false"');
   }
   if (field.maxLength !== undefined) {
     attrs.push(`MaxLength="${field.maxLength}"`);
@@ -68,6 +72,22 @@ ${properties}
 ${navProperties ? `${navProperties}\n` : ''}      </EntityType>`;
 };
 
+/** Generates an EntitySet element with NavigationPropertyBinding entries. */
+const generateEntitySet = (resourceName: string, fields: ReadonlyArray<ResoField>, targetResourceSet: ReadonlySet<string>): string => {
+  const namespace = 'org.reso.metadata';
+  const expansionFields = fields.filter(f => f.isExpansion && f.typeName && targetResourceSet.has(f.typeName));
+
+  if (expansionFields.length === 0) {
+    return `        <EntitySet Name="${escapeXml(resourceName)}" EntityType="${namespace}.${escapeXml(resourceName)}"/>`;
+  }
+
+  const bindings = expansionFields
+    .map(f => `          <NavigationPropertyBinding Path="${escapeXml(f.fieldName)}" Target="${escapeXml(f.typeName!)}"/>`)
+    .join('\n');
+
+  return `        <EntitySet Name="${escapeXml(resourceName)}" EntityType="${namespace}.${escapeXml(resourceName)}">\n${bindings}\n        </EntitySet>`;
+};
+
 /**
  * Generates a complete EDMX 4.0 XML metadata document from RESO JSON metadata.
  *
@@ -76,21 +96,28 @@ ${navProperties ? `${navProperties}\n` : ''}      </EntityType>`;
  * isArray for EntityType/Property/PropertyRef/Annotation).
  */
 export const generateEdmx = (metadata: ResoMetadata, targetResources: ReadonlyArray<string>): string => {
-  const entityTypes = targetResources
+  const targetResourceSet: ReadonlySet<string> = new Set(targetResources);
+  const resourceData = targetResources
     .map(resource => {
       const fields = getFieldsForResource(metadata, resource);
       const keyField = getKeyFieldForResource(resource);
-      if (!keyField || fields.length === 0) return '';
-      return generateEntityType(resource, keyField, fields);
+      if (!keyField || fields.length === 0) return null;
+      return { resource, keyField, fields };
     })
-    .filter(Boolean)
-    .join('\n');
+    .filter((d): d is NonNullable<typeof d> => d !== null);
+
+  const entityTypes = resourceData.map(d => generateEntityType(d.resource, d.keyField, d.fields)).join('\n');
+
+  const entitySets = resourceData.map(d => generateEntitySet(d.resource, d.fields, targetResourceSet)).join('\n');
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
   <edmx:DataServices>
     <Schema Namespace="org.reso.metadata" xmlns="http://docs.oasis-open.org/odata/ns/edm">
 ${entityTypes}
+      <EntityContainer Name="Default">
+${entitySets}
+      </EntityContainer>
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>`;

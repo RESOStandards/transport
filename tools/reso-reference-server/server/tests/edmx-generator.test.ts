@@ -39,12 +39,20 @@ describe('generateEdmx', () => {
     expect(edmx).toMatch(/Property Name="StandardStatus" Type="Edm\.String"/);
   });
 
-  it('maps collection fields to Collection(Edm.String)', async () => {
+  it('maps collection fields to Collection(Edm.String) with Nullable="false"', async () => {
     const metadata = await loadMetadata(metadataPath);
     const edmx = generateEdmx(metadata, ['Property']);
 
-    // AccessibilityFeatures is a collection field
-    expect(edmx).toMatch(/Property Name="AccessibilityFeatures" Type="Collection\(Edm\.String\)"/);
+    // Collection fields return [] not null, so must be Nullable="false"
+    expect(edmx).toMatch(/Property Name="AccessibilityFeatures" Type="Collection\(Edm\.String\)" Nullable="false"/);
+  });
+
+  it('omits Nullable="true" since it is the OData default', async () => {
+    const metadata = await loadMetadata(metadataPath);
+    const edmx = generateEdmx(metadata, ['Property']);
+
+    // Nullable="true" should never appear — it's the default per the spec
+    expect(edmx).not.toContain('Nullable="true"');
   });
 
   it('includes lookup annotations for enum fields', async () => {
@@ -80,6 +88,34 @@ describe('generateEdmx', () => {
 
     // PropertyRooms should have Listing nav prop back to Property
     expect(edmx).toMatch(/NavigationProperty Name="Listing" Type="org\.reso\.metadata\.Property"/);
+  });
+
+  it('generates EntityContainer with EntitySet for each resource', async () => {
+    const metadata = await loadMetadata(metadataPath);
+    const edmx = generateEdmx(metadata, ['Property', 'Member', 'Office']);
+
+    expect(edmx).toContain('EntityContainer Name="Default"');
+    expect(edmx).toContain('EntitySet Name="Property" EntityType="org.reso.metadata.Property"');
+    expect(edmx).toContain('EntitySet Name="Member" EntityType="org.reso.metadata.Member"');
+    expect(edmx).toContain('EntitySet Name="Office" EntityType="org.reso.metadata.Office"');
+  });
+
+  it('generates NavigationPropertyBinding in EntitySets for expansion fields', async () => {
+    const metadata = await loadMetadata(metadataPath);
+    const edmx = generateEdmx(metadata, ['Property', 'Media', 'Member']);
+
+    // Property EntitySet should bind Media and BuyerAgent nav props
+    expect(edmx).toContain('NavigationPropertyBinding Path="Media" Target="Media"');
+    expect(edmx).toContain('NavigationPropertyBinding Path="BuyerAgent" Target="Member"');
+  });
+
+  it('omits NavigationPropertyBinding for targets not in the resource list', async () => {
+    const metadata = await loadMetadata(metadataPath);
+    // Media is NOT included — Property's Media binding should be omitted
+    const edmx = generateEdmx(metadata, ['Property', 'Member']);
+
+    expect(edmx).not.toContain('NavigationPropertyBinding Path="Media"');
+    expect(edmx).toContain('NavigationPropertyBinding Path="BuyerAgent" Target="Member"');
   });
 
   it('can be parsed by fast-xml-parser with the same options as the test tool', async () => {

@@ -2,6 +2,121 @@
 
 ---
 
+## v0.0.14 — 2026-03-04
+
+### EDMX Metadata: EntityContainer and Nullable Fixes
+
+Fixed two OData spec compliance issues in the generated EDMX XML metadata
+(`/$metadata` endpoint).
+
+**EntityContainer with EntitySets:**
+
+- Added `<EntityContainer Name="Default">` with an `<EntitySet>` element for
+  each target resource, as required by the OData CSDL specification
+- EntitySets include `<NavigationPropertyBinding>` entries linking navigation
+  properties to their target EntitySets (only for targets included in the
+  resource list)
+
+**Nullable attribute corrections:**
+
+- Removed `Nullable="true"` from all properties — this is the OData default
+  for non-collection properties and should not be emitted
+- Collection properties now always emit `Nullable="false"` since they return
+  the empty list `[]` instead of `null`
+
+**Modified files:**
+
+- `edmx-generator.ts` — EntityContainer generation, Nullable logic
+- `edmx-generator.test.ts` — 4 new tests (EntityContainer, EntitySet,
+  NavigationPropertyBinding, Nullable)
+
+### Test Summary
+
+| Package | Tests |
+|---------|------:|
+| `@reso/validation` | 91 |
+| `@reso/odata-filter-parser` | 151 |
+| `@reso/odata-client` | 101 |
+| `@reso/data-generator` | 71 |
+| `@reso/reference-server` | 130 |
+| `@reso/certification-add-edit` | 49 |
+| **Total** | **593** |
+
+---
+
+## v0.0.13 — 2026-03-04
+
+### OData $filter Two-Way Sync and Validation
+
+Added two-way synchronization between the search bar and advanced search form,
+client and server-side filter validation, and an AST serializer for the filter
+parser.
+
+**AST serializer (`astToFilterString`):**
+
+- New `serializer.ts` in `@reso/odata-filter-parser` — walks the AST and
+  produces a canonical OData `$filter` string
+- Handles all node types: comparison, logical, not, arithmetic, function,
+  lambda, literal, property, collection
+- 54 round-trip tests (parse → serialize → compare)
+
+**Filter sync utility (`filter-sync.ts`):**
+
+- `parseFilterToEntries()` — parses an OData filter string into form-compatible
+  entries using the AST, detecting simple comparisons, `contains()`, lambda
+  `any`/`all` patterns, and flagging unrepresentable expressions
+- `buildFilterString()` — moved from advanced-search, builds OData filter from
+  form entries
+
+**Search page state management:**
+
+- `draftFilter` state lifted to SearchPage as single source of truth
+- URL `$filter` param synced on browser back/forward
+- Client-side validation via `parseFilter()` blocks invalid filters with
+  error display before API calls
+- SearchBar is now a fully controlled component with validation error display
+  and copy-to-clipboard for long filters
+
+**Advanced search two-way sync:**
+
+- Form state derived from incoming filter string via `parseFilterToEntries()`
+- `lastEmittedRef` prevents infinite update loops in bidirectional sync
+- Live sync: field changes rebuild filter string and update search bar
+- Amber info bar when filter contains expressions the form can't represent
+- Expansion fields disabled with "filtering not yet supported" message
+
+**Server-side validation:**
+
+- `collectionHandler` returns 400 (not 500) for `ParseError`, `LexerError`,
+  and filter-related errors with OData error format
+
+**Modified files:**
+
+- `odata-filter-parser/src/serializer.ts` — New
+- `odata-filter-parser/src/index.ts` — Added export
+- `odata-filter-parser/tests/serializer.test.ts` — New (54 tests)
+- `ui/package.json` — Added `@reso/odata-filter-parser` dependency
+- `ui/Dockerfile` — Copy parser into Docker build
+- `ui/src/utils/filter-sync.ts` — New
+- `ui/src/pages/search-page.tsx` — Lifted state, validation
+- `ui/src/components/search-bar.tsx` — Controlled component rewrite
+- `ui/src/components/advanced-search.tsx` — Two-way sync
+- `server/src/odata/handlers.ts` — 400 for invalid filters
+
+### Test Summary
+
+| Package | Tests |
+|---------|------:|
+| `@reso/validation` | 91 |
+| `@reso/odata-filter-parser` | 151 |
+| `@reso/odata-client` | 101 |
+| `@reso/data-generator` | 71 |
+| `@reso/reference-server` | 126 |
+| `@reso/certification-add-edit` | 49 |
+| **Total** | **589** |
+
+---
+
 ## v0.0.12 — 2026-03-04
 
 ### $expand: Property Child Resources and Three FK Strategies
