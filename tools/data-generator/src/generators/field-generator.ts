@@ -82,6 +82,9 @@ export const generateFieldValue = (
   // Skip key fields — server generates these
   if (fieldName.endsWith('Key') && fieldName.length > 3) return undefined;
 
+  // Skip expansion fields — they reference other entities, loaded via $expand
+  if (field.isExpansion) return undefined;
+
   // Handle collection types
   if (field.isCollection || type.startsWith('Collection(')) {
     const innerType = type.replace(/^Collection\(/, '').replace(/\)$/, '');

@@ -90,9 +90,10 @@ const buildSelectColumns = (
 /**
  * Build SELECT column list for an expanded navigation property.
  * All columns are aliased as "nav_<NavName>.<ColumnName>".
+ * Excludes expansion fields — they are lazy, loaded via nested $expand.
  */
 const buildNavSelectColumns = (binding: NavigationPropertyBinding, alias: string): ReadonlyArray<string> =>
-  binding.targetFields.map(f => `${alias}."${f.fieldName}" AS "${alias}.${f.fieldName}"`);
+  binding.targetFields.filter(f => !f.isExpansion).map(f => `${alias}."${f.fieldName}" AS "${alias}.${f.fieldName}"`);
 
 /**
  * Build the LEFT JOIN clause for a navigation property.
@@ -247,18 +248,19 @@ export const createPostgresDal = (pool: pg.Pool): DataAccessLayer => {
     const values: unknown[] = [];
     let paramIndex = 1;
 
-    // Determine which fields to select
+    // Determine which fields to select (exclude expansion fields — they are lazy, loaded via $expand)
+    const dataFields = ctx.fields.filter(f => !f.isExpansion);
     let selectedFields: ReadonlyArray<ResoField>;
     if (options?.$select) {
       const requested = new Set(parseSelect(options.$select));
       requested.add(ctx.keyField);
-      selectedFields = ctx.fields.filter(f => requested.has(f.fieldName));
+      selectedFields = dataFields.filter(f => requested.has(f.fieldName));
     } else {
-      selectedFields = ctx.fields;
+      selectedFields = dataFields;
     }
 
     // Build SELECT columns for parent only
-    const parentSelectCols: ReadonlyArray<string> = buildSelectColumns(ctx.fields, ctx.keyField, options?.$select, parentAlias);
+    const parentSelectCols: ReadonlyArray<string> = buildSelectColumns(dataFields, ctx.keyField, options?.$select, parentAlias);
 
     // Resolve $expand bindings
     const expandBindings: Array<{
@@ -432,9 +434,10 @@ export const createPostgresDal = (pool: pg.Pool): DataAccessLayer => {
       return result.value[0];
     }
 
-    // Simple key lookup without expansion
+    // Simple key lookup without expansion (exclude expansion fields — lazy via $expand)
     const parentAlias = 'p';
-    const selectCols = buildSelectColumns(ctx.fields, ctx.keyField, options?.$select, parentAlias);
+    const dataFields = ctx.fields.filter(f => !f.isExpansion);
+    const selectCols = buildSelectColumns(dataFields, ctx.keyField, options?.$select, parentAlias);
 
     const sql = `SELECT ${selectCols.join(', ')} FROM "${ctx.resource}" ${parentAlias} WHERE ${parentAlias}."${ctx.keyField}" = $1`;
     const result = await pool.query(sql, [keyValue]);
@@ -442,8 +445,8 @@ export const createPostgresDal = (pool: pg.Pool): DataAccessLayer => {
     if (result.rows.length === 0) return undefined;
 
     const row = result.rows[0] as Record<string, unknown>;
-    const parent = extractParentColumns(row, parentAlias, ctx.fields);
-    return deserializeRow(parent, [...ctx.fields]);
+    const parent = extractParentColumns(row, parentAlias, dataFields);
+    return deserializeRow(parent, [...dataFields]);
   };
 
   const insert = async (ctx: ResourceContext, record: Readonly<Record<string, unknown>>): Promise<EntityRecord> => {

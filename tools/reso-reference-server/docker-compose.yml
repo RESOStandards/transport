@@ -172,6 +172,96 @@ services:
     profiles:
       - seed-mongo
 
+  # ---------------------------------------------------------------------------
+  # Compliance: Data Dictionary 2.0 (PostgreSQL)
+  # Usage: docker compose --profile compliance-dd up --build --exit-code-from compliance-dd
+  # ---------------------------------------------------------------------------
+  compliance-dd:
+    build:
+      context: compliance
+      dockerfile: Dockerfile.dd
+    entrypoint: ["/bin/sh", "/config/entrypoint-dd.sh"]
+    environment:
+      SERVER_URL: http://server:8080
+    volumes:
+      - ./compliance:/config:ro
+      - compliance-dd-results:/reso-certification-utils/results
+    depends_on:
+      server:
+        condition: service_healthy
+    profiles:
+      - compliance
+      - compliance-dd
+
+  # ---------------------------------------------------------------------------
+  # Compliance: Web API Core 2.0.0 (PostgreSQL)
+  # Usage: docker compose --profile compliance-core up --build --exit-code-from compliance-core
+  # ---------------------------------------------------------------------------
+  compliance-core:
+    build:
+      context: compliance
+      dockerfile: Dockerfile.core
+    entrypoint: ["/bin/sh", "/config/entrypoint-core.sh"]
+    environment:
+      SERVER_URL: http://server:8080
+      AUTH_TOKEN: admin-token
+    volumes:
+      - ./compliance:/config:ro
+      - compliance-core-results:/commander/build/certification
+    depends_on:
+      server:
+        condition: service_healthy
+    profiles:
+      - compliance
+      - compliance-core
+
+  # ---------------------------------------------------------------------------
+  # Compliance: Data Dictionary 2.0 (MongoDB)
+  # Usage: docker compose --profile compliance-dd-mongo up --build --exit-code-from compliance-dd-mongo
+  # ---------------------------------------------------------------------------
+  compliance-dd-mongo:
+    build:
+      context: compliance
+      dockerfile: Dockerfile.dd
+    entrypoint: ["/bin/sh", "/config/entrypoint-dd.sh"]
+    environment:
+      SERVER_URL: http://server-mongo:8080
+    volumes:
+      - ./compliance:/config:ro
+      - compliance-dd-mongo-results:/reso-certification-utils/results
+    depends_on:
+      server-mongo:
+        condition: service_healthy
+    profiles:
+      - compliance-mongo
+      - compliance-dd-mongo
+
+  # ---------------------------------------------------------------------------
+  # Compliance: Web API Core 2.0.0 (MongoDB)
+  # Usage: docker compose --profile compliance-core-mongo up --build --exit-code-from compliance-core-mongo
+  # ---------------------------------------------------------------------------
+  compliance-core-mongo:
+    build:
+      context: compliance
+      dockerfile: Dockerfile.core
+    entrypoint: ["/bin/sh", "/config/entrypoint-core.sh"]
+    environment:
+      SERVER_URL: http://server-mongo:8080
+      AUTH_TOKEN: admin-token
+    volumes:
+      - ./compliance:/config:ro
+      - compliance-core-mongo-results:/commander/build/certification
+    depends_on:
+      server-mongo:
+        condition: service_healthy
+    profiles:
+      - compliance-mongo
+      - compliance-core-mongo
+
 volumes:
   pgdata:
   mongodata:
+  compliance-dd-results:
+  compliance-core-results:
+  compliance-dd-mongo-results:
+  compliance-core-mongo-results:

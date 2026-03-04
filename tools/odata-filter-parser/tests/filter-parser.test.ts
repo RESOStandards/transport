@@ -122,6 +122,15 @@ describe('tokenize', () => {
     });
   });
 
+  it('tokenizes datetimeoffset literals with fractional seconds', () => {
+    const tokens = tokenize('ModifiedAt lt 2026-03-04T13:02:21.582Z');
+    expect(tokens[2]).toEqual({
+      type: 'literal_datetimeoffset',
+      value: '2026-03-04T13:02:21.582Z',
+      position: 14
+    });
+  });
+
   it('tokenizes guid literals', () => {
     const tokens = tokenize('ListingId eq 01234567-89ab-cdef-0123-456789abcdef');
     expect(tokens[2]).toEqual({

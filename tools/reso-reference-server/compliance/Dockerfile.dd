@@ -1,0 +1,40 @@
+# ---------------------------------------------------------------------------
+# Data Dictionary 2.0 compliance tool (reso-certification-utils v3.0.0)
+#
+# Multi-stage build:
+#   1. java-build  — clone + build web-api-commander JAR (Java dependency)
+#   2. node-build  — clone + install reso-certification-utils v3.0.0
+#   3. runtime     — minimal Node + JRE image with both artifacts
+# ---------------------------------------------------------------------------
+
+FROM node:slim AS java-build
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      ca-certificates git openjdk-17-jdk-headless \
+    && rm -rf /var/lib/apt/lists/*
+RUN git clone https://github.com/RESOStandards/web-api-commander \
+      --single-branch --depth 1
+WORKDIR /web-api-commander
+RUN ./gradlew --no-daemon clean jar
+
+FROM node:slim AS node-build
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      ca-certificates git \
+    && rm -rf /var/lib/apt/lists/*
+RUN git clone https://github.com/RESOStandards/reso-certification-utils \
+      --single-branch --branch v3.0.0 --depth 1
+WORKDIR /reso-certification-utils
+RUN npm install
+
+FROM node:slim
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      openjdk-17-jre-headless wget jq git \
+    && rm -rf /var/lib/apt/lists/*
+COPY --from=java-build /web-api-commander /web-api-commander
+COPY --from=node-build /reso-certification-utils /reso-certification-utils
+
+ENV WEB_API_COMMANDER_PATH=/web-api-commander
+ENV JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
+ENV NODE_OPTIONS=--max-old-space-size=8192
+
+WORKDIR /reso-certification-utils
+RUN npm link

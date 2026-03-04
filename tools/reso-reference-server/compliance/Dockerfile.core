@@ -1,0 +1,16 @@
+# ---------------------------------------------------------------------------
+# Web API Core 2.0.0 compliance tool (web-api-commander)
+#
+# Based on upstream GradleDockerfile with JDK 17 and helper utilities.
+# ---------------------------------------------------------------------------
+
+FROM eclipse-temurin:17-jdk
+RUN apt-get update && apt-get install -y --no-install-recommends wget jq \
+    && rm -rf /var/lib/apt/lists/*
+WORKDIR /commander
+RUN wget -qO- https://github.com/RESOStandards/web-api-commander/archive/refs/heads/main.tar.gz \
+    | tar xz --strip-components=1
+RUN ./gradlew --no-daemon clean jar
+
+ENTRYPOINT ["./gradlew", "--no-daemon"]
+CMD ["tasks"]

@@ -55,8 +55,5 @@ export const generateMediaRecords = (
       record.MediaCategory = i === 0 && photo ? 'Photo' : randomChoice(categoryValues).lookupValue;
     }
 
-    // Media type
-    record.MimeType = 'image/jpeg';
-
     return record;
   });

@@ -1,0 +1,23 @@
+{
+  "providerUoi": "TEST-RESO-SERVER",
+  "configs": [
+    {
+      "description": "Bearer Token",
+      "serviceRootUri": "SERVER_URL_PLACEHOLDER",
+      "recipientUoi": "TEST-RESO-SERVER",
+      "providerUsi": "TEST-RESO-SERVER",
+      "token": "admin-token"
+    },
+    {
+      "description": "Client Credentials",
+      "serviceRootUri": "SERVER_URL_PLACEHOLDER",
+      "recipientUoi": "TEST-RESO-SERVER",
+      "providerUsi": "TEST-RESO-SERVER",
+      "clientCredentials": {
+        "clientId": "reso-test-client",
+        "clientSecret": "reso-test-secret",
+        "tokenUri": "SERVER_URL_PLACEHOLDER/oauth/token?role=admin"
+      }
+    }
+  ]
+}

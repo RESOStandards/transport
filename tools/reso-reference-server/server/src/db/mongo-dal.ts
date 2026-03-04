@@ -75,6 +75,12 @@ const batchExpandNavigation = async (
     const collection = db.collection(binding.targetResource);
     const fk = binding.foreignKey;
 
+    // Build projection for target fields — exclude _id and expansion fields (lazy via $expand)
+    const navProjection: Record<string, number> = { _id: 0 };
+    for (const f of binding.targetFields) {
+      if (f.isExpansion) navProjection[f.fieldName] = 0;
+    }
+
     if (fk.strategy === 'parent-fk') {
       // To-one: parent has FK column referencing target's key.
       // Collect the FK values from parents, then look up target records by their key.
@@ -84,7 +90,7 @@ const batchExpandNavigation = async (
         navResults.set(binding.name, new Map());
         continue;
       }
-      const docs = await collection.find({ [binding.targetKeyField]: { $in: fkValues } }, { projection: { _id: 0 } }).toArray();
+      const docs = await collection.find({ [binding.targetKeyField]: { $in: fkValues } }, { projection: navProjection }).toArray();
 
       // Index by target key for O(1) lookup
       const byKey = new Map<string, Record<string, unknown>>();
@@ -115,7 +121,7 @@ const batchExpandNavigation = async (
       filter = { [targetCol]: { $in: parentKeys } };
     }
 
-    const docs = await collection.find(filter, { projection: { _id: 0 } }).toArray();
+    const docs = await collection.find(filter, { projection: navProjection }).toArray();
 
     // Group by parent key
     const grouped = new Map<string, Record<string, unknown>[]>();
@@ -167,12 +173,18 @@ export const createMongoDal = (db: Db): DataAccessLayer => {
     // Build MongoDB filter from $filter
     const filter = options?.$filter ? filterToMongo(options.$filter, ctx.fields).query : {};
 
-    // Build projection from $select (always suppress _id)
+    // Build projection from $select (always suppress _id and expansion fields — they are lazy, loaded via $expand)
+    const expansionFieldNames = new Set(ctx.fields.filter(f => f.isExpansion).map(f => f.fieldName));
     const projection: Record<string, number> = { _id: 0 };
     if (options?.$select) {
       const selectFields = options.$select.split(',').map(s => s.trim());
-      for (const f of selectFields) projection[f] = 1;
+      for (const f of selectFields) {
+        if (!expansionFieldNames.has(f)) projection[f] = 1;
+      }
       projection[ctx.keyField] = 1; // always include key
+    } else {
+      // Explicitly exclude expansion fields from default projection
+      for (const name of expansionFieldNames) projection[name] = 0;
     }
 
     // Start cursor
@@ -226,7 +238,11 @@ export const createMongoDal = (db: Db): DataAccessLayer => {
     options?: { readonly $select?: string; readonly $expand?: string }
   ): Promise<SingleResult> => {
     const collection = db.collection(ctx.resource);
-    const doc = await collection.findOne({ [ctx.keyField]: keyValue }, { projection: { _id: 0 } });
+    // Exclude expansion fields from projection — they are lazy, loaded via $expand
+    const expansionNames = new Set(ctx.fields.filter(f => f.isExpansion).map(f => f.fieldName));
+    const readProjection: Record<string, number> = { _id: 0 };
+    for (const name of expansionNames) readProjection[name] = 0;
+    const doc = await collection.findOne({ [ctx.keyField]: keyValue }, { projection: readProjection });
     if (!doc) return undefined;
 
     // Apply $select

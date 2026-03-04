@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { Router } from 'express';
+import express, { Router } from 'express';
 import type { AuthRole } from './config.js';
 import { registerDynamicToken } from './config.js';
 
@@ -13,6 +13,9 @@ import { registerDynamicToken } from './config.js';
  */
 export const createMockOAuthRouter = (): Router => {
   const router = Router();
+
+  // OAuth2 Client Credentials uses application/x-www-form-urlencoded
+  router.use(express.urlencoded({ extended: false }));
 
   router.post('/oauth/token', (req, res) => {
     const role = (req.query.role as AuthRole | undefined) ?? 'write';

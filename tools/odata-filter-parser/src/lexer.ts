@@ -53,7 +53,7 @@ const BOOLEANS = new Set(['true', 'false']);
 
 // Regex patterns for date/time/guid literals
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}/;
-const DATETIMEOFFSET_PATTERN = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})/;
+const DATETIMEOFFSET_PATTERN = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})/;
 const GUID_PATTERN = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/;
 const DURATION_PATTERN = /^duration'[^']*'/;
 

@@ -2,6 +2,75 @@
 
 ---
 
+## v0.0.15 — 2026-03-05
+
+### DD 2.0 Compliance and Expansion Field Fixes
+
+Achieved full RESO Data Dictionary 2.0 compliance (928 passed, 676 skipped, 0
+variations, 0 schema validation errors) and fixed several OData spec issues.
+
+**Metadata source:**
+
+- Replaced `server-metadata.json` with the `reso-certification-etl` DD 2.0
+  reference (`metadata-report.json` dated 2024-10-15), fixing 6 field name
+  casing issues (`ID` → `Id`) that caused compliance variations
+- Same 1,727 fields; 3,611 lookups (355 more than previous source)
+- Users can still pass their own metadata via the `METADATA_PATH` env var
+
+**Expansion field lazy loading:**
+
+- Server no longer returns expansion fields (e.g., HistoryTransactional,
+  SocialMedia) in responses unless explicitly requested via `$expand`
+- Fixed in both PostgreSQL and MongoDB DALs at all levels: parent queries,
+  readByKey, and navigation property sub-queries
+- 7 new tests verifying expansion field filtering behavior
+
+**Data generator DD 2.0 compliance:**
+
+- Removed `MimeType` from Media generator (not a DD 2.0 field)
+- Removed `ResourceName`/`ResourceRecordKey` from OpenHouse and Showing
+  generators (those resources use `ListingKey` for parent FK)
+- Fixed Showing field names: `ShowingStartTime` → `ShowingStartTimestamp`,
+  `ShowingEndTime` → `ShowingEndTimestamp`, removed `ShowingDate` and
+  `ShowingInstructions` (not in DD 2.0)
+- Added `isExpansion` flag to `ResoField` type; field generator skips
+  expansion fields
+
+**OData filter parser:**
+
+- Fixed DateTimeOffset lexer regex to handle fractional seconds
+  (e.g., `2026-03-04T13:02:21.582Z`) — previously only matched whole seconds
+
+**Other fixes:**
+
+- EDMX generator filters out expansion fields from NavigationProperty output
+- Mock OAuth endpoint now parses `application/x-www-form-urlencoded` bodies
+- OData-Version response header added to all responses
+- Docker Compose: added 4 compliance services (DD + Core × Postgres + MongoDB)
+  with profiles and result volumes
+
+**Compliance infrastructure (new `compliance/` directory):**
+
+- `Dockerfile.dd` — reso-certification-utils v3.0.0 (multi-stage build)
+- `Dockerfile.core` — web-api-commander (Gradle build)
+- `dd-config.json` — DD 2.0 config with bearer token and client credentials
+- `entrypoint-dd.sh` — wait for server, run DD tests (supports `RECORD_LIMIT`)
+- `entrypoint-core.sh` — wait for server, generate RESOScripts, run Core tests
+
+### Test Summary
+
+| Package | Tests |
+|---------|------:|
+| `@reso/validation` | 91 |
+| `@reso/odata-filter-parser` | 152 |
+| `@reso/odata-client` | 101 |
+| `@reso/data-generator` | 73 |
+| `@reso/reference-server` | 137 |
+| `@reso/certification-add-edit` | 49 |
+| **Total** | **603** |
+
+---
+
 ## v0.0.14 — 2026-03-04
 
 ### EDMX Metadata: EntityContainer and Nullable Fixes

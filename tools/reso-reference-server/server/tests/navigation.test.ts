@@ -1,6 +1,6 @@
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { loadMetadata } from '../src/metadata/loader.js';
+import { getFieldsForResource, loadMetadata } from '../src/metadata/loader.js';
 import { TARGET_RESOURCES } from '../src/metadata/types.js';
 import { buildNavigationBindings } from '../src/odata/router.js';
 
@@ -175,5 +175,104 @@ describe('buildNavigationBindings', () => {
     expect(collectionNames).toContain('GreenBuildingVerification');
     expect(collectionNames).toContain('PowerProduction');
     expect(collectionNames).toContain('UnitTypes');
+  });
+});
+
+describe('expansion field filtering', () => {
+  it('Property has expansion fields in its metadata', async () => {
+    const metadata = await loadMetadata(metadataPath);
+    const fields = getFieldsForResource(metadata, 'Property');
+    const expansionFields = fields.filter(f => f.isExpansion);
+
+    expect(expansionFields.length).toBeGreaterThan(0);
+    expect(expansionFields.every(f => f.isExpansion === true)).toBe(true);
+  });
+
+  it('expansion fields are all collection or to-one navigation types', async () => {
+    const metadata = await loadMetadata(metadataPath);
+    const fields = getFieldsForResource(metadata, 'Property');
+    const expansionFields = fields.filter(f => f.isExpansion);
+
+    for (const field of expansionFields) {
+      // Expansion fields must have a typeName referencing another entity type
+      expect(field.typeName).toBeDefined();
+      // Their type should not be a primitive Edm.* type
+      expect(field.type).not.toMatch(/^Edm\./);
+    }
+  });
+
+  it('non-expansion fields have no isExpansion flag', async () => {
+    const metadata = await loadMetadata(metadataPath);
+    const fields = getFieldsForResource(metadata, 'Property');
+    const dataFields = fields.filter(f => !f.isExpansion);
+
+    expect(dataFields.length).toBeGreaterThan(0);
+    // Data fields should have primitive or enum types
+    for (const field of dataFields) {
+      expect(field.isExpansion).toBeFalsy();
+    }
+  });
+
+  it('filtering out expansion fields excludes HistoryTransactional and SocialMedia', async () => {
+    const metadata = await loadMetadata(metadataPath);
+    const fields = getFieldsForResource(metadata, 'Property');
+    const dataFields = fields.filter(f => !f.isExpansion);
+    const dataFieldNames = new Set(dataFields.map(f => f.fieldName));
+
+    // These expansion fields should NOT be in the data fields
+    expect(dataFieldNames.has('HistoryTransactional')).toBe(false);
+    expect(dataFieldNames.has('SocialMedia')).toBe(false);
+
+    // But they ARE in the full field list
+    const allFieldNames = new Set(fields.map(f => f.fieldName));
+    expect(allFieldNames.has('HistoryTransactional')).toBe(true);
+    expect(allFieldNames.has('SocialMedia')).toBe(true);
+  });
+
+  it('filtering out expansion fields keeps all regular data fields', async () => {
+    const metadata = await loadMetadata(metadataPath);
+    const fields = getFieldsForResource(metadata, 'Property');
+    const dataFields = fields.filter(f => !f.isExpansion);
+    const expansionFields = fields.filter(f => f.isExpansion);
+
+    // All fields should be accounted for
+    expect(dataFields.length + expansionFields.length).toBe(fields.length);
+
+    // Standard data fields should still be present
+    const dataFieldNames = new Set(dataFields.map(f => f.fieldName));
+    expect(dataFieldNames.has('ListingKey')).toBe(true);
+    expect(dataFieldNames.has('ListPrice')).toBe(true);
+    expect(dataFieldNames.has('City')).toBe(true);
+    expect(dataFieldNames.has('ModificationTimestamp')).toBe(true);
+  });
+
+  it('every expansion field on Property references a known entity type', async () => {
+    const metadata = await loadMetadata(metadataPath);
+    const fields = getFieldsForResource(metadata, 'Property');
+    const expansionFields = fields.filter(f => f.isExpansion);
+
+    for (const field of expansionFields) {
+      expect(field.typeName).toBeDefined();
+      // typeName should reference a resource name (e.g., Media, Member, HistoryTransactional)
+      expect(typeof field.typeName).toBe('string');
+      expect(field.typeName!.length).toBeGreaterThan(0);
+    }
+  });
+
+  it('expansion fields not in TARGET_RESOURCES are excluded from navigation bindings', async () => {
+    const metadata = await loadMetadata(metadataPath);
+    const fields = getFieldsForResource(metadata, 'Property');
+    const expansionFields = fields.filter(f => f.isExpansion);
+    const bindings = buildNavigationBindings('Property', metadata, TARGET_RESOURCES);
+    const bindingNames = new Set(bindings.map(b => b.name));
+
+    // Some expansion fields reference types outside TARGET_RESOURCES
+    const nonTargetExpansions = expansionFields.filter(f => f.typeName && !TARGET_RESOURCES.includes(f.typeName));
+    expect(nonTargetExpansions.length).toBeGreaterThan(0);
+
+    // None of these should have navigation bindings
+    for (const field of nonTargetExpansions) {
+      expect(bindingNames.has(field.fieldName)).toBe(false);
+    }
   });
 });

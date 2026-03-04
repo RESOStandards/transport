@@ -156,6 +156,78 @@ OData Data Aggregation Extension: `groupby`, `aggregate`, `filter`,
 
 ## Infrastructure
 
+### #17 — Compliance Testing: Docker Compose + GitHub Actions
+**Package:** `reso-reference-server`
+
+Add external RESO compliance tools as Docker Compose services that run against the
+reference server. Both tools test against both Postgres and MongoDB backends with
+bearer token and client credentials auth.
+
+**Tools:**
+1. **Data Dictionary 2.0** (`reso-certification-utils` v3.0.0) — Node.js + embedded Java.
+   Validates metadata, field mappings, data availability, JSON schemas.
+2. **Web API Core 2.0.0** (`web-api-commander`) — Java/Gradle. Validates OData queries,
+   filtering, sorting, metadata compliance. Needs a RESOScript config per resource.
+
+**Deliverables:**
+- `compliance/` directory with Dockerfiles, configs, entrypoint scripts
+- Dynamic RESOScript generation from live server data (per resource)
+- 4 Docker Compose services (DD + Core × Postgres + MongoDB)
+- Fix mock OAuth endpoint for urlencoded body parsing
+- GitHub Actions workflow (`.github/workflows/compliance.yml`)
+
+**Target resources:** Property, Member, Office, Media, OpenHouse, Showing,
+PropertyGreenVerification, PropertyPowerProduction, PropertyRooms, PropertyUnitTypes
+
+### ~~#18 — Fix DD 2.0 Compliance Test Failures~~
+**Package:** `reso-reference-server`
+**Status:** Closed
+
+~~DD 2.0 compliance tests now pass: 928 passed, 676 skipped, 0 variations.~~
+
+**Fixes applied:**
+- ~~Replaced `server-metadata.json` with `reso-certification-etl` DD 2.0 reference (fixes 6 `ID`→`Id` casing issues)~~
+- ~~Fixed expansion fields (HistoryTransactional, SocialMedia) returned without `$expand` — both PostgreSQL and MongoDB DALs~~
+- ~~Fixed data generator non-DD fields: removed MimeType, OpenHouse/Showing ResourceName/ResourceRecordKey, fixed Showing field names to DD 2.0 (ShowingStartTimestamp, ShowingEndTimestamp)~~
+- ~~Fixed DateTimeOffset fractional seconds in filter parser (replication phase `$filter` queries)~~
+
+**Remaining post-test issue:** Client credentials replication requires HTTPS tokenUri (tracked in #20)
+
+### #19 — Fix Web API Core 2.0.0 Compliance Test Failures
+**Package:** `reso-reference-server`
+
+Web API Core tests pass metadata validation, service document, `$select`, `$top`,
+`$skip`, `$count`, and many `$filter`/`$orderby` scenarios. Remaining failures:
+
+**Issues:**
+1. **Enum filter parsing** — Commander sends filters like
+   `ShowingStatus eq 'OnHold'` but server's `$filter` parser rejects the lookup
+   value as an unknown field name (400 response)
+2. **Missing `MultipleValueLookupField`** for resources without collection enum
+   fields (Showing, OpenHouse, etc.) — Commander fails when the parameter is blank
+3. **400 vs 404 response codes** — Commander expects 400 for invalid queries but
+   server returns 404 in some cases
+4. **`Unexpected token 'gt'`** — Possible URL encoding issue in filter expressions
+   with `gt`/`ge`/`lt`/`le` operators
+
+### #20 — Client Credentials Compliance: HTTPS Token URI
+**Package:** `reso-reference-server`
+
+The `reso-certification-utils` client credentials replication phase requires
+`tokenUri` to be a valid HTTPS URL. The mock OAuth endpoint uses HTTP.
+
+**Options:**
+1. Add a self-signed TLS certificate to the Docker Compose setup
+2. Configure the compliance tool to skip HTTPS validation
+3. Use a reverse proxy (nginx/traefik) with TLS termination
+
+### #21 — Use services.reso.org/metadata as Default Metadata Source
+**Package:** `reso-reference-server`
+
+Currently the server uses a bundled `server-metadata.json` from `reso-certification-etl`.
+Once `services.reso.org/metadata` is synced with the DD 2.0 reference, switch to
+fetching metadata from that endpoint at startup (with the bundled file as fallback).
+
 ### #12 — CI/CD Pipeline
 Set up GitHub Actions for:
 - Build all packages in dependency order

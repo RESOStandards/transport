@@ -57,9 +57,15 @@ const generateNavigationProperty = (field: ResoField): string => {
 };
 
 /** Generates an EDMX EntityType element for a resource. */
-const generateEntityType = (resourceName: string, keyField: string, fields: ReadonlyArray<ResoField>): string => {
+const generateEntityType = (
+  resourceName: string,
+  keyField: string,
+  fields: ReadonlyArray<ResoField>,
+  targetResourceSet: ReadonlySet<string>
+): string => {
   const regularFields = fields.filter(f => !f.isExpansion);
-  const expansionFields = fields.filter(f => f.isExpansion);
+  // Only emit NavigationProperty for types that exist in the schema
+  const expansionFields = fields.filter(f => f.isExpansion && f.typeName && targetResourceSet.has(f.typeName));
 
   const properties = regularFields.map(generateProperty).join('\n');
   const navProperties = expansionFields.map(generateNavigationProperty).join('\n');
@@ -106,7 +112,7 @@ export const generateEdmx = (metadata: ResoMetadata, targetResources: ReadonlyAr
     })
     .filter((d): d is NonNullable<typeof d> => d !== null);
 
-  const entityTypes = resourceData.map(d => generateEntityType(d.resource, d.keyField, d.fields)).join('\n');
+  const entityTypes = resourceData.map(d => generateEntityType(d.resource, d.keyField, d.fields, targetResourceSet)).join('\n');
 
   const entitySets = resourceData.map(d => generateEntitySet(d.resource, d.fields, targetResourceSet)).join('\n');
 

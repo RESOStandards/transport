@@ -17,15 +17,13 @@ export const generateOpenHouseRecords = (
   fields: ReadonlyArray<ResoField>,
   lookups: Readonly<Record<string, ReadonlyArray<ResoLookup>>>,
   count: number,
-  parentResource?: string,
+  _parentResource?: string,
   parentKey?: string
 ): ReadonlyArray<Record<string, unknown>> =>
   Array.from({ length: count }, (_, i) => {
     const record = generateRecord(fields, lookups, i);
 
-    // Link to parent via RESO FK convention
-    if (parentResource) record.ResourceName = parentResource;
-    if (parentKey) record.ResourceRecordKey = parentKey;
+    // Link to parent Property via ListingKey
     if (parentKey) record.ListingKey = parentKey;
 
     // Schedule open houses in the near future

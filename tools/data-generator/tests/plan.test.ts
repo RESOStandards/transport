@@ -21,8 +21,7 @@ const SAMPLE_FIELDS_BY_RESOURCE: Record<string, ReadonlyArray<ResoField>> = {
   OpenHouse: [
     makeField('OpenHouse', 'OpenHouseKey'),
     makeField('OpenHouse', 'OpenHouseDate', 'Edm.Date'),
-    makeField('OpenHouse', 'ResourceName'),
-    makeField('OpenHouse', 'ResourceRecordKey')
+    makeField('OpenHouse', 'ListingKey')
   ],
   Member: [makeField('Member', 'MemberKey'), makeField('Member', 'MemberFirstName'), makeField('Member', 'MemberLastName')],
   Office: [makeField('Office', 'OfficeKey'), makeField('Office', 'OfficeName')]
@@ -41,6 +40,10 @@ describe('getRelatedResources', () => {
   it('does not include the parent resource itself', () => {
     const related = getRelatedResources('Media', SAMPLE_FIELDS_BY_RESOURCE);
     expect(related).not.toContain('Media');
+  });
+
+  it('discovers OpenHouse as related to Property via ListingKey', () => {
+    const related = getRelatedResources('Property', SAMPLE_FIELDS_BY_RESOURCE);
     expect(related).toContain('OpenHouse');
   });
 

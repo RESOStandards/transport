@@ -65,7 +65,7 @@ const MEDIA_FIELDS: ResoField[] = [
   makeField('ShortDescription', 'Edm.String', { resourceName: 'Media' }),
   makeField('Order', 'Edm.Int32', { resourceName: 'Media' }),
   makeField('MediaCategory', 'org.reso.metadata.enums.MediaCategory', { resourceName: 'Media' }),
-  makeField('MimeType', 'Edm.String', { resourceName: 'Media' }),
+  makeField('MediaType', 'org.reso.metadata.enums.MediaType', { resourceName: 'Media' }),
   makeField('ResourceName', 'org.reso.metadata.enums.ResourceName', { resourceName: 'Media' }),
   makeField('ResourceRecordKey', 'Edm.String', { resourceName: 'Media' })
 ];
@@ -76,18 +76,14 @@ const OPEN_HOUSE_FIELDS: ResoField[] = [
   makeField('OpenHouseStartTime', 'Edm.TimeOfDay', { resourceName: 'OpenHouse' }),
   makeField('OpenHouseEndTime', 'Edm.TimeOfDay', { resourceName: 'OpenHouse' }),
   makeField('OpenHouseRemarks', 'Edm.String', { resourceName: 'OpenHouse' }),
-  makeField('ResourceName', 'org.reso.metadata.enums.ResourceName', { resourceName: 'OpenHouse' }),
-  makeField('ResourceRecordKey', 'Edm.String', { resourceName: 'OpenHouse' })
+  makeField('ListingKey', 'Edm.String', { resourceName: 'OpenHouse' })
 ];
 
 const SHOWING_FIELDS: ResoField[] = [
   makeField('ShowingKey', 'Edm.String', { resourceName: 'Showing' }),
-  makeField('ShowingDate', 'Edm.Date', { resourceName: 'Showing' }),
-  makeField('ShowingStartTime', 'Edm.TimeOfDay', { resourceName: 'Showing' }),
-  makeField('ShowingEndTime', 'Edm.TimeOfDay', { resourceName: 'Showing' }),
-  makeField('ShowingInstructions', 'Edm.String', { resourceName: 'Showing' }),
-  makeField('ResourceName', 'org.reso.metadata.enums.ResourceName', { resourceName: 'Showing' }),
-  makeField('ResourceRecordKey', 'Edm.String', { resourceName: 'Showing' })
+  makeField('ShowingStartTimestamp', 'Edm.DateTimeOffset', { resourceName: 'Showing' }),
+  makeField('ShowingEndTimestamp', 'Edm.DateTimeOffset', { resourceName: 'Showing' }),
+  makeField('ListingKey', 'Edm.String', { resourceName: 'Showing' })
 ];
 
 const SAMPLE_LOOKUPS: Record<string, ReadonlyArray<ResoLookup>> = {
@@ -233,9 +229,9 @@ describe('generateMediaRecords', () => {
     expect(records[0].MediaURL as string).toContain('https://');
   });
 
-  it('sets MimeType', () => {
+  it('does not include non-metadata fields', () => {
     const records = generateMediaRecords(MEDIA_FIELDS, SAMPLE_LOOKUPS, 1);
-    expect(records[0].MimeType).toBe('image/jpeg');
+    expect(records[0]).not.toHaveProperty('MimeType');
   });
 });
 
@@ -245,10 +241,11 @@ describe('generateOpenHouseRecords', () => {
     expect(records).toHaveLength(2);
   });
 
-  it('sets ResourceName and ResourceRecordKey for parent linkage', () => {
+  it('sets ListingKey for parent linkage', () => {
     const records = generateOpenHouseRecords(OPEN_HOUSE_FIELDS, {}, 1, 'Property', 'prop-key-1');
-    expect(records[0].ResourceName).toBe('Property');
-    expect(records[0].ResourceRecordKey).toBe('prop-key-1');
+    expect(records[0].ListingKey).toBe('prop-key-1');
+    expect(records[0]).not.toHaveProperty('ResourceName');
+    expect(records[0]).not.toHaveProperty('ResourceRecordKey');
   });
 
   it('generates future dates', () => {
@@ -274,16 +271,28 @@ describe('generateShowingRecords', () => {
     expect(records).toHaveLength(3);
   });
 
-  it('sets ResourceName and ResourceRecordKey for parent linkage', () => {
+  it('sets ListingKey for parent linkage', () => {
     const records = generateShowingRecords(SHOWING_FIELDS, {}, 1, 'Property', 'prop-key-2');
-    expect(records[0].ResourceName).toBe('Property');
-    expect(records[0].ResourceRecordKey).toBe('prop-key-2');
+    expect(records[0].ListingKey).toBe('prop-key-2');
+    expect(records[0]).not.toHaveProperty('ResourceName');
+    expect(records[0]).not.toHaveProperty('ResourceRecordKey');
   });
 
-  it('generates showing instructions', () => {
+  it('generates DD 2.0 timestamp fields', () => {
     const records = generateShowingRecords(SHOWING_FIELDS, {}, 1);
-    expect(typeof records[0].ShowingInstructions).toBe('string');
-    expect((records[0].ShowingInstructions as string).length).toBeGreaterThan(0);
+    expect(records[0].ShowingStartTimestamp).toMatch(/^\d{4}-\d{2}-\d{2}T/);
+    expect(records[0].ShowingEndTimestamp).toMatch(/^\d{4}-\d{2}-\d{2}T/);
+    const start = new Date(records[0].ShowingStartTimestamp as string);
+    const end = new Date(records[0].ShowingEndTimestamp as string);
+    expect(end.getTime()).toBeGreaterThan(start.getTime());
+  });
+
+  it('does not include non-DD 2.0 fields', () => {
+    const records = generateShowingRecords(SHOWING_FIELDS, {}, 1);
+    expect(records[0]).not.toHaveProperty('ShowingDate');
+    expect(records[0]).not.toHaveProperty('ShowingStartTime');
+    expect(records[0]).not.toHaveProperty('ShowingEndTime');
+    expect(records[0]).not.toHaveProperty('ShowingInstructions');
   });
 });
 

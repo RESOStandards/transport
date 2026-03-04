@@ -81,11 +81,13 @@ const main = async (): Promise<void> => {
   const app = express();
   app.use(express.json({ limit: '10mb' }));
 
-  // CORS middleware
+  // OData version + CORS headers
   app.use((_req, res, next) => {
+    res.set('OData-Version', '4.0');
     res.set('Access-Control-Allow-Origin', '*');
     res.set('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS');
     res.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, Prefer, OData-Version');
+    res.set('Access-Control-Expose-Headers', 'OData-Version');
     if (_req.method === 'OPTIONS') {
       res.status(204).send();
       return;
