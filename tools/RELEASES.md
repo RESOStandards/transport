@@ -2,6 +2,24 @@
 
 ---
 
+## v0.0.11 — 2026-03-03
+
+### UI: Remove "Other" Group for Ungrouped Resources
+
+Resources without field groupings defined in the Data Dictionary Google Sheet
+(Member, Office, Media, OpenHouse, Showing) now display fields as a flat
+alphabetical list instead of wrapping them in a collapsible "Other" section.
+Resources with groupings (Property) are unchanged — ungrouped fields still
+appear in an "Other" section.
+
+**Modified files:**
+
+- `detail-page.tsx` — Render flat field table when `grouped.size === 0`
+- `record-form.tsx` — Render flat field grid when no groups exist
+- `advanced-search.tsx` — Render flat field rows when no groups exist
+
+---
+
 ## v0.0.10 — 2026-03-03
 
 ### MongoDB Document Store Backend

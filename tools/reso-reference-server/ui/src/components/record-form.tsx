@@ -170,9 +170,10 @@ export const RecordForm = ({
         </FieldGroupSection>
       ))}
 
-      {/* Ungrouped fields */}
-      {ungrouped.length > 0 && (
-        <FieldGroupSection title="Other" defaultOpen={sortedGroups.length === 0}>
+      {/* Ungrouped fields — flat list when no groupings exist, "Other" section otherwise */}
+      {ungrouped.length > 0 && sortedGroups.length === 0 && renderFieldGrid(ungrouped)}
+      {ungrouped.length > 0 && sortedGroups.length > 0 && (
+        <FieldGroupSection title="Other" defaultOpen>
           {renderFieldGrid(ungrouped)}
         </FieldGroupSection>
       )}

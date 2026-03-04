@@ -169,8 +169,13 @@ export const DetailPage = () => {
         </FieldGroupSection>
       ))}
 
-      {/* Ungrouped fields */}
-      {ungrouped.length > 0 && (
+      {/* Ungrouped fields — flat list when no groupings exist, "Other" section otherwise */}
+      {ungrouped.length > 0 && grouped.size === 0 && (
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+          {renderFieldTable(ungrouped)}
+        </div>
+      )}
+      {ungrouped.length > 0 && grouped.size > 0 && (
         <FieldGroupSection title="Other" defaultOpen>
           {renderFieldTable(ungrouped)}
         </FieldGroupSection>

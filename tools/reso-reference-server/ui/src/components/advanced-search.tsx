@@ -172,7 +172,11 @@ export const AdvancedSearch = ({ resource, fields, lookups, fieldGroups, onSearc
         </FieldGroupSection>
       ))}
 
-      {ungrouped.length > 0 && <FieldGroupSection title="Other">{ungrouped.map(renderFieldRow)}</FieldGroupSection>}
+      {/* Ungrouped fields — flat list when no groupings exist, "Other" section otherwise */}
+      {ungrouped.length > 0 && sortedGroups.length === 0 && <div>{ungrouped.map(renderFieldRow)}</div>}
+      {ungrouped.length > 0 && sortedGroups.length > 0 && (
+        <FieldGroupSection title="Other">{ungrouped.map(renderFieldRow)}</FieldGroupSection>
+      )}
 
       <div className="flex gap-2 pt-2">
         <button type="submit" className="px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700">

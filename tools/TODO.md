@@ -22,6 +22,21 @@ alternative backend, selectable via `DB_BACKEND` environment variable.~~
 - ~~Docker Compose profile for MongoDB~~
 - ~~Documentation: server README, reference-server README, module READMEs~~
 
+### ~~#14 — UI: Remove "Other" Group When No Groupings Are Defined~~
+**Package:** `reso-reference-server/ui`
+**Status:** Closed
+
+~~When a resource has no field groupings defined in the Data Dictionary Google Sheet
+(e.g., Member, Office, Media, OpenHouse, Showing), all fields end up in a
+collapsible "Other" section. Instead, display them as a flat alphabetical list
+without any group wrapper. Only use the "Other" section when a resource HAS
+groupings defined (like Property) and some fields fall outside those groups.~~
+
+~~Affected files:~~
+- ~~`ui/src/pages/detail-page.tsx`~~
+- ~~`ui/src/components/record-form.tsx`~~
+- ~~`ui/src/components/advanced-search.tsx`~~
+
 ### #2 — Multi-Level $expand Support
 **Package:** `reso-reference-server`, `odata-client`
 
