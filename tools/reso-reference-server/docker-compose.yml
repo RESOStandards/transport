@@ -134,6 +134,8 @@ services:
       dockerfile: reso-reference-server/ui/Dockerfile
     ports:
       - "5173:80"
+    environment:
+      API_UPSTREAM: server-mongo:8080
     depends_on:
       - server-mongo
     restart: unless-stopped

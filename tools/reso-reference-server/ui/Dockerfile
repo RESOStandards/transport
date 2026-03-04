@@ -19,57 +19,12 @@ RUN npm run build
 FROM nginx:alpine
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# nginx config to proxy API requests to the server container and handle SPA routing
-#
-# Routing strategy: the UI client sends "Accept: application/json" on all API
-# calls, while browser navigation sends "Accept: text/html". We use this header
-# to distinguish OData API requests from SPA page loads on the same paths.
-RUN cat > /etc/nginx/conf.d/default.conf << 'EOF'
-server {
-    listen 80;
+# nginx config template — API_UPSTREAM is substituted at container startup
+# by the nginx entrypoint's envsubst mechanism (20-envsubst-on-templates.sh).
+# Default: "server:8080" (matches the default docker-compose service name).
+# Override via environment variable to point at a different backend service.
+ENV API_UPSTREAM=server:8080
 
-    # Named location for proxying to the OData server
-    location @api {
-        internal;
-        proxy_pass http://server:8080;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-    }
-
-    # Non-resource API endpoints — always proxy
-    location ~ ^/(ui-config|field-groups|api|admin|health|images|oauth|\$metadata) {
-        proxy_pass http://server:8080;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-    }
-
-    # OData entity requests with key syntax — always proxy
-    # Matches: /Property('key'), /Property(%28'key'%29)
-    location ~ ^/(Property|Member|Office|Media|OpenHouse|Showing)(\(|%28) {
-        proxy_pass http://server:8080;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-    }
-
-    # Bare resource collection paths — proxy if Accept: application/json, SPA otherwise
-    # Uses error_page + return trick to safely branch inside nginx (avoids if + proxy_pass)
-    location ~ ^/(Property|Member|Office|Media|OpenHouse|Showing)$ {
-        error_page 418 = @api;
-        if ($http_accept ~* "application/json") {
-            return 418;
-        }
-        root /usr/share/nginx/html;
-        try_files /index.html =404;
-    }
-
-    # SPA fallback — serve index.html for all other routes
-    # Handles: /Property/key, /Property/edit/key, /Property/add, etc.
-    location / {
-        root /usr/share/nginx/html;
-        index index.html;
-        try_files $uri $uri/ /index.html;
-    }
-}
-EOF
+COPY reso-reference-server/ui/nginx.conf.template /etc/nginx/templates/default.conf.template
 
 EXPOSE 80

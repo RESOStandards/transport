@@ -1,0 +1,45 @@
+server {
+    listen 80;
+
+    # Named location for proxying to the OData server
+    location @api {
+        internal;
+        proxy_pass http://${API_UPSTREAM};
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+
+    # Non-resource API endpoints — always proxy
+    location ~ ^/(ui-config|field-groups|api|admin|health|images|oauth|\$metadata) {
+        proxy_pass http://${API_UPSTREAM};
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+
+    # OData entity requests with key syntax — always proxy
+    # Matches: /Property('key'), /Property(%28'key'%29)
+    location ~ ^/(Property|Member|Office|Media|OpenHouse|Showing)(\(|%28) {
+        proxy_pass http://${API_UPSTREAM};
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+
+    # Bare resource collection paths — proxy if Accept: application/json, SPA otherwise
+    # Uses error_page + return trick to safely branch inside nginx (avoids if + proxy_pass)
+    location ~ ^/(Property|Member|Office|Media|OpenHouse|Showing)$ {
+        error_page 418 = @api;
+        if ($http_accept ~* "application/json") {
+            return 418;
+        }
+        root /usr/share/nginx/html;
+        try_files /index.html =404;
+    }
+
+    # SPA fallback — serve index.html for all other routes
+    # Handles: /Property/key, /Property/edit/key, /Property/add, etc.
+    location / {
+        root /usr/share/nginx/html;
+        index index.html;
+        try_files $uri $uri/ /index.html;
+    }
+}
