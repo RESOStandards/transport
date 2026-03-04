@@ -4,6 +4,10 @@ A metadata-driven OData 4.01 reference server for the [RESO Data Dictionary](htt
 
 ## Quick Start (Docker)
 
+The server supports two database backends: **PostgreSQL** (default) and **MongoDB**. Each has its own Docker Compose profile.
+
+### PostgreSQL (default)
+
 ```bash
 cd tools/reso-reference-server
 docker compose up -d
@@ -11,17 +15,49 @@ docker compose up -d
 
 This starts:
 - **UI** at `http://localhost:5173` (React SPA with nginx reverse proxy)
-- **Server** at `http://localhost:8080` (OData API)
+- **Server** at `http://localhost:8080` (OData API, `DB_BACKEND=postgres`)
 - **PostgreSQL** at `localhost:5432`
 
-### Seed with Test Data
+Seed with test data:
 
 ```bash
 docker compose --profile seed up seed
 ```
 
-This generates 50 Property records (with Media, OpenHouse, Showing), 20 Members,
-and 10 Offices using the built-in data generator.
+### MongoDB
+
+```bash
+cd tools/reso-reference-server
+docker compose --profile mongodb up -d mongodb server-mongo ui-mongo
+```
+
+This starts:
+- **UI** at `http://localhost:5173`
+- **Server** at `http://localhost:8080` (OData API, `DB_BACKEND=mongodb`)
+- **MongoDB** at `localhost:27017`
+
+Seed with test data:
+
+```bash
+docker compose --profile seed-mongo up seed-mongo
+```
+
+### Switching Between Backends
+
+Stop the current backend and start the other:
+
+```bash
+# Stop everything and remove volumes
+docker compose --profile mongodb down -v
+
+# Start with PostgreSQL
+docker compose up -d
+docker compose --profile seed up seed
+
+# — or start with MongoDB —
+docker compose --profile mongodb up -d mongodb server-mongo ui-mongo
+docker compose --profile seed-mongo up seed-mongo
+```
 
 ### Verify
 
@@ -46,13 +82,14 @@ curl -X POST http://localhost:8080/Property \
   -d '{"ListPrice": 250000, "City": "Austin", "StateOrProvince": "TX", "PostalCode": "78701", "Country": "US", "BedroomsTotal": 3}'
 ```
 
+Seeding generates 50 Property records (with Media, OpenHouse, Showing), 20 Members, and 10 Offices using the built-in data generator.
+
 ### Reseed (drop existing data)
 
 ```bash
-docker compose down -v
-docker compose up -d
-docker compose --profile seed rm -f seed
-docker compose --profile seed up seed
+docker compose down -v        # or: docker compose --profile mongodb down -v
+docker compose up -d          # start your chosen backend
+docker compose --profile seed up seed   # or: --profile seed-mongo up seed-mongo
 ```
 
 ## Architecture
@@ -67,10 +104,12 @@ reso-reference-server/
 
 The server is **metadata-driven**: it reads `server-metadata.json` (RESO Data Dictionary 2.0) at startup and dynamically:
 
-1. Creates PostgreSQL tables for each target resource (Property, Member, Office, Media, OpenHouse, Showing)
+1. Creates database schema (PostgreSQL tables or MongoDB collections/indexes) for each target resource
 2. Registers OData CRUD routes with proper headers, annotations, and error format
 3. Generates EDMX XML metadata at `/$metadata`
 4. Generates OpenAPI 3.0 documentation at `/api-docs`
+
+The `DataAccessLayer` interface abstracts persistence, allowing the same OData handlers to work with either PostgreSQL or MongoDB. See [server/README.md](server/README.md) for backend-specific details.
 
 ## Supported Resources
 

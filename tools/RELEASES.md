@@ -2,6 +2,52 @@
 
 ---
 
+## v0.0.10 — 2026-03-03
+
+### MongoDB Document Store Backend
+
+Added MongoDB as a fully functional alternative database backend, selectable via
+the `DB_BACKEND` environment variable.
+
+**New files:**
+
+- `filter-to-mongo.ts` — OData `$filter` AST to MongoDB query translator with
+  two modes: native query operators (index-friendly) for simple comparisons, and
+  `$expr` aggregation expressions for functions and arithmetic
+- `filter-to-mongo.test.ts` — 33 tests covering all comparison, logical, string,
+  date, math, and arithmetic operators
+- `mongo-dal.ts` — Production MongoDB `DataAccessLayer` adapter with cursor
+  pagination and batch `$in` queries for `$expand` resolution
+- `mongo-init.ts` — Collection and index setup (unique PK index per resource,
+  compound FK index for child collections)
+
+**Modified files:**
+
+- `config.ts` — Added `DB_BACKEND` (`postgres` | `mongodb`) and `MONGODB_URL`
+  environment variables
+- `index.ts` — Conditional DAL instantiation via dynamic imports (mongodb package
+  only loaded when `DB_BACKEND=mongodb`)
+- `docker-compose.yml` — Added `mongodb` profile with `mongodb`, `server-mongo`,
+  `ui-mongo`, and `seed-mongo` services
+
+**Deleted:** `mongo-dal.example.ts` — superseded by production `mongo-dal.ts`
+
+**Docker usage:**
+
+- PostgreSQL (unchanged): `docker compose up -d`
+- MongoDB: `docker compose --profile mongodb up -d mongodb server-mongo ui-mongo`
+- MongoDB seed: `docker compose --profile seed-mongo up seed-mongo`
+
+### Documentation
+
+- Updated server README with MongoDB backend docs (env vars, project structure,
+  DAL adapter comparison, filter translation, MongoDB-specific behavior)
+- Updated reference-server README with Docker instructions for both backends
+- Created READMEs for `@reso/validation`, `@reso/data-generator`, and
+  `@reso/certification-test-runner`
+
+---
+
 ## v0.0.9 — 2026-03-03
 
 ### Server-Driven Pagination with @odata.nextLink

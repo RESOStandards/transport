@@ -1,4 +1,8 @@
 services:
+  # ---------------------------------------------------------------------------
+  # PostgreSQL backend (default)
+  # Usage: docker compose up -d
+  # ---------------------------------------------------------------------------
   server:
     build:
       context: ..
@@ -7,6 +11,7 @@ services:
       - "8080:8080"
     environment:
       PORT: 8080
+      DB_BACKEND: postgres
       DATABASE_URL: postgresql://reso:reso@db:5432/reso_reference
       METADATA_PATH: ./server-metadata.json
       BASE_URL: http://localhost:8080
@@ -47,8 +52,8 @@ services:
       - server
     restart: unless-stopped
 
-  # Optional: seed the database with realistic test data
-  # Usage: docker-compose --profile seed up
+  # Optional: seed PostgreSQL with realistic test data
+  # Usage: docker compose --profile seed up
   seed:
     build:
       context: ..
@@ -79,5 +84,92 @@ services:
     profiles:
       - seed
 
+  # ---------------------------------------------------------------------------
+  # MongoDB backend (alternative)
+  # Usage: docker compose --profile mongodb up -d
+  # Seed:  docker compose --profile mongodb --profile seed-mongo up
+  # ---------------------------------------------------------------------------
+  mongodb:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodata:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    profiles:
+      - mongodb
+
+  server-mongo:
+    build:
+      context: ..
+      dockerfile: reso-reference-server/server/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: 8080
+      DB_BACKEND: mongodb
+      MONGODB_URL: mongodb://mongodb:27017/reso_reference
+      METADATA_PATH: ./server-metadata.json
+      BASE_URL: http://localhost:8080
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/health || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    restart: unless-stopped
+    profiles:
+      - mongodb
+
+  ui-mongo:
+    build:
+      context: ..
+      dockerfile: reso-reference-server/ui/Dockerfile
+    ports:
+      - "5173:80"
+    depends_on:
+      - server-mongo
+    restart: unless-stopped
+    profiles:
+      - mongodb
+
+  seed-mongo:
+    build:
+      context: ..
+      dockerfile: reso-reference-server/server/Dockerfile
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        echo "Waiting for server at http://server-mongo:8080..."
+        until wget -qO- http://server-mongo:8080/health > /dev/null 2>&1; do sleep 2; done
+        echo "Server ready. Seeding data..."
+
+        wget -qO- --post-data='{"resource":"Property","count":50,"relatedRecords":{"Media":5,"OpenHouse":2,"Showing":2}}' \
+          --header='Content-Type: application/json' --header='Authorization: Bearer admin-token' \
+          http://server-mongo:8080/admin/data-generator || true
+
+        wget -qO- --post-data='{"resource":"Member","count":20}' \
+          --header='Content-Type: application/json' --header='Authorization: Bearer admin-token' \
+          http://server-mongo:8080/admin/data-generator || true
+
+        wget -qO- --post-data='{"resource":"Office","count":10}' \
+          --header='Content-Type: application/json' --header='Authorization: Bearer admin-token' \
+          http://server-mongo:8080/admin/data-generator || true
+
+        echo "Seed complete."
+    depends_on:
+      server-mongo:
+        condition: service_healthy
+    profiles:
+      - seed-mongo
+
 volumes:
   pgdata:
+  mongodata:

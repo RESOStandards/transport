@@ -1,13 +1,13 @@
 # RESO Reference Server — API
 
-The OData 4.01 reference server for the RESO Data Dictionary. Built with Node.js, Express, TypeScript, and PostgreSQL.
+The OData 4.01 reference server for the RESO Data Dictionary. Built with Node.js, Express, and TypeScript. Supports PostgreSQL and MongoDB backends, selectable via environment variable.
 
 ## Development Setup
 
 ### Prerequisites
 
 - Node.js 22+
-- PostgreSQL 16+ (or use Docker)
+- PostgreSQL 16+ **or** MongoDB 7+ (or use Docker for either)
 
 ### Install and Build
 
@@ -16,9 +16,7 @@ npm install
 npm run build
 ```
 
-### Start PostgreSQL
-
-Using Docker:
+### Start with PostgreSQL (default)
 
 ```bash
 docker run -d \
@@ -28,9 +26,22 @@ docker run -d \
   -e POSTGRES_DB=reso_reference \
   -p 5432:5432 \
   postgres:16-alpine
+
+npm start
 ```
 
-Or use the docker-compose from the parent directory.
+### Start with MongoDB
+
+```bash
+docker run -d \
+  --name reso-mongo \
+  -p 27017:27017 \
+  mongo:7
+
+DB_BACKEND=mongodb MONGODB_URL=mongodb://localhost:27017/reso_reference npm start
+```
+
+Or use Docker Compose from the parent directory (see [Docker instructions](../README.md)).
 
 ### Run the Server
 
@@ -52,13 +63,16 @@ Tests include:
 - `schema-generator.test.ts` — PostgreSQL DDL generation
 - `validation.test.ts` — Request body validation
 - `filter-to-sql.test.ts` — OData `$filter` to parameterized SQL WHERE translation (31 tests)
+- `filter-to-mongo.test.ts` — OData `$filter` to MongoDB query translation (33 tests)
 
 ## Environment Variables
 
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `PORT` | `8080` | HTTP server port |
-| `DATABASE_URL` | `postgresql://reso:reso@localhost:5432/reso_reference` | PostgreSQL connection string |
+| `DB_BACKEND` | `postgres` | Database backend: `postgres` or `mongodb` |
+| `DATABASE_URL` | `postgresql://reso:reso@localhost:5432/reso_reference` | PostgreSQL connection string (used when `DB_BACKEND=postgres`) |
+| `MONGODB_URL` | `mongodb://localhost:27017/reso_reference` | MongoDB connection string (used when `DB_BACKEND=mongodb`) |
 | `METADATA_PATH` | `./server-metadata.json` | Path to RESO metadata JSON file |
 | `BASE_URL` | `http://localhost:{PORT}` | Base URL for OData annotations (Location, @odata.id, etc.) |
 
@@ -67,22 +81,24 @@ Tests include:
 ```
 server/
 ├── src/
-│   ├── index.ts                # Entry point: load metadata, migrate DB, boot Express
-│   ├── config.ts               # Environment variable parsing
+│   ├── index.ts                # Entry point: load metadata, select backend, boot Express
+│   ├── config.ts               # Environment variable parsing (DB_BACKEND, DATABASE_URL, MONGODB_URL)
 │   ├── metadata/
 │   │   ├── types.ts            # ResoMetadata, ResoField, ResoLookup interfaces
 │   │   ├── loader.ts           # Read/parse metadata JSON, helper filters
 │   │   ├── edmx-generator.ts   # JSON metadata → EDMX 4.0 XML
 │   │   └── openapi-generator.ts # JSON metadata → OpenAPI 3.0 spec
 │   ├── db/
-│   │   ├── pool.ts             # PostgreSQL connection pool
-│   │   ├── schema-generator.ts # Metadata → CREATE TABLE DDL
-│   │   ├── migrate.ts          # Run DDL on startup
-│   │   ├── queries.ts          # Parameterized CRUD query builders
 │   │   ├── data-access.ts      # DataAccessLayer interface (abstracts persistence)
-│   │   ├── postgres-dal.ts     # PostgreSQL DAL (LEFT JOIN + app-side grouping for $expand)
+│   │   ├── postgres-dal.ts     # PostgreSQL adapter (CTE pagination + LEFT JOIN for $expand)
 │   │   ├── filter-to-sql.ts    # OData $filter AST → parameterized SQL WHERE
-│   │   └── mongo-dal.example.ts # MongoDB DAL sketch (non-functional demo)
+│   │   ├── mongo-dal.ts        # MongoDB adapter (cursor pagination + batch expand)
+│   │   ├── filter-to-mongo.ts  # OData $filter AST → MongoDB query documents
+│   │   ├── mongo-init.ts       # MongoDB collection and index setup
+│   │   ├── pool.ts             # PostgreSQL connection pool
+│   │   ├── schema-generator.ts # Metadata → CREATE TABLE DDL (PostgreSQL)
+│   │   ├── migrate.ts          # Run DDL on startup (PostgreSQL)
+│   │   └── queries.ts          # Parameterized CRUD query builders (PostgreSQL)
 │   ├── odata/
 │   │   ├── router.ts           # Dynamic Express router (auto-detects navigation bindings)
 │   │   ├── handlers.ts         # CRUD + collection handler factories via DAL interface
@@ -132,11 +148,46 @@ The `$filter` query option is parsed into an AST by `@reso/odata-filter-parser` 
 
 ## Data Access Layer
 
-The server uses a `DataAccessLayer` interface to abstract persistence from query handling. This allows swapping PostgreSQL for other backends.
+The server uses a `DataAccessLayer` interface to abstract persistence from query handling. The backend is selected at startup via the `DB_BACKEND` environment variable.
 
-- **`data-access.ts`** — Interface definition with `queryCollection`, `readByKey`, `insert`, `update`, `deleteByKey`
-- **`postgres-dal.ts`** — PostgreSQL implementation using LEFT JOIN + app-side grouping for `$expand`
-- **`mongo-dal.example.ts`** — Non-functional sketch showing how a MongoDB implementation would use batch queries instead of JOINs
+**Interface** (`data-access.ts`): `queryCollection`, `readByKey`, `insert`, `update`, `deleteByKey`
+
+**Adapters:**
+
+| Adapter | Backend | `$expand` Strategy | `$filter` | Schema |
+|---------|---------|-------------------|-----------|--------|
+| `postgres-dal.ts` | PostgreSQL | CTE pagination + LEFT JOIN, app-side grouping | Parameterized SQL WHERE | DDL migration on startup |
+| `mongo-dal.ts` | MongoDB | Cursor pagination + batch `$in` queries per nav property | Native query operators + `$expr` | Collection/index creation on startup |
+
+At startup, `index.ts` branches on `config.dbBackend`:
+- **`postgres`** (default): creates a pg pool, runs schema migrations, and instantiates the PostgreSQL DAL
+- **`mongodb`**: dynamically imports the `mongodb` package, connects `MongoClient`, initializes collections/indexes, and instantiates the MongoDB DAL
+
+Dynamic imports ensure the `mongodb` package is not loaded when running in PostgreSQL mode.
+
+### MongoDB-Specific Behavior
+
+- **No schema migration** — MongoDB is schemaless. Collections and indexes are created on startup via `mongo-init.ts`
+- **Native arrays** — Collection fields (e.g., `PropertyType[]`) are stored as native arrays, not JSONB strings
+- **`_id` suppression** — MongoDB's auto-generated `_id` is projected out on all read paths
+- **Index strategy** — Unique index on primary key per resource; compound index on `(ResourceName, ResourceRecordKey)` for child collections used by `$expand`
+
+### $filter Translation (MongoDB)
+
+The `$filter` query option is parsed into an AST by `@reso/odata-filter-parser` and translated to MongoDB query documents. Two translation modes are used:
+
+- **Query mode** — native MongoDB operators (`{ field: { $gt: value } }`) for simple comparisons that benefit from indexes
+- **Expression mode** — `$expr` aggregation expressions for functions and arithmetic
+
+| OData | MongoDB |
+|-------|---------|
+| `eq`, `ne`, `gt`, `ge`, `lt`, `le` | `{ field: value }`, `$ne`, `$gt`, `$gte`, `$lt`, `$lte` |
+| `and`, `or`, `not` | `$and`, `$or`, `$nor` |
+| `contains(f, 'v')` | `{ f: { $regex: 'v', $options: 'i' } }` |
+| `startswith(f, 'v')` | `{ f: { $regex: '^v', $options: 'i' } }` |
+| `endswith(f, 'v')` | `{ f: { $regex: 'v$', $options: 'i' } }` |
+| `year(f)`, `month(f)`, etc. | `{ $expr: { $eq: [{ $year: '$f' }, value] } }` |
+| `round(f)`, `floor(f)`, `ceiling(f)` | `{ $expr: { $round: ['$f', 0] } }` |
 
 ### Navigation Properties ($expand)
 

@@ -7,7 +7,22 @@ to GitHub Issues once the repository is ready for public collaboration.
 
 ## High Priority
 
-### Multi-Level $expand Support
+### ~~#1 — Data Access Layer: MongoDB Backend~~
+**Package:** `reso-reference-server`
+**Status:** Closed
+
+~~The server defines a `DataAccessLayer` interface. Currently only the
+PostgreSQL implementation exists. Add MongoDB as a fully functional
+alternative backend, selectable via `DB_BACKEND` environment variable.~~
+
+- ~~`filter-to-mongo.ts` — OData $filter AST to MongoDB query translator (33 tests)~~
+- ~~`mongo-dal.ts` — Production MongoDB DAL adapter~~
+- ~~`mongo-init.ts` — Collection and index setup~~
+- ~~Config/startup updates for backend selection~~
+- ~~Docker Compose profile for MongoDB~~
+- ~~Documentation: server README, reference-server README, module READMEs~~
+
+### #2 — Multi-Level $expand Support
 **Package:** `reso-reference-server`, `odata-client`
 
 Currently only single-level `$expand` is implemented (e.g., `$expand=Media`).
@@ -23,12 +38,10 @@ Multi-level expansion like `$expand=Media($expand=Tags)` needs:
 5. Respect `$levels=N` and `$levels=max` parameters
 6. Add depth limit configuration to prevent unbounded recursive expansion
 
-### Data Access Layer — Additional Backends
+### #3 — Data Access Layer: Additional Backends
 **Package:** `reso-reference-server`
 
-The server defines a `DataAccessLayer` interface. Currently only the
-PostgreSQL implementation exists. Future backends to consider:
-- MongoDB (document store — example interface sketch exists)
+Future backends to consider beyond PostgreSQL and MongoDB:
 - SQLite (lightweight local testing)
 - In-memory (unit testing without database)
 
@@ -36,7 +49,7 @@ PostgreSQL implementation exists. Future backends to consider:
 
 ## Medium Priority
 
-### Batch Operations (`$batch`)
+### #4 — Batch Operations (`$batch`)
 **Package:** `odata-client`, `reso-reference-server`
 
 OData 4.01 supports batch requests via `POST /$batch` in both
@@ -45,14 +58,14 @@ multipart/mixed and JSON formats. Implement:
 - Server: `$batch` endpoint with changeset (atomic group) support
 - JSON batch format (preferred for 4.01)
 
-### Asynchronous Requests
+### #5 — Asynchronous Requests
 **Package:** `odata-client`, `reso-reference-server`
 
 `Prefer: respond-async` for long-running operations:
 - Client: detect `202 Accepted`, poll status monitor URL
 - Server: queue handler, status monitor endpoint, `Retry-After` header
 
-### Delta Responses / Change Tracking
+### #6 — Delta Responses / Change Tracking
 **Package:** `odata-client`, `reso-reference-server`
 
 `Prefer: odata.track-changes` with `@odata.deltaLink`:
@@ -60,7 +73,7 @@ multipart/mixed and JSON formats. Implement:
 - Server: track changes via database triggers or logical timestamps,
   return delta payloads with added/changed/deleted entities
 
-### Type Casting in URLs
+### #7 — Type Casting in URLs
 **Package:** `odata-client`, `odata-filter-parser`
 
 Support `EntitySet/Namespace.DerivedType` path segments for filtering
@@ -71,27 +84,27 @@ segments.
 
 ## Lower Priority
 
-### Geo Functions and Types
+### #8 — Geo Functions and Types
 **Package:** `odata-filter-parser`, `odata-client`
 
 `geo.distance()`, `geo.intersects()`, `geo.length()` filter functions
 and `Edm.Geography*`/`Edm.Geometry*` types. Not commonly used in RESO
 but part of the OData 4.01 spec.
 
-### TypeDefinition Parsing
+### #9 — TypeDefinition Parsing
 **Package:** `odata-client`
 
 CSDL `TypeDefinition` elements (named aliases for primitive types with
 constrained facets). Parse and validate in CSDL parser.
 
-### Annotation Parsing
+### #10 — Annotation Parsing
 **Package:** `odata-client`
 
 Full `Annotation` element parsing from CSDL XML, including vocabulary
 references (`edmx:Reference`/`edmx:Include`) and standard vocabularies
 (Core, Capabilities, Validation, Measures).
 
-### $apply (Aggregation)
+### #11 — $apply (Aggregation)
 **Package:** `odata-filter-parser`, `reso-reference-server`
 
 OData Data Aggregation Extension: `groupby`, `aggregate`, `filter`,
@@ -101,13 +114,14 @@ OData Data Aggregation Extension: `groupby`, `aggregate`, `filter`,
 
 ## Infrastructure
 
-### Migrate TODOs to GitHub Issues
-Move items from this file into GitHub Issues with proper labels,
-milestones, and assignees once the repository is public.
-
-### CI/CD Pipeline
+### #12 — CI/CD Pipeline
 Set up GitHub Actions for:
 - Build all packages in dependency order
 - Run all test suites
 - Cross-tool validation (reference server + test tool)
 - Publish packages to npm (when ready)
+
+### ~~#13 — Migrate TODOs to GitHub Issues~~
+~~Move items from this file into GitHub Issues with proper labels,
+milestones, and assignees once the repository is public.~~
+Tracking with ticket numbers in this file for now.

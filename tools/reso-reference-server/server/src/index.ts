@@ -5,6 +5,7 @@ import { createAdminRouter } from './admin/router.js';
 import { loadAuthConfig } from './auth/config.js';
 import { createMockOAuthRouter } from './auth/mock-oauth.js';
 import { loadConfig } from './config.js';
+import type { DataAccessLayer } from './db/data-access.js';
 import { runMigrations } from './db/migrate.js';
 import { createPool } from './db/pool.js';
 import { createPostgresDal } from './db/postgres-dal.js';
@@ -20,15 +21,12 @@ const main = async (): Promise<void> => {
   const config = loadConfig();
   console.log('RESO Reference Server starting...');
   console.log(`  Port: ${config.port}`);
-  console.log(`  Database: ${config.databaseUrl.replace(/\/\/.*@/, '//***@')}`);
+  console.log(`  Backend: ${config.dbBackend}`);
   console.log(`  Metadata: ${config.metadataPath}`);
 
   // Load metadata
   const metadata = await loadMetadata(config.metadataPath);
   console.log(`Loaded RESO metadata v${metadata.version}: ${metadata.fields.length} fields, ${metadata.lookups.length} lookups`);
-
-  // Create database pool and run migrations
-  const pool = createPool(config.databaseUrl);
 
   const resourceSpecs = TARGET_RESOURCES.map(resource => ({
     resourceName: resource,
@@ -36,13 +34,39 @@ const main = async (): Promise<void> => {
     fields: getFieldsForResource(metadata, resource)
   })).filter(spec => spec.keyField && spec.fields.length > 0);
 
-  const ddl = generateSchema(resourceSpecs);
-  console.log(`Running migrations for ${resourceSpecs.length} resources...`);
-  await runMigrations(pool, ddl);
-  console.log('Database migrations complete.');
+  // Create data access layer based on configured backend
+  let dal: DataAccessLayer;
 
-  // Create data access layer
-  const dal = createPostgresDal(pool);
+  if (config.dbBackend === 'mongodb') {
+    console.log(`  MongoDB: ${config.mongodbUrl.replace(/\/\/.*@/, '//***@')}`);
+    const { MongoClient } = await import('mongodb');
+    const { createMongoDal } = await import('./db/mongo-dal.js');
+    const { initializeMongoCollections } = await import('./db/mongo-init.js');
+
+    const client = new MongoClient(config.mongodbUrl);
+    await client.connect();
+    const db = client.db();
+
+    const mongoSpecs = resourceSpecs.map(spec => ({
+      resourceName: spec.resourceName,
+      keyField: spec.keyField,
+      hasResourceRecordKey: spec.fields.some(f => f.fieldName === 'ResourceRecordKey')
+    }));
+    console.log(`Initializing MongoDB collections and indexes for ${mongoSpecs.length} resources...`);
+    await initializeMongoCollections(db, mongoSpecs);
+    console.log('MongoDB initialization complete.');
+
+    dal = createMongoDal(db);
+  } else {
+    console.log(`  PostgreSQL: ${config.databaseUrl.replace(/\/\/.*@/, '//***@')}`);
+    const pool = createPool(config.databaseUrl);
+    const ddl = generateSchema(resourceSpecs);
+    console.log(`Running migrations for ${resourceSpecs.length} resources...`);
+    await runMigrations(pool, ddl);
+    console.log('Database migrations complete.');
+
+    dal = createPostgresDal(pool);
+  }
 
   // Load auth configuration
   const authConfig = loadAuthConfig();
