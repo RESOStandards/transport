@@ -23,7 +23,7 @@ export const EditPage = () => {
   const { fieldGroups } = useUiConfig();
 
   if (!TARGET_RESOURCES.includes(resourceName)) {
-    return <div className="text-red-600 dark:text-red-400">Unknown resource: {resource}</div>;
+    return <div className="p-4 sm:p-6 text-red-600 dark:text-red-400">Unknown resource: {resource}</div>;
   }
 
   // Load record when key is provided
@@ -75,48 +75,54 @@ export const EditPage = () => {
     [resourceName, key, navigate]
   );
 
-  if (metaLoading) return <div className="text-sm text-gray-500 dark:text-gray-400 py-4">Loading metadata...</div>;
+  if (metaLoading) return <div className="p-4 sm:p-6 text-sm text-gray-500 dark:text-gray-400">Loading metadata...</div>;
 
   // No key — show prompt
   if (!key) {
     return (
-      <div className="space-y-4">
-        <button type="button" onClick={() => navigate(`/${resourceName}`)} className="text-sm text-blue-600 hover:text-blue-800">
-          &larr; Back to {resourceName}
-        </button>
-        <KeyPrompt resource={resourceName} onSubmit={handleKeySubmit} action="edit" />
+      <div className="h-full overflow-y-auto p-4 sm:p-6">
+        <div className="space-y-4">
+          <button type="button" onClick={() => navigate(`/${resourceName}`)} className="text-sm text-blue-600 hover:text-blue-800">
+            &larr; Back to {resourceName}
+          </button>
+          <KeyPrompt resource={resourceName} onSubmit={handleKeySubmit} action="edit" />
+        </div>
       </div>
     );
   }
 
-  if (isLoadingRecord) return <div className="text-sm text-gray-500 dark:text-gray-400 py-4">Loading record...</div>;
+  if (isLoadingRecord) return <div className="p-4 sm:p-6 text-sm text-gray-500 dark:text-gray-400">Loading record...</div>;
   if (error)
     return (
-      <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded px-3 py-2 text-sm">
-        {error}
+      <div className="p-4 sm:p-6">
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded px-3 py-2 text-sm">
+          {error}
+        </div>
       </div>
     );
-  if (!record) return <div className="text-gray-500 dark:text-gray-400">Record not found</div>;
+  if (!record) return <div className="p-4 sm:p-6 text-gray-500 dark:text-gray-400">Record not found</div>;
 
   return (
-    <div className="space-y-4">
-      <div>
-        <button type="button" onClick={() => navigate(`/${resourceName}`)} className="text-sm text-blue-600 hover:text-blue-800 mb-1">
-          &larr; Back to {resourceName}
-        </button>
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Edit {resourceName}</h2>
-      </div>
+    <div className="h-full overflow-y-auto p-4 sm:p-6">
+      <div className="space-y-4">
+        <div>
+          <button type="button" onClick={() => navigate(`/${resourceName}`)} className="text-sm text-blue-600 hover:text-blue-800 mb-1">
+            &larr; Back to {resourceName}
+          </button>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Edit {resourceName}</h2>
+        </div>
 
-      <RecordForm
-        resource={resourceName}
-        fields={fields}
-        lookups={lookups}
-        fieldGroups={fieldGroups}
-        initialValues={record}
-        isEdit
-        onSubmit={handleSubmit}
-        isLoading={isSubmitting}
-      />
+        <RecordForm
+          resource={resourceName}
+          fields={fields}
+          lookups={lookups}
+          fieldGroups={fieldGroups}
+          initialValues={record}
+          isEdit
+          onSubmit={handleSubmit}
+          isLoading={isSubmitting}
+        />
+      </div>
     </div>
   );
 };

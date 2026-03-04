@@ -18,7 +18,7 @@ export const SearchPage = () => {
 
   const resourceName = resource as ResourceName;
   if (!TARGET_RESOURCES.includes(resourceName)) {
-    return <div className="text-red-600 dark:text-red-400">Unknown resource: {resource}</div>;
+    return <div className="p-4 sm:p-6 text-red-600 dark:text-red-400">Unknown resource: {resource}</div>;
   }
 
   const filter = searchParams.get('$filter') ?? '';
@@ -121,94 +121,106 @@ export const SearchPage = () => {
   );
 
   if (metaLoading) {
-    return <div className="text-sm text-gray-500 dark:text-gray-400 py-4">Loading metadata...</div>;
+    return <div className="p-4 sm:p-6 text-sm text-gray-500 dark:text-gray-400">Loading metadata...</div>;
   }
 
   return (
-    <div className="space-y-4">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{resourceName}</h2>
-        <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={() => navigate(`/${resourceName}/add`)}
-            className="px-3 py-1.5 text-sm bg-green-600 text-white rounded hover:bg-green-700">
-            + Add
-          </button>
-          <button
-            type="button"
-            onClick={() => navigate(`/${resourceName}/edit`)}
-            className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-50 dark:hover:bg-gray-700">
-            Edit
-          </button>
-          <button
-            type="button"
-            onClick={() => navigate(`/${resourceName}/delete`)}
-            className="px-3 py-1.5 text-sm border border-red-300 dark:border-red-700 text-red-600 dark:text-red-400 rounded hover:bg-red-50 dark:hover:bg-red-900/20">
-            Delete
-          </button>
-        </div>
-      </div>
-
-      {/* Search */}
-      <SearchBar
-        value={draftFilter}
-        onChange={setDraftFilter}
-        onSearch={handleSubmit}
-        onToggleAdvanced={handleToggleAdvanced}
-        isAdvancedMode={isAdvanced}
-        validationError={validationError}
-      />
-
-      {/* Advanced search panel */}
-      {isAdvanced && (
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-          <AdvancedSearch
-            resource={resourceName}
-            fields={fields}
-            lookups={lookups}
-            fieldGroups={fieldGroups}
-            filterString={draftFilter}
-            onFilterChange={setDraftFilter}
-            onSearch={handleSubmit}
-          />
-        </div>
-      )}
-
-      {/* Sortable column headers */}
-      {rows.length > 0 && (
-        <div className="flex flex-wrap gap-1">
-          <span className="text-xs text-gray-500 dark:text-gray-400 mr-1">Sort by:</span>
-          {summaryFields.slice(0, 6).map(f => (
+    <div className="flex flex-col h-full min-h-0">
+      {/* Pinned toolbar — does not scroll */}
+      <div className="shrink-0 px-4 sm:px-6 pt-4 sm:pt-6 pb-3 space-y-4 bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{resourceName}</h2>
+          <div className="flex gap-2">
             <button
               type="button"
-              key={f}
-              onClick={() => handleSort(f)}
-              className={`text-xs px-2 py-0.5 rounded border ${
-                orderby.includes(f)
-                  ? 'bg-blue-50 dark:bg-blue-900/30 border-blue-300 dark:border-blue-600 text-blue-700 dark:text-blue-400'
-                  : 'border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'
-              }`}>
-              {f} {orderby === `${f} asc` ? '↑' : orderby === `${f} desc` ? '↓' : ''}
+              onClick={() => navigate(`/${resourceName}/add`)}
+              className="px-3 py-1.5 text-sm bg-green-600 text-white rounded hover:bg-green-700">
+              + Add
             </button>
-          ))}
+            <button
+              type="button"
+              onClick={() => navigate(`/${resourceName}/edit`)}
+              className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-50 dark:hover:bg-gray-700">
+              Edit
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate(`/${resourceName}/delete`)}
+              className="px-3 py-1.5 text-sm border border-red-300 dark:border-red-700 text-red-600 dark:text-red-400 rounded hover:bg-red-50 dark:hover:bg-red-900/20">
+              Delete
+            </button>
+          </div>
         </div>
-      )}
 
-      {/* Results */}
-      <ResultsList
-        resource={resourceName}
-        rows={rows}
-        summaryFields={summaryFields}
-        fields={fields}
-        count={count}
-        isLoading={isLoading}
-        hasMore={hasMore}
-        error={error}
-        onLoadMore={loadMore}
-        onRowClick={handleRowClick}
-      />
+        {/* Search */}
+        <SearchBar
+          value={draftFilter}
+          onChange={setDraftFilter}
+          onSearch={handleSubmit}
+          onToggleAdvanced={handleToggleAdvanced}
+          isAdvancedMode={isAdvanced}
+          validationError={validationError}
+        />
+
+        {/* Advanced search panel */}
+        {isAdvanced && (
+          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+            <AdvancedSearch
+              resource={resourceName}
+              fields={fields}
+              lookups={lookups}
+              fieldGroups={fieldGroups}
+              filterString={draftFilter}
+              onFilterChange={setDraftFilter}
+              onSearch={handleSubmit}
+            />
+          </div>
+        )}
+
+        {/* Sortable column headers */}
+        {rows.length > 0 && (
+          <div className="flex flex-wrap gap-1">
+            <span className="text-xs text-gray-500 dark:text-gray-400 mr-1">Sort by:</span>
+            {summaryFields.slice(0, 6).map(f => (
+              <button
+                type="button"
+                key={f}
+                onClick={() => handleSort(f)}
+                className={`text-xs px-2 py-0.5 rounded border ${
+                  orderby.includes(f)
+                    ? 'bg-blue-50 dark:bg-blue-900/30 border-blue-300 dark:border-blue-600 text-blue-700 dark:text-blue-400'
+                    : 'border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'
+                }`}>
+                {f} {orderby === `${f} asc` ? '↑' : orderby === `${f} desc` ? '↓' : ''}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Result count */}
+        {count !== undefined && (
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            {count.toLocaleString()} result{count !== 1 ? 's' : ''}
+          </p>
+        )}
+      </div>
+
+      {/* Scrollable results */}
+      <div className="flex-1 overflow-y-auto min-h-0 px-4 sm:px-6 py-4">
+        <ResultsList
+          resource={resourceName}
+          rows={rows}
+          summaryFields={summaryFields}
+          fields={fields}
+          count={count}
+          isLoading={isLoading}
+          hasMore={hasMore}
+          error={error}
+          onLoadMore={loadMore}
+          onRowClick={handleRowClick}
+        />
+      </div>
     </div>
   );
 };

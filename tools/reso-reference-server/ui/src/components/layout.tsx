@@ -81,8 +81,8 @@ export const Layout = () => {
           <ResourceNav />
         </nav>
 
-        {/* Main content — only this area scrolls */}
-        <main className="flex-1 p-4 sm:p-6 overflow-y-auto">
+        {/* Main content — each page manages its own scrolling */}
+        <main className="flex-1 overflow-hidden">
           <Outlet />
         </main>
       </div>

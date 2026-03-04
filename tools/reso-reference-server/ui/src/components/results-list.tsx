@@ -32,13 +32,6 @@ export const ResultsList = ({
 
   return (
     <div>
-      {/* Count display */}
-      {count !== undefined && (
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
-          {count.toLocaleString()} result{count !== 1 ? 's' : ''}
-        </p>
-      )}
-
       {/* Error */}
       {error && (
         <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded px-3 py-2 text-sm mb-3">

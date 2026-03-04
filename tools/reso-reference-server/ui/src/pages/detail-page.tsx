@@ -25,7 +25,7 @@ export const DetailPage = () => {
   const { config, fieldGroups } = useUiConfig();
 
   if (!TARGET_RESOURCES.includes(resourceName) || !key) {
-    return <div className="text-red-600 dark:text-red-400">Invalid resource or key</div>;
+    return <div className="p-4 sm:p-6 text-red-600 dark:text-red-400">Invalid resource or key</div>;
   }
 
   const keyField = KEY_FIELD_MAP[resourceName];
@@ -56,14 +56,16 @@ export const DetailPage = () => {
     };
   }, [resourceName, key]);
 
-  if (isLoading) return <div className="text-sm text-gray-500 dark:text-gray-400 py-4">Loading...</div>;
+  if (isLoading) return <div className="p-4 sm:p-6 text-sm text-gray-500 dark:text-gray-400">Loading...</div>;
   if (error)
     return (
-      <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded px-3 py-2 text-sm">
-        {error}
+      <div className="p-4 sm:p-6">
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded px-3 py-2 text-sm">
+          {error}
+        </div>
       </div>
     );
-  if (!record) return <div className="text-gray-500 dark:text-gray-400">Record not found</div>;
+  if (!record) return <div className="p-4 sm:p-6 text-gray-500 dark:text-gray-400">Record not found</div>;
 
   // Extract media records
   const media = Array.isArray(record.Media) ? (record.Media as Record<string, unknown>[]) : [];
@@ -140,85 +142,90 @@ export const DetailPage = () => {
   );
 
   return (
-    <div className="space-y-4">
-      {/* Header with actions */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-        <div>
-          <button type="button" onClick={() => navigate(`/${resourceName}`)} className="text-sm text-blue-600 hover:text-blue-800 mb-1">
-            &larr; Back to {resourceName}
-          </button>
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{resourceName} Detail</h2>
-        </div>
-        <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={() => navigate(`/${resourceName}/edit/${encodeURIComponent(key!)}`)}
-            className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded hover:bg-blue-700">
-            Edit
-          </button>
-          <button
-            type="button"
-            onClick={() => setShowDelete(true)}
-            className="px-3 py-1.5 text-sm bg-red-600 text-white rounded hover:bg-red-700">
-            Delete
-          </button>
+    <div className="flex flex-col h-full min-h-0">
+      {/* Pinned header — does not scroll */}
+      <div className="shrink-0 px-4 sm:px-6 pt-4 sm:pt-6 pb-3 bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+          <div>
+            <button type="button" onClick={() => navigate(`/${resourceName}`)} className="text-sm text-blue-600 hover:text-blue-800 mb-1">
+              &larr; Back to {resourceName}
+            </button>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{resourceName} Detail</h2>
+          </div>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => navigate(`/${resourceName}/edit/${encodeURIComponent(key!)}`)}
+              className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded hover:bg-blue-700">
+              Edit
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowDelete(true)}
+              className="px-3 py-1.5 text-sm bg-red-600 text-white rounded hover:bg-red-700">
+              Delete
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Summary/fields + Media carousel side-by-side */}
-      <div className={`flex flex-col ${media.length > 0 ? 'lg:flex-row' : ''} gap-4`}>
-        {/* Left pane: Summary (grouped resources) or all fields (ungrouped resources) */}
-        <div
-          className={`bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 ${media.length > 0 ? 'lg:w-1/2' : 'w-full'}`}>
-          {resourceName === 'Property' && address && (
-            <div className="text-base font-medium text-gray-900 dark:text-gray-100 mb-2">{address}</div>
-          )}
-          <div className="flex items-baseline gap-2 py-0.5 text-sm mb-1">
-            <span className="text-gray-500 dark:text-gray-400 shrink-0">{keyField}:</span>
-            <span className="font-mono text-gray-800 dark:text-gray-200">{String(record[keyField] ?? '')}</span>
-          </div>
-          {record.ModificationTimestamp != null && (
+      {/* Scrollable content */}
+      <div className="flex-1 overflow-y-auto min-h-0 px-4 sm:px-6 py-4 space-y-4">
+        {/* Summary/fields + Media carousel side-by-side */}
+        <div className={`flex flex-col ${media.length > 0 ? 'lg:flex-row' : ''} gap-4`}>
+          {/* Left pane: Summary (grouped resources) or all fields (ungrouped resources) */}
+          <div
+            className={`bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 ${media.length > 0 ? 'lg:w-1/2' : 'w-full'}`}>
+            {resourceName === 'Property' && address && (
+              <div className="text-base font-medium text-gray-900 dark:text-gray-100 mb-2">{address}</div>
+            )}
             <div className="flex items-baseline gap-2 py-0.5 text-sm mb-1">
-              <span className="text-gray-500 dark:text-gray-400 shrink-0">ModificationTimestamp:</span>
-              <span className="text-gray-800 dark:text-gray-200">{String(record.ModificationTimestamp)}</span>
+              <span className="text-gray-500 dark:text-gray-400 shrink-0">{keyField}:</span>
+              <span className="font-mono text-gray-800 dark:text-gray-200">{String(record[keyField] ?? '')}</span>
+            </div>
+            {record.ModificationTimestamp != null && (
+              <div className="flex items-baseline gap-2 py-0.5 text-sm mb-1">
+                <span className="text-gray-500 dark:text-gray-400 shrink-0">ModificationTimestamp:</span>
+                <span className="text-gray-800 dark:text-gray-200">{String(record.ModificationTimestamp)}</span>
+              </div>
+            )}
+            {hasGroupings && summaryFields.length > 0 && (
+              <>
+                <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mt-3 mb-2">Summary</h3>
+                {renderFieldList(
+                  summaryFields.filter(f => !ADDRESS_FIELDS.has(f.fieldName)),
+                  1
+                )}
+              </>
+            )}
+            {!hasGroupings && ungrouped.length > 0 && renderFieldList(ungrouped, 2)}
+          </div>
+
+          {/* Right pane: Media carousel */}
+          {media.length > 0 && (
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 lg:w-1/2">
+              <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Media ({media.length})</h3>
+              <MediaCarousel media={media} />
             </div>
           )}
-          {hasGroupings && summaryFields.length > 0 && (
-            <>
-              <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mt-3 mb-2">Summary</h3>
-              {renderFieldList(
-                summaryFields.filter(f => !ADDRESS_FIELDS.has(f.fieldName)),
-                1
-              )}
-            </>
-          )}
-          {!hasGroupings && ungrouped.length > 0 && renderFieldList(ungrouped, 2)}
         </div>
 
-        {/* Right pane: Media carousel */}
-        {media.length > 0 && (
-          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 lg:w-1/2">
-            <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Media ({media.length})</h3>
-            <MediaCarousel media={media} />
-          </div>
+        {/* Grouped fields (resources with groupings only) */}
+        {sortedGroups.map(([group, groupFields]) => (
+          <FieldGroupSection key={group} title={group} defaultOpen>
+            {renderFieldList(groupFields)}
+          </FieldGroupSection>
+        ))}
+
+        {/* Ungrouped remainder in "Other" (only when resource HAS groupings) */}
+        {ungrouped.length > 0 && hasGroupings && (
+          <FieldGroupSection title="Other" defaultOpen>
+            {renderFieldList(ungrouped)}
+          </FieldGroupSection>
         )}
       </div>
 
-      {/* Grouped fields (resources with groupings only) */}
-      {sortedGroups.map(([group, groupFields]) => (
-        <FieldGroupSection key={group} title={group} defaultOpen>
-          {renderFieldList(groupFields)}
-        </FieldGroupSection>
-      ))}
-
-      {/* Ungrouped remainder in "Other" (only when resource HAS groupings) */}
-      {ungrouped.length > 0 && hasGroupings && (
-        <FieldGroupSection title="Other" defaultOpen>
-          {renderFieldList(ungrouped)}
-        </FieldGroupSection>
-      )}
-
-      {/* Delete dialog */}
+      {/* Delete dialog (fixed overlay, outside scroll area) */}
       {showDelete && (
         <DeleteDialog
           resource={resourceName}

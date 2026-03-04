@@ -213,6 +213,22 @@ can remain in their current collapsed/expanded state.~~
 ~~**Note:** Only applies to resources with field groups (e.g., Property). Resources without
 groups display fields in a flat list and are unaffected.~~
 
+### ~~#23 — UI: Pin Search Toolbar and Detail Header~~
+**Package:** `reso-reference-server/ui`
+**Status:** Closed
+
+~~On search pages, the resource title, search bar, sort buttons, and result count
+now stay pinned at the top while only the result cards scroll. On detail pages,
+the back link, title, and Edit/Delete buttons stay pinned while the content scrolls.
+Each page manages its own scroll container since `<main>` is now `overflow-hidden`.~~
+
+~~Affected files:~~
+- ~~`ui/src/components/layout.tsx` — `<main>` changed to `overflow-hidden`, padding removed~~
+- ~~`ui/src/pages/search-page.tsx` — flex layout with pinned toolbar + scrollable results~~
+- ~~`ui/src/components/results-list.tsx` — count display moved to search page~~
+- ~~`ui/src/pages/detail-page.tsx` — flex layout with pinned header + scrollable content~~
+- ~~`ui/src/pages/add-page.tsx`, `edit-page.tsx`, `delete-page.tsx`, `not-found-page.tsx`, `admin-layout.tsx` — scroll wrappers + padding~~
+
 ### #19 — Fix Web API Core 2.0.0 Compliance Test Failures
 **Package:** `reso-reference-server`
 

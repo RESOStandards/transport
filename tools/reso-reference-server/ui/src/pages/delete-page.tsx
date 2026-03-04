@@ -18,7 +18,7 @@ export const DeletePage = () => {
   const [error, setError] = useState<string | null>(null);
 
   if (!TARGET_RESOURCES.includes(resourceName)) {
-    return <div className="text-red-600 dark:text-red-400">Unknown resource: {resource}</div>;
+    return <div className="p-4 sm:p-6 text-red-600 dark:text-red-400">Unknown resource: {resource}</div>;
   }
 
   // Load record when key is set
@@ -58,29 +58,33 @@ export const DeletePage = () => {
   // No key yet — show prompt
   if (!key) {
     return (
-      <div className="space-y-4">
-        <button type="button" onClick={() => navigate(`/${resourceName}`)} className="text-sm text-blue-600 hover:text-blue-800">
-          &larr; Back to {resourceName}
-        </button>
-        <KeyPrompt resource={resourceName} onSubmit={handleKeySubmit} action="delete" />
+      <div className="h-full overflow-y-auto p-4 sm:p-6">
+        <div className="space-y-4">
+          <button type="button" onClick={() => navigate(`/${resourceName}`)} className="text-sm text-blue-600 hover:text-blue-800">
+            &larr; Back to {resourceName}
+          </button>
+          <KeyPrompt resource={resourceName} onSubmit={handleKeySubmit} action="delete" />
+        </div>
       </div>
     );
   }
 
-  if (isLoading) return <div className="text-sm text-gray-500 dark:text-gray-400 py-4">Looking up record...</div>;
+  if (isLoading) return <div className="p-4 sm:p-6 text-sm text-gray-500 dark:text-gray-400">Looking up record...</div>;
 
   if (error) {
     return (
-      <div className="space-y-4">
-        <button type="button" onClick={() => navigate(`/${resourceName}`)} className="text-sm text-blue-600 hover:text-blue-800">
-          &larr; Back to {resourceName}
-        </button>
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded px-3 py-2 text-sm">
-          {error}
+      <div className="h-full overflow-y-auto p-4 sm:p-6">
+        <div className="space-y-4">
+          <button type="button" onClick={() => navigate(`/${resourceName}`)} className="text-sm text-blue-600 hover:text-blue-800">
+            &larr; Back to {resourceName}
+          </button>
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded px-3 py-2 text-sm">
+            {error}
+          </div>
+          <button type="button" onClick={() => setKey(null)} className="text-sm text-blue-600 hover:text-blue-800">
+            Try a different key
+          </button>
         </div>
-        <button type="button" onClick={() => setKey(null)} className="text-sm text-blue-600 hover:text-blue-800">
-          Try a different key
-        </button>
       </div>
     );
   }

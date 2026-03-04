@@ -2,6 +2,29 @@
 
 ---
 
+## v0.0.17 — 2026-03-04
+
+### UI: Pinned Search Toolbar and Detail Header (#23)
+
+On search pages, the resource title, action buttons, search bar, advanced search
+panel, sort buttons, and result count now stay pinned at the top — only the result
+cards scroll. On detail pages, the back link, title, and Edit/Delete buttons stay
+pinned while summary, media, and field groups scroll beneath.
+
+**Layout change:** `<main>` is now `overflow-hidden` and each page manages its own
+scroll container. This enables per-page pinning without `position: sticky` hacks.
+
+**Affected files:**
+
+- `ui/src/components/layout.tsx` — removed padding and scroll from `<main>`
+- `ui/src/pages/search-page.tsx` — flex layout: pinned toolbar + scrollable results
+- `ui/src/components/results-list.tsx` — count display moved to search page pinned area
+- `ui/src/pages/detail-page.tsx` — flex layout: pinned header + scrollable content
+- `ui/src/pages/add-page.tsx`, `edit-page.tsx`, `delete-page.tsx`,
+  `not-found-page.tsx`, `admin/admin-layout.tsx` — scroll wrappers with padding
+
+---
+
 ## v0.0.16 — 2026-03-04
 
 ### Validation Improvements, Tax/Expense Data, and UI Fixes

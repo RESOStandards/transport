@@ -18,7 +18,7 @@ export const AddPage = () => {
   const { fieldGroups } = useUiConfig();
 
   if (!TARGET_RESOURCES.includes(resourceName)) {
-    return <div className="text-red-600 dark:text-red-400">Unknown resource: {resource}</div>;
+    return <div className="p-4 sm:p-6 text-red-600 dark:text-red-400">Unknown resource: {resource}</div>;
   }
 
   const handleSubmit = useCallback(
@@ -34,26 +34,30 @@ export const AddPage = () => {
     [resourceName, navigate]
   );
 
-  if (metaLoading) return <div className="text-sm text-gray-500 dark:text-gray-400 py-4">Loading metadata...</div>;
+  if (metaLoading) return <div className="p-4 sm:p-6 text-sm text-gray-500 dark:text-gray-400">Loading metadata...</div>;
 
   return (
-    <div className="space-y-4">
-      <div>
-        <button type="button" onClick={() => navigate(`/${resourceName}`)} className="text-sm text-blue-600 hover:text-blue-800 mb-1">
-          &larr; Back to {resourceName}
-        </button>
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Add {resourceName}</h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Create a new {resourceName} record. The key will be auto-generated.</p>
-      </div>
+    <div className="h-full overflow-y-auto p-4 sm:p-6">
+      <div className="space-y-4">
+        <div>
+          <button type="button" onClick={() => navigate(`/${resourceName}`)} className="text-sm text-blue-600 hover:text-blue-800 mb-1">
+            &larr; Back to {resourceName}
+          </button>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Add {resourceName}</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+            Create a new {resourceName} record. The key will be auto-generated.
+          </p>
+        </div>
 
-      <RecordForm
-        resource={resourceName}
-        fields={fields}
-        lookups={lookups}
-        fieldGroups={fieldGroups}
-        onSubmit={handleSubmit}
-        isLoading={isSubmitting}
-      />
+        <RecordForm
+          resource={resourceName}
+          fields={fields}
+          lookups={lookups}
+          fieldGroups={fieldGroups}
+          onSubmit={handleSubmit}
+          isLoading={isSubmitting}
+        />
+      </div>
     </div>
   );
 };
