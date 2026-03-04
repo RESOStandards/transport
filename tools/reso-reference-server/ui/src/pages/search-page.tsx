@@ -1,4 +1,5 @@
-import { useCallback } from 'react';
+import { LexerError, ParseError, parseFilter } from '@reso/odata-filter-parser';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router';
 import { AdvancedSearch } from '../components/advanced-search';
 import { ResultsList } from '../components/results-list';
@@ -25,6 +26,16 @@ export const SearchPage = () => {
   const mode = searchParams.get('mode') ?? 'simple';
   const isAdvanced = mode === 'advanced';
 
+  // Draft filter state — tracks what the user is composing before submitting
+  const [draftFilter, setDraftFilter] = useState(filter);
+  const [validationError, setValidationError] = useState<string | null>(null);
+
+  // Sync draft when URL filter changes (browser back/forward, initial load)
+  useEffect(() => {
+    setDraftFilter(filter);
+    setValidationError(null);
+  }, [filter]);
+
   const { config, fieldGroups } = useUiConfig();
   const { fields, lookups, isLoading: metaLoading } = useMetadata(resourceName);
 
@@ -34,8 +45,6 @@ export const SearchPage = () => {
   const summaryFields: string[] = isAllFields ? fields.map(f => f.fieldName) : [...resourceConfig.summaryFields];
 
   // Determine $select and $expand for the collection query
-  // When summaryFields is "__all__", omit $select entirely — the server returns all fields by default.
-  // Sending every field name in $select creates a URL that exceeds nginx's header buffer limit.
   const hasMedia = resourceName === 'Property';
   const selectFields = isAllFields ? undefined : summaryFields.join(',');
 
@@ -58,6 +67,27 @@ export const SearchPage = () => {
     },
     [searchParams, setSearchParams]
   );
+
+  /** Validate and submit the current draft filter. */
+  const handleSubmit = useCallback(() => {
+    const trimmed = draftFilter.trim();
+    if (!trimmed) {
+      setValidationError(null);
+      handleSearch('');
+      return;
+    }
+    try {
+      parseFilter(trimmed);
+      setValidationError(null);
+      handleSearch(trimmed);
+    } catch (err) {
+      if (err instanceof ParseError || err instanceof LexerError) {
+        setValidationError(err.message);
+      } else {
+        setValidationError('Invalid filter expression');
+      }
+    }
+  }, [draftFilter, handleSearch]);
 
   const handleToggleAdvanced = useCallback(() => {
     const params = new URLSearchParams(searchParams);
@@ -122,12 +152,27 @@ export const SearchPage = () => {
       </div>
 
       {/* Search */}
-      <SearchBar initialFilter={filter} onSearch={handleSearch} onToggleAdvanced={handleToggleAdvanced} isAdvancedMode={isAdvanced} />
+      <SearchBar
+        value={draftFilter}
+        onChange={setDraftFilter}
+        onSearch={handleSubmit}
+        onToggleAdvanced={handleToggleAdvanced}
+        isAdvancedMode={isAdvanced}
+        validationError={validationError}
+      />
 
       {/* Advanced search panel */}
       {isAdvanced && (
         <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-          <AdvancedSearch resource={resourceName} fields={fields} lookups={lookups} fieldGroups={fieldGroups} onSearch={handleSearch} />
+          <AdvancedSearch
+            resource={resourceName}
+            fields={fields}
+            lookups={lookups}
+            fieldGroups={fieldGroups}
+            filterString={draftFilter}
+            onFilterChange={setDraftFilter}
+            onSearch={handleSubmit}
+          />
         </div>
       )}
 

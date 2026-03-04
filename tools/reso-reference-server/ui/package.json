@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@reso/odata-filter-parser": "file:../../odata-filter-parser",
     "@reso/validation": "file:../../validation",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

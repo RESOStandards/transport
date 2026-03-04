@@ -1,6 +1,7 @@
-import { type FormEvent, useCallback, useState } from 'react';
+import { type FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 import type { FieldGroups, ResoField, ResoLookup, ResourceName } from '../types';
 import { isEnumType, isNumericEdmType } from '../types';
+import { type FilterEntry, buildFilterString, parseFilterToEntries } from '../utils/filter-sync.js';
 import { FieldGroupSection } from './field-group-section';
 
 interface AdvancedSearchProps {
@@ -8,7 +9,9 @@ interface AdvancedSearchProps {
   readonly fields: ReadonlyArray<ResoField>;
   readonly lookups: Readonly<Record<string, ReadonlyArray<ResoLookup>>>;
   readonly fieldGroups: FieldGroups | null;
-  readonly onSearch: (filter: string) => void;
+  readonly filterString: string;
+  readonly onFilterChange: (filter: string) => void;
+  readonly onSearch: () => void;
 }
 
 /** All comparison operators. */
@@ -42,15 +45,8 @@ const getOperatorsForField = (field: ResoField): ReadonlyArray<{ readonly value:
   if (DATE_TYPES.has(field.type)) return ORDERABLE_OPS;
   if (field.type === 'Edm.String') return STRING_OPS;
   if (field.type === 'Edm.Boolean') return EQUALITY_OPS;
-  // Guid and any other types — equality only
   return EQUALITY_OPS;
 };
-
-interface FilterEntry {
-  readonly field: string;
-  readonly operator: string;
-  readonly value: string;
-}
 
 /** Groups fields into sections matching the RESO Data Dictionary groupings. */
 const groupFields = (
@@ -85,70 +81,52 @@ const groupFields = (
   return { grouped, ungrouped };
 };
 
-/** Builds an OData $filter string from a list of filter entries. */
-const buildFilterString = (entries: ReadonlyArray<FilterEntry>, fields: ReadonlyArray<ResoField>): string => {
-  const fieldMap = new Map(fields.map(f => [f.fieldName, f]));
-  const parts: string[] = [];
-
-  for (const entry of entries) {
-    if (!entry.value.trim()) continue;
-    const field = fieldMap.get(entry.field);
-    if (!field) continue;
-
-    const isString = field.type === 'Edm.String' || isEnumType(field.type);
-    const isNumeric = isNumericEdmType(field.type);
-    const val = isString ? `'${entry.value.replace(/'/g, "''")}'` : isNumeric ? entry.value : `'${entry.value}'`;
-
-    if (entry.operator === 'any' || entry.operator === 'all') {
-      const values = entry.value.split('|').filter(v => v.trim());
-      if (values.length === 0) continue;
-      const quoted = values.map(v => `'${v.replace(/'/g, "''")}'`);
-      if (entry.operator === 'any') {
-        // any: at least one of the selected values exists in the collection
-        const inner = quoted.map(q => `x eq ${q}`).join(' or ');
-        parts.push(`${entry.field}/any(x:${inner})`);
-      } else {
-        // all: every selected value exists in the collection
-        for (const q of quoted) {
-          parts.push(`${entry.field}/any(x:x eq ${q})`);
-        }
-      }
-    } else if (entry.operator === 'contains') {
-      parts.push(`contains(${entry.field},${val})`);
-    } else {
-      parts.push(`${entry.field} ${entry.operator} ${val}`);
-    }
-  }
-
-  return parts.join(' and ');
-};
-
 /** Advanced search form with fields organized by RESO Data Dictionary groups. */
-export const AdvancedSearch = ({ resource, fields, lookups, fieldGroups, onSearch }: AdvancedSearchProps) => {
+export const AdvancedSearch = ({ resource, fields, lookups, fieldGroups, filterString, onFilterChange, onSearch }: AdvancedSearchProps) => {
   const [filters, setFilters] = useState<Map<string, FilterEntry>>(new Map());
+  const [hasUnrepresentable, setHasUnrepresentable] = useState(false);
+  const lastEmittedRef = useRef('');
   const { grouped, ungrouped } = groupFields(fields, resource, fieldGroups);
 
-  const handleChange = useCallback((fieldName: string, operator: string, value: string) => {
-    setFilters(prev => {
-      const next = new Map(prev);
-      if (!value.trim()) {
-        next.delete(fieldName);
-      } else {
-        next.set(fieldName, { field: fieldName, operator, value });
-      }
-      return next;
-    });
-  }, []);
+  // Derive form state from incoming filter string (e.g. typed in search bar)
+  useEffect(() => {
+    if (filterString === lastEmittedRef.current) return;
+    const result = parseFilterToEntries(filterString, fields);
+    if (!result.parseError) {
+      setFilters(new Map(result.entries));
+      setHasUnrepresentable(result.hasUnrepresentable);
+    }
+  }, [filterString, fields]);
+
+  const handleChange = useCallback(
+    (fieldName: string, operator: string, value: string) => {
+      setFilters(prev => {
+        const next = new Map(prev);
+        if (!value.trim()) {
+          next.delete(fieldName);
+        } else {
+          next.set(fieldName, { field: fieldName, operator, value });
+        }
+        const newFilterStr = buildFilterString([...next.values()], fields);
+        lastEmittedRef.current = newFilterStr;
+        onFilterChange(newFilterStr);
+        return next;
+      });
+    },
+    [fields, onFilterChange]
+  );
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    const filterStr = buildFilterString([...filters.values()], fields);
-    onSearch(filterStr);
+    onSearch();
   };
 
   const handleClear = () => {
     setFilters(new Map());
-    onSearch('');
+    setHasUnrepresentable(false);
+    lastEmittedRef.current = '';
+    onFilterChange('');
+    onSearch();
   };
 
   const renderFieldRow = (field: ResoField, index: number) => {
@@ -157,6 +135,17 @@ export const AdvancedSearch = ({ resource, fields, lookups, fieldGroups, onSearc
     const operators = getOperatorsForField(field);
     const defaultOp = operators[0].value;
     const stripe = index % 2 === 1 ? 'bg-gray-100 dark:bg-gray-700/40' : '';
+
+    if (field.isExpansion) {
+      return (
+        <div
+          key={field.fieldName}
+          className={`flex flex-col sm:flex-row gap-1 sm:gap-2 items-start sm:items-center py-2.5 px-2 rounded opacity-50 ${stripe}`}>
+          <span className="text-xs text-gray-600 dark:text-gray-400 w-full sm:w-48 shrink-0 truncate">{field.fieldName}</span>
+          <span className="text-xs text-gray-400 dark:text-gray-500 italic">expansion — filtering not yet supported</span>
+        </div>
+      );
+    }
 
     return (
       <div
@@ -226,6 +215,12 @@ export const AdvancedSearch = ({ resource, fields, lookups, fieldGroups, onSearc
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
+      {hasUnrepresentable && (
+        <div className="text-xs text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded px-3 py-2">
+          This filter contains expressions that can only be edited in the search bar.
+        </div>
+      )}
+
       {activeFilters.length > 0 && (
         <div className="text-xs text-gray-500 dark:text-gray-400">
           {activeFilters.length} filter{activeFilters.length !== 1 ? 's' : ''} active

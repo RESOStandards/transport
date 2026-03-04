@@ -18,6 +18,7 @@
  */
 
 export { parseFilter, ParseError, LexerError } from './parser.js';
+export { astToFilterString } from './serializer.js';
 export { tokenize } from './lexer.js';
 export type {
   FilterExpression,

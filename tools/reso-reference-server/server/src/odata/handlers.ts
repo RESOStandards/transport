@@ -1,10 +1,15 @@
 import { randomUUID } from 'node:crypto';
+import { LexerError, ParseError } from '@reso/odata-filter-parser';
 import type { RequestHandler } from 'express';
 import type { CollectionQueryOptions, DataAccessLayer, ResourceContext } from '../db/data-access.js';
 import { buildAnnotations } from './annotations.js';
 import { buildODataError, buildValidationError } from './errors.js';
 import { setODataHeaders } from './headers.js';
 import { validateRequestBody } from './validation.js';
+
+/** Returns true if the error is a client-facing filter validation error (e.g. unknown field). */
+const isFilterError = (err: unknown): err is Error =>
+  err instanceof Error && (err.message.includes('$filter') || err.message.includes('Unknown field'));
 
 /** Extracts the OData key from a URL path like `/Property('12345')`. */
 const extractKey = (path: string): string | undefined => {
@@ -273,6 +278,11 @@ export const collectionHandler =
       res.status(200).json(body);
     } catch (err) {
       setODataHeaders(res);
+      if (err instanceof ParseError || err instanceof LexerError || isFilterError(err)) {
+        const msg = err instanceof Error ? err.message : 'Invalid $filter expression';
+        res.status(400).json(buildODataError('40000', msg, [{ target: '$filter', message: msg }], 'Query'));
+        return;
+      }
       res.status(500).json(buildODataError('50000', err instanceof Error ? err.message : 'Internal server error', [], 'Query'));
     }
   };

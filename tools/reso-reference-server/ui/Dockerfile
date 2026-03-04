@@ -2,13 +2,15 @@
 FROM node:22-alpine AS build
 WORKDIR /app
 
-# Copy file: dependency
+# Copy file: dependencies
 COPY validation/ /deps/validation/
+COPY odata-filter-parser/ /deps/odata-filter-parser/
 
 COPY reso-reference-server/ui/package.json reso-reference-server/ui/package-lock.json* ./
 
-# Rewrite file: dependency path for the Docker build context
-RUN sed -i 's|file:../../validation|file:/deps/validation|' package.json
+# Rewrite file: dependency paths for the Docker build context
+RUN sed -i 's|file:../../validation|file:/deps/validation|' package.json && \
+    sed -i 's|file:../../odata-filter-parser|file:/deps/odata-filter-parser|' package.json
 
 RUN npm ci --ignore-scripts || npm install
 
