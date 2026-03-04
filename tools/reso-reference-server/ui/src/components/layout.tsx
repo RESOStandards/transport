@@ -25,7 +25,7 @@ export const Layout = () => {
   const pageIndicator = getPageIndicator(location.pathname, resource);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
+    <div className="h-screen flex flex-col overflow-hidden bg-gray-50 dark:bg-gray-900 transition-colors">
       {/* Header */}
       <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 sm:px-6">
         <div className="flex items-center justify-between">
@@ -75,14 +75,14 @@ export const Layout = () => {
         </div>
       </header>
 
-      <div className="flex flex-col sm:flex-row">
-        {/* Sidebar */}
-        <nav className="w-full sm:w-56 shrink-0 bg-white dark:bg-gray-800 border-b sm:border-b-0 sm:border-r border-gray-200 dark:border-gray-700 p-3 sm:p-4 sm:min-h-[calc(100vh-57px)]">
+      <div className="flex flex-col sm:flex-row flex-1 overflow-hidden">
+        {/* Sidebar — fixed, does not scroll with content */}
+        <nav className="w-full sm:w-56 shrink-0 bg-white dark:bg-gray-800 border-b sm:border-b-0 sm:border-r border-gray-200 dark:border-gray-700 p-3 sm:p-4 sm:overflow-y-auto">
           <ResourceNav />
         </nav>
 
-        {/* Main content */}
-        <main className="flex-1 p-4 sm:p-6 overflow-x-auto">
+        {/* Main content — only this area scrolls */}
+        <main className="flex-1 p-4 sm:p-6 overflow-y-auto">
           <Outlet />
         </main>
       </div>

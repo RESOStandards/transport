@@ -1,6 +1,9 @@
 server {
     listen 80;
 
+    # Allow large OData URIs (complex $filter/$select can exceed the 8k default)
+    large_client_header_buffers 4 32k;
+
     # Named location for proxying to the OData server
     location @api {
         internal;

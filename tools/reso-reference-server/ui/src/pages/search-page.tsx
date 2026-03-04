@@ -30,17 +30,14 @@ export const SearchPage = () => {
 
   // Resolve summary fields from config
   const resourceConfig = config?.resources?.[resourceName];
-  const summaryFields: string[] = (() => {
-    if (!resourceConfig) return [KEY_FIELD_MAP[resourceName]];
-    if (resourceConfig.summaryFields === '__all__') {
-      return fields.map(f => f.fieldName);
-    }
-    return [...resourceConfig.summaryFields];
-  })();
+  const isAllFields = !resourceConfig || resourceConfig.summaryFields === '__all__';
+  const summaryFields: string[] = isAllFields ? fields.map(f => f.fieldName) : [...resourceConfig.summaryFields];
 
   // Determine $select and $expand for the collection query
+  // When summaryFields is "__all__", omit $select entirely — the server returns all fields by default.
+  // Sending every field name in $select creates a URL that exceeds nginx's header buffer limit.
   const hasMedia = resourceName === 'Property';
-  const selectFields = summaryFields.length > 0 ? summaryFields.join(',') : undefined;
+  const selectFields = isAllFields ? undefined : summaryFields.join(',');
 
   const { rows, count, isLoading, hasMore, error, loadMore } = useCollection(resourceName, {
     $filter: filter || undefined,

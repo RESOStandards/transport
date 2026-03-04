@@ -22,6 +22,20 @@ alternative backend, selectable via `DB_BACKEND` environment variable.~~
 - ~~Docker Compose profile for MongoDB~~
 - ~~Documentation: server README, reference-server README, module READMEs~~
 
+### ~~#16 — UI: Fixed Header/Sidebar and Request URI Fix~~
+**Package:** `reso-reference-server/ui`
+**Status:** Closed
+
+~~Header and left navigation sidebar now stay fixed while only the main content
+area scrolls. Also fixed "Request URI too large" error caused by sending all
+field names in `$select` for `__all__` resources, and increased nginx header
+buffer limit to 32k for complex OData queries.~~
+
+~~Affected files:~~
+- ~~`ui/src/components/layout.tsx`~~
+- ~~`ui/src/pages/search-page.tsx`~~
+- ~~`ui/nginx.conf.template`~~
+
 ### ~~#15 — UI: Detail Page Layout — Summary Pane + Media Carousel~~
 **Package:** `reso-reference-server/ui`
 **Status:** Closed

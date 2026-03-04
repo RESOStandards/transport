@@ -26,8 +26,20 @@ all UI views.
   collapsible "Other" section
 - Applies to detail page, record form, and advanced search
 
+**Fixed header/sidebar and request URI fix (#16):**
+
+- Header and left navigation sidebar now stay fixed; only the main content
+  area scrolls
+- Fixed "Request URI too large" error by omitting `$select` for resources
+  with `summaryFields: "__all__"` (server returns all fields by default)
+- Increased nginx `large_client_header_buffers` to `4 32k` for complex
+  OData queries
+
 **Modified files:**
 
+- `layout.tsx` — Fixed header/sidebar with scrollable content area
+- `search-page.tsx` — Omit `$select` for `__all__` resources
+- `nginx.conf.template` — Increased header buffer limit
 - `detail-page.tsx` — Summary pane + carousel layout, summary field extraction
 - `record-form.tsx` — Flat field grid when no groups exist
 - `advanced-search.tsx` — Flat field rows when no groups exist
