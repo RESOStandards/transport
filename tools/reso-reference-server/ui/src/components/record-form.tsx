@@ -68,6 +68,7 @@ export const RecordForm = ({
   const [values, setValues] = useState<Record<string, unknown>>(initialValues ?? {});
   const [errors, setErrors] = useState<Map<string, string>>(new Map());
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [keyCopied, setKeyCopied] = useState(false);
 
   const keyField = KEY_FIELD_MAP[resource];
   const excludeFields = new Set(['ModificationTimestamp', ...(isEdit ? [] : [keyField])]);
@@ -170,9 +171,36 @@ export const RecordForm = ({
     <form onSubmit={handleSubmit} className="space-y-4">
       {/* Key field shown as read-only in edit mode */}
       {isEdit && (
-        <div className="bg-gray-50 dark:bg-gray-900 rounded px-4 py-2">
+        <div className="bg-gray-50 dark:bg-gray-900 rounded px-4 py-2 flex items-center">
           <span className="text-xs text-gray-500 dark:text-gray-400">{keyField}:</span>
-          <span className="text-sm font-mono ml-2">{String(values[keyField] ?? '')}</span>
+          <span className="text-sm font-mono ml-2 text-gray-800 dark:text-gray-200">{String(values[keyField] ?? '')}</span>
+          <button
+            type="button"
+            onClick={() => {
+              navigator.clipboard.writeText(String(values[keyField] ?? '')).then(() => {
+                setKeyCopied(true);
+                setTimeout(() => setKeyCopied(false), 1500);
+              });
+            }}
+            title={keyCopied ? 'Copied!' : 'Copy key to clipboard'}
+            className="ml-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+            {keyCopied ? (
+              <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <title>Copied</title>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            ) : (
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <title>Copy to clipboard</title>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                />
+              </svg>
+            )}
+          </button>
         </div>
       )}
 
