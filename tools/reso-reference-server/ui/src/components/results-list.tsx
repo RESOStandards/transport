@@ -36,7 +36,6 @@ export const ResultsList = ({
       {count !== undefined && (
         <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
           {count.toLocaleString()} result{count !== 1 ? 's' : ''}
-          {rows.length < count ? ` (showing ${rows.length.toLocaleString()})` : ''}
         </p>
       )}
 

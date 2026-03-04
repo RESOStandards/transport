@@ -11,16 +11,40 @@ interface AdvancedSearchProps {
   readonly onSearch: (filter: string) => void;
 }
 
-/** Comparison operators available for filter expressions. */
-const OPERATORS = [
-  { value: 'eq', label: '=' },
-  { value: 'ne', label: '!=' },
-  { value: 'gt', label: '>' },
-  { value: 'ge', label: '>=' },
-  { value: 'lt', label: '<' },
-  { value: 'le', label: '<=' },
-  { value: 'contains', label: 'contains' }
-] as const;
+/** All comparison operators. */
+const OP_EQ = { value: 'eq', label: '=' } as const;
+const OP_NE = { value: 'ne', label: '!=' } as const;
+const OP_GT = { value: 'gt', label: '>' } as const;
+const OP_GE = { value: 'ge', label: '>=' } as const;
+const OP_LT = { value: 'lt', label: '<' } as const;
+const OP_LE = { value: 'le', label: '<=' } as const;
+const OP_CONTAINS = { value: 'contains', label: 'contains' } as const;
+
+const OP_ANY = { value: 'any', label: 'any' } as const;
+const OP_ALL = { value: 'all', label: 'all' } as const;
+
+/** Operators valid for orderable types (numeric, date/time). */
+const ORDERABLE_OPS = [OP_EQ, OP_NE, OP_GT, OP_GE, OP_LT, OP_LE] as const;
+/** Operators valid for string fields. */
+const STRING_OPS = [OP_EQ, OP_NE, OP_CONTAINS] as const;
+/** Operators valid for equality-only types (enum, boolean, guid). */
+const EQUALITY_OPS = [OP_EQ, OP_NE] as const;
+/** Operators valid for collection fields (lambda). */
+const COLLECTION_OPS = [OP_ANY, OP_ALL] as const;
+
+const DATE_TYPES = new Set(['Edm.Date', 'Edm.DateTimeOffset', 'Edm.TimeOfDay']);
+
+/** Returns the valid operators for a given field based on its Edm type. */
+const getOperatorsForField = (field: ResoField): ReadonlyArray<{ readonly value: string; readonly label: string }> => {
+  if (field.isCollection) return COLLECTION_OPS;
+  if (isEnumType(field.type)) return EQUALITY_OPS;
+  if (isNumericEdmType(field.type)) return ORDERABLE_OPS;
+  if (DATE_TYPES.has(field.type)) return ORDERABLE_OPS;
+  if (field.type === 'Edm.String') return STRING_OPS;
+  if (field.type === 'Edm.Boolean') return EQUALITY_OPS;
+  // Guid and any other types — equality only
+  return EQUALITY_OPS;
+};
 
 interface FilterEntry {
   readonly field: string;
@@ -75,7 +99,21 @@ const buildFilterString = (entries: ReadonlyArray<FilterEntry>, fields: Readonly
     const isNumeric = isNumericEdmType(field.type);
     const val = isString ? `'${entry.value.replace(/'/g, "''")}'` : isNumeric ? entry.value : `'${entry.value}'`;
 
-    if (entry.operator === 'contains') {
+    if (entry.operator === 'any' || entry.operator === 'all') {
+      const values = entry.value.split('|').filter(v => v.trim());
+      if (values.length === 0) continue;
+      const quoted = values.map(v => `'${v.replace(/'/g, "''")}'`);
+      if (entry.operator === 'any') {
+        // any: at least one of the selected values exists in the collection
+        const inner = quoted.map(q => `x eq ${q}`).join(' or ');
+        parts.push(`${entry.field}/any(x:${inner})`);
+      } else {
+        // all: every selected value exists in the collection
+        for (const q of quoted) {
+          parts.push(`${entry.field}/any(x:x eq ${q})`);
+        }
+      }
+    } else if (entry.operator === 'contains') {
       parts.push(`contains(${entry.field},${val})`);
     } else {
       parts.push(`${entry.field} ${entry.operator} ${val}`);
@@ -93,7 +131,7 @@ export const AdvancedSearch = ({ resource, fields, lookups, fieldGroups, onSearc
   const handleChange = useCallback((fieldName: string, operator: string, value: string) => {
     setFilters(prev => {
       const next = new Map(prev);
-      if (!value.trim() && operator === 'eq') {
+      if (!value.trim()) {
         next.delete(fieldName);
       } else {
         next.set(fieldName, { field: fieldName, operator, value });
@@ -113,27 +151,55 @@ export const AdvancedSearch = ({ resource, fields, lookups, fieldGroups, onSearc
     onSearch('');
   };
 
-  const renderFieldRow = (field: ResoField) => {
+  const renderFieldRow = (field: ResoField, index: number) => {
     const entry = filters.get(field.fieldName);
     const fieldLookups = isEnumType(field.type) ? lookups[field.type] : undefined;
+    const operators = getOperatorsForField(field);
+    const defaultOp = operators[0].value;
+    const stripe = index % 2 === 1 ? 'bg-gray-100 dark:bg-gray-700/40' : '';
 
     return (
-      <div key={field.fieldName} className="flex flex-col sm:flex-row gap-1 sm:gap-2 items-start sm:items-center py-1">
+      <div
+        key={field.fieldName}
+        className={`flex flex-col sm:flex-row gap-1 sm:gap-2 items-start sm:items-center py-2.5 px-2 rounded ${stripe}`}>
         <span className="text-xs text-gray-600 dark:text-gray-400 w-full sm:w-48 shrink-0 truncate">{field.fieldName}</span>
         <select
-          value={entry?.operator ?? 'eq'}
+          value={entry?.operator ?? defaultOp}
           onChange={e => handleChange(field.fieldName, e.target.value, entry?.value ?? '')}
           className="px-1 py-1 border border-gray-300 dark:border-gray-600 rounded text-xs w-full sm:w-20 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
-          {OPERATORS.map(op => (
+          {operators.map(op => (
             <option key={op.value} value={op.value}>
               {op.label}
             </option>
           ))}
         </select>
-        {fieldLookups && fieldLookups.length > 0 ? (
+        {field.isCollection && fieldLookups && fieldLookups.length > 0 ? (
+          <div className="flex-1 flex flex-wrap gap-1 w-full">
+            {fieldLookups.map(l => {
+              const selected = (entry?.value ?? '').split('|').filter(Boolean);
+              const isSelected = selected.includes(l.lookupValue);
+              return (
+                <button
+                  key={l.lookupValue}
+                  type="button"
+                  onClick={() => {
+                    const next = isSelected ? selected.filter(v => v !== l.lookupValue) : [...selected, l.lookupValue];
+                    handleChange(field.fieldName, entry?.operator ?? defaultOp, next.join('|'));
+                  }}
+                  className={`px-2 py-0.5 rounded text-xs border transition-colors ${
+                    isSelected
+                      ? 'bg-blue-600 text-white border-blue-600'
+                      : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:border-blue-400 dark:hover:border-blue-500'
+                  }`}>
+                  {l.lookupValue}
+                </button>
+              );
+            })}
+          </div>
+        ) : fieldLookups && fieldLookups.length > 0 ? (
           <select
             value={entry?.value ?? ''}
-            onChange={e => handleChange(field.fieldName, entry?.operator ?? 'eq', e.target.value)}
+            onChange={e => handleChange(field.fieldName, entry?.operator ?? defaultOp, e.target.value)}
             className="flex-1 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded text-xs w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
             <option value="">— Any —</option>
             {fieldLookups.map(l => (
@@ -146,7 +212,7 @@ export const AdvancedSearch = ({ resource, fields, lookups, fieldGroups, onSearc
           <input
             type="text"
             value={entry?.value ?? ''}
-            onChange={e => handleChange(field.fieldName, entry?.operator ?? 'eq', e.target.value)}
+            onChange={e => handleChange(field.fieldName, entry?.operator ?? defaultOp, e.target.value)}
             placeholder="value"
             className="flex-1 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded text-xs w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
           />
