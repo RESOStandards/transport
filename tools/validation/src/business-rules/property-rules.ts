@@ -6,9 +6,12 @@ const MAX_PRICE = 1_000_000_000;
 /** Maximum allowed value for bedroom/bathroom count fields. */
 const MAX_ROOM_COUNT = 100;
 
+/** Maximum allowed value for expense, fee, and amount fields. */
+const MAX_EXPENSE = 10_000;
+
 const priceRule = (fieldName: string): FieldRule => ({
   fieldName,
-  min: 0,
+  min: 0.01,
   max: MAX_PRICE
 });
 
@@ -23,6 +26,13 @@ const requiredRule = (fieldName: string): FieldRule => ({
   required: true
 });
 
+/**
+ * Pattern matching expense, fee, and amount fields by name suffix.
+ * Matches: CableTvExpense, AssociationFee, AssociationFee2, TaxAnnualAmount, etc.
+ * Does NOT match: LotSizeSquareFeet (ends with "Feet", not "Fee").
+ */
+const EXPENSE_FEE_AMOUNT_PATTERN = /(?:Expense|Amount|Fee\d?)$/;
+
 /** Per-field rules for the Property resource. */
 export const PROPERTY_RULES: ReadonlyArray<FieldRule> = [
   // Required address fields
@@ -31,12 +41,20 @@ export const PROPERTY_RULES: ReadonlyArray<FieldRule> = [
   requiredRule('PostalCode'),
   requiredRule('Country'),
 
-  // Price fields
+  // Price fields (must be > $0)
   priceRule('ListPrice'),
   priceRule('OriginalListPrice'),
   priceRule('PreviousListPrice'),
   priceRule('ClosePrice'),
   priceRule('ListPriceLow'),
+
+  // Expense, fee, and amount fields (pattern-matched)
+  {
+    fieldName: 'expenses/fees/amounts',
+    fieldPattern: EXPENSE_FEE_AMOUNT_PATTERN,
+    min: 0,
+    max: MAX_EXPENSE
+  },
 
   // Bedroom fields
   roomCountRule('BedroomsTotal'),

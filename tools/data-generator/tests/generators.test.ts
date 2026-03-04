@@ -154,6 +154,49 @@ describe('generatePropertyRecords', () => {
     expect(typeof records[0].PublicRemarks).toBe('string');
     expect((records[0].PublicRemarks as string).length).toBeGreaterThan(0);
   });
+
+  it('calculates TaxAnnualAmount from ListPrice and state tax rate', () => {
+    const records = generatePropertyRecords(PROPERTY_FIELDS, SAMPLE_LOOKUPS, 20);
+    for (const record of records) {
+      const tax = record.TaxAnnualAmount as number;
+      expect(tax).toBeGreaterThan(0);
+      // Tax should be a reasonable fraction of ListPrice (between 0.1% and 3%)
+      const price = record.ListPrice as number;
+      expect(tax).toBeLessThanOrEqual(price * 0.03);
+      expect(tax).toBeGreaterThanOrEqual(price * 0.001);
+    }
+  });
+
+  it('generates TaxAssessedValue less than ListPrice', () => {
+    const records = generatePropertyRecords(PROPERTY_FIELDS, SAMPLE_LOOKUPS, 10);
+    for (const record of records) {
+      expect(record.TaxAssessedValue as number).toBeLessThanOrEqual(record.ListPrice as number);
+      expect(record.TaxAssessedValue as number).toBeGreaterThan(0);
+    }
+  });
+
+  it('generates expense fields within $0-$10,000 range', () => {
+    const expenseFields = [
+      'AssociationFee',
+      'AssociationFee2',
+      'InsuranceExpense',
+      'ElectricExpense',
+      'WaterSewerExpense',
+      'TrashExpense',
+      'CableTvExpense',
+      'MaintenanceExpense',
+      'OperatingExpense',
+      'OtherExpense'
+    ];
+    const records = generatePropertyRecords(PROPERTY_FIELDS, SAMPLE_LOOKUPS, 10);
+    for (const record of records) {
+      for (const field of expenseFields) {
+        const value = record[field] as number;
+        expect(value).toBeGreaterThanOrEqual(0);
+        expect(value).toBeLessThanOrEqual(10000);
+      }
+    }
+  });
 });
 
 describe('generateMemberRecords', () => {

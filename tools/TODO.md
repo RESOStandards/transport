@@ -193,6 +193,26 @@ PropertyGreenVerification, PropertyPowerProduction, PropertyRooms, PropertyUnitT
 
 **Remaining post-test issue:** Client credentials replication requires HTTPS tokenUri (tracked in #20)
 
+### ~~#22 — UI: Auto-Expand Field Groups Containing Validation Errors~~
+**Package:** `reso-reference-server/ui`
+**Status:** Closed
+
+~~When editing a Property record (or any resource with field groups), validation errors
+may be inside collapsed group sections. The error banner says "Please fix the 2 field
+errors highlighted below" but the user has to manually open each group to find which
+fields have errors.~~
+
+~~**Fix:** When validation errors occur (client-side or server-side), automatically expand
+any `FieldGroupSection` that contains a field with an error. Groups without errors
+can remain in their current collapsed/expanded state.~~
+
+~~Affected files:~~
+- ~~`ui/src/components/record-form.tsx` — pass error field names to determine which groups should be open~~
+- ~~`ui/src/components/field-group-section.tsx` — accept a `forceOpen` prop or similar to override collapsed state~~
+
+~~**Note:** Only applies to resources with field groups (e.g., Property). Resources without
+groups display fields in a flat list and are unaffected.~~
+
 ### #19 — Fix Web API Core 2.0.0 Compliance Test Failures
 **Package:** `reso-reference-server`
 

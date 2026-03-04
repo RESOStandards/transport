@@ -32,7 +32,9 @@ const fields: ResoField[] = [
   makeField({ fieldName: 'CloseDate', type: 'Edm.Date' }),
   makeField({ fieldName: 'ModificationTimestamp', type: 'Edm.DateTimeOffset' }),
   makeField({ fieldName: 'LotSizeAcres', type: 'Edm.Double' }),
-  makeField({ fieldName: 'Remarks', type: 'Edm.String', maxLength: 50 })
+  makeField({ fieldName: 'Remarks', type: 'Edm.String', maxLength: 50 }),
+  makeField({ fieldName: 'Latitude', type: 'Edm.Decimal', precision: 12, scale: 6 }),
+  makeField({ fieldName: 'Longitude', type: 'Edm.Decimal', precision: 12, scale: 6 })
 ];
 
 describe('validateRecord', () => {
@@ -121,6 +123,14 @@ describe('validateRecord', () => {
       expect(failures).toHaveLength(1);
       expect(failures[0].field).toBe('ListPrice');
       expect(failures[0].reason).toContain('greater than or equal to 0');
+    });
+
+    it('accepts negative Latitude', () => {
+      expect(validateRecord({ ...VALID_ADDRESS, Latitude: -33.8688 }, fields)).toHaveLength(0);
+    });
+
+    it('accepts negative Longitude', () => {
+      expect(validateRecord({ ...VALID_ADDRESS, Longitude: -118.2437 }, fields)).toHaveLength(0);
     });
   });
 

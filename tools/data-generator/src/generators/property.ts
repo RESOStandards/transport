@@ -1,6 +1,63 @@
 import { generateRecord, randomChoice, randomDecimal, randomInt } from './field-generator.js';
 import type { ResoField, ResoLookup } from './types.js';
 
+/**
+ * Effective property tax rates by US state (2024 data).
+ * Source: Tax Foundation / American Community Survey.
+ * Rates expressed as decimal fractions (e.g., 0.0179 = 1.79%).
+ */
+const STATE_TAX_RATES: Readonly<Record<string, number>> = {
+  AL: 0.0037,
+  AZ: 0.0043,
+  AR: 0.0054,
+  CA: 0.0069,
+  CO: 0.0052,
+  CT: 0.0136,
+  DE: 0.0051,
+  FL: 0.0076,
+  GA: 0.0077,
+  HI: 0.0031,
+  ID: 0.0043,
+  IL: 0.0179,
+  IN: 0.0076,
+  IA: 0.0125,
+  KS: 0.012,
+  KY: 0.0072,
+  LA: 0.0056,
+  ME: 0.009,
+  MD: 0.009,
+  MA: 0.0095,
+  MI: 0.0113,
+  MN: 0.0099,
+  MS: 0.0054,
+  MO: 0.0085,
+  MT: 0.0059,
+  NE: 0.0138,
+  NV: 0.005,
+  NH: 0.0135,
+  NJ: 0.0168,
+  NM: 0.0061,
+  NY: 0.0123,
+  NC: 0.0062,
+  ND: 0.0094,
+  OH: 0.0128,
+  OK: 0.0078,
+  OR: 0.0079,
+  PA: 0.0114,
+  RI: 0.01,
+  SC: 0.0044,
+  SD: 0.01,
+  TN: 0.0046,
+  TX: 0.0125,
+  UT: 0.0045,
+  VT: 0.014,
+  VA: 0.0075,
+  WA: 0.0074,
+  WV: 0.0048,
+  WI: 0.0119,
+  WY: 0.0058
+};
+
 const STREET_NAMES = [
   'Main',
   'Oak',
@@ -136,6 +193,25 @@ export const generatePropertyRecords = (
           : randomChoice(statusValues).lookupValue
         : randomChoice(statusValues).lookupValue;
     }
+
+    // Taxes — calculated from ListPrice × state effective rate
+    const taxRate = STATE_TAX_RATES[record.StateOrProvince as string] ?? 0.01;
+    const listPrice = record.ListPrice as number;
+    record.TaxAnnualAmount = randomDecimal(listPrice * taxRate * 0.9, listPrice * taxRate * 1.1, 2);
+    record.TaxAssessedValue = randomDecimal(listPrice * 0.7, listPrice * 0.95, 2);
+    record.TaxYear = new Date().getFullYear() - randomInt(0, 1);
+
+    // Expense fields (realistic monthly amounts)
+    record.AssociationFee = randomDecimal(50, 800, 2);
+    record.AssociationFee2 = Math.random() > 0.7 ? randomDecimal(25, 200, 2) : 0;
+    record.InsuranceExpense = randomDecimal(50, 500, 2);
+    record.ElectricExpense = randomDecimal(50, 400, 2);
+    record.WaterSewerExpense = randomDecimal(20, 150, 2);
+    record.TrashExpense = randomDecimal(10, 75, 2);
+    record.CableTvExpense = randomDecimal(30, 200, 2);
+    record.MaintenanceExpense = randomDecimal(50, 500, 2);
+    record.OperatingExpense = randomDecimal(100, 2000, 2);
+    record.OtherExpense = randomDecimal(0, 300, 2);
 
     // Dates
     const listDate = new Date(Date.now() - randomInt(1, 365) * 86400000);

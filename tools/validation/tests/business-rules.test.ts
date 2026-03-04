@@ -67,8 +67,14 @@ describe('getBusinessRules', () => {
 
 describe('validateBusinessRules', () => {
   describe('ListPrice', () => {
-    it('accepts 0', () => {
-      expect(validateBusinessRules('Property', { ...VALID_ADDRESS, ListPrice: 0 })).toHaveLength(0);
+    it('rejects 0 (prices must be > 0)', () => {
+      const failures = validateBusinessRules('Property', { ...VALID_ADDRESS, ListPrice: 0 });
+      expect(failures).toHaveLength(1);
+      expect(failures[0].field).toBe('ListPrice');
+    });
+
+    it('accepts 0.01', () => {
+      expect(validateBusinessRules('Property', { ...VALID_ADDRESS, ListPrice: 0.01 })).toHaveLength(0);
     });
 
     it('accepts a normal price', () => {
@@ -95,6 +101,52 @@ describe('validateBusinessRules', () => {
       expect(failures).toHaveLength(1);
       expect(failures[0].field).toBe('ListPrice');
       expect(failures[0].reason).toContain('at least');
+    });
+  });
+
+  describe('expense/fee/amount fields (pattern-matched)', () => {
+    it('accepts 0 for expense fields', () => {
+      expect(validateBusinessRules('Property', { ...VALID_ADDRESS, InsuranceExpense: 0 })).toHaveLength(0);
+    });
+
+    it('accepts values up to 10,000', () => {
+      expect(validateBusinessRules('Property', { ...VALID_ADDRESS, TaxAnnualAmount: 10_000 })).toHaveLength(0);
+    });
+
+    it('rejects expense values above 10,000', () => {
+      const failures = validateBusinessRules('Property', { ...VALID_ADDRESS, MaintenanceExpense: 10_001 });
+      expect(failures).toHaveLength(1);
+      expect(failures[0].field).toBe('MaintenanceExpense');
+    });
+
+    it('rejects negative expense values', () => {
+      const failures = validateBusinessRules('Property', { ...VALID_ADDRESS, ElectricExpense: -50 });
+      expect(failures).toHaveLength(1);
+      expect(failures[0].field).toBe('ElectricExpense');
+    });
+
+    it('matches AssociationFee', () => {
+      const failures = validateBusinessRules('Property', { ...VALID_ADDRESS, AssociationFee: 10_001 });
+      expect(failures).toHaveLength(1);
+      expect(failures[0].field).toBe('AssociationFee');
+    });
+
+    it('matches AssociationFee2', () => {
+      const failures = validateBusinessRules('Property', { ...VALID_ADDRESS, AssociationFee2: 10_001 });
+      expect(failures).toHaveLength(1);
+      expect(failures[0].field).toBe('AssociationFee2');
+    });
+
+    it('matches TaxOtherAnnualAssessmentAmount', () => {
+      expect(validateBusinessRules('Property', { ...VALID_ADDRESS, TaxOtherAnnualAssessmentAmount: 5000 })).toHaveLength(0);
+    });
+
+    it('does not match LotSizeSquareFeet (ends with Feet, not Fee)', () => {
+      expect(validateBusinessRules('Property', { ...VALID_ADDRESS, LotSizeSquareFeet: 50_000 })).toHaveLength(0);
+    });
+
+    it('does not match non-numeric expense values', () => {
+      expect(validateBusinessRules('Property', { ...VALID_ADDRESS, InsuranceExpense: 'n/a' })).toHaveLength(0);
     });
   });
 

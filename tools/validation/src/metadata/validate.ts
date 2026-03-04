@@ -2,6 +2,9 @@ import { validateBusinessRules } from '../business-rules/index.js';
 import { isEnumType, isIntegerEdmType, isNumericEdmType } from './helpers.js';
 import type { ResoField, ValidationFailure } from './types.js';
 
+/** Fields that legitimately hold negative numeric values (e.g., coordinates). */
+const ALLOW_NEGATIVE_FIELDS = new Set(['Latitude', 'Longitude']);
+
 /**
  * Validates a record against the resource's field definitions.
  *
@@ -38,8 +41,8 @@ export const validateRecord = (
     // Skip null, undefined, and empty string values
     if (value === null || value === undefined || value === '') continue;
 
-    // Check negative numerics
-    if (typeof value === 'number' && value < 0 && isNumericEdmType(field.type)) {
+    // Check negative numerics (Latitude/Longitude are allowed to be negative)
+    if (typeof value === 'number' && value < 0 && isNumericEdmType(field.type) && !ALLOW_NEGATIVE_FIELDS.has(key)) {
       failures.push({ field: key, reason: 'Value must be greater than or equal to 0.' });
       continue;
     }

@@ -2,6 +2,75 @@
 
 ---
 
+## v0.0.16 — 2026-03-04
+
+### Validation Improvements, Tax/Expense Data, and UI Fixes
+
+**Validation: Pattern-based field rules and negative coordinate fix (#22):**
+
+- Added `fieldPattern` to `FieldRule` for regex-based field matching — expense,
+  fee, and amount fields (matching `/(?:Expense|Amount|Fee\d?)$/`) now validated
+  against a $0–$10,000 range without enumerating all 25+ field names
+- Price fields (ListPrice, OriginalListPrice, etc.) now require values > 0
+  (previously accepted 0)
+- Latitude and Longitude exempt from the "must be >= 0" rule — negative
+  coordinates are valid for Western/Southern hemispheres
+- 11 new validation tests (expense patterns, negative coordinates)
+
+**Data generator: Realistic tax and expense fields:**
+
+- Added US state effective property tax rates (2024 ACS data, all 50 states)
+- `TaxAnnualAmount` calculated from ListPrice × state rate with ±10% randomization
+- `TaxAssessedValue` generated at 70–95% of ListPrice
+- `TaxYear` set to current or previous year
+- 10 expense fields generated with realistic ranges: AssociationFee, InsuranceExpense,
+  ElectricExpense, WaterSewerExpense, TrashExpense, CableTvExpense, MaintenanceExpense,
+  OperatingExpense, OtherExpense, AssociationFee2
+- 5 new data generator tests
+
+**UI: Auto-expand field groups with validation errors (#22):**
+
+- `FieldGroupSection` now accepts an `errorCount` prop — groups auto-expand
+  when errors are present, with a red error count badge on the section header
+  and a red border highlight
+- `RecordForm` computes per-group error counts via `useMemo` and passes them
+  to each `FieldGroupSection`
+- Only affects resources with field groups (e.g., Property)
+
+**UI: Dark mode persistence fix:**
+
+- Dark mode preference now persists via `localStorage` instead of URL query
+  params, which were lost on React Router navigation
+- URL `?theme=dark|light` still works as a one-time override
+
+**Affected files:**
+
+- `validation/src/business-rules/types.ts` — `fieldPattern` on `FieldRule`
+- `validation/src/business-rules/property-rules.ts` — expense pattern rule, price min > 0
+- `validation/src/business-rules/index.ts` — pattern rule matching logic
+- `validation/src/metadata/validate.ts` — `ALLOW_NEGATIVE_FIELDS` set
+- `validation/tests/business-rules.test.ts` — 9 new expense tests
+- `validation/tests/validate.test.ts` — 2 new coordinate tests
+- `data-generator/src/generators/property.ts` — state tax rates, expense generation
+- `data-generator/tests/generators.test.ts` — 5 new tests
+- `ui/src/components/field-group-section.tsx` — errorCount prop, auto-expand
+- `ui/src/components/record-form.tsx` — per-group error counts
+- `ui/src/hooks/use-dark-mode.ts` — localStorage persistence
+
+### Test Summary
+
+| Package | Tests |
+|---------|------:|
+| `@reso/validation` | 103 |
+| `@reso/odata-filter-parser` | 152 |
+| `@reso/odata-client` | 101 |
+| `@reso/data-generator` | 76 |
+| `@reso/reference-server` | 137 |
+| `@reso/certification-add-edit` | 49 |
+| **Total** | **618** |
+
+---
+
 ## v0.0.15 — 2026-03-05
 
 ### DD 2.0 Compliance and Expansion Field Fixes

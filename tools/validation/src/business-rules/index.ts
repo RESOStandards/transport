@@ -47,7 +47,12 @@ export const validateBusinessRules = (resourceName: string, body: Readonly<Recor
   // Per-field rules
   const rules = getBusinessRules(resourceName);
   if (rules.length > 0) {
-    const ruleMap = new Map(rules.map(r => [r.fieldName, r]));
+    const exactRules = new Map<string, FieldRule>();
+    const patternRules: FieldRule[] = [];
+    for (const r of rules) {
+      if (r.fieldPattern) patternRules.push(r);
+      else exactRules.set(r.fieldName, r);
+    }
 
     // Required field checks — iterate rules looking for missing fields
     for (const rule of rules) {
@@ -61,7 +66,8 @@ export const validateBusinessRules = (resourceName: string, body: Readonly<Recor
     // Range checks — iterate body fields looking for out-of-range values
     for (const [key, value] of Object.entries(body)) {
       if (typeof value !== 'number') continue;
-      const rule = ruleMap.get(key);
+      // Check exact match first, then pattern rules
+      const rule = exactRules.get(key) ?? patternRules.find(r => r.fieldPattern!.test(key));
       if (!rule) continue;
       if (rule.min !== undefined && value < rule.min) {
         failures.push({ field: key, reason: formatRangeMessage(rule, value) });

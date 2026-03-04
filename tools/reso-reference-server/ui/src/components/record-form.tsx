@@ -1,5 +1,5 @@
 import { type ValidationFailure, validateRecord } from '@reso/validation';
-import { type FormEvent, useCallback, useState } from 'react';
+import { type FormEvent, useCallback, useMemo, useState } from 'react';
 import type { FieldGroups, ResoField, ResoLookup, ResourceName } from '../types';
 import { KEY_FIELD_MAP } from '../types';
 import { FieldGroupSection } from './field-group-section';
@@ -147,6 +147,25 @@ export const RecordForm = ({
   // Sort group keys alphabetically
   const sortedGroups = [...grouped.entries()].sort((a, b) => a[0].localeCompare(b[0]));
 
+  // Compute error counts per group so sections with errors auto-expand
+  const groupErrorCounts = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const [group, groupFields] of sortedGroups) {
+      let count = 0;
+      for (const field of groupFields) {
+        if (errors.has(field.fieldName)) count++;
+      }
+      counts.set(group, count);
+    }
+    // Count errors in ungrouped fields for the "Other" section
+    let otherCount = 0;
+    for (const field of ungrouped) {
+      if (errors.has(field.fieldName)) otherCount++;
+    }
+    counts.set('Other', otherCount);
+    return counts;
+  }, [sortedGroups, ungrouped, errors]);
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {/* Key field shown as read-only in edit mode */}
@@ -165,7 +184,7 @@ export const RecordForm = ({
 
       {/* Grouped fields */}
       {sortedGroups.map(([group, groupFields]) => (
-        <FieldGroupSection key={group} title={group} defaultOpen={sortedGroups.length <= 3}>
+        <FieldGroupSection key={group} title={group} defaultOpen={sortedGroups.length <= 3} errorCount={groupErrorCounts.get(group) ?? 0}>
           {renderFieldGrid(groupFields)}
         </FieldGroupSection>
       ))}
@@ -173,7 +192,7 @@ export const RecordForm = ({
       {/* Ungrouped fields — flat list when no groupings exist, "Other" section otherwise */}
       {ungrouped.length > 0 && sortedGroups.length === 0 && renderFieldGrid(ungrouped)}
       {ungrouped.length > 0 && sortedGroups.length > 0 && (
-        <FieldGroupSection title="Other" defaultOpen>
+        <FieldGroupSection title="Other" defaultOpen errorCount={groupErrorCounts.get('Other') ?? 0}>
           {renderFieldGrid(ungrouped)}
         </FieldGroupSection>
       )}
