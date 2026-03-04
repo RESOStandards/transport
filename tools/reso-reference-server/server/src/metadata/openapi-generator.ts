@@ -53,8 +53,74 @@ const buildSchemaProperties = (fields: ReadonlyArray<ResoField>): Record<string,
 const buildResourcePaths = (resource: string, keyField: string, fields: ReadonlyArray<ResoField>): Record<string, unknown> => {
   const schemaRef = `#/components/schemas/${resource}`;
 
+  const collectionSchema = {
+    type: 'object',
+    properties: {
+      '@odata.context': { type: 'string' },
+      '@odata.count': { type: 'integer' },
+      '@odata.nextLink': { type: 'string' },
+      value: { type: 'array', items: { $ref: schemaRef } }
+    }
+  };
+
+  const queryParameters = [
+    {
+      name: '$filter',
+      in: 'query',
+      description: 'OData $filter expression (e.g., ListPrice gt 200000)',
+      schema: { type: 'string' }
+    },
+    {
+      name: '$select',
+      in: 'query',
+      description: 'Comma-separated list of fields to include',
+      schema: { type: 'string' }
+    },
+    {
+      name: '$orderby',
+      in: 'query',
+      description: 'Sort expression (e.g., ListPrice desc)',
+      schema: { type: 'string' }
+    },
+    {
+      name: '$top',
+      in: 'query',
+      description: 'Maximum number of records to return',
+      schema: { type: 'integer', minimum: 0 }
+    },
+    {
+      name: '$skip',
+      in: 'query',
+      description: 'Number of records to skip',
+      schema: { type: 'integer', minimum: 0 }
+    },
+    {
+      name: '$count',
+      in: 'query',
+      description: 'Include total count in response',
+      schema: { type: 'boolean' }
+    },
+    {
+      name: '$expand',
+      in: 'query',
+      description: 'Navigation properties to expand (e.g., Media)',
+      schema: { type: 'string' }
+    }
+  ];
+
   return {
     [`/${resource}`]: {
+      get: {
+        tags: [resource],
+        summary: `Query ${resource} collection`,
+        parameters: queryParameters,
+        responses: {
+          '200': {
+            description: 'OData collection response',
+            content: { 'application/json': { schema: collectionSchema } }
+          }
+        }
+      },
       post: {
         tags: [resource],
         summary: `Create a new ${resource} record`,
@@ -93,6 +159,18 @@ const buildResourcePaths = (resource: string, keyField: string, fields: Readonly
             name: keyField,
             in: 'path',
             required: true,
+            schema: { type: 'string' }
+          },
+          {
+            name: '$select',
+            in: 'query',
+            description: 'Comma-separated list of fields to include',
+            schema: { type: 'string' }
+          },
+          {
+            name: '$expand',
+            in: 'query',
+            description: 'Navigation properties to expand (e.g., Media)',
             schema: { type: 'string' }
           }
         ],

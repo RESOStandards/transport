@@ -6,40 +6,70 @@ import { KEY_FIELD_MAP } from '../metadata/types.js';
 import { collectionHandler, createHandler, deleteHandler, readHandler, updateHandler } from './handlers.js';
 
 /**
- * Build navigation property bindings for a resource based on RESO conventions.
+ * Build navigation property bindings for a resource from isExpansion metadata.
  *
- * RESO uses the ResourceName + ResourceRecordKey pattern for child resources
- * like Media, which have columns pointing back to the parent resource.
+ * Each field with isExpansion=true defines a navigation property. The FK
+ * strategy is determined by inspecting the target resource's fields:
+ *
+ * 1. resource-record-key — target has ResourceName + ResourceRecordKey
+ *    (polymorphic child, e.g. Media belongs to Property, Member, Office, ...)
+ *
+ * 2. direct — target has the parent's key field directly
+ *    (dedicated child, e.g. OpenHouse.ListingKey → Property.ListingKey)
+ *
+ * 3. parent-fk — parent has {NavPropName}Key referencing the target's key
+ *    (to-one lookup, e.g. Property.BuyerAgentKey → Member.MemberKey)
  */
-const buildNavigationBindings = (
+export const buildNavigationBindings = (
   resource: string,
   metadata: ResoMetadata,
   targetResources: ReadonlyArray<string>
 ): ReadonlyArray<NavigationPropertyBinding> => {
+  const parentFields = getFieldsForResource(metadata, resource);
+  const expansionFields = parentFields.filter(f => f.isExpansion);
+  const parentKeyField = KEY_FIELD_MAP[resource];
+  const targetResourceSet = new Set(targetResources);
   const bindings: NavigationPropertyBinding[] = [];
 
-  // Check which target resources have ResourceName/ResourceRecordKey fields,
-  // indicating they can be child resources via the RESO FK convention.
-  for (const targetResource of targetResources) {
-    if (targetResource === resource) continue;
+  for (const field of expansionFields) {
+    const targetResource = field.typeName;
+    if (!targetResource || !targetResourceSet.has(targetResource)) continue;
+
+    const targetKeyField = KEY_FIELD_MAP[targetResource];
+    if (!targetKeyField) continue;
 
     const targetFields = getFieldsForResource(metadata, targetResource);
-    const hasResourceName = targetFields.some(f => f.fieldName === 'ResourceName');
-    const hasResourceRecordKey = targetFields.some(f => f.fieldName === 'ResourceRecordKey');
+    const hasResourceRecordKey =
+      targetFields.some(f => f.fieldName === 'ResourceName') && targetFields.some(f => f.fieldName === 'ResourceRecordKey');
 
-    if (hasResourceName && hasResourceRecordKey) {
-      const targetKeyField = KEY_FIELD_MAP[targetResource];
-      if (!targetKeyField) continue;
+    let foreignKey: NavigationPropertyBinding['foreignKey'];
 
-      bindings.push({
-        name: targetResource,
-        targetResource,
-        targetKeyField,
-        targetFields,
-        foreignKey: { strategy: 'resource-record-key' },
-        isCollection: true
-      });
+    if (field.isCollection && hasResourceRecordKey) {
+      // Polymorphic child (Media, HistoryTransactional, SocialMedia)
+      foreignKey = { strategy: 'resource-record-key' };
+    } else if (field.isCollection && parentKeyField && targetFields.some(f => f.fieldName === parentKeyField)) {
+      // Dedicated child with parent's key as direct FK (OpenHouse.ListingKey, Showing.ListingKey)
+      foreignKey = { strategy: 'direct', targetColumn: parentKeyField };
+    } else if (!field.isCollection) {
+      // To-one lookup: parent has {NavPropName}Key → target's key
+      const parentFkColumn = `${field.fieldName}Key`;
+      if (parentFields.some(f => f.fieldName === parentFkColumn)) {
+        foreignKey = { strategy: 'parent-fk', parentColumn: parentFkColumn };
+      } else {
+        continue; // Can't resolve FK, skip
+      }
+    } else {
+      continue; // Can't resolve FK, skip
     }
+
+    bindings.push({
+      name: field.fieldName,
+      targetResource,
+      targetKeyField,
+      targetFields,
+      foreignKey,
+      isCollection: field.isCollection ?? false
+    });
   }
 
   return bindings;

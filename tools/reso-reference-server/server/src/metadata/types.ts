@@ -19,6 +19,7 @@ export interface ResoField {
   readonly typeName?: string;
   readonly nullable?: boolean;
   readonly isCollection?: boolean;
+  readonly isExpansion?: boolean;
   readonly maxLength?: number;
   readonly scale?: number;
   readonly precision?: number;
@@ -43,26 +44,57 @@ export interface ResoMetadata {
   readonly lookups: ReadonlyArray<ResoLookup>;
 }
 
-/** Map of resource names to their primary key field names. */
+/** Map of resource names to their primary key field names (from DD 2.0). */
 export const KEY_FIELD_MAP: Readonly<Record<string, string>> = {
   Property: 'ListingKey',
-  Member: 'MemberKey',
-  Office: 'OfficeKey',
-  Media: 'MediaKey',
-  OpenHouse: 'OpenHouseKey',
-  Showing: 'ShowingKey',
-  Contacts: 'ContactKey',
+  Association: 'AssociationKey',
+  ContactListingNotes: 'ContactKey',
   ContactListings: 'ContactListingsKey',
+  Contacts: 'ContactKey',
+  EntityEvent: 'EntityEventSequence',
+  Field: 'FieldKey',
   HistoryTransactional: 'HistoryTransactionalKey',
-  InternetTracking: 'InternetTrackingKey',
-  SavedSearch: 'SavedSearchKey',
+  InternetTracking: 'EventKey',
+  LockOrBox: 'LockOrBoxKey',
+  Media: 'MediaKey',
+  Member: 'MemberKey',
+  MemberAssociation: 'AssociationKey',
+  MemberStateLicense: 'MemberStateLicenseKey',
+  Office: 'OfficeKey',
+  OfficeAssociation: 'AssociationKey',
+  OfficeCorporateLicense: 'OfficeCorporateLicenseKey',
+  OpenHouse: 'OpenHouseKey',
+  OtherPhone: 'OtherPhoneKey',
+  OUID: 'OrganizationUniqueIdKey',
+  PropertyGreenVerification: 'GreenBuildingVerificationKey',
+  PropertyPowerProduction: 'PowerProductionKey',
+  PropertyPowerStorage: 'PowerStorageKey',
+  PropertyRooms: 'RoomKey',
+  PropertyUnitTypes: 'UnitTypeKey',
   Prospecting: 'ProspectingKey',
   Queue: 'QueueTransactionKey',
   Rules: 'RuleKey',
-  Teams: 'TeamKey',
+  SavedSearch: 'SavedSearchKey',
+  Showing: 'ShowingKey',
+  ShowingAppointment: 'ShowingAppointmentKey',
+  ShowingAvailability: 'ShowingAvailabilityKey',
+  ShowingRequest: 'ShowingRequestKey',
+  SocialMedia: 'SocialMediaKey',
   TeamMembers: 'TeamMemberKey',
-  OUID: 'OrganizationUniqueId'
+  Teams: 'TeamKey',
+  TransactionManagement: 'TransactionKey'
 };
 
 /** Resources targeted for the reference server. */
-export const TARGET_RESOURCES: ReadonlyArray<string> = ['Property', 'Member', 'Office', 'Media', 'OpenHouse', 'Showing'];
+export const TARGET_RESOURCES: ReadonlyArray<string> = [
+  'Property',
+  'Member',
+  'Office',
+  'Media',
+  'OpenHouse',
+  'Showing',
+  'PropertyGreenVerification',
+  'PropertyPowerProduction',
+  'PropertyRooms',
+  'PropertyUnitTypes'
+];

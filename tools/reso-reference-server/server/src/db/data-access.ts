@@ -89,14 +89,22 @@ export interface NavigationForeignKey {
    *   resource AND ResourceRecordKey = parent key value.
    *
    * - "direct": Direct FK column on the target pointing to the parent key.
-   *   e.g. target.ParentKey = parent.Key
+   *   e.g. OpenHouse.ListingKey = Property.ListingKey (child has parent's key)
+   *
+   * - "parent-fk": Parent has a FK column referencing the target's key.
+   *   e.g. Property.BuyerAgentKey = Member.MemberKey (to-one lookup)
    */
-  readonly strategy: 'resource-record-key' | 'direct';
+  readonly strategy: 'resource-record-key' | 'direct' | 'parent-fk';
   /**
    * For "direct" strategy: the column on the target resource that holds the
    * parent's key value.
    */
   readonly targetColumn?: string;
+  /**
+   * For "parent-fk" strategy: the column on the parent resource that holds
+   * the target's key value.
+   */
+  readonly parentColumn?: string;
 }
 
 // ---------------------------------------------------------------------------

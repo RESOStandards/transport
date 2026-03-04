@@ -46,16 +46,26 @@ const generateProperty = (field: ResoField): string => {
   return `        <Property ${attrs.join(' ')}/>`;
 };
 
+/** Generates an EDMX NavigationProperty element for an expansion field. */
+const generateNavigationProperty = (field: ResoField): string => {
+  const type = field.isCollection ? `Collection(${field.type})` : field.type;
+  return `        <NavigationProperty Name="${escapeXml(field.fieldName)}" Type="${escapeXml(type)}"/>`;
+};
+
 /** Generates an EDMX EntityType element for a resource. */
 const generateEntityType = (resourceName: string, keyField: string, fields: ReadonlyArray<ResoField>): string => {
-  const properties = fields.map(generateProperty).join('\n');
+  const regularFields = fields.filter(f => !f.isExpansion);
+  const expansionFields = fields.filter(f => f.isExpansion);
+
+  const properties = regularFields.map(generateProperty).join('\n');
+  const navProperties = expansionFields.map(generateNavigationProperty).join('\n');
 
   return `      <EntityType Name="${escapeXml(resourceName)}">
         <Key>
           <PropertyRef Name="${escapeXml(keyField)}"/>
         </Key>
 ${properties}
-      </EntityType>`;
+${navProperties ? `${navProperties}\n` : ''}      </EntityType>`;
 };
 
 /**

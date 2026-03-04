@@ -54,6 +54,34 @@ describe('generateEdmx', () => {
     expect(edmx).toContain('RESO.OData.Metadata.LookupName');
   });
 
+  it('generates NavigationProperty elements for expansion fields', async () => {
+    const metadata = await loadMetadata(metadataPath);
+    const edmx = generateEdmx(metadata, ['Property', 'Media', 'PropertyRooms']);
+
+    // Property should have NavigationProperty for Media (collection)
+    expect(edmx).toMatch(/NavigationProperty Name="Media" Type="Collection\(org\.reso\.metadata\.Media\)"/);
+
+    // Property should have NavigationProperty for Rooms (collection of PropertyRooms)
+    expect(edmx).toMatch(/NavigationProperty Name="Rooms" Type="Collection\(org\.reso\.metadata\.PropertyRooms\)"/);
+  });
+
+  it('generates to-one NavigationProperty for single-valued expansions', async () => {
+    const metadata = await loadMetadata(metadataPath);
+    const edmx = generateEdmx(metadata, ['Property', 'Member']);
+
+    // BuyerAgent is a to-one nav prop targeting Member
+    expect(edmx).toMatch(/NavigationProperty Name="BuyerAgent" Type="org\.reso\.metadata\.Member"/);
+    expect(edmx).toMatch(/NavigationProperty Name="ListAgent" Type="org\.reso\.metadata\.Member"/);
+  });
+
+  it('generates NavigationProperty for child resource back-references', async () => {
+    const metadata = await loadMetadata(metadataPath);
+    const edmx = generateEdmx(metadata, ['Property', 'PropertyRooms']);
+
+    // PropertyRooms should have Listing nav prop back to Property
+    expect(edmx).toMatch(/NavigationProperty Name="Listing" Type="org\.reso\.metadata\.Property"/);
+  });
+
   it('can be parsed by fast-xml-parser with the same options as the test tool', async () => {
     // Dynamic import to avoid hard dependency
     const { XMLParser } = await import('fast-xml-parser');

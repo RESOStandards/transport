@@ -2,6 +2,98 @@
 
 ---
 
+## v0.0.12 — 2026-03-04
+
+### $expand: Property Child Resources and Three FK Strategies
+
+Extended `$expand` support from 3 resources (Media, OpenHouse, Showing) to all 7
+Property child resources, and refactored navigation property discovery to support
+three distinct foreign key strategies.
+
+**New child resources:** PropertyRooms, PropertyGreenVerification,
+PropertyPowerProduction, PropertyUnitTypes — all linked to Property via
+`ListingKey` (direct FK strategy).
+
+**Three FK strategies in `buildNavigationBindings`:**
+
+- **resource-record-key** — polymorphic FK via `ResourceName` +
+  `ResourceRecordKey` columns (Media on any parent resource)
+- **direct** — child has the parent's key field directly (OpenHouse, Showing,
+  PropertyRooms, PropertyGreenVerification, PropertyPowerProduction,
+  PropertyUnitTypes all have `ListingKey`)
+- **parent-fk** — parent entity holds a FK to the target (to-one nav props like
+  BuyerAgent, ListAgent, BuyerOffice, ListOffice on Property → Member/Office)
+
+**OpenAPI and EDMX metadata:**
+
+- OpenAPI: GET collection endpoints now include `$expand` query parameter with
+  valid navigation property names listed in the enum
+- EDMX: `NavigationProperty` elements generated for all expansion fields with
+  correct `Type` (collection vs singleton) and `Partner` attributes
+
+**Modified files:**
+
+- `router.ts` — Three-strategy `buildNavigationBindings`, exported for testing
+- `openapi-generator.ts` — `$expand` query parameter on GET collection endpoints
+- `edmx-generator.ts` — `NavigationProperty` elements from expansion metadata
+- `types.ts` — Extended `TARGET_RESOURCES` with 4 new child resources,
+  added `FieldMetadata.isExpansion` support
+- `postgres-dal.ts` — Updated expand query for direct FK strategy
+- `mongo-dal.ts` — Updated expand query for direct FK strategy
+- `data-access.ts` — Generalized `ExpandBinding` type for all FK strategies
+
+### Data Generator: Property Child Resources
+
+Added generators for 4 new child resources and made the seed plan dynamic.
+
+- `property-child.ts` — Generic generator for PropertyRooms,
+  PropertyGreenVerification, PropertyPowerProduction, PropertyUnitTypes
+- `plan.ts` — `getRelatedResources()` discovers valid child resources per parent
+  using FK field analysis; `getDefaultRelatedCount()` returns sensible defaults
+- `open-house.ts`, `showing.ts` — Added `ListingKey` to generated records
+- Docker Compose seed scripts updated with all 7 child resources
+
+### UI: Data Generator Improvements
+
+- Related Records section now shows only valid expansions for the selected parent
+  resource (driven by server metadata, not hardcoded)
+- Short display names for child resources (PropertyRooms → "Rooms", etc.)
+- Two-column responsive layout (resource/count on left, related records on right)
+- Wider container (`max-w-5xl`) for better use of horizontal space
+- Plan summary computes total related records dynamically
+
+**Modified files:**
+
+- `admin-client.ts` — Added `RelatedResourceInfo` type and `relatedResources`
+  field to `ResourceStatus`
+- `data-generator.ts` (server) — Status endpoint returns `relatedResources`
+  per resource using `getRelatedResources()` from `@reso/data-generator`
+- `data-generator-page.tsx` — Context-sensitive related records UI
+
+### nginx SPA Routing Fix
+
+Fixed "Cannot GET /admin/data-generator" error on browser refresh. The nginx
+config previously proxied all `/admin/*` paths to the backend. Split into a
+dedicated `/admin/` location block that proxies POST and `/status` to the API
+while serving the SPA for page routes. Also added the 4 new child resources
+to the OData entity and collection regex patterns.
+
+### Test Summary
+
+17 new tests (navigation property discovery + EDMX generation).
+
+| Package | Tests |
+|---------|------:|
+| `@reso/validation` | 91 |
+| `@reso/odata-filter-parser` | 97 |
+| `@reso/odata-client` | 101 |
+| `@reso/data-generator` | 71 |
+| `@reso/reference-server` | 126 |
+| `@reso/certification-add-edit` | 49 |
+| **Total** | **535** |
+
+---
+
 ## v0.0.11 — 2026-03-03
 
 ### UI: Detail Page Layout and Field Grouping Improvements

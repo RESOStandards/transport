@@ -1,8 +1,15 @@
+/** A related resource that can be generated as children of a parent. */
+export interface RelatedResourceInfo {
+  readonly resource: string;
+  readonly defaultCount: number;
+}
+
 /** Status of a single resource in the data generator. */
 export interface ResourceStatus {
   readonly resource: string;
   readonly fields: number;
   readonly count: number;
+  readonly relatedResources: ReadonlyArray<RelatedResourceInfo>;
 }
 
 /** Response from GET /admin/data-generator/status. */

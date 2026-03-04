@@ -3,6 +3,7 @@ import { generateMediaRecords } from './media.js';
 import { generateMemberRecords } from './member.js';
 import { generateOfficeRecords } from './office.js';
 import { generateOpenHouseRecords } from './open-house.js';
+import { generatePropertyChildRecords } from './property-child.js';
 import { generatePropertyRecords } from './property.js';
 import { generateShowingRecords } from './showing.js';
 import type { RecordGenerator, ResoField, ResoLookup } from './types.js';
@@ -36,7 +37,15 @@ const GENERATORS: Readonly<Record<string, RecordGenerator>> = {
   Media: (fields, lookups, count, parentResource, parentKey) => generateMediaRecords(fields, lookups, count, parentResource, parentKey),
   OpenHouse: (fields, lookups, count, parentResource, parentKey) =>
     generateOpenHouseRecords(fields, lookups, count, parentResource, parentKey),
-  Showing: (fields, lookups, count, parentResource, parentKey) => generateShowingRecords(fields, lookups, count, parentResource, parentKey)
+  Showing: (fields, lookups, count, parentResource, parentKey) => generateShowingRecords(fields, lookups, count, parentResource, parentKey),
+  PropertyRooms: (fields, lookups, count, parentResource, parentKey) =>
+    generatePropertyChildRecords(fields, lookups, count, parentResource, parentKey),
+  PropertyGreenVerification: (fields, lookups, count, parentResource, parentKey) =>
+    generatePropertyChildRecords(fields, lookups, count, parentResource, parentKey),
+  PropertyPowerProduction: (fields, lookups, count, parentResource, parentKey) =>
+    generatePropertyChildRecords(fields, lookups, count, parentResource, parentKey),
+  PropertyUnitTypes: (fields, lookups, count, parentResource, parentKey) =>
+    generatePropertyChildRecords(fields, lookups, count, parentResource, parentKey)
 };
 
 /**

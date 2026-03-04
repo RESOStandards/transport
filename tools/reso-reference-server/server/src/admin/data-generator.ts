@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { getGenerator } from '@reso/data-generator';
+import { getDefaultRelatedCount, getGenerator, getRelatedResources } from '@reso/data-generator';
 import type { ResoField, ResoLookup } from '@reso/data-generator';
 import type { RequestHandler } from 'express';
 import type { DataAccessLayer, ResourceContext } from '../db/data-access.js';
@@ -189,17 +189,30 @@ export const createDataGeneratorStatusHandler =
   (metadata: ResoMetadata, dal: DataAccessLayer): RequestHandler =>
   async (_req, res) => {
     try {
-      const resources: Array<{ resource: string; fields: number; count: number }> = [];
+      // Build fieldsByResource map for getRelatedResources
+      const fieldsByResource: Record<string, ReadonlyArray<ResoField>> = {};
+      for (const resource of TARGET_RESOURCES) {
+        fieldsByResource[resource] = getFieldsForResource(metadata, resource);
+      }
+
+      const resources: Array<{
+        resource: string;
+        fields: number;
+        count: number;
+        relatedResources: ReadonlyArray<{ resource: string; defaultCount: number }>;
+      }> = [];
 
       for (const resource of TARGET_RESOURCES) {
         const resourceCtx = buildResourceContext(metadata, resource);
         if (!resourceCtx) continue;
 
         const result = await dal.queryCollection(resourceCtx, { $count: true, $top: 0 });
+        const related = getRelatedResources(resource, fieldsByResource);
         resources.push({
           resource,
           fields: resourceCtx.fields.length,
-          count: result.count ?? 0
+          count: result.count ?? 0,
+          relatedResources: related.map(r => ({ resource: r, defaultCount: getDefaultRelatedCount(r) }))
         });
       }
 

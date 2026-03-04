@@ -1,36 +1,59 @@
 import type { GeneratorConfig, ResoField, SeedPlan } from './generators/types.js';
 
-/** Resources that can be child (related) resources via ResourceName/ResourceRecordKey FK convention. */
-const CHILD_RESOURCES = new Set(['Media', 'OpenHouse', 'Showing']);
+/** Resources that can be child (related) resources of a parent resource. */
+const CHILD_RESOURCES = new Set([
+  'Media',
+  'OpenHouse',
+  'Showing',
+  'PropertyRooms',
+  'PropertyGreenVerification',
+  'PropertyPowerProduction',
+  'PropertyUnitTypes'
+]);
 
 /** Default related record counts by resource. */
 const DEFAULT_RELATED_COUNTS: Readonly<Record<string, number>> = {
   Media: 5,
   OpenHouse: 2,
-  Showing: 2
+  Showing: 2,
+  PropertyRooms: 3,
+  PropertyGreenVerification: 1,
+  PropertyPowerProduction: 1,
+  PropertyUnitTypes: 2
 };
 
 /**
  * Determines which resources can be related to the given parent resource.
- * A resource is a valid related resource if it has both ResourceName and
- * ResourceRecordKey fields (RESO FK convention).
+ *
+ * A resource is a valid related resource if it either:
+ * - Has ResourceName + ResourceRecordKey fields (polymorphic FK convention), or
+ * - Has the parent's key field (e.g. ListingKey for Property children)
  */
 export const getRelatedResources = (
   parentResource: string,
   fieldsByResource: Readonly<Record<string, ReadonlyArray<ResoField>>>
 ): ReadonlyArray<string> => {
+  const parentKeyField = PARENT_KEY_FIELDS[parentResource];
   const related: string[] = [];
 
   for (const [resource, fields] of Object.entries(fieldsByResource)) {
     if (resource === parentResource) continue;
-    const hasResourceName = fields.some(f => f.fieldName === 'ResourceName');
-    const hasResourceRecordKey = fields.some(f => f.fieldName === 'ResourceRecordKey');
-    if (hasResourceName && hasResourceRecordKey) {
+    if (!CHILD_RESOURCES.has(resource)) continue;
+
+    const hasResourceRecordKey = fields.some(f => f.fieldName === 'ResourceName') && fields.some(f => f.fieldName === 'ResourceRecordKey');
+    const hasParentKey = parentKeyField ? fields.some(f => f.fieldName === parentKeyField) : false;
+
+    if (hasResourceRecordKey || hasParentKey) {
       related.push(resource);
     }
   }
 
   return related;
+};
+
+/** Maps parent resources to their key field for child resource discovery. */
+const PARENT_KEY_FIELDS: Readonly<Record<string, string>> = {
+  Property: 'ListingKey'
 };
 
 /** Returns the default count for a related resource. */
@@ -53,8 +76,5 @@ export const buildSeedPlan = (config: GeneratorConfig): SeedPlan => {
   return { resources };
 };
 
-/**
- * Checks whether a resource is a child resource that uses the
- * ResourceName/ResourceRecordKey FK convention.
- */
+/** Checks whether a resource is a child resource (linked to a parent via FK). */
 export const isChildResource = (resource: string): boolean => CHILD_RESOURCES.has(resource);

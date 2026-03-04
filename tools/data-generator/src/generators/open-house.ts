@@ -26,6 +26,7 @@ export const generateOpenHouseRecords = (
     // Link to parent via RESO FK convention
     if (parentResource) record.ResourceName = parentResource;
     if (parentKey) record.ResourceRecordKey = parentKey;
+    if (parentKey) record.ListingKey = parentKey;
 
     // Schedule open houses in the near future
     const daysAhead = randomInt(1, 60);

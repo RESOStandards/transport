@@ -112,7 +112,14 @@ const buildExpandJoin = (
       `AND ${navAlias}."ResourceRecordKey" = ${parentAlias}."${parentKeyField}"`
     );
   }
-  // direct FK
+  if (fk.strategy === 'parent-fk') {
+    // Parent has FK column referencing target's key
+    const parentCol = fk.parentColumn!;
+    return (
+      `LEFT JOIN "${binding.targetResource}" ${navAlias} ` + `ON ${navAlias}."${binding.targetKeyField}" = ${parentAlias}."${parentCol}"`
+    );
+  }
+  // direct FK — target has parent's key field
   const targetCol = fk.targetColumn ?? parentKeyField;
   return `LEFT JOIN "${binding.targetResource}" ${navAlias} ` + `ON ${navAlias}."${targetCol}" = ${parentAlias}."${parentKeyField}"`;
 };

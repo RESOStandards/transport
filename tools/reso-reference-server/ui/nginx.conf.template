@@ -13,15 +13,29 @@ server {
     }
 
     # Non-resource API endpoints — always proxy
-    location ~ ^/(ui-config|field-groups|api|admin|health|images|oauth|\$metadata) {
+    location ~ ^/(ui-config|field-groups|api|health|images|oauth|\$metadata) {
         proxy_pass http://${API_UPSTREAM};
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
     }
 
+    # Admin API — proxy POST requests and /status GET to the backend
+    # SPA page routes like GET /admin/data-generator fall through to the SPA fallback
+    location /admin/ {
+        error_page 418 = @api;
+        if ($request_method = POST) {
+            return 418;
+        }
+        if ($uri ~ /status$) {
+            return 418;
+        }
+        root /usr/share/nginx/html;
+        try_files /index.html =404;
+    }
+
     # OData entity requests with key syntax — always proxy
     # Matches: /Property('key'), /Property(%28'key'%29)
-    location ~ ^/(Property|Member|Office|Media|OpenHouse|Showing)(\(|%28) {
+    location ~ ^/(Property|Member|Office|Media|OpenHouse|Showing|PropertyRooms|PropertyGreenVerification|PropertyPowerProduction|PropertyUnitTypes)(\(|%28) {
         proxy_pass http://${API_UPSTREAM};
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -29,7 +43,7 @@ server {
 
     # Bare resource collection paths — proxy if Accept: application/json, SPA otherwise
     # Uses error_page + return trick to safely branch inside nginx (avoids if + proxy_pass)
-    location ~ ^/(Property|Member|Office|Media|OpenHouse|Showing)$ {
+    location ~ ^/(Property|Member|Office|Media|OpenHouse|Showing|PropertyRooms|PropertyGreenVerification|PropertyPowerProduction|PropertyUnitTypes)$ {
         error_page 418 = @api;
         if ($http_accept ~* "application/json") {
             return 418;

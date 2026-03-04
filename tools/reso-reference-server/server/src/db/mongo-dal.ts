@@ -75,6 +75,35 @@ const batchExpandNavigation = async (
     const collection = db.collection(binding.targetResource);
     const fk = binding.foreignKey;
 
+    if (fk.strategy === 'parent-fk') {
+      // To-one: parent has FK column referencing target's key.
+      // Collect the FK values from parents, then look up target records by their key.
+      const fkColumn = fk.parentColumn!;
+      const fkValues = [...new Set(parents.map(p => String(p[fkColumn] ?? '')).filter(v => v.length > 0))];
+      if (fkValues.length === 0) {
+        navResults.set(binding.name, new Map());
+        continue;
+      }
+      const docs = await collection.find({ [binding.targetKeyField]: { $in: fkValues } }, { projection: { _id: 0 } }).toArray();
+
+      // Index by target key for O(1) lookup
+      const byKey = new Map<string, Record<string, unknown>>();
+      for (const doc of docs) {
+        byKey.set(String(doc[binding.targetKeyField] ?? ''), doc);
+      }
+
+      // Group by parent key — each parent's FK value maps to at most one target
+      const grouped = new Map<string, Record<string, unknown>[]>();
+      for (const parent of parents) {
+        const pk = String(parent[parentKeyField] ?? '');
+        const fkVal = String(parent[fkColumn] ?? '');
+        const target = byKey.get(fkVal);
+        grouped.set(pk, target ? [target] : []);
+      }
+      navResults.set(binding.name, grouped);
+      continue;
+    }
+
     let filter: Record<string, unknown>;
     if (fk.strategy === 'resource-record-key') {
       filter = {
