@@ -4,19 +4,33 @@
 
 ## v0.0.11 — 2026-03-03
 
-### UI: Remove "Other" Group for Ungrouped Resources
+### UI: Detail Page Layout and Field Grouping Improvements
 
-Resources without field groupings defined in the Data Dictionary Google Sheet
-(Member, Office, Media, OpenHouse, Showing) now display fields as a flat
-alphabetical list instead of wrapping them in a collapsible "Other" section.
-Resources with groupings (Property) are unchanged — ungrouped fields still
-appear in an "Other" section.
+Redesigned the detail page layout and improved field grouping behavior across
+all UI views.
+
+**Detail page layout (#15):**
+
+- Media carousel now sits on the right (half-width) with a summary pane on the
+  left, side-by-side on desktop, stacked on mobile
+- For Property: left pane shows formatted address, key, timestamp, and
+  configured summary fields (from `ui-config.json`); grouped field sections
+  appear below in collapsible panels
+- For resources without groupings: all fields display alphabetically in a
+  two-column layout beside the carousel
+
+**Remove "Other" group for ungrouped resources (#14):**
+
+- Resources without field groupings (Member, Office, Media, OpenHouse, Showing)
+  now display fields as a flat alphabetical list instead of wrapping them in a
+  collapsible "Other" section
+- Applies to detail page, record form, and advanced search
 
 **Modified files:**
 
-- `detail-page.tsx` — Render flat field table when `grouped.size === 0`
-- `record-form.tsx` — Render flat field grid when no groups exist
-- `advanced-search.tsx` — Render flat field rows when no groups exist
+- `detail-page.tsx` — Summary pane + carousel layout, summary field extraction
+- `record-form.tsx` — Flat field grid when no groups exist
+- `advanced-search.tsx` — Flat field rows when no groups exist
 
 ---
 

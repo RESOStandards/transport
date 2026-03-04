@@ -22,6 +22,19 @@ alternative backend, selectable via `DB_BACKEND` environment variable.~~
 - ~~Docker Compose profile for MongoDB~~
 - ~~Documentation: server README, reference-server README, module READMEs~~
 
+### ~~#15 — UI: Detail Page Layout — Summary Pane + Media Carousel~~
+**Package:** `reso-reference-server/ui`
+**Status:** Closed
+
+~~Redesign the detail page layout so the media carousel takes half the horizontal
+space on the right, with a summary pane on the left. For Property (which has
+groupings), the left pane shows address, key, timestamp, and configured summary
+fields; grouped field sections appear below. For resources without groupings,
+all fields display alphabetically in a two-column layout beside the carousel.~~
+
+~~Affected files:~~
+- ~~`ui/src/pages/detail-page.tsx`~~
+
 ### ~~#14 — UI: Remove "Other" Group When No Groupings Are Defined~~
 **Package:** `reso-reference-server/ui`
 **Status:** Closed

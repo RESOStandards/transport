@@ -8,7 +8,7 @@ import { useMetadata } from '../hooks/use-metadata';
 import { useUiConfig } from '../hooks/use-ui-config';
 import type { ResoField, ResourceName } from '../types';
 import { KEY_FIELD_MAP, TARGET_RESOURCES } from '../types';
-import { formatAddress, formatFieldValue } from '../utils/format';
+import { ADDRESS_FIELDS, formatAddress, formatFieldValue } from '../utils/format';
 
 /** Detail page showing a full record with fields grouped by RESO Data Dictionary categories. */
 export const DetailPage = () => {
@@ -22,7 +22,7 @@ export const DetailPage = () => {
   const [showDelete, setShowDelete] = useState(false);
 
   const { fields } = useMetadata(resourceName);
-  const { fieldGroups } = useUiConfig();
+  const { config, fieldGroups } = useUiConfig();
 
   if (!TARGET_RESOURCES.includes(resourceName) || !key) {
     return <div className="text-red-600 dark:text-red-400">Invalid resource or key</div>;
@@ -68,27 +68,54 @@ export const DetailPage = () => {
   // Extract media records
   const media = Array.isArray(record.Media) ? (record.Media as Record<string, unknown>[]) : [];
 
+  // Build a field lookup map
+  const fieldMap = new Map(fields.map(f => [f.fieldName, f]));
+
   // Group fields by RESO groups
   const resourceGroups = fieldGroups?.[resourceName] ?? {};
+  const hasGroupings = Object.keys(resourceGroups).length > 0;
   const grouped = new Map<string, ResoField[]>();
   const ungrouped: ResoField[] = [];
-  const pinnedFields = new Set([keyField, 'ModificationTimestamp']);
+  const skipFields = new Set([keyField, 'ModificationTimestamp']);
+
+  // Determine summary fields for the left pane
+  const summaryFieldNames = config?.resources?.[resourceName]?.summaryFields;
+  const summarySet = new Set(Array.isArray(summaryFieldNames) ? summaryFieldNames : []);
+
+  // For Property: summary fields go in the left pane, rest go in groups
+  // For other resources: all fields go in a single alphabetical list (rendered beside carousel if present)
+  const summaryFields: ResoField[] = [];
 
   for (const field of fields) {
-    if (pinnedFields.has(field.fieldName)) continue;
+    if (skipFields.has(field.fieldName)) continue;
     if (record[field.fieldName] === undefined || record[field.fieldName] === null) continue;
-    // Skip OData annotations
     if (field.fieldName.startsWith('@')) continue;
 
-    const groups = resourceGroups[field.fieldName];
-    if (groups && groups.length > 0) {
-      const groupKey = groups[0];
-      const existing = grouped.get(groupKey);
-      if (existing) existing.push(field);
-      else grouped.set(groupKey, [field]);
+    if (hasGroupings) {
+      // Resources with groupings: split into summary vs grouped/ungrouped
+      if (summarySet.has(field.fieldName)) {
+        summaryFields.push(field);
+      } else {
+        const groups = resourceGroups[field.fieldName];
+        if (groups && groups.length > 0) {
+          const groupKey = groups[0];
+          const existing = grouped.get(groupKey);
+          if (existing) existing.push(field);
+          else grouped.set(groupKey, [field]);
+        } else {
+          ungrouped.push(field);
+        }
+      }
     } else {
+      // Resources without groupings: all fields in one flat list
       ungrouped.push(field);
     }
+  }
+
+  // Sort summary fields in config order
+  if (hasGroupings && summaryFields.length > 0) {
+    const orderMap = new Map(Array.from(summarySet).map((name, i) => [name, i]));
+    summaryFields.sort((a, b) => (orderMap.get(a.fieldName) ?? 999) - (orderMap.get(b.fieldName) ?? 999));
   }
 
   for (const groupFields of grouped.values()) {
@@ -98,8 +125,11 @@ export const DetailPage = () => {
 
   const sortedGroups = [...grouped.entries()].sort((a, b) => a[0].localeCompare(b[0]));
 
-  const renderFieldTable = (fieldList: ResoField[]) => (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1">
+  // For resources without groupings, hide address fields from the flat list when a composed address is shown
+  const address = formatAddress(record);
+
+  const renderFieldList = (fieldList: ResoField[], columns: 1 | 2 = 2) => (
+    <div className={`grid grid-cols-1 ${columns === 2 ? 'sm:grid-cols-2' : ''} gap-x-6 gap-y-1`}>
       {fieldList.map(field => (
         <div key={field.fieldName} className="flex items-baseline gap-2 py-0.5 text-sm">
           <span className="text-gray-500 dark:text-gray-400 shrink-0 w-40 sm:w-52 truncate">{field.fieldName}</span>
@@ -135,49 +165,56 @@ export const DetailPage = () => {
         </div>
       </div>
 
-      {/* Pinned: Key + Address + Timestamp */}
-      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-        {resourceName === 'Property' && formatAddress(record) && (
-          <div className="text-base font-medium text-gray-900 dark:text-gray-100 mb-2">{formatAddress(record)}</div>
-        )}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
-          <div>
-            <span className="text-gray-500 dark:text-gray-400">{keyField}: </span>
+      {/* Summary/fields + Media carousel side-by-side */}
+      <div className={`flex flex-col ${media.length > 0 ? 'lg:flex-row' : ''} gap-4`}>
+        {/* Left pane: Summary (grouped resources) or all fields (ungrouped resources) */}
+        <div
+          className={`bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 ${media.length > 0 ? 'lg:w-1/2' : 'w-full'}`}>
+          {resourceName === 'Property' && address && (
+            <div className="text-base font-medium text-gray-900 dark:text-gray-100 mb-2">{address}</div>
+          )}
+          <div className="flex items-baseline gap-2 py-0.5 text-sm mb-1">
+            <span className="text-gray-500 dark:text-gray-400 shrink-0">{keyField}:</span>
             <span className="font-mono text-gray-800 dark:text-gray-200">{String(record[keyField] ?? '')}</span>
           </div>
           {record.ModificationTimestamp != null && (
-            <div>
-              <span className="text-gray-500 dark:text-gray-400">ModificationTimestamp: </span>
+            <div className="flex items-baseline gap-2 py-0.5 text-sm mb-1">
+              <span className="text-gray-500 dark:text-gray-400 shrink-0">ModificationTimestamp:</span>
               <span className="text-gray-800 dark:text-gray-200">{String(record.ModificationTimestamp)}</span>
             </div>
           )}
+          {hasGroupings && summaryFields.length > 0 && (
+            <>
+              <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mt-3 mb-2">Summary</h3>
+              {renderFieldList(
+                summaryFields.filter(f => !ADDRESS_FIELDS.has(f.fieldName)),
+                1
+              )}
+            </>
+          )}
+          {!hasGroupings && ungrouped.length > 0 && renderFieldList(ungrouped, 2)}
         </div>
+
+        {/* Right pane: Media carousel */}
+        {media.length > 0 && (
+          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 lg:w-1/2">
+            <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Media ({media.length})</h3>
+            <MediaCarousel media={media} />
+          </div>
+        )}
       </div>
 
-      {/* Media carousel */}
-      {media.length > 0 && (
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-          <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Media ({media.length})</h3>
-          <MediaCarousel media={media} />
-        </div>
-      )}
-
-      {/* Grouped fields */}
+      {/* Grouped fields (resources with groupings only) */}
       {sortedGroups.map(([group, groupFields]) => (
         <FieldGroupSection key={group} title={group} defaultOpen>
-          {renderFieldTable(groupFields)}
+          {renderFieldList(groupFields)}
         </FieldGroupSection>
       ))}
 
-      {/* Ungrouped fields — flat list when no groupings exist, "Other" section otherwise */}
-      {ungrouped.length > 0 && grouped.size === 0 && (
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-          {renderFieldTable(ungrouped)}
-        </div>
-      )}
-      {ungrouped.length > 0 && grouped.size > 0 && (
+      {/* Ungrouped remainder in "Other" (only when resource HAS groupings) */}
+      {ungrouped.length > 0 && hasGroupings && (
         <FieldGroupSection title="Other" defaultOpen>
-          {renderFieldTable(ungrouped)}
+          {renderFieldList(ungrouped)}
         </FieldGroupSection>
       )}
 
