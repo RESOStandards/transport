@@ -51,7 +51,8 @@ const postRecord = async (
   serverUrl: string,
   resource: string,
   record: Record<string, unknown>,
-  authToken: string
+  authToken: string,
+  keyField?: string
 ): Promise<CreateResult> => {
   try {
     const url = `${serverUrl}/${resource}`;
@@ -73,9 +74,9 @@ const postRecord = async (
     }
 
     const created = (await res.json()) as Record<string, unknown>;
-    // Extract key from response — look for common key field patterns
-    const keyField = Object.keys(created).find(k => k.endsWith('Key') && typeof created[k] === 'string');
-    const key = keyField ? String(created[keyField]) : undefined;
+    // Use explicit key field when provided, fall back to heuristic
+    const kf = keyField ?? Object.keys(created).find(k => k.endsWith('Key') && typeof created[k] === 'string');
+    const key = kf ? String(created[kf]) : undefined;
 
     return { success: true, key };
   } catch (err) {
@@ -92,7 +93,8 @@ export const createRecordsViaHttp = async (
   resource: string,
   records: ReadonlyArray<Record<string, unknown>>,
   auth: AuthConfig,
-  onProgress?: (completed: number, total: number) => void
+  onProgress?: (completed: number, total: number) => void,
+  keyField?: string
 ): Promise<BatchCreateResult> => {
   const keys: string[] = [];
   const errors: string[] = [];
@@ -100,7 +102,7 @@ export const createRecordsViaHttp = async (
   let failed = 0;
 
   for (let i = 0; i < records.length; i++) {
-    const result = await postRecord(serverUrl, resource, records[i], auth.authToken);
+    const result = await postRecord(serverUrl, resource, records[i], auth.authToken, keyField);
     if (result.success) {
       created++;
       if (result.key) keys.push(result.key);
@@ -206,4 +208,68 @@ export const generateCurlScript = async (
 
   await mkdir(dirname(outputFile), { recursive: true });
   await writeFile(outputFile, `${lines.join('\n')}\n`, 'utf-8');
+};
+
+/**
+ * PATCHes a single record via HTTP to update FK fields (used for back-fill).
+ */
+const patchRecord = async (
+  serverUrl: string,
+  resource: string,
+  key: string,
+  updates: Record<string, unknown>,
+  authToken: string
+): Promise<CreateResult> => {
+  try {
+    const url = `${serverUrl}/${resource}('${key}')`;
+    const res = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        'OData-Version': '4.01',
+        Authorization: `Bearer ${authToken}`
+      },
+      body: JSON.stringify(updates)
+    });
+
+    if (!res.ok) {
+      const body = await res.text();
+      return { success: false, error: `HTTP ${res.status}: ${body.slice(0, 200)}` };
+    }
+
+    return { success: true, key };
+  } catch (err) {
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
+  }
+};
+
+/**
+ * Batch PATCH records via HTTP (used for back-filling deferred FK values).
+ */
+export const patchRecordsViaHttp = async (
+  serverUrl: string,
+  resource: string,
+  patches: ReadonlyArray<{ readonly key: string; readonly updates: Record<string, unknown> }>,
+  auth: AuthConfig,
+  onProgress?: (completed: number, total: number) => void
+): Promise<BatchCreateResult> => {
+  const keys: string[] = [];
+  const errors: string[] = [];
+  let created = 0;
+  let failed = 0;
+
+  for (let i = 0; i < patches.length; i++) {
+    const result = await patchRecord(serverUrl, resource, patches[i].key, patches[i].updates, auth.authToken);
+    if (result.success) {
+      created++;
+      if (result.key) keys.push(result.key);
+    } else {
+      failed++;
+      errors.push(`Patch ${i + 1}: ${result.error}`);
+    }
+    onProgress?.(i + 1, patches.length);
+  }
+
+  return { created, failed, keys, errors };
 };

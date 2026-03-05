@@ -16,6 +16,10 @@
         <Property Name="AccessibilityFeatures" Type="Collection(Edm.String)">
           <Annotation Term="RESO.OData.Metadata.LookupName" String="AccessibilityFeatures"/>
         </Property>
+        <Property Name="City" Type="Edm.String" MaxLength="50"/>
+        <Property Name="StateOrProvince" Type="Edm.String" MaxLength="2"/>
+        <Property Name="PostalCode" Type="Edm.String" MaxLength="10"/>
+        <Property Name="Country" Type="Edm.String" MaxLength="2"/>
         <Property Name="ModificationTimestamp" Precision="27" Type="Edm.DateTimeOffset"/>
       </EntityType>
       <EntityType Name="Lookup">

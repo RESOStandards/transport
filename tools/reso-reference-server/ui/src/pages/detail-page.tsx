@@ -39,13 +39,17 @@ export const DetailPage = () => {
   const keyField = KEY_FIELD_MAP[resourceName];
 
   useEffect(() => {
+    // Wait for metadata to load before fetching the entity so we know which nav props to $expand
+    if (fields.length === 0) return;
+
     let cancelled = false;
     setIsLoading(true);
     setError(null);
 
     const load = async () => {
       try {
-        const result = await readEntity(resourceName, key!, { $expand: 'Media' });
+        const expandFields = fields.filter(f => f.isExpansion).map(f => f.fieldName);
+        const result = await readEntity(resourceName, key!, expandFields.length ? { $expand: expandFields.join(',') } : {});
         if (!cancelled) setRecord(result);
       } catch (err) {
         if (!cancelled) {
@@ -62,7 +66,7 @@ export const DetailPage = () => {
     return () => {
       cancelled = true;
     };
-  }, [resourceName, key]);
+  }, [resourceName, key, fields]);
 
   if (isLoading) return <div className="p-4 sm:p-6 text-sm text-gray-500 dark:text-gray-400">Loading...</div>;
   if (error)

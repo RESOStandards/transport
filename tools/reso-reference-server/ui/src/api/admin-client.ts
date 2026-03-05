@@ -39,6 +39,7 @@ export interface GenerateRequest {
   readonly resource: string;
   readonly count: number;
   readonly relatedRecords?: Readonly<Record<string, number>>;
+  readonly resolveDependencies?: boolean;
 }
 
 const ADMIN_TOKEN_KEY = 'reso-admin-token';

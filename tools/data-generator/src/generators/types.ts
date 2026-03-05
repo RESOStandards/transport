@@ -64,6 +64,8 @@ export interface SeedOptions {
   readonly fieldsByResource: Readonly<Record<string, ReadonlyArray<ResoField>>>;
   /** Available lookup values (keyed by fully-qualified lookup name). */
   readonly lookupsByType: Readonly<Record<string, ReadonlyArray<ResoLookup>>>;
+  /** When true, auto-generate dependency resources (Office, Member, etc.) in correct order. */
+  readonly resolveDependencies?: boolean;
 }
 
 /** A function that generates records for a resource. */
@@ -74,3 +76,75 @@ export type RecordGenerator = (
   parentResource?: string,
   parentKey?: string
 ) => ReadonlyArray<Record<string, unknown>>;
+
+// ---------------------------------------------------------------------------
+// FK resolution and multi-resource seed plan types
+// ---------------------------------------------------------------------------
+
+/** Map of resource names to their primary key field names (from RESO DD 2.0). */
+export const KEY_FIELD_MAP: Readonly<Record<string, string>> = {
+  Property: 'ListingKey',
+  Member: 'MemberKey',
+  Office: 'OfficeKey',
+  Media: 'MediaKey',
+  OpenHouse: 'OpenHouseKey',
+  Showing: 'ShowingKey',
+  Teams: 'TeamKey',
+  TeamMembers: 'TeamMemberKey',
+  OUID: 'OrganizationUniqueIdKey',
+  PropertyGreenVerification: 'GreenBuildingVerificationKey',
+  PropertyPowerProduction: 'PowerProductionKey',
+  PropertyRooms: 'RoomKey',
+  PropertyUnitTypes: 'UnitTypeKey',
+  HistoryTransactional: 'HistoryTransactionalKey',
+  SocialMedia: 'SocialMediaKey',
+  OtherPhone: 'OtherPhoneKey'
+};
+
+/** A to-one FK binding discovered from metadata. */
+export interface ForeignKeyBinding {
+  /** The FK column on the source resource (e.g. "ListAgentKey"). */
+  readonly fkColumn: string;
+  /** The target resource (e.g. "Member"). */
+  readonly targetResource: string;
+  /** The target resource's primary key field (e.g. "MemberKey"). */
+  readonly targetKeyField: string;
+  /** The navigation property name (e.g. "ListAgent"). */
+  readonly navPropName: string;
+}
+
+/** Dependency edge: source resource depends on target resource. */
+export interface ResourceDependency {
+  readonly sourceResource: string;
+  readonly targetResource: string;
+  /** FK bindings from source to target. */
+  readonly bindings: ReadonlyArray<ForeignKeyBinding>;
+}
+
+/** A step in the multi-resource seed plan. */
+export interface SeedPhase {
+  readonly resource: string;
+  readonly count: number;
+  /** FK bindings from this resource to already-created resources. */
+  readonly fkBindings: ReadonlyArray<ForeignKeyBinding>;
+}
+
+/** A back-fill step to update records after all creation phases complete. */
+export interface BackFillPhase {
+  readonly resource: string;
+  /** FK bindings to back-fill (e.g. Office.OfficeBrokerKey → Member). */
+  readonly fkBindings: ReadonlyArray<ForeignKeyBinding>;
+}
+
+/** A complete multi-resource seed plan with dependency ordering. */
+export interface MultiResourceSeedPlan {
+  /** Resources to create, in dependency order. */
+  readonly phases: ReadonlyArray<SeedPhase>;
+  /** Resources needing FK back-fills after all phases complete. */
+  readonly backFillPhases: ReadonlyArray<BackFillPhase>;
+  /** The originally requested resource. */
+  readonly requestedResource: string;
+  readonly requestedCount: number;
+  /** Child collection records to generate per parent (e.g. Media:5). */
+  readonly relatedRecords?: Readonly<Record<string, number>>;
+}

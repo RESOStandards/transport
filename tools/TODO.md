@@ -229,6 +229,18 @@ Each page manages its own scroll container since `<main>` is now `overflow-hidde
 - ~~`ui/src/pages/detail-page.tsx` — flex layout with pinned header + scrollable content~~
 - ~~`ui/src/pages/add-page.tsx`, `edit-page.tsx`, `delete-page.tsx`, `not-found-page.tsx`, `admin-layout.tsx` — scroll wrappers + padding~~
 
+### ~~#24 — Data Generator Improvements~~
+**Package:** `data-generator`, `reso-reference-server`
+**Status:** Closed
+
+~~Referentially correct multi-resource seed data with FK resolution, dependency
+graph, cycle breaking (Office ↔ Member), three output modes (HTTP/JSON/curl),
+CLI `--deps` flag, server `resolveDependencies` endpoint, and UI integration.
+Docker-verified on both PostgreSQL and MongoDB (892 records, 0 errors each).~~
+
+~~Sub-tasks 1–6 complete. Sub-task 7 (HistoryTransactional as child collection)
+deferred to a future ticket.~~
+
 ### #19 — Fix Web API Core 2.0.0 Compliance Test Failures
 **Package:** `reso-reference-server`
 

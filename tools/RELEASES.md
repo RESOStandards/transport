@@ -2,6 +2,63 @@
 
 ---
 
+## v0.0.18 — 2026-03-04
+
+### Data Generator: Referentially Correct Multi-Resource Seed Data (#24)
+
+The data generator now produces records with valid cross-resource FK linkages so
+`$expand` works for all to-one navigation properties (e.g., Property→ListAgent,
+Member→Office, Office→OfficeBroker).
+
+**FK resolver (`fk-resolver.ts`):**
+
+- Discovers to-one FK relationships from metadata navigation bindings
+- Builds a dependency graph and topologically sorts resources
+- Detects and breaks the Office ↔ Member circular dependency via deferred back-fill
+- 28 tests covering FK discovery, dependency graph, topo sort, and plan building
+
+**Multi-resource orchestrator (`index.ts`):**
+
+- New `generateWithDependencies()` creates resources in dependency order with FK injection
+- Maintains a key pool per resource; injects valid FK values from previously created records
+- Three output modes: HTTP POST (with server back-fill via `dal.update()`), JSON files, curl scripts
+- Supports `resolveDependencies` flag in `SeedOptions`
+
+**PATCH support (`client.ts`):**
+
+- `patchRecordsViaHttp()` for HTTP back-fill of deferred FKs
+- `updateJsonRecords()` for read-modify-write of JSON output files
+- Curl script generation extended with PATCH commands
+
+**CLI improvements:**
+
+- `--deps` flag (default true) enables dependency resolution
+- Interactive mode shows plan summary: "Property (10) requires: Office (4), Member (10), ..."
+
+**Server endpoint:**
+
+- `POST /admin/data-generator` accepts `resolveDependencies` in request body
+- When true, builds a multi-resource plan and executes phases with `dal.update()` back-fill
+
+**Docker seed:**
+
+- Single seed call with `resolveDependencies: true` replaces separate per-resource calls
+- Verified: PostgreSQL (892 records, 0 errors) and MongoDB (892 records, 0 errors)
+
+**Bug fixes during testing:**
+
+- TaxAssessedValue: Edm.Int64 but generated as decimal — fixed with `Math.round()`
+- PostgreSQL CTE $expand JOIN: parent-fk strategy used raw column name instead of CTE alias
+- PostgreSQL CTE $expand: FK columns now included when `$select` is used with `$expand`
+- PostgreSQL $count with $top=0: window function returns nothing — added fallback `SELECT COUNT(*)`
+- Removed hardcoded `OfficeBrokerKey = 'BRK0001'` from office generator
+- UI data generator: added `resolveDependencies: true` to API call
+- Added Teams, TeamMembers, OUID to TARGET_RESOURCES in server and UI
+
+**Files changed:** 20 files, ~760 insertions, ~130 deletions
+
+---
+
 ## v0.0.17 — 2026-03-04
 
 ### UI: Pinned Search Toolbar and Detail Header (#23)

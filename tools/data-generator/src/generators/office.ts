@@ -108,7 +108,6 @@ export const generateOfficeRecords = (
 
     // National association ID
     record.OfficeNationalAssociationId = `NRDS${String(randomInt(100000, 999999))}`;
-    record.OfficeBrokerKey = `BRK${String(i + 1).padStart(4, '0')}`;
 
     return record;
   });

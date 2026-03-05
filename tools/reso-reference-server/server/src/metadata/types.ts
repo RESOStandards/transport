@@ -96,5 +96,8 @@ export const TARGET_RESOURCES: ReadonlyArray<string> = [
   'PropertyGreenVerification',
   'PropertyPowerProduction',
   'PropertyRooms',
-  'PropertyUnitTypes'
+  'PropertyUnitTypes',
+  'Teams',
+  'TeamMembers',
+  'OUID'
 ];

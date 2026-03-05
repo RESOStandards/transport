@@ -10,15 +10,21 @@ import type { RecordGenerator, ResoField, ResoLookup } from './types.js';
 
 export type {
   AuthConfig,
+  BackFillPhase,
+  ForeignKeyBinding,
   GeneratorConfig,
+  MultiResourceSeedPlan,
   RecordGenerator,
+  ResourceDependency,
   ResoAnnotation,
   ResoField,
   ResoLookup,
   SeedOptions,
+  SeedPhase,
   SeedPlan,
   SeedResult
 } from './types.js';
+export { KEY_FIELD_MAP } from './types.js';
 export {
   generateFieldValue,
   generateRecord,

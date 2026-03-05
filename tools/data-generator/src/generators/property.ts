@@ -198,7 +198,7 @@ export const generatePropertyRecords = (
     const taxRate = STATE_TAX_RATES[record.StateOrProvince as string] ?? 0.01;
     const listPrice = record.ListPrice as number;
     record.TaxAnnualAmount = randomDecimal(listPrice * taxRate * 0.9, listPrice * taxRate * 1.1, 2);
-    record.TaxAssessedValue = randomDecimal(listPrice * 0.7, listPrice * 0.95, 2);
+    record.TaxAssessedValue = Math.round(randomDecimal(listPrice * 0.7, listPrice * 0.95, 0));
     record.TaxYear = new Date().getFullYear() - randomInt(0, 1);
 
     // Expense fields (realistic monthly amounts)

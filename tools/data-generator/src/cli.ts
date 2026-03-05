@@ -2,6 +2,7 @@
 import { parseArgs } from 'node:util';
 import { checkbox, confirm, input, number, select } from '@inquirer/prompts';
 import type { OutputOptions } from './client.js';
+import { buildMultiResourcePlan } from './fk-resolver.js';
 import type { ResoField, ResoLookup, SeedOptions } from './generators/types.js';
 import { generateSeedData } from './index.js';
 import { getDefaultRelatedCount, getRelatedResources } from './plan.js';
@@ -25,7 +26,21 @@ const fetchServerMetadata = async (serverUrl: string, authToken: string): Promis
   if (!healthRes.ok) throw new Error(`Server not reachable at ${serverUrl}`);
 
   // Fetch fields for all known resources
-  const knownResources = ['Property', 'Member', 'Office', 'Media', 'OpenHouse', 'Showing'];
+  const knownResources = [
+    'Property',
+    'Member',
+    'Office',
+    'Media',
+    'OpenHouse',
+    'Showing',
+    'Teams',
+    'TeamMembers',
+    'OUID',
+    'PropertyRooms',
+    'PropertyGreenVerification',
+    'PropertyPowerProduction',
+    'PropertyUnitTypes'
+  ];
   const allFields: ResoField[] = [];
   const resources: Array<{ resourceName: string }> = [];
 
@@ -94,6 +109,8 @@ const parseCliArgs = () => {
       'auth-token': { type: 'string', short: 't' },
       format: { type: 'string', short: 'f' },
       output: { type: 'string', short: 'o' },
+      deps: { type: 'boolean', short: 'd' },
+      'no-deps': { type: 'boolean' },
       help: { type: 'boolean', short: 'h' }
     },
     strict: false
@@ -114,6 +131,8 @@ Options:
   -r, --resource <name>     Resource to generate (e.g., Property)
   -n, --count <number>      Number of records to generate (default: 10)
   --related <spec>          Related records (e.g., Media:5,OpenHouse:2,Showing:2)
+  -d, --deps                Auto-generate dependency resources with valid FKs (default: true)
+  --no-deps                 Disable dependency resolution
   -t, --auth-token <token>  Bearer token for authentication
   -f, --format <format>     Output format: http, json, or curl (default: http)
   -o, --output <path>       Output path (directory for json, file for curl)
@@ -123,13 +142,16 @@ Examples:
   # Interactive mode
   reso-data-generator
 
-  # POST 50 Properties with related records to a server
+  # POST 50 Properties with dependency resources and related records
   reso-data-generator -u http://localhost:8080 -r Property -n 50 \\
     --related Media:5,OpenHouse:2,Showing:2 -t admin-token
 
-  # Generate JSON files
+  # Generate JSON files (dependencies auto-resolved)
   reso-data-generator -r Property -n 10 -f json -o ./seed-data \\
     --related Media:5
+
+  # Generate without dependency resolution
+  reso-data-generator -r Property -n 10 -f json -o ./seed-data --no-deps
 
   # Generate a seed.sh curl script
   reso-data-generator -r Property -n 10 -f curl -o ./seed.sh \\
@@ -248,10 +270,38 @@ const runInteractive = async () => {
     }
   }
 
+  // Dependency resolution
+  const resolveDependencies = await confirm({
+    message: 'Auto-generate dependency resources (Member, Office, etc.) with valid FK linkages?',
+    default: true
+  });
+
   // Summary
   console.log('\n--- Generation Plan ---');
   console.log(`  Resource: ${resource}`);
   console.log(`  Count: ${count}`);
+  if (resolveDependencies) {
+    const plan = buildMultiResourcePlan(
+      resource,
+      count,
+      Object.keys(relatedRecords).length > 0 ? relatedRecords : undefined,
+      fieldsByResource
+    );
+    const depPhases = plan.phases.filter(p => p.resource !== resource);
+    if (depPhases.length > 0) {
+      console.log('  Dependencies (auto-generated):');
+      for (const phase of depPhases) {
+        console.log(`    ${phase.resource}: ${phase.count} records`);
+      }
+    }
+    if (plan.backFillPhases.length > 0) {
+      console.log('  Back-fill phases:');
+      for (const bf of plan.backFillPhases) {
+        const fks = bf.fkBindings.map(b => `${b.fkColumn} -> ${b.targetResource}`).join(', ');
+        console.log(`    ${bf.resource}: ${fks}`);
+      }
+    }
+  }
   if (Object.keys(relatedRecords).length > 0) {
     console.log('  Related records:');
     for (const [r, c] of Object.entries(relatedRecords)) {
@@ -291,7 +341,8 @@ const runInteractive = async () => {
       relatedRecords: Object.keys(relatedRecords).length > 0 ? relatedRecords : undefined,
       auth: { mode: 'token', authToken },
       fieldsByResource,
-      lookupsByType
+      lookupsByType,
+      resolveDependencies
     },
     output,
     (message, completed, total) => {
@@ -321,6 +372,8 @@ const runNonInteractive = async (args: ReturnType<typeof parseCliArgs>) => {
   const authToken = (args['auth-token'] as string) ?? 'admin-token';
   const format = (args.format as string) ?? 'http';
   const outputPath = (args.output as string) ?? (format === 'json' ? './seed-data' : './seed.sh');
+  // --deps is default true; --no-deps disables it
+  const resolveDependencies = !args['no-deps'];
 
   if (!resource) {
     console.error('Error: --resource is required in non-interactive mode');
@@ -357,7 +410,8 @@ const runNonInteractive = async (args: ReturnType<typeof parseCliArgs>) => {
       relatedRecords,
       auth: { mode: 'token', authToken },
       fieldsByResource,
-      lookupsByType
+      lookupsByType,
+      resolveDependencies
     },
     output,
     (message, completed, total) => {

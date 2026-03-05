@@ -78,7 +78,8 @@ export const DataGeneratorPage = () => {
       const response = await generateData({
         resource: selectedResource,
         count,
-        relatedRecords: Object.keys(relatedRecords).length > 0 ? relatedRecords : undefined
+        relatedRecords: Object.keys(relatedRecords).length > 0 ? relatedRecords : undefined,
+        resolveDependencies: true
       });
       setResult(response);
       await loadStatus();

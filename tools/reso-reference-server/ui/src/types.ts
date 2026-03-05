@@ -63,8 +63,22 @@ export interface ODataError {
   };
 }
 
-/** The 6 target resources supported by the reference server. */
-export const TARGET_RESOURCES = ['Property', 'Member', 'Office', 'Media', 'OpenHouse', 'Showing'] as const;
+/** Target resources supported by the reference server. */
+export const TARGET_RESOURCES = [
+  'Property',
+  'Member',
+  'Office',
+  'Media',
+  'OpenHouse',
+  'Showing',
+  'PropertyGreenVerification',
+  'PropertyPowerProduction',
+  'PropertyRooms',
+  'PropertyUnitTypes',
+  'Teams',
+  'TeamMembers',
+  'OUID'
+] as const;
 export type ResourceName = (typeof TARGET_RESOURCES)[number];
 
 /** Map of resource names to their primary key field names. */
@@ -74,7 +88,14 @@ export const KEY_FIELD_MAP: Readonly<Record<ResourceName, string>> = {
   Office: 'OfficeKey',
   Media: 'MediaKey',
   OpenHouse: 'OpenHouseKey',
-  Showing: 'ShowingKey'
+  Showing: 'ShowingKey',
+  PropertyGreenVerification: 'GreenBuildingVerificationKey',
+  PropertyPowerProduction: 'PowerProductionKey',
+  PropertyRooms: 'RoomKey',
+  PropertyUnitTypes: 'UnitTypeKey',
+  Teams: 'TeamKey',
+  TeamMembers: 'TeamMemberKey',
+  OUID: 'OrganizationUniqueIdKey'
 };
 
 /** Secondary ID fields (user-facing, not UUIDs). */

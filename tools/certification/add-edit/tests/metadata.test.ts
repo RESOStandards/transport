@@ -79,7 +79,10 @@ describe('validatePayloadAgainstMetadata', () => {
   const entityType = getEntityType(metadata, 'Property')!;
 
   it('validates a payload with known fields', () => {
-    const result = validatePayloadAgainstMetadata({ ListPrice: 100, BedroomsTotal: 3 }, entityType);
+    const result = validatePayloadAgainstMetadata(
+      { ListPrice: 100, BedroomsTotal: 3, City: 'Austin', StateOrProvince: 'TX', PostalCode: '78701', Country: 'US' },
+      entityType
+    );
     expect(result.valid).toBe(true);
     expect(result.unknownFields).toHaveLength(0);
   });
@@ -91,7 +94,10 @@ describe('validatePayloadAgainstMetadata', () => {
   });
 
   it('ignores @-prefixed keys (OData annotations)', () => {
-    const result = validatePayloadAgainstMetadata({ '@reso.target': '12345', ListPrice: 100 }, entityType);
+    const result = validatePayloadAgainstMetadata(
+      { '@reso.target': '12345', ListPrice: 100, City: 'Austin', StateOrProvince: 'TX', PostalCode: '78701', Country: 'US' },
+      entityType
+    );
     expect(result.valid).toBe(true);
     expect(result.unknownFields).toHaveLength(0);
   });

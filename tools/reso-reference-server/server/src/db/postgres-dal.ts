@@ -115,7 +115,11 @@ const buildExpandJoin = (
   }
   if (fk.strategy === 'parent-fk') {
     // Parent has FK column referencing target's key
-    const parentCol = fk.parentColumn!;
+    // When joining against a CTE, parentKeyField contains the aliased form (e.g., "p.ListingKey").
+    // Apply the same alias prefix to the FK column so the CTE column name matches.
+    const rawCol = fk.parentColumn!;
+    const dotIdx = parentKeyField.indexOf('.');
+    const parentCol = dotIdx >= 0 ? `${parentKeyField.substring(0, dotIdx)}.${rawCol}` : rawCol;
     return (
       `LEFT JOIN "${binding.targetResource}" ${navAlias} ` + `ON ${navAlias}."${binding.targetKeyField}" = ${parentAlias}."${parentCol}"`
     );
@@ -259,10 +263,7 @@ export const createPostgresDal = (pool: pg.Pool): DataAccessLayer => {
       selectedFields = dataFields;
     }
 
-    // Build SELECT columns for parent only
-    const parentSelectCols: ReadonlyArray<string> = buildSelectColumns(dataFields, ctx.keyField, options?.$select, parentAlias);
-
-    // Resolve $expand bindings
+    // Resolve $expand bindings (before building SELECT so FK columns can be included)
     const expandBindings: Array<{
       readonly binding: NavigationPropertyBinding;
       readonly alias: string;
@@ -279,11 +280,23 @@ export const createPostgresDal = (pool: pg.Pool): DataAccessLayer => {
       }
     }
 
+    // Build SELECT columns for parent — include FK columns needed for $expand JOINs
+    let expandSelect = options?.$select;
+    if (options?.$select && expandBindings.length > 0) {
+      const fkCols = expandBindings.map(({ binding }) => binding.foreignKey.parentColumn).filter((col): col is string => col !== undefined);
+      if (fkCols.length > 0) {
+        expandSelect = `${options.$select},${fkCols.join(',')}`;
+      }
+    }
+    const parentSelectCols: ReadonlyArray<string> = buildSelectColumns(dataFields, ctx.keyField, expandSelect, parentAlias);
+
     // Build WHERE clause from $filter
     let whereClause = '';
+    const filterValues: unknown[] = [];
     if (options?.$filter) {
       const filterResult = filterToSql(options.$filter, ctx.fields, parentAlias, paramIndex);
       whereClause = `WHERE ${filterResult.where}`;
+      filterValues.push(...filterResult.values);
       values.push(...filterResult.values);
       paramIndex += filterResult.values.length;
     }
@@ -408,6 +421,11 @@ export const createPostgresDal = (pool: pg.Pool): DataAccessLayer => {
     let count: number | undefined;
     if (options?.$count && rows.length > 0) {
       count = Number(rows[0].__total_count);
+    } else if (options?.$count && rows.length === 0) {
+      // Window function returns nothing when LIMIT 0 — run a separate COUNT query
+      const countSql = ['SELECT COUNT(*) AS cnt', `FROM "${ctx.resource}" ${parentAlias}`, whereClause].filter(s => s.length > 0).join(' ');
+      const countResult = await pool.query(countSql, filterValues);
+      count = Number(countResult.rows[0]?.cnt ?? 0);
     }
 
     const entities = rows.map(row => {
