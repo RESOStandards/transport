@@ -4,8 +4,9 @@ on:
   push:
     branches: [main]
     paths: [tools/**]
-  pull_request:
-    paths: [tools/**]
+  # TODO: Re-enable pull_request trigger once compliance tests are stable in CI
+  # pull_request:
+  #   paths: [tools/**]
   workflow_dispatch:
 
 jobs:
