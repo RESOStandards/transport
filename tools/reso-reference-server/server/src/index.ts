@@ -100,6 +100,18 @@ const main = async (): Promise<void> => {
     res.type('application/xml').send(edmxXml);
   });
 
+  // OData service document (GET /) — lists all entity sets
+  app.get('/', (_req, res) => {
+    res.json({
+      '@odata.context': `${config.baseUrl}/$metadata`,
+      value: TARGET_RESOURCES.map(name => ({
+        name,
+        kind: 'EntitySet',
+        url: name
+      }))
+    });
+  });
+
   // OAuth2 mock token endpoint
   app.use(createMockOAuthRouter());
 

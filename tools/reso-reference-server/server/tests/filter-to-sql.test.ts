@@ -3,10 +3,11 @@ import { filterToSql } from '../src/db/filter-to-sql.js';
 import type { ResoField } from '../src/metadata/types.js';
 
 /** Minimal field definition factory. */
-const field = (fieldName: string, type = 'Edm.String'): ResoField => ({
+const field = (fieldName: string, type = 'Edm.String', isCollection = false): ResoField => ({
   resourceName: 'Property',
   fieldName,
   type,
+  isCollection,
   annotations: []
 });
 
@@ -18,7 +19,8 @@ const fields: ReadonlyArray<ResoField> = [
   field('ListingKey'),
   field('ModificationTimestamp', 'Edm.DateTimeOffset'),
   field('StandardStatus'),
-  field('PostalCode')
+  field('PostalCode'),
+  field('AccessibilityFeatures', 'Collection(Edm.String)', true)
 ];
 
 describe('filterToSql', () => {
@@ -217,6 +219,26 @@ describe('filterToSql', () => {
       const result = filterToSql("City eq 'Austin' and ListPrice gt 200000", fields, 'p', 3);
       expect(result.where).toBe(`(p."City" = $3 AND p."ListPrice" > $4)`);
       expect(result.values).toEqual(['Austin', 200000]);
+    });
+  });
+
+  describe('lambda expressions', () => {
+    it('translates any() with equality', () => {
+      const result = filterToSql("AccessibilityFeatures/any(v:v eq 'Elevator')", fields, 'p');
+      expect(result.where).toBe(`p."AccessibilityFeatures" @> $1::jsonb`);
+      expect(result.values).toEqual(['["Elevator"]']);
+    });
+
+    it('translates all() with equality', () => {
+      const result = filterToSql("AccessibilityFeatures/all(v:v eq 'Elevator')", fields, 'p');
+      expect(result.where).toBe(`(jsonb_array_length(p."AccessibilityFeatures") > 0 AND p."AccessibilityFeatures" <@ $1::jsonb)`);
+      expect(result.values).toEqual(['["Elevator"]']);
+    });
+
+    it('translates empty any() as non-empty check', () => {
+      const result = filterToSql('AccessibilityFeatures/any()', fields, 'p');
+      expect(result.where).toBe(`jsonb_array_length(p."AccessibilityFeatures") > 0`);
+      expect(result.values).toEqual([]);
     });
   });
 

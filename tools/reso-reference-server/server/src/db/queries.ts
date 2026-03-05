@@ -14,10 +14,35 @@ const serializeValue = (value: unknown, field: ResoField): unknown => {
   return value;
 };
 
+/** Edm types that must be returned as JavaScript integers. */
+const INT_TYPES = new Set(['Edm.Int16', 'Edm.Int32', 'Edm.Int64', 'Edm.Byte']);
+
+/** Edm types that must be returned as JavaScript decimals. */
+const DECIMAL_TYPES = new Set(['Edm.Decimal', 'Edm.Double', 'Edm.Single']);
+
 /** Deserializes a database row value back to its API representation. */
 const deserializeValue = (value: unknown, field: ResoField): unknown => {
+  if (value == null) return value;
   if (field.isCollection && typeof value === 'string') {
     return JSON.parse(value) as unknown;
+  }
+  // PostgreSQL returns BIGINT/NUMERIC as strings — coerce to JS numbers
+  if (typeof value === 'string' && INT_TYPES.has(field.type)) {
+    const n = Number(value);
+    return Number.isFinite(n) ? Math.trunc(n) : value;
+  }
+  if (typeof value === 'string' && DECIMAL_TYPES.has(field.type)) {
+    const n = Number(value);
+    return Number.isFinite(n) ? n : value;
+  }
+  // Edm.Date must return ISO 8601 date-only (YYYY-MM-DD), not a full timestamp
+  if (field.type === 'Edm.Date') {
+    if (value instanceof Date) {
+      return value.toISOString().split('T')[0];
+    }
+    if (typeof value === 'string' && value.includes('T')) {
+      return value.split('T')[0];
+    }
   }
   return value;
 };

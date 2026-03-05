@@ -1,0 +1,70 @@
+name: Compliance Tests
+
+on:
+  push:
+    branches: [main]
+    paths: [tools/**]
+  pull_request:
+    paths: [tools/**]
+  workflow_dispatch:
+
+jobs:
+  compliance-postgres:
+    name: Compliance (PostgreSQL)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build and start (PostgreSQL)
+        working-directory: tools/reso-reference-server
+        run: docker compose up -d --build --wait
+
+      - name: Seed test data
+        working-directory: tools/reso-reference-server
+        run: docker compose --profile seed up --exit-code-from seed
+
+      - name: Data Dictionary 2.0 compliance
+        working-directory: tools/reso-reference-server
+        run: docker compose --profile compliance-dd up --build --exit-code-from compliance-dd
+
+      - name: Web API Core 2.0.0 compliance
+        working-directory: tools/reso-reference-server
+        run: docker compose --profile compliance-core up --build --exit-code-from compliance-core
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: compliance-results-postgres
+          path: tools/reso-reference-server/compliance/results/
+
+  compliance-mongodb:
+    name: Compliance (MongoDB)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build and start (MongoDB)
+        working-directory: tools/reso-reference-server
+        run: docker compose --profile mongodb up -d --build --wait
+
+      - name: Seed test data
+        working-directory: tools/reso-reference-server
+        run: docker compose --profile mongodb --profile seed-mongo up --exit-code-from seed-mongo
+
+      - name: Data Dictionary 2.0 compliance (MongoDB)
+        working-directory: tools/reso-reference-server
+        run: docker compose --profile compliance-dd-mongo up --build --exit-code-from compliance-dd-mongo
+
+      - name: Web API Core 2.0.0 compliance (MongoDB)
+        working-directory: tools/reso-reference-server
+        run: docker compose --profile compliance-core-mongo up --build --exit-code-from compliance-core-mongo
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: compliance-results-mongodb
+          path: tools/reso-reference-server/compliance/results/

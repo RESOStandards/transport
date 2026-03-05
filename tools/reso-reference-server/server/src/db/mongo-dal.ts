@@ -177,7 +177,10 @@ export const createMongoDal = (db: Db): DataAccessLayer => {
     const expansionFieldNames = new Set(ctx.fields.filter(f => f.isExpansion).map(f => f.fieldName));
     const projection: Record<string, number> = { _id: 0 };
     if (options?.$select) {
-      const selectFields = options.$select.split(',').map(s => s.trim());
+      const selectFields = options.$select
+        .split(',')
+        .map(s => s.trim())
+        .filter(s => s.length > 0);
       for (const f of selectFields) {
         if (!expansionFieldNames.has(f)) projection[f] = 1;
       }
@@ -248,7 +251,12 @@ export const createMongoDal = (db: Db): DataAccessLayer => {
     // Apply $select
     let entity: EntityRecord = doc;
     if (options?.$select) {
-      const selectFields = new Set(options.$select.split(',').map(s => s.trim()));
+      const selectFields = new Set(
+        options.$select
+          .split(',')
+          .map(s => s.trim())
+          .filter(s => s.length > 0)
+      );
       selectFields.add(ctx.keyField);
       entity = Object.fromEntries(Object.entries(doc).filter(([k]) => selectFields.has(k)));
     }

@@ -28,6 +28,7 @@ for script in /tmp/resoscripts/*.resoscript; do
     -DpathToRESOScript="$script" \
     -DuseStringEnums=true \
     -DuseCollections=true \
+    -DshowResponses=true \
     || FAILED=1
 done
 

@@ -256,22 +256,41 @@ nginx proxy missing Teams, TeamMembers, and OUID resources.~~
 - ~~`ui/src/pages/detail-page.tsx` — filter expansions, render in Related Records section~~
 - ~~`ui/nginx.conf.template` — add Teams, TeamMembers, OUID to proxy allowlist~~
 
-### #19 — Fix Web API Core 2.0.0 Compliance Test Failures
+### #26 — RESOScript Generation: Allow Null Parameters for Partial Resources
 **Package:** `reso-reference-server`
 
-Web API Core tests pass metadata validation, service document, `$select`, `$top`,
-`$skip`, `$count`, and many `$filter`/`$orderby` scenarios. Remaining failures:
+Currently, if a resource cannot fill every required data type parameter (Integer,
+Decimal, Date, Timestamp, SingleValueLookup, MultipleValueLookup), it is skipped
+entirely during Web API Core compliance testing. Only Property has all types.
 
-**Issues:**
-1. **Enum filter parsing** — Commander sends filters like
-   `ShowingStatus eq 'OnHold'` but server's `$filter` parser rejects the lookup
-   value as an unknown field name (400 response)
-2. **Missing `MultipleValueLookupField`** for resources without collection enum
-   fields (Showing, OpenHouse, etc.) — Commander fails when the parameter is blank
-3. **400 vs 404 response codes** — Commander expects 400 for invalid queries but
-   server returns 404 in some cases
-4. **`Unexpected token 'gt'`** — Possible URL encoding issue in filter expressions
-   with `gt`/`ge`/`lt`/`le` operators
+Allow partial RESOScript generation so resources with some missing types can still
+run the tests they support (e.g., Member has timestamps and lookups but no integers).
+Requires either:
+- Conditional parameter omission with commander-side graceful skipping
+- Multiple RESOScript variants per resource (one per supported test subset)
+- Upstream commander changes to skip tests when parameters are blank
+
+### #27 — RESOScript Generation: OData Edm.EnumType Namespace Support
+**Package:** `reso-reference-server`
+
+The RESOScript generator currently sets `SingleValueLookupNamespace` and
+`MultipleValueLookupNamespace` to empty strings because the RESO Data Dictionary
+uses string enums (`Edm.String` with `LookupName` annotations) and the commander
+is invoked with `-DuseStringEnums=true`.
+
+When the server adds support for OData `Edm.EnumType` typed enums, the generator
+must resolve the full enum namespace (e.g., `org.reso.metadata.enums.StandardStatus`)
+from `$metadata` and populate these parameters accordingly.
+
+### ~~#19 — Fix Web API Core 2.0.0 Compliance Test Failures~~
+**Package:** `reso-reference-server`
+**Status:** Closed
+
+~~All 42 applicable Web API Core 2.0.0 tests pass (3 skipped: `has` operator,
+N/A for string enumerations). Fixes: PostgreSQL numeric coercion, Edm.Date
+truncation, lambda any()/all() SQL + MongoDB translation, RESOScript generator
+improvements (date format, timestamp field selection, integer median, multi-value
+lookup population), fractional seconds in filter parser, service document endpoint.~~
 
 ### #20 — Client Credentials Compliance: HTTPS Token URI
 **Package:** `reso-reference-server`
@@ -297,6 +316,33 @@ Set up GitHub Actions for:
 - Run all test suites
 - Cross-tool validation (reference server + test tool)
 - Publish packages to npm (when ready)
+
+### #29 — Add RESO Lookup Resource Support
+**Package:** `reso-reference-server`
+
+The server uses `Edm.String` for enumerations (with `LookupName` annotations) rather
+than OData `Edm.EnumType`. To pass DD 2.0 compliance tests, the server must expose
+the RESO Lookup Resource — an OData entity set that serves lookup metadata so that
+compliance tools can validate enumeration values.
+
+**Deliverables:**
+- Lookup entity set in `$metadata` (EDMX)
+- `/Lookup` endpoint with `$filter` support (by `LookupName`, `LookupValue`, etc.)
+- Seed lookup data from the bundled metadata file
+- Service document updated to include Lookup
+
+**Priority:** Before SQLite DAL implementation (#3).
+
+### #28 — Rewrite Web API Core Testing Tools
+**Package:** `reso-reference-server`
+
+Rewrite the current Web API Core compliance testing tools. Current approach uses
+the RESO `web-api-commander` Java/Gradle tool via Docker. The new approach will
+implement tests natively. The Cucumber spec for Web API Core 2.0.0 will serve as
+the reference for test scenarios.
+
+**Prerequisite:** All current Commander-based Web API Core tests must pass first
+(ticket #19) before rewriting.
 
 ### ~~#13 — Migrate TODOs to GitHub Issues~~
 ~~Move items from this file into GitHub Issues with proper labels,

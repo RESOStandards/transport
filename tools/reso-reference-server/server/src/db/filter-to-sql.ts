@@ -8,7 +8,7 @@
  */
 
 import { parseFilter } from '@reso/odata-filter-parser';
-import type { FilterExpression } from '@reso/odata-filter-parser';
+import type { FilterExpression, LambdaExpr } from '@reso/odata-filter-parser';
 import type { ResoField } from '../metadata/types.js';
 
 /** Result of translating a $filter expression to SQL. */
@@ -130,9 +130,64 @@ export const filterToSql = (
         return `${tableAlias}."${expr.name}"`;
       }
 
-      case 'lambda':
-        // Lambda expressions (any/all) are not supported in SQL translation yet
-        throw new Error(`Lambda expressions (${expr.operator}) are not supported in server-side $filter`);
+      case 'lambda': {
+        // Translate any()/all() on JSONB array columns using PostgreSQL containment operators.
+        // Pattern: Field/any(v:v eq 'value') → "Field" @> '["value"]'::jsonb
+        // Pattern: Field/all(v:v eq 'value') → "Field" <@ '["value"]'::jsonb AND jsonb_array_length("Field") > 0
+        // Pattern: Field/any() → jsonb_array_length("Field") > 0
+        const source = expr.source;
+        if (source.type !== 'property') {
+          throw new Error('Lambda source must be a property reference');
+        }
+        if (!fieldNames.has(source.name)) {
+          throw new Error(`Unknown field in $filter: ${source.name}`);
+        }
+        const col = `${tableAlias}."${source.name}"`;
+
+        // Empty lambda: any() means "collection is non-empty"
+        if (!expr.variable && expr.predicate.type === 'literal' && expr.predicate.value === true) {
+          return `jsonb_array_length(${col}) > 0`;
+        }
+
+        // Extract comparison value(s) from the predicate.
+        // Supports simple equality: v eq 'value'
+        // Supports logical or: v eq 'a' or v eq 'b'
+        const extractValues = (pred: FilterExpression): unknown[] => {
+          if (pred.type === 'comparison' && pred.operator === 'eq') {
+            // One side is the lambda variable, the other is a literal
+            const literal = pred.left.type === 'literal' ? pred.left : pred.right.type === 'literal' ? pred.right : null;
+            if (literal?.type === 'literal') return [literal.value];
+          }
+          if (pred.type === 'logical' && pred.operator === 'or') {
+            return [...extractValues(pred.left), ...extractValues(pred.right)];
+          }
+          if (pred.type === 'logical' && pred.operator === 'and') {
+            return [...extractValues(pred.left), ...extractValues(pred.right)];
+          }
+          throw new Error('Unsupported lambda predicate — expected simple equality comparisons');
+        };
+
+        const vals = extractValues(expr.predicate);
+
+        if (expr.operator === 'any') {
+          // any(v:v eq 'a') → "Field" @> '["a"]'::jsonb
+          // any(v:v eq 'a' or v eq 'b') → ("Field" @> '["a"]'::jsonb OR "Field" @> '["b"]'::jsonb)
+          if (vals.length === 1) {
+            const param = addParam(JSON.stringify(vals));
+            return `${col} @> ${param}::jsonb`;
+          }
+          const clauses = vals.map(v => {
+            const param = addParam(JSON.stringify([v]));
+            return `${col} @> ${param}::jsonb`;
+          });
+          return `(${clauses.join(' OR ')})`;
+        }
+
+        // all(v:v eq 'a') → every element equals 'a'
+        // all(v:v eq 'a' or v eq 'b') → every element is 'a' or 'b'
+        const param = addParam(JSON.stringify(vals));
+        return `(jsonb_array_length(${col}) > 0 AND ${col} <@ ${param}::jsonb)`;
+      }
 
       case 'collection':
         // Render as a comma-separated list of values (for "in" operator)

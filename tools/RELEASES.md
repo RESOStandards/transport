@@ -2,6 +2,41 @@
 
 ---
 
+## v0.0.20 — 2026-03-04
+
+### Web API Core 2.0.0 Compliance — All Tests Passing (#19)
+
+The reference server now passes all applicable Web API Core 2.0.0 compliance
+tests: **42 passed, 0 failed, 3 skipped** (the 3 skipped are `has` operator
+tests, not applicable when using string enumerations).
+
+**Server fixes:**
+
+- **PostgreSQL numeric coercion** — `pg` driver returns BIGINT/NUMERIC as
+  strings; `deserializeValue()` now coerces Edm.Int* to JavaScript integers
+  and Edm.Decimal/Double/Single to JavaScript decimals
+- **Edm.Date truncation** — Edm.Date fields now return ISO 8601 date-only
+  (`YYYY-MM-DD`), not full timestamps, in API responses
+- **Lambda `any()`/`all()` support** — OData collection lambda expressions
+  translated to PostgreSQL JSONB containment (`@>`, `<@`) and MongoDB native
+  array operators (`$in`, `$all`), with 6 new tests
+- **Service document endpoint** — `GET /` returns the OData service document
+
+**RESOScript generator improvements:**
+
+- Date values truncated to ISO 8601 date-only format
+- Timestamp field selection prefers fully-populated DateTimeOffset fields with
+  fallback to ModificationTimestamp (always populated per RESO rules)
+- Integer field selection uses median of distinct values (ensures `lt`/`gt`
+  tests find matching records)
+- Multi-value lookup fields correctly populated for `any()`/`all()` tests
+
+**Filter parser:**
+
+- Rebuilt `dist/` with fractional seconds support in DateTimeOffset lexer
+
+---
+
 ## v0.0.19 — 2026-03-04
 
 ### UI: Expansion Cards for Navigation Properties (#25)

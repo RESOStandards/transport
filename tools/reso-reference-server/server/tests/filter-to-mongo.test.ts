@@ -3,10 +3,11 @@ import { filterToMongo } from '../src/db/filter-to-mongo.js';
 import type { ResoField } from '../src/metadata/types.js';
 
 /** Minimal field definition factory. */
-const field = (fieldName: string, type = 'Edm.String'): ResoField => ({
+const field = (fieldName: string, type = 'Edm.String', isCollection = false): ResoField => ({
   resourceName: 'Property',
   fieldName,
   type,
+  isCollection,
   annotations: []
 });
 
@@ -18,7 +19,8 @@ const fields: ReadonlyArray<ResoField> = [
   field('ListingKey'),
   field('ModificationTimestamp', 'Edm.DateTimeOffset'),
   field('StandardStatus'),
-  field('PostalCode')
+  field('PostalCode'),
+  field('AccessibilityFeatures', 'Collection(Edm.String)', true)
 ];
 
 describe('filterToMongo', () => {
@@ -231,6 +233,23 @@ describe('filterToMongo', () => {
       expect(result.query).toEqual({
         $and: [{ City: { $regex: 'Aus', $options: 'i' } }, { ListPrice: { $gt: 100000 } }]
       });
+    });
+  });
+
+  describe('lambda expressions', () => {
+    it('translates any() with equality', () => {
+      const result = filterToMongo("AccessibilityFeatures/any(v:v eq 'Elevator')", fields);
+      expect(result.query).toEqual({ AccessibilityFeatures: 'Elevator' });
+    });
+
+    it('translates all() with equality', () => {
+      const result = filterToMongo("AccessibilityFeatures/all(v:v eq 'Elevator')", fields);
+      expect(result.query).toEqual({ AccessibilityFeatures: { $all: ['Elevator'] } });
+    });
+
+    it('translates empty any() as non-empty check', () => {
+      const result = filterToMongo('AccessibilityFeatures/any()', fields);
+      expect(result.query).toEqual({ AccessibilityFeatures: { $exists: true, $not: { $size: 0 } } });
     });
   });
 

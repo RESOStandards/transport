@@ -111,6 +111,46 @@ export const filterToMongo = (filterString: string, fields: ReadonlyArray<ResoFi
         return { $expr: toExpr(expr) };
       }
 
+      case 'lambda': {
+        // Translate any()/all() on native MongoDB arrays.
+        // any(v:v eq 'a') → { field: 'a' } (native array element matching)
+        // all(v:v eq 'a') → { field: { $all: ['a'] } }
+        // any() → { field: { $exists: true, $not: { $size: 0 } } }
+        const source = expr.source;
+        if (source.type !== 'property') {
+          throw new Error('Lambda source must be a property reference');
+        }
+        validateField(source.name);
+        const lambdaField = source.name;
+
+        // Empty lambda: any() means "collection is non-empty"
+        if (!expr.variable && expr.predicate.type === 'literal' && expr.predicate.value === true) {
+          return { [lambdaField]: { $exists: true, $not: { $size: 0 } } };
+        }
+
+        // Extract comparison values from the predicate
+        const extractLambdaValues = (pred: FilterExpression): unknown[] => {
+          if (pred.type === 'comparison' && pred.operator === 'eq') {
+            const literal = pred.left.type === 'literal' ? pred.left : pred.right.type === 'literal' ? pred.right : null;
+            if (literal?.type === 'literal') return [literal.value];
+          }
+          if (pred.type === 'logical' && (pred.operator === 'or' || pred.operator === 'and')) {
+            return [...extractLambdaValues(pred.left), ...extractLambdaValues(pred.right)];
+          }
+          throw new Error('Unsupported lambda predicate — expected simple equality comparisons');
+        };
+
+        const vals = extractLambdaValues(expr.predicate);
+
+        if (expr.operator === 'any') {
+          // any: record matches if array contains ANY of the values
+          return vals.length === 1 ? { [lambdaField]: vals[0] } : { [lambdaField]: { $in: vals } };
+        }
+
+        // all: record matches if array contains ALL of the values
+        return { [lambdaField]: { $all: vals } };
+      }
+
       default:
         throw new Error(`Unsupported filter expression at query level: ${expr.type}`);
     }

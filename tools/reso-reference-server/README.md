@@ -98,6 +98,7 @@ docker compose --profile seed up seed   # or: --profile seed-mongo up seed-mongo
 reso-reference-server/
 ├── server/          # Node/Express/TypeScript OData server
 ├── ui/              # React SPA for browsing/editing records (Vite + Tailwind)
+├── compliance/      # RESO compliance test infrastructure (Docker)
 ├── docker-compose.yml
 └── CLAUDE.md        # Coding conventions
 ```
@@ -157,9 +158,45 @@ The server implements OData 4.01 features required by the RESO Web API Add/Edit 
 | GET | `/admin/data-generator/status` | Resource counts and available generators |
 | POST | `/admin/data-generator` | Generate seed data (supports `resolveDependencies`) |
 
-## Cross-Tool Validation
+## Compliance Testing
 
-This server is designed to pass the RESO Web API Add/Edit compliance test tool:
+The server includes Docker-based compliance testing against both RESO certification tools. Tests run against seeded data and validate OData protocol compliance, metadata structure, field mappings, and query behavior.
+
+### Web API Core 2.0.0
+
+Validates OData query operations (`$filter`, `$select`, `$orderby`, `$top`, `$skip`, `$count`, `$expand`), response formats, metadata, and service document compliance. Uses the RESO [web-api-commander](https://github.com/RESOStandards/web-api-commander).
+
+**Current status: 42 passed, 0 failed, 3 skipped** (3 skipped: `has` operator tests, N/A for string enumerations)
+
+```bash
+# PostgreSQL
+docker compose up -d --build --wait
+docker compose --profile seed up --exit-code-from seed
+docker compose --profile compliance-core up --build --exit-code-from compliance-core
+
+# MongoDB
+docker compose --profile mongodb up -d --build --wait mongodb server-mongo ui-mongo
+docker compose --profile seed-mongo up seed-mongo
+docker compose --profile compliance-core-mongo up --build --exit-code-from compliance-core-mongo
+```
+
+The test generates RESOScript XML configs dynamically from live server data (`compliance/generate-resoscripts.sh`), sampling records to find appropriate field values for each data type (integer, decimal, date, timestamp, single/multi-value lookups).
+
+### Data Dictionary 2.0
+
+Validates metadata compliance, field mappings, and data availability against the RESO Data Dictionary 2.0 specification. Uses the RESO [reso-certification-utils](https://github.com/RESOStandards/reso-certification-utils).
+
+**Current status: 928 passed, 676 skipped, 0 schema validation errors**
+
+```bash
+# PostgreSQL
+docker compose --profile compliance-dd up --build --exit-code-from compliance-dd
+
+# MongoDB
+docker compose --profile compliance-dd-mongo up --build --exit-code-from compliance-dd-mongo
+```
+
+### Web API Add/Edit (RCP-010)
 
 ```bash
 cd ../certification/add-edit
@@ -169,6 +206,10 @@ npx reso-cert-add-edit \
   --payloads ./sample-payloads \
   --auth-token test
 ```
+
+### CI/CD
+
+Compliance tests run automatically on push to `main` and on pull requests via GitHub Actions (`.github/workflows/compliance.yml`). Both PostgreSQL and MongoDB backends are tested in parallel. Results are uploaded as build artifacts.
 
 ## Development
 
