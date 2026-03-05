@@ -89,7 +89,8 @@ export const createODataRouter = (
   metadata: ResoMetadata,
   dal: DataAccessLayer,
   baseUrl: string,
-  targetResources: ReadonlyArray<string>
+  targetResources: ReadonlyArray<string>,
+  readOnlyResources: ReadonlySet<string> = new Set()
 ): Router => {
   const router = Router();
 
@@ -122,14 +123,15 @@ export const createODataRouter = (
     const keyPattern = new RegExp(`^/${resource}\\('([^']+)'\\)$`);
 
     // Collection route must be registered first (exact match)
+    const isReadOnly = readOnlyResources.has(resource);
     router.get(`/${resource}`, collectionHandler(ctx));
-    router.post(`/${resource}`, createHandler(ctx));
+    if (!isReadOnly) router.post(`/${resource}`, createHandler(ctx));
     router.get(keyPattern, readHandler(ctx));
-    router.patch(keyPattern, updateHandler(ctx));
-    router.delete(keyPattern, deleteHandler(ctx));
+    if (!isReadOnly) router.patch(keyPattern, updateHandler(ctx));
+    if (!isReadOnly) router.delete(keyPattern, deleteHandler(ctx));
 
     console.log(
-      `  Registered routes for ${resource} (${fields.length} fields, key: ${keyField}, navProps: ${navigationBindings.map(b => b.name).join(', ') || 'none'})`
+      `  Registered routes for ${resource} (${fields.length} fields, key: ${keyField}${isReadOnly ? ', read-only' : ''}, navProps: ${navigationBindings.map(b => b.name).join(', ') || 'none'})`
     );
   }
 

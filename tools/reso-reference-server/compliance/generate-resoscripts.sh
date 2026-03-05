@@ -141,39 +141,45 @@ for entry in $RESOURCES; do
   done
 
   # REQUIRED: Decimal fields (Edm.Decimal)
+  # Pick a field with 3+ distinct values and use the median so that both
+  # gt and lt filters can find records.
   DECIMAL_FIELD=""
   DECIMAL_VALUE=""
   FIELDS=$(extract_fields_by_type "$RESOURCE" "Edm.Decimal")
   for f in $FIELDS; do
-    i=0
-    while [ "$i" -lt "$RECORD_COUNT" ]; do
-      val=$(echo "$SAMPLE" | jq -r --arg f "$f" --argjson i "$i" '.value[$i][$f] // empty')
-      if [ -n "$val" ] && [ "$val" != "null" ]; then
-        DECIMAL_FIELD="$f"
-        DECIMAL_VALUE="$val"
-        break 2
-      fi
-      i=$((i + 1))
-    done
+    dec_vals=$(echo "$SAMPLE" | jq -r --arg f "$f" \
+      '[.value[][$f] | select(. != null)] | sort | unique | .[]' 2>/dev/null)
+    dec_count=$(echo "$dec_vals" | grep -c .)
+    if [ "$dec_count" -ge 3 ]; then
+      DECIMAL_FIELD="$f"
+      median_idx=$(( dec_count / 2 ))
+      DECIMAL_VALUE=$(echo "$dec_vals" | sed -n "$((median_idx + 1))p")
+      break
+    elif [ "$dec_count" -ge 1 ] && [ -z "$DECIMAL_FIELD" ]; then
+      DECIMAL_FIELD="$f"
+      DECIMAL_VALUE=$(echo "$dec_vals" | head -1)
+    fi
   done
 
   # REQUIRED: Date fields (Edm.Date)
+  # Pick a field with 3+ distinct values and use the median so that both
+  # gt and lt filters can find records.
   DATE_FIELD=""
   DATE_VALUE=""
   FIELDS=$(extract_fields_by_type "$RESOURCE" "Edm.Date")
   for f in $FIELDS; do
-    i=0
-    while [ "$i" -lt "$RECORD_COUNT" ]; do
-      val=$(echo "$SAMPLE" | jq -r --arg f "$f" --argjson i "$i" '.value[$i][$f] // empty')
-      if [ -n "$val" ] && [ "$val" != "null" ]; then
-        DATE_FIELD="$f"
-        # Edm.Date values MUST be ISO 8601 date-only (YYYY-MM-DD).
-        # Server may return timestamps; truncate to date portion.
-        DATE_VALUE=$(echo "$val" | cut -dT -f1)
-        break 2
-      fi
-      i=$((i + 1))
-    done
+    date_vals=$(echo "$SAMPLE" | jq -r --arg f "$f" \
+      '[.value[][$f] | select(. != null)] | sort | unique | .[]' 2>/dev/null)
+    date_count=$(echo "$date_vals" | grep -c .)
+    if [ "$date_count" -ge 3 ]; then
+      DATE_FIELD="$f"
+      median_idx=$(( date_count / 2 ))
+      DATE_VALUE=$(echo "$date_vals" | sed -n "$((median_idx + 1))p" | cut -dT -f1)
+      break
+    elif [ "$date_count" -ge 1 ] && [ -z "$DATE_FIELD" ]; then
+      DATE_FIELD="$f"
+      DATE_VALUE=$(echo "$date_vals" | head -1 | cut -dT -f1)
+    fi
   done
 
   # REQUIRED: Timestamp fields (Edm.DateTimeOffset)
@@ -224,42 +230,62 @@ for entry in $RESOURCES; do
     done
   done
 
-  # REQUIRED: Multi-value lookup field — need at least 2 distinct values
+  # REQUIRED: Multi-value lookup field — need at least 2 distinct values.
+  # The all() test needs MultipleLookupValue1 to come from a single-element
+  # collection so "all(x: x eq value)" can actually match a record.
   MULTI_LOOKUP_FIELD=""
   MULTI_LOOKUP_VALUE1=""
   MULTI_LOOKUP_VALUE2=""
   MULTI_FIELDS=$(extract_multi_lookup_fields "$RESOURCE")
   for f in $MULTI_FIELDS; do
-    i=0
-    while [ "$i" -lt "$RECORD_COUNT" ]; do
-      arr_len=$(echo "$SAMPLE" | jq -r --arg f "$f" --argjson i "$i" \
-        '.value[$i][$f] | if type == "array" then length else 0 end' 2>/dev/null || echo "0")
-      if [ "$arr_len" -ge 2 ]; then
-        MULTI_LOOKUP_FIELD="$f"
-        MULTI_LOOKUP_VALUE1=$(echo "$SAMPLE" | jq -r --arg f "$f" --argjson i "$i" '.value[$i][$f][0]')
-        MULTI_LOOKUP_VALUE2=$(echo "$SAMPLE" | jq -r --arg f "$f" --argjson i "$i" '.value[$i][$f][1]')
-        break 2
-      elif [ "$arr_len" -eq 1 ] && [ -z "$MULTI_LOOKUP_VALUE1" ]; then
-        # Save single value; keep looking for a record with 2+
-        MULTI_LOOKUP_FIELD="$f"
-        MULTI_LOOKUP_VALUE1=$(echo "$SAMPLE" | jq -r --arg f "$f" --argjson i "$i" '.value[$i][$f][0]')
-      fi
-      i=$((i + 1))
-    done
-    # If we found a field with one value, try to find a second across other records
-    if [ -n "$MULTI_LOOKUP_VALUE1" ] && [ -z "$MULTI_LOOKUP_VALUE2" ]; then
-      i=0
-      while [ "$i" -lt "$RECORD_COUNT" ]; do
-        val=$(echo "$SAMPLE" | jq -r --arg f "$f" --argjson i "$i" --arg v1 "$MULTI_LOOKUP_VALUE1" \
-          '.value[$i][$f] // [] | map(select(. != $v1)) | .[0] // empty')
-        if [ -n "$val" ] && [ "$val" != "null" ]; then
-          MULTI_LOOKUP_VALUE2="$val"
-          break
+    # Use jq to scan all records at once and extract:
+    #  - a value from a single-element array (for all() test)
+    #  - two distinct values from any array with 2+ elements (for has/any tests)
+    multi_info=$(echo "$SAMPLE" | jq -r --arg f "$f" '
+      .value | [
+        # Find first record with exactly 1 element
+        (map(select(.[$f] | type == "array" and length == 1)) | .[0][$f][0] // null),
+        # Find first record with 2+ elements — value 1
+        (map(select(.[$f] | type == "array" and length >= 2)) | .[0][$f][0] // null),
+        # Find first record with 2+ elements — value 2
+        (map(select(.[$f] | type == "array" and length >= 2)) | .[0][$f][1] // null)
+      ] | @tsv
+    ' 2>/dev/null)
+
+    single_val=$(echo "$multi_info" | cut -f1)
+    pair_val1=$(echo "$multi_info" | cut -f2)
+    pair_val2=$(echo "$multi_info" | cut -f3)
+
+    # Need at least 2 distinct values across all records for this field
+    if [ -n "$pair_val1" ] && [ "$pair_val1" != "null" ] && \
+       [ -n "$pair_val2" ] && [ "$pair_val2" != "null" ]; then
+      MULTI_LOOKUP_FIELD="$f"
+      # Prefer single_val as Value1 (for all() test), pair_val as Value2
+      if [ -n "$single_val" ] && [ "$single_val" != "null" ]; then
+        MULTI_LOOKUP_VALUE1="$single_val"
+        # Pick a Value2 different from Value1
+        if [ "$pair_val1" != "$single_val" ]; then
+          MULTI_LOOKUP_VALUE2="$pair_val1"
+        else
+          MULTI_LOOKUP_VALUE2="$pair_val2"
         fi
-        i=$((i + 1))
-      done
+      else
+        MULTI_LOOKUP_VALUE1="$pair_val1"
+        MULTI_LOOKUP_VALUE2="$pair_val2"
+      fi
+      break
+    elif [ -n "$single_val" ] && [ "$single_val" != "null" ]; then
+      # Only single-element records found; try to find a different value
+      MULTI_LOOKUP_FIELD="$f"
+      MULTI_LOOKUP_VALUE1="$single_val"
+      alt_val=$(echo "$SAMPLE" | jq -r --arg f "$f" --arg v1 "$single_val" '
+        [.value[][$f] // [] | .[] | select(. != $v1)] | .[0] // empty
+      ' 2>/dev/null)
+      if [ -n "$alt_val" ] && [ "$alt_val" != "null" ]; then
+        MULTI_LOOKUP_VALUE2="$alt_val"
+        break
+      fi
     fi
-    [ -n "$MULTI_LOOKUP_VALUE2" ] && break
   done
 
   # --- Diagnostics ---

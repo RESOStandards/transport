@@ -13,6 +13,7 @@ import { generateSchema } from './db/schema-generator.js';
 import { createSwaggerRouter } from './docs/swagger.js';
 import { generateEdmx } from './metadata/edmx-generator.js';
 import { getFieldsForResource, getKeyFieldForResource, getLookupsForType, isEnumType, loadMetadata } from './metadata/loader.js';
+import { seedLookups } from './metadata/lookup-seeder.js';
 import { generateOpenApiSpec } from './metadata/openapi-generator.js';
 import { TARGET_RESOURCES } from './metadata/types.js';
 import { createODataRouter } from './odata/router.js';
@@ -22,17 +23,26 @@ const main = async (): Promise<void> => {
   console.log('RESO Reference Server starting...');
   console.log(`  Port: ${config.port}`);
   console.log(`  Backend: ${config.dbBackend}`);
+  console.log(`  Enum mode: ${config.enumMode}`);
   console.log(`  Metadata: ${config.metadataPath}`);
 
   // Load metadata
   const metadata = await loadMetadata(config.metadataPath);
   console.log(`Loaded RESO metadata v${metadata.version}: ${metadata.fields.length} fields, ${metadata.lookups.length} lookups`);
 
-  const resourceSpecs = TARGET_RESOURCES.map(resource => ({
-    resourceName: resource,
-    keyField: getKeyFieldForResource(resource)!,
-    fields: getFieldsForResource(metadata, resource)
-  })).filter(spec => spec.keyField && spec.fields.length > 0);
+  // Build active resource list — include Lookup in string enum mode
+  const activeResources: ReadonlyArray<string> = config.enumMode === 'string' ? [...TARGET_RESOURCES, 'Lookup'] : TARGET_RESOURCES;
+
+  // Read-only resources should not have POST/PATCH/DELETE routes
+  const readOnlyResources: ReadonlySet<string> = new Set(config.enumMode === 'string' ? ['Lookup'] : []);
+
+  const resourceSpecs = activeResources
+    .map(resource => ({
+      resourceName: resource,
+      keyField: getKeyFieldForResource(resource)!,
+      fields: getFieldsForResource(metadata, resource)
+    }))
+    .filter(spec => spec.keyField && spec.fields.length > 0);
 
   // Create data access layer based on configured backend
   let dal: DataAccessLayer;
@@ -68,14 +78,22 @@ const main = async (): Promise<void> => {
     dal = createPostgresDal(pool);
   }
 
+  // Auto-seed Lookup resource from metadata in string enum mode
+  if (config.enumMode === 'string') {
+    const seeded = await seedLookups(dal, metadata);
+    if (seeded > 0) {
+      console.log(`Seeded ${seeded} Lookup records from metadata.`);
+    }
+  }
+
   // Load auth configuration
   const authConfig = loadAuthConfig();
 
   // Generate EDMX metadata
-  const edmxXml = generateEdmx(metadata, TARGET_RESOURCES);
+  const edmxXml = generateEdmx(metadata, activeResources);
 
   // Generate OpenAPI spec
-  const openApiSpec = generateOpenApiSpec(metadata, TARGET_RESOURCES, config.baseUrl);
+  const openApiSpec = generateOpenApiSpec(metadata, activeResources, config.baseUrl);
 
   // Build Express app
   const app = express();
@@ -104,7 +122,7 @@ const main = async (): Promise<void> => {
   app.get('/', (_req, res) => {
     res.json({
       '@odata.context': `${config.baseUrl}/$metadata`,
-      value: TARGET_RESOURCES.map(name => ({
+      value: activeResources.map(name => ({
         name,
         kind: 'EntitySet',
         url: name
@@ -116,11 +134,11 @@ const main = async (): Promise<void> => {
   app.use(createMockOAuthRouter());
 
   // OData CRUD + collection routes (using DAL instead of direct pool access)
-  const odataRouter = createODataRouter(metadata, dal, config.baseUrl, TARGET_RESOURCES);
+  const odataRouter = createODataRouter(metadata, dal, config.baseUrl, activeResources, readOnlyResources);
   app.use(odataRouter);
 
   // Admin endpoints (data generator, etc.)
-  const adminRouter = createAdminRouter(metadata, dal, authConfig);
+  const adminRouter = createAdminRouter(metadata, dal, authConfig, config.enumMode);
   app.use(adminRouter);
 
   // Swagger UI

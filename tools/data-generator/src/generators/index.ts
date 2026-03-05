@@ -29,10 +29,12 @@ export {
   generateFieldValue,
   generateRecord,
   generateRecords,
+  getLookupDisplayValue,
   isEnumType,
   randomChoice,
   randomDecimal,
-  randomInt
+  randomInt,
+  transformLookupsForHumanFriendly
 } from './field-generator.js';
 
 /** Registry of resource-specific generators. Falls back to generic generator. */

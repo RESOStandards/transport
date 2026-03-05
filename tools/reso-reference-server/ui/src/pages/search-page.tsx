@@ -8,7 +8,7 @@ import { useCollection } from '../hooks/use-collection';
 import { useMetadata } from '../hooks/use-metadata';
 import { useUiConfig } from '../hooks/use-ui-config';
 import type { ResourceName } from '../types';
-import { KEY_FIELD_MAP, TARGET_RESOURCES } from '../types';
+import { KEY_FIELD_MAP, READ_ONLY_RESOURCES, TARGET_RESOURCES } from '../types';
 
 /** Search page with filter bar, optional advanced search, and infinite scroll results. */
 export const SearchPage = () => {
@@ -131,26 +131,28 @@ export const SearchPage = () => {
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{resourceName}</h2>
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={() => navigate(`/${resourceName}/add`)}
-              className="px-3 py-1.5 text-sm bg-green-600 text-white rounded hover:bg-green-700">
-              + Add
-            </button>
-            <button
-              type="button"
-              onClick={() => navigate(`/${resourceName}/edit`)}
-              className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-50 dark:hover:bg-gray-700">
-              Edit
-            </button>
-            <button
-              type="button"
-              onClick={() => navigate(`/${resourceName}/delete`)}
-              className="px-3 py-1.5 text-sm border border-red-300 dark:border-red-700 text-red-600 dark:text-red-400 rounded hover:bg-red-50 dark:hover:bg-red-900/20">
-              Delete
-            </button>
-          </div>
+          {!READ_ONLY_RESOURCES.has(resourceName) && (
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => navigate(`/${resourceName}/add`)}
+                className="px-3 py-1.5 text-sm bg-green-600 text-white rounded hover:bg-green-700">
+                + Add
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate(`/${resourceName}/edit`)}
+                className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-50 dark:hover:bg-gray-700">
+                Edit
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate(`/${resourceName}/delete`)}
+                className="px-3 py-1.5 text-sm border border-red-300 dark:border-red-700 text-red-600 dark:text-red-400 rounded hover:bg-red-50 dark:hover:bg-red-900/20">
+                Delete
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Search */}

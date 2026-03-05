@@ -1,7 +1,15 @@
 import { randomUUID } from 'node:crypto';
-import { KEY_FIELD_MAP, buildMultiResourcePlan, getDefaultRelatedCount, getGenerator, getRelatedResources } from '@reso/data-generator';
+import {
+  KEY_FIELD_MAP,
+  buildMultiResourcePlan,
+  getDefaultRelatedCount,
+  getGenerator,
+  getRelatedResources,
+  transformLookupsForHumanFriendly
+} from '@reso/data-generator';
 import type { ResoField, ResoLookup } from '@reso/data-generator';
 import type { RequestHandler } from 'express';
+import type { EnumMode } from '../config.js';
 import type { DataAccessLayer, ResourceContext } from '../db/data-access.js';
 import { getFieldsForResource, getKeyFieldForResource, getLookupsForType, isEnumType } from '../metadata/loader.js';
 import type { ResoMetadata } from '../metadata/types.js';
@@ -49,7 +57,11 @@ const buildResourceContext = (metadata: ResoMetadata, resource: string): Resourc
 const pickRandom = <T>(arr: ReadonlyArray<T>): T => arr[Math.floor(Math.random() * arr.length)];
 
 /** Collects all lookup values for fields of a resource into a lookup map. */
-const buildLookupMap = (metadata: ResoMetadata, fields: ReadonlyArray<ResoField>): Record<string, ReadonlyArray<ResoLookup>> => {
+const buildLookupMap = (
+  metadata: ResoMetadata,
+  fields: ReadonlyArray<ResoField>,
+  useHumanFriendly: boolean
+): Record<string, ReadonlyArray<ResoLookup>> => {
   const lookupMap: Record<string, ResoLookup[]> = {};
   for (const field of fields) {
     if (isEnumType(field.type) && !lookupMap[field.type]) {
@@ -59,7 +71,7 @@ const buildLookupMap = (metadata: ResoMetadata, fields: ReadonlyArray<ResoField>
       }
     }
   }
-  return lookupMap;
+  return useHumanFriendly ? transformLookupsForHumanFriendly(lookupMap) : lookupMap;
 };
 
 /**
@@ -69,7 +81,7 @@ const buildLookupMap = (metadata: ResoMetadata, fields: ReadonlyArray<ResoField>
  * directly for performance since we're already inside the server process.
  */
 export const createDataGeneratorHandler =
-  (metadata: ResoMetadata, dal: DataAccessLayer): RequestHandler =>
+  (metadata: ResoMetadata, dal: DataAccessLayer, enumMode: EnumMode = 'string'): RequestHandler =>
   async (req, res) => {
     const startTime = Date.now();
     const body = req.body as GenerateRequest;
@@ -95,6 +107,8 @@ export const createDataGeneratorHandler =
     }
 
     try {
+      const useHumanFriendly = enumMode === 'string';
+
       // Build fieldsByResource map for all target resources
       const fieldsByResource: Record<string, ReadonlyArray<ResoField>> = {};
       for (const r of TARGET_RESOURCES) {
@@ -120,7 +134,7 @@ export const createDataGeneratorHandler =
           }
 
           const phaseFields = fieldsByResource[phase.resource];
-          const phaseLookups = buildLookupMap(metadata, phaseFields);
+          const phaseLookups = buildLookupMap(metadata, phaseFields, useHumanFriendly);
           const phaseGenerator = getGenerator(phase.resource);
           const records = [...phaseGenerator(phaseFields, phaseLookups, phase.count)];
 
@@ -197,7 +211,7 @@ export const createDataGeneratorHandler =
             }
 
             const relatedFields = fieldsByResource[relatedResource];
-            const relatedLookups = buildLookupMap(metadata, relatedFields);
+            const relatedLookups = buildLookupMap(metadata, relatedFields, useHumanFriendly);
             const relatedGenerator = getGenerator(relatedResource);
             let relatedCreated = 0;
             let relatedFailed = 0;
@@ -227,7 +241,7 @@ export const createDataGeneratorHandler =
       } else {
         // Original single-resource generation (no dependency resolution)
         const fields = fieldsByResource[body.resource];
-        const lookups = buildLookupMap(metadata, fields);
+        const lookups = buildLookupMap(metadata, fields, useHumanFriendly);
         const generator = getGenerator(body.resource);
         const records = generator(fields, lookups, body.count);
         const parentKeys: string[] = [];
@@ -259,7 +273,7 @@ export const createDataGeneratorHandler =
             }
 
             const relatedFields = getFieldsForResource(metadata, relatedResource);
-            const relatedLookups = buildLookupMap(metadata, relatedFields);
+            const relatedLookups = buildLookupMap(metadata, relatedFields, useHumanFriendly);
             const relatedGenerator = getGenerator(relatedResource);
             let relatedCreated = 0;
             let relatedFailed = 0;

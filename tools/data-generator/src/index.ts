@@ -18,7 +18,7 @@ export { KEY_FIELD_MAP } from './generators/types.js';
 export type { BatchCreateResult, OutputFormat, OutputOptions } from './client.js';
 export { patchRecordsViaHttp } from './client.js';
 export { buildDependencyGraph, buildMultiResourcePlan, discoverForeignKeys, topologicalSort } from './fk-resolver.js';
-export { getGenerator } from './generators/index.js';
+export { getGenerator, getLookupDisplayValue, transformLookupsForHumanFriendly } from './generators/index.js';
 export { buildSeedPlan, getDefaultRelatedCount, getRelatedResources } from './plan.js';
 
 import { randomUUID } from 'node:crypto';

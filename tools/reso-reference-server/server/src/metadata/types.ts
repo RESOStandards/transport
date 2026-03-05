@@ -56,6 +56,7 @@ export const KEY_FIELD_MAP: Readonly<Record<string, string>> = {
   HistoryTransactional: 'HistoryTransactionalKey',
   InternetTracking: 'EventKey',
   LockOrBox: 'LockOrBoxKey',
+  Lookup: 'LookupKey',
   Media: 'MediaKey',
   Member: 'MemberKey',
   MemberAssociation: 'AssociationKey',

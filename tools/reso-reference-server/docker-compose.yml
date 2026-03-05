@@ -15,6 +15,7 @@ services:
       DATABASE_URL: postgresql://reso:reso@db:5432/reso_reference
       METADATA_PATH: ./server-metadata.json
       BASE_URL: http://localhost:8080
+      ENUM_MODE: string
     depends_on:
       db:
         condition: service_healthy
@@ -107,6 +108,7 @@ services:
       MONGODB_URL: mongodb://mongodb:27017/reso_reference
       METADATA_PATH: ./server-metadata.json
       BASE_URL: http://localhost:8080
+      ENUM_MODE: string
     depends_on:
       mongodb:
         condition: service_healthy

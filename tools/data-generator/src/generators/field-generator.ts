@@ -58,6 +58,36 @@ const randomString = (fieldName: string, index: number, maxLength?: number): str
   return val;
 };
 
+/**
+ * Resolves the display value from a lookup entry based on enum mode.
+ * In human-friendly mode (string enums), uses the StandardName annotation;
+ * in legacy mode (EnumType), uses the CamelCase lookupValue.
+ */
+export const getLookupDisplayValue = (lookup: ResoLookup, useHumanFriendly: boolean): string => {
+  if (!useHumanFriendly) return lookup.lookupValue;
+  const stdName = lookup.annotations?.find(a => a.term === 'RESO.OData.Metadata.StandardName');
+  return stdName?.value ?? lookup.lookupValue;
+};
+
+/**
+ * Transforms a lookup map for human-friendly string enum mode.
+ * Replaces each lookup entry's lookupValue with its StandardName annotation,
+ * so all downstream generator code that references `v.lookupValue`
+ * automatically uses the human-friendly display name.
+ */
+export const transformLookupsForHumanFriendly = (
+  lookups: Readonly<Record<string, ReadonlyArray<ResoLookup>>>
+): Record<string, ReadonlyArray<ResoLookup>> => {
+  const result: Record<string, ResoLookup[]> = {};
+  for (const [type, entries] of Object.entries(lookups)) {
+    result[type] = entries.map(entry => ({
+      ...entry,
+      lookupValue: getLookupDisplayValue(entry, true)
+    }));
+  }
+  return result;
+};
+
 /** Generates a random lookup value from available lookups for a given type. */
 const randomLookupValue = (type: string, lookups: Readonly<Record<string, ReadonlyArray<ResoLookup>>>): string | undefined => {
   const values = lookups[type];

@@ -317,21 +317,44 @@ Set up GitHub Actions for:
 - Cross-tool validation (reference server + test tool)
 - Publish packages to npm (when ready)
 
-### #29 — Add RESO Lookup Resource Support
-**Package:** `reso-reference-server`
+### #29 — Lookup Resource + Human-Friendly String Enumerations
+**Package:** `reso-reference-server`, `data-generator`
 
-The server uses `Edm.String` for enumerations (with `LookupName` annotations) rather
-than OData `Edm.EnumType`. To pass DD 2.0 compliance tests, the server must expose
-the RESO Lookup Resource — an OData entity set that serves lookup metadata so that
-compliance tools can validate enumeration values.
+The server uses `Edm.String` for enumerations (with `LookupName` annotations) but
+currently stores CamelCase `lookupValue` identifiers (e.g., `"ActiveUnderContract"`)
+instead of human-friendly display names (e.g., `"Active Under Contract"`). The DD 2.0
+specification (Section 2.2) requires servers using `Edm.String` enumerations to expose
+a Lookup Resource so compliance tools and consumers can discover valid values.
 
 **Deliverables:**
-- Lookup entity set in `$metadata` (EDMX)
-- `/Lookup` endpoint with `$filter` support (by `LookupName`, `LookupValue`, etc.)
-- Seed lookup data from the bundled metadata file
-- Service document updated to include Lookup
+- `ENUM_MODE` environment variable (`string` | `enum-type`, default `string`)
+- Lookup entity set in `$metadata` (EDMX) — 6 fields per DD 2.0 Section 2.2
+- `/Lookup` OData endpoint (read-only: GET collection + GET by key, `$filter`, `$top`, `$skip`, `$count`)
+- Auto-seed Lookup table from `server-metadata.json` at startup (SHA-3 256 hash for LookupKey)
+- Human-friendly `StandardName` values in data payloads and queries (string mode)
+- Data generator updated to use human-friendly values when `ENUM_MODE=string`
+- UI: browse/search Lookup resource (read-only, no editing)
+- Service document and EDMX updated to include Lookup
 
-**Priority:** Before SQLite DAL implementation (#3).
+**Priority:** Before SQLite DAL implementation (#3). Required for DD 2.0 compliance.
+
+### #30 — EnumType Mode (OData Edm.EnumType Support)
+**Package:** `reso-reference-server`, `data-generator`
+
+Add `ENUM_MODE=enum-type` support as an alternative to string enumerations. When
+enabled, the server uses OData `Edm.EnumType` definitions in EDMX instead of
+`Edm.String` with `LookupName` annotations. Data payloads use CamelCase
+`lookupValue` identifiers (e.g., `"ActiveUnderContract"`). No Lookup Resource is
+needed in this mode.
+
+**Deliverables:**
+- Second EDMX Schema block (`org.reso.metadata.enums`) with `<EnumType>` definitions
+- Fields use fully-qualified enum type names instead of `Edm.String`
+- Data generator uses `lookupValue` (CamelCase) — current behavior
+- RESOScript generator: omit `-DuseStringEnums=true`, provide enum namespace
+- Web API Core compliance: pass correct flags for EnumType mode
+
+**Prerequisite:** #29 (ENUM_MODE config infrastructure).
 
 ### #28 — Rewrite Web API Core Testing Tools
 **Package:** `reso-reference-server`

@@ -8,7 +8,7 @@ import { MediaCarousel } from '../components/media-carousel';
 import { useMetadata } from '../hooks/use-metadata';
 import { useUiConfig } from '../hooks/use-ui-config';
 import type { ResoField, ResourceName } from '../types';
-import { KEY_FIELD_MAP, TARGET_RESOURCES } from '../types';
+import { KEY_FIELD_MAP, READ_ONLY_RESOURCES, TARGET_RESOURCES } from '../types';
 import { ADDRESS_FIELDS, formatAddress, formatFieldValue } from '../utils/format';
 
 /** Detail page showing a full record with fields grouped by RESO Data Dictionary categories. */
@@ -199,20 +199,22 @@ export const DetailPage = () => {
             </button>
             <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{resourceName} Detail</h2>
           </div>
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={() => navigate(`/${resourceName}/edit/${encodeURIComponent(key!)}`)}
-              className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded hover:bg-blue-700">
-              Edit
-            </button>
-            <button
-              type="button"
-              onClick={() => setShowDelete(true)}
-              className="px-3 py-1.5 text-sm bg-red-600 text-white rounded hover:bg-red-700">
-              Delete
-            </button>
-          </div>
+          {!READ_ONLY_RESOURCES.has(resourceName) && (
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => navigate(`/${resourceName}/edit/${encodeURIComponent(key!)}`)}
+                className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded hover:bg-blue-700">
+                Edit
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowDelete(true)}
+                className="px-3 py-1.5 text-sm bg-red-600 text-white rounded hover:bg-red-700">
+                Delete
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -312,7 +314,7 @@ export const DetailPage = () => {
       </div>
 
       {/* Delete dialog (fixed overlay, outside scroll area) */}
-      {showDelete && (
+      {!READ_ONLY_RESOURCES.has(resourceName) && showDelete && (
         <DeleteDialog
           resource={resourceName}
           record={record}
