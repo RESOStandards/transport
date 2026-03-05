@@ -241,24 +241,20 @@ Docker-verified on both PostgreSQL and MongoDB (892 records, 0 errors each).~~
 ~~Sub-tasks 1–6 complete. Sub-task 7 (HistoryTransactional as child collection)
 deferred to a future ticket.~~
 
-### #25 — UI: Expansion Cards for Navigation Properties
+### ~~#25 — UI: Expansion Cards for Navigation Properties~~
 **Package:** `reso-reference-server/ui`
-**Status:** In Progress
+**Status:** Closed
 
-Add inset cards to the detail page that display field-value data for expanded
-navigation properties. Two variants:
+~~Inset cards in a collapsible "Related Records" section display field-value data
+for expanded navigation properties. To-one expansions show a single card with
+"View" link; to-many show paginated cards with back/next navigation. Each card
+uses a two-column, vertically scrollable field layout (max 4 rows). Also fixed
+nginx proxy missing Teams, TeamMembers, and OUID resources.~~
 
-- **To-one** (ListAgent, ListOffice, etc.): single card with horizontally
-  scrollable field-value pairs and "View" link to the entity's detail page
-- **To-many** (Media, OpenHouse, Showing, etc.): card with back/next pagination
-  to browse records, each showing horizontally scrollable field-value pairs
-
-The existing `MediaCarousel` (photo/video carousel from MediaURL) is unchanged —
-expansion cards show record-level field data, not media visuals.
-
-**Affected files:**
-- `ui/src/components/expanded-entity-card.tsx` — new component
-- `ui/src/pages/detail-page.tsx` — filter expansions from field list, render cards
+~~Affected files:~~
+- ~~`ui/src/components/expanded-entity-card.tsx` — new component~~
+- ~~`ui/src/pages/detail-page.tsx` — filter expansions, render in Related Records section~~
+- ~~`ui/nginx.conf.template` — add Teams, TeamMembers, OUID to proxy allowlist~~
 
 ### #19 — Fix Web API Core 2.0.0 Compliance Test Failures
 **Package:** `reso-reference-server`

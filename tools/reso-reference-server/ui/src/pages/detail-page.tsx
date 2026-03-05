@@ -174,6 +174,9 @@ export const DetailPage = () => {
   // For resources without groupings, hide address fields from the flat list when a composed address is shown
   const address = formatAddress(record);
 
+  // Sort expansions alphabetically by nav prop name
+  expansions.sort((a, b) => a.fieldName.localeCompare(b.fieldName));
+
   const renderFieldList = (fieldList: ResoField[], columns: 1 | 2 = 2) => (
     <div className={`grid grid-cols-1 ${columns === 2 ? 'sm:grid-cols-2' : ''} gap-x-6 gap-y-1`}>
       {fieldList.map(field => (
@@ -276,21 +279,6 @@ export const DetailPage = () => {
           )}
         </div>
 
-        {/* Expanded navigation properties */}
-        {expansions.length > 0 && (
-          <div className="space-y-3">
-            {expansions.map(exp => (
-              <ExpandedEntityCard
-                key={exp.fieldName}
-                title={exp.fieldName}
-                targetResource={exp.targetResource}
-                records={exp.records}
-                isCollection={exp.isCollection}
-              />
-            ))}
-          </div>
-        )}
-
         {/* Grouped fields (resources with groupings only) */}
         {sortedGroups.map(([group, groupFields]) => (
           <FieldGroupSection key={group} title={group} defaultOpen>
@@ -302,6 +290,23 @@ export const DetailPage = () => {
         {ungrouped.length > 0 && hasGroupings && (
           <FieldGroupSection title="Other" defaultOpen>
             {renderFieldList(ungrouped)}
+          </FieldGroupSection>
+        )}
+
+        {/* Related Records — all expanded navigation properties */}
+        {expansions.length > 0 && (
+          <FieldGroupSection title="Related Records" defaultOpen>
+            <div className="space-y-3">
+              {expansions.map(exp => (
+                <ExpandedEntityCard
+                  key={exp.fieldName}
+                  title={exp.fieldName}
+                  targetResource={exp.targetResource}
+                  records={exp.records}
+                  isCollection={exp.isCollection}
+                />
+              ))}
+            </div>
           </FieldGroupSection>
         )}
       </div>

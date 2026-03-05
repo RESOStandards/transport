@@ -44,7 +44,9 @@ export const ExpandedEntityCard = ({ title, targetResource, records, isCollectio
   const keyField = isTargetNavigable ? KEY_FIELD_MAP[targetResource as ResourceName] : undefined;
   const entityKey = keyField ? current[keyField] : undefined;
 
-  const displayFields = Object.entries(current).filter(([key, value]) => isDisplayableField(key, value));
+  const displayFields = Object.entries(current)
+    .filter(([key, value]) => isDisplayableField(key, value))
+    .sort(([a], [b]) => a.localeCompare(b));
 
   const handlePrev = () => setCurrentIndex(i => (i > 0 ? i - 1 : records.length - 1));
   const handleNext = () => setCurrentIndex(i => (i < records.length - 1 ? i + 1 : 0));
@@ -100,15 +102,15 @@ export const ExpandedEntityCard = ({ title, targetResource, records, isCollectio
         </div>
       </div>
 
-      {/* Horizontally scrollable field-value pairs */}
-      <div className="overflow-x-auto px-3 py-2">
-        <div className="flex gap-4 min-w-0">
+      {/* Two-column field list, vertically scrollable, max 4 rows visible */}
+      <div className="overflow-y-auto max-h-28 px-3 py-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-0.5">
           {displayFields.map(([key, value]) => (
-            <div key={key} className="flex-none min-w-[140px] max-w-[240px]">
-              <div className="text-[11px] text-gray-400 dark:text-gray-500 truncate">{key}</div>
-              <div className="text-sm text-gray-800 dark:text-gray-200 truncate" title={formatValue(value)}>
+            <div key={key} className="flex items-baseline gap-2 py-0.5 text-sm">
+              <span className="text-gray-500 dark:text-gray-400 shrink-0 w-40 sm:w-44 truncate">{key}</span>
+              <span className="text-gray-800 dark:text-gray-200 truncate" title={formatValue(value)}>
                 {formatValue(value)}
-              </div>
+              </span>
             </div>
           ))}
         </div>

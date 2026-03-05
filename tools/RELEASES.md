@@ -2,6 +2,30 @@
 
 ---
 
+## v0.0.19 — 2026-03-04
+
+### UI: Expansion Cards for Navigation Properties (#25)
+
+The detail page now displays expanded navigation property data in a collapsible
+"Related Records" section. Each expansion renders as an inset card with a
+two-column, vertically scrollable field list (max 4 visible rows).
+
+- **To-one expansions** (ListAgent, ListOffice, etc.): single card with
+  alphabetized fields and "View" link to navigate to the related entity
+- **To-many expansions** (Media, OpenHouse, Showing, etc.): card with
+  back/next pagination to browse individual records
+- Expansion fields are filtered from regular field lists (no more "[object Object]")
+- Existing `MediaCarousel` (photo/video display) unchanged
+
+### Bug Fix: nginx proxy missing Teams, TeamMembers, OUID
+
+The nginx reverse proxy allowlist in `nginx.conf.template` was missing three
+resources added in v0.0.18 (`Teams`, `TeamMembers`, `OUID`). API requests for
+these resources were served the SPA HTML instead of being proxied to the backend,
+causing "not valid JSON" errors.
+
+---
+
 ## v0.0.18 — 2026-03-04
 
 ### Data Generator: Referentially Correct Multi-Resource Seed Data (#24)

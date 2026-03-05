@@ -35,7 +35,7 @@ server {
 
     # OData entity requests with key syntax — always proxy
     # Matches: /Property('key'), /Property(%28'key'%29)
-    location ~ ^/(Property|Member|Office|Media|OpenHouse|Showing|PropertyRooms|PropertyGreenVerification|PropertyPowerProduction|PropertyUnitTypes)(\(|%28) {
+    location ~ ^/(Property|Member|Office|Media|OpenHouse|Showing|PropertyRooms|PropertyGreenVerification|PropertyPowerProduction|PropertyUnitTypes|Teams|TeamMembers|OUID)(\(|%28) {
         proxy_pass http://${API_UPSTREAM};
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -43,7 +43,7 @@ server {
 
     # Bare resource collection paths — proxy if Accept: application/json, SPA otherwise
     # Uses error_page + return trick to safely branch inside nginx (avoids if + proxy_pass)
-    location ~ ^/(Property|Member|Office|Media|OpenHouse|Showing|PropertyRooms|PropertyGreenVerification|PropertyPowerProduction|PropertyUnitTypes)$ {
+    location ~ ^/(Property|Member|Office|Media|OpenHouse|Showing|PropertyRooms|PropertyGreenVerification|PropertyPowerProduction|PropertyUnitTypes|Teams|TeamMembers|OUID)$ {
         error_page 418 = @api;
         if ($http_accept ~* "application/json") {
             return 418;
