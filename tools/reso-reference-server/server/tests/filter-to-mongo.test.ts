@@ -30,9 +30,9 @@ describe('filterToMongo', () => {
       expect(result.query).toEqual({ City: 'Austin' });
     });
 
-    it('translates ne', () => {
+    it('translates ne (excludes null to match SQL semantics)', () => {
       const result = filterToMongo("City ne 'Dallas'", fields);
-      expect(result.query).toEqual({ City: { $ne: 'Dallas' } });
+      expect(result.query).toEqual({ City: { $nin: ['Dallas', null] } });
     });
 
     it('translates gt', () => {
@@ -242,9 +242,15 @@ describe('filterToMongo', () => {
       expect(result.query).toEqual({ AccessibilityFeatures: 'Elevator' });
     });
 
-    it('translates all() with equality', () => {
+    it('translates all() with equality (every element must match)', () => {
       const result = filterToMongo("AccessibilityFeatures/all(v:v eq 'Elevator')", fields);
-      expect(result.query).toEqual({ AccessibilityFeatures: { $all: ['Elevator'] } });
+      expect(result.query).toEqual({
+        $and: [
+          { AccessibilityFeatures: { $exists: true } },
+          { AccessibilityFeatures: { $ne: [] } },
+          { AccessibilityFeatures: { $not: { $elemMatch: { $ne: 'Elevator' } } } }
+        ]
+      });
     });
 
     it('translates empty any() as non-empty check', () => {

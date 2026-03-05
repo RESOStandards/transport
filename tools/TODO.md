@@ -317,26 +317,26 @@ Set up GitHub Actions for:
 - Cross-tool validation (reference server + test tool)
 - Publish packages to npm (when ready)
 
-### #29 — Lookup Resource + Human-Friendly String Enumerations
+### ~~#29 — Lookup Resource + Human-Friendly String Enumerations~~
 **Package:** `reso-reference-server`, `data-generator`
+**Status:** Closed
 
-The server uses `Edm.String` for enumerations (with `LookupName` annotations) but
-currently stores CamelCase `lookupValue` identifiers (e.g., `"ActiveUnderContract"`)
-instead of human-friendly display names (e.g., `"Active Under Contract"`). The DD 2.0
-specification (Section 2.2) requires servers using `Edm.String` enumerations to expose
-a Lookup Resource so compliance tools and consumers can discover valid values.
+~~The server now exposes a Lookup Resource per DD 2.0 Section 2.2 and uses
+human-friendly `StandardName` values for string enumerations.~~
 
-**Deliverables:**
-- `ENUM_MODE` environment variable (`string` | `enum-type`, default `string`)
-- Lookup entity set in `$metadata` (EDMX) — 6 fields per DD 2.0 Section 2.2
-- `/Lookup` OData endpoint (read-only: GET collection + GET by key, `$filter`, `$top`, `$skip`, `$count`)
-- Auto-seed Lookup table from `server-metadata.json` at startup (SHA-3 256 hash for LookupKey)
-- Human-friendly `StandardName` values in data payloads and queries (string mode)
-- Data generator updated to use human-friendly values when `ENUM_MODE=string`
-- UI: browse/search Lookup resource (read-only, no editing)
-- Service document and EDMX updated to include Lookup
-
-**Priority:** Before SQLite DAL implementation (#3). Required for DD 2.0 compliance.
+~~**Delivered:**~~
+- ~~`ENUM_MODE` environment variable (`string` | `enum-type`, default `string`)~~
+- ~~Lookup entity set in `$metadata` (EDMX) — 6 fields per DD 2.0 Section 2.2~~
+- ~~`/Lookup` OData endpoint (read-only: GET collection + GET by key, `$filter`, `$top`, `$skip`, `$count`)~~
+- ~~Auto-seed 3,611 Lookup records from `server-metadata.json` at startup (SHA-3 256 hash for LookupKey)~~
+- ~~Human-friendly `StandardName` values in data payloads and queries (string mode)~~
+- ~~Data generator updated to use human-friendly values when `ENUM_MODE=string`~~
+- ~~UI: browse/search Lookup resource (read-only, no editing)~~
+- ~~Service document and EDMX updated to include Lookup~~
+- ~~MongoDB `$ne` filter fixed to exclude null-valued documents (SQL three-valued logic)~~
+- ~~MongoDB `all()` lambda fixed to use correct "every element matches" semantics~~
+- ~~RESOScript generator: median value selection for dates/decimals, single-element collection preference for `all()` tests~~
+- ~~Web API Core 2.0.0: 42/42 passed on both PostgreSQL and MongoDB~~
 
 ### #30 — EnumType Mode (OData Edm.EnumType Support)
 **Package:** `reso-reference-server`, `data-generator`

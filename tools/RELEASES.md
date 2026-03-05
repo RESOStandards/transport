@@ -2,6 +2,66 @@
 
 ---
 
+## v0.0.21 — 2026-03-04
+
+### Lookup Resource + Human-Friendly String Enumerations (#29)
+
+The server now exposes a **Lookup Resource** per DD 2.0 Section 2.2 and uses
+human-friendly `StandardName` display values for string enumerations. This is
+required for DD 2.0 compliance when using `Edm.String` enumeration mode.
+
+**Lookup Resource:**
+
+- New `Lookup` entity set with 6 fields: `LookupKey`, `LookupName`,
+  `LookupValue`, `StandardLookupValue`, `LegacyODataValue`,
+  `ModificationTimestamp`
+- `LookupKey` is a deterministic SHA-3 256 hash of `{LookupName}:{LookupValue}`
+- Auto-seeded from `server-metadata.json` at startup (3,611 records)
+- Read-only: GET collection + GET by key with full OData query support
+  (`$filter`, `$top`, `$skip`, `$count`, `$select`, `$orderby`)
+- POST/PATCH/DELETE routes not registered (404)
+
+**Enumeration mode (`ENUM_MODE`):**
+
+- New `ENUM_MODE` environment variable (`string` | `enum-type`, default `string`)
+- **String mode** (default): `Edm.String` types with `LookupName` annotations,
+  Lookup Resource exposed, human-friendly values in data (e.g.,
+  `"Active Under Contract"` instead of `"ActiveUnderContract"`)
+- **EnumType mode**: future ticket (#30)
+
+**Data generator:**
+
+- New `transformLookupsForHumanFriendly()` transforms lookup maps so all
+  downstream generators produce human-friendly values without code changes
+- `getLookupDisplayValue()` resolves `StandardName` annotation when available,
+  falls back to `lookupValue` for the 23 lookups without annotations
+
+**MongoDB filter fixes:**
+
+- `$ne` operator now uses `$nin: [value, null]` to exclude null/missing
+  documents, matching SQL three-valued NULL logic
+- `all()` lambda now uses `$not: { $elemMatch: { $ne: value } }` for correct
+  "every element matches" semantics (was using `$all` which is set containment)
+
+**RESOScript generator improvements:**
+
+- Decimal and date fields use median of distinct values (prevents `gt`/`lt`
+  tests from failing when the first value is an extreme)
+- Multi-value lookup `MultipleLookupValue1` prefers single-element collection
+  records so `all()` tests find matching data
+
+**UI:**
+
+- Lookup added to resource list for browsing/searching
+- Add/Edit/Delete buttons hidden for read-only resources (Lookup)
+- Nginx proxy allowlist updated
+
+**Compliance results (both PostgreSQL and MongoDB):**
+
+- Web API Core 2.0.0: **42 passed, 0 failed, 3 skipped**
+
+---
+
 ## v0.0.20 — 2026-03-04
 
 ### Web API Core 2.0.0 Compliance — All Tests Passing (#19)

@@ -147,8 +147,17 @@ export const filterToMongo = (filterString: string, fields: ReadonlyArray<ResoFi
           return vals.length === 1 ? { [lambdaField]: vals[0] } : { [lambdaField]: { $in: vals } };
         }
 
-        // all: record matches if array contains ALL of the values
-        return { [lambdaField]: { $all: vals } };
+        // all: every element in the array must satisfy the predicate.
+        // OData all(v: v eq 'a') means "for ALL elements, element equals 'a'".
+        // MongoDB $all means "array contains all listed values" (set containment) — wrong semantics.
+        // Instead: no element fails the test ($not $elemMatch $ne), array exists and is non-empty.
+        return {
+          $and: [
+            { [lambdaField]: { $exists: true } },
+            { [lambdaField]: { $ne: [] } },
+            { [lambdaField]: { $not: { $elemMatch: vals.length === 1 ? { $ne: vals[0] } : { $nin: vals } } } }
+          ]
+        };
       }
 
       default:
@@ -199,6 +208,15 @@ export const filterToMongo = (filterString: string, fields: ReadonlyArray<ResoFi
     }
     const field = getPropertyName(expr.left);
     const value = toLiteralValue(expr.right);
+
+    // For ne: exclude null/missing fields to match SQL three-valued logic.
+    // In SQL, NULL != value → UNKNOWN → excluded from results.
+    // In MongoDB, $ne matches documents where the field is null/missing.
+    // Using $nin excludes both the value and null in a single operator.
+    if (op === 'ne') {
+      return { [field]: { $nin: [value, null] } };
+    }
+
     return { [field]: { [mongoOp]: value } };
   };
 
