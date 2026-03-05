@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { readEntity } from '../api/client';
 import { DeleteDialog } from '../components/delete-dialog';
+import { ExpandedEntityCard } from '../components/expanded-entity-card';
 import { FieldGroupSection } from '../components/field-group-section';
 import { MediaCarousel } from '../components/media-carousel';
 import { useMetadata } from '../hooks/use-metadata';
@@ -100,10 +101,41 @@ export const DetailPage = () => {
   // For other resources: all fields go in a single alphabetical list (rendered beside carousel if present)
   const summaryFields: ResoField[] = [];
 
+  // Collect expanded navigation properties
+  const expansions: Array<{
+    readonly fieldName: string;
+    readonly targetResource: string;
+    readonly records: ReadonlyArray<Record<string, unknown>>;
+    readonly isCollection: boolean;
+  }> = [];
+
+  for (const field of fields) {
+    if (!field.isExpansion) continue;
+    const value = record[field.fieldName];
+    if (value === null || value === undefined) continue;
+
+    if (field.isCollection && Array.isArray(value) && value.length > 0) {
+      expansions.push({
+        fieldName: field.fieldName,
+        targetResource: field.typeName ?? field.fieldName,
+        records: value as Record<string, unknown>[],
+        isCollection: true
+      });
+    } else if (!field.isCollection && typeof value === 'object' && !Array.isArray(value)) {
+      expansions.push({
+        fieldName: field.fieldName,
+        targetResource: field.typeName ?? field.fieldName,
+        records: [value as Record<string, unknown>],
+        isCollection: false
+      });
+    }
+  }
+
   for (const field of fields) {
     if (skipFields.has(field.fieldName)) continue;
     if (record[field.fieldName] === undefined || record[field.fieldName] === null) continue;
     if (field.fieldName.startsWith('@')) continue;
+    if (field.isExpansion) continue;
 
     if (hasGroupings) {
       // Resources with groupings: split into summary vs grouped/ungrouped
@@ -243,6 +275,21 @@ export const DetailPage = () => {
             </div>
           )}
         </div>
+
+        {/* Expanded navigation properties */}
+        {expansions.length > 0 && (
+          <div className="space-y-3">
+            {expansions.map(exp => (
+              <ExpandedEntityCard
+                key={exp.fieldName}
+                title={exp.fieldName}
+                targetResource={exp.targetResource}
+                records={exp.records}
+                isCollection={exp.isCollection}
+              />
+            ))}
+          </div>
+        )}
 
         {/* Grouped fields (resources with groupings only) */}
         {sortedGroups.map(([group, groupFields]) => (
