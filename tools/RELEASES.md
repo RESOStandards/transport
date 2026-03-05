@@ -2,6 +2,36 @@
 
 ---
 
+## v0.0.22 — 2026-03-05
+
+### SQLite Data Access Layer Backend (#3)
+
+Added SQLite as a third database backend alongside PostgreSQL and MongoDB.
+Lightweight option requiring no external database — ideal for local development
+and testing.
+
+**New files:**
+- `filter-to-sqlite.ts` — OData $filter to SQLite SQL translator (32 tests)
+- `sqlite-schema-generator.ts` — Edm type to SQLite type mapping + DDL (14 tests)
+- `sqlite-dal.ts` — Full `DataAccessLayer` implementation with CTE + LEFT JOIN
+  for `$expand`, `json_each()` for collection lambda expressions, `strftime()` for
+  date functions, and `REGEXP` for `matchesPattern()`
+- `sqlite-pool.ts` — Database handle factory with WAL journal mode
+
+**Configuration:**
+- `DB_BACKEND=sqlite` selects the SQLite backend
+- `SQLITE_DB_PATH` sets the database file path (default: `./reso_reference.db`)
+
+**Docker Compose:**
+- `docker compose --profile sqlite up -d` — starts server + UI with SQLite
+- `docker compose --profile sqlite --profile seed-sqlite up` — seeds test data
+- Compliance profiles: `compliance-dd-sqlite`, `compliance-core-sqlite`
+
+**Compliance:** Web API Core 2.0.0 — 42/42 passed, 3 skipped (identical to
+PostgreSQL and MongoDB).
+
+---
+
 ## v0.0.21 — 2026-03-04
 
 ### Lookup Resource + Human-Friendly String Enumerations (#29)

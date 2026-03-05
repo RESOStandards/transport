@@ -1,13 +1,13 @@
 # RESO Reference Server — API
 
-The OData 4.01 reference server for the RESO Data Dictionary. Built with Node.js, Express, and TypeScript. Supports PostgreSQL and MongoDB backends, selectable via environment variable.
+The OData 4.01 reference server for the RESO Data Dictionary. Built with Node.js, Express, and TypeScript. Supports PostgreSQL, MongoDB, and SQLite backends, selectable via environment variable.
 
 ## Development Setup
 
 ### Prerequisites
 
 - Node.js 22+
-- PostgreSQL 16+ **or** MongoDB 7+ (or use Docker for either)
+- PostgreSQL 16+, MongoDB 7+, or SQLite (bundled with `better-sqlite3`, no install needed)
 
 ### Install and Build
 
@@ -41,6 +41,20 @@ docker run -d \
 DB_BACKEND=mongodb MONGODB_URL=mongodb://localhost:27017/reso_reference npm start
 ```
 
+### Start with SQLite
+
+No external database needed — SQLite stores data in a local file:
+
+```bash
+DB_BACKEND=sqlite npm start
+```
+
+This creates `reso_reference.db` in the server directory. To use a custom path:
+
+```bash
+DB_BACKEND=sqlite SQLITE_DB_PATH=/tmp/reso.db npm start
+```
+
 Or use Docker Compose from the parent directory (see [Docker instructions](../README.md)).
 
 ### Run the Server
@@ -57,24 +71,27 @@ The server starts at `http://localhost:8080` by default.
 npm test
 ```
 
-137 tests across 8 test files:
+189 tests across 10 test files:
 - `metadata.test.ts` — Metadata loader and helpers
 - `edmx-generator.test.ts` — EDMX XML generation, EntityContainer, NavigationProperty
 - `schema-generator.test.ts` — PostgreSQL DDL generation
+- `sqlite-schema-generator.test.ts` — SQLite DDL generation and type mapping
 - `validation.test.ts` — Request body validation with business rules
 - `navigation.test.ts` — Navigation property bindings, $expand, expansion field filtering
 - `auth.test.ts` — Authentication and authorization middleware
 - `filter-to-sql.test.ts` — OData `$filter` to parameterized SQL WHERE translation (31 tests)
 - `filter-to-mongo.test.ts` — OData `$filter` to MongoDB query translation (33 tests)
+- `filter-to-sqlite.test.ts` — OData `$filter` to parameterized SQLite WHERE translation (32 tests)
 
 ## Environment Variables
 
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `PORT` | `8080` | HTTP server port |
-| `DB_BACKEND` | `postgres` | Database backend: `postgres` or `mongodb` |
+| `DB_BACKEND` | `postgres` | Database backend: `postgres`, `mongodb`, or `sqlite` |
 | `DATABASE_URL` | `postgresql://reso:reso@localhost:5432/reso_reference` | PostgreSQL connection string (used when `DB_BACKEND=postgres`) |
 | `MONGODB_URL` | `mongodb://localhost:27017/reso_reference` | MongoDB connection string (used when `DB_BACKEND=mongodb`) |
+| `SQLITE_DB_PATH` | `./reso_reference.db` | SQLite database file path (used when `DB_BACKEND=sqlite`) |
 | `METADATA_PATH` | `./server-metadata.json` | Path to RESO metadata JSON file |
 | `BASE_URL` | `http://localhost:{PORT}` | Base URL for OData annotations (Location, @odata.id, etc.) |
 
@@ -84,7 +101,7 @@ npm test
 server/
 ├── src/
 │   ├── index.ts                # Entry point: load metadata, select backend, boot Express
-│   ├── config.ts               # Environment variable parsing (DB_BACKEND, DATABASE_URL, MONGODB_URL)
+│   ├── config.ts               # Environment variable parsing (DB_BACKEND, DATABASE_URL, MONGODB_URL, SQLITE_DB_PATH)
 │   ├── metadata/
 │   │   ├── types.ts            # ResoMetadata, ResoField, ResoLookup interfaces
 │   │   ├── loader.ts           # Read/parse metadata JSON, helper filters
@@ -97,6 +114,10 @@ server/
 │   │   ├── mongo-dal.ts        # MongoDB adapter (cursor pagination + batch expand)
 │   │   ├── filter-to-mongo.ts  # OData $filter AST → MongoDB query documents
 │   │   ├── mongo-init.ts       # MongoDB collection and index setup
+│   │   ├── sqlite-dal.ts       # SQLite adapter (CTE pagination + LEFT JOIN, same as PostgreSQL)
+│   │   ├── filter-to-sqlite.ts # OData $filter AST → parameterized SQLite WHERE
+│   │   ├── sqlite-pool.ts      # SQLite connection handle (WAL mode, REGEXP function)
+│   │   ├── sqlite-schema-generator.ts # Metadata → CREATE TABLE DDL (SQLite)
 │   │   ├── pool.ts             # PostgreSQL connection pool
 │   │   ├── schema-generator.ts # Metadata → CREATE TABLE DDL (PostgreSQL)
 │   │   ├── migrate.ts          # Run DDL on startup (PostgreSQL)
@@ -137,7 +158,7 @@ Collection GET endpoints (`GET /{Resource}`) support OData system query options:
 | `$count` | `COUNT(*) OVER()` window function |
 | `$expand` | `LEFT JOIN` with app-side row grouping |
 
-### $filter Translation
+### $filter Translation (PostgreSQL)
 
 The `$filter` query option is parsed into an AST by `@reso/odata-filter-parser` and translated to parameterized SQL. All values use `$1`, `$2`, etc. placeholders — no string interpolation.
 
@@ -161,14 +182,16 @@ The server uses a `DataAccessLayer` interface to abstract persistence from query
 
 | Adapter | Backend | `$expand` Strategy | `$filter` | Schema |
 |---------|---------|-------------------|-----------|--------|
-| `postgres-dal.ts` | PostgreSQL | CTE pagination + LEFT JOIN, app-side grouping | Parameterized SQL WHERE | DDL migration on startup |
+| `postgres-dal.ts` | PostgreSQL | CTE pagination + LEFT JOIN, app-side grouping | Parameterized SQL WHERE (`$1`, `$2`, ...) | DDL migration on startup |
 | `mongo-dal.ts` | MongoDB | Cursor pagination + batch `$in` queries per nav property | Native query operators + `$expr` | Collection/index creation on startup |
+| `sqlite-dal.ts` | SQLite | CTE pagination + LEFT JOIN, app-side grouping | Parameterized SQL WHERE (`?` positional) | DDL execution on startup |
 
 At startup, `index.ts` branches on `config.dbBackend`:
 - **`postgres`** (default): creates a pg pool, runs schema migrations, and instantiates the PostgreSQL DAL
 - **`mongodb`**: dynamically imports the `mongodb` package, connects `MongoClient`, initializes collections/indexes, and instantiates the MongoDB DAL
+- **`sqlite`**: dynamically imports `better-sqlite3`, opens the database file with WAL journal mode, creates tables, and instantiates the SQLite DAL
 
-Dynamic imports ensure the `mongodb` package is not loaded when running in PostgreSQL mode.
+Dynamic imports ensure backend-specific packages (`mongodb`, `better-sqlite3`) are not loaded when running a different backend.
 
 ### MongoDB-Specific Behavior
 
@@ -176,6 +199,31 @@ Dynamic imports ensure the `mongodb` package is not loaded when running in Postg
 - **Native arrays** — Collection fields (e.g., `PropertyType[]`) are stored as native arrays, not JSONB strings
 - **`_id` suppression** — MongoDB's auto-generated `_id` is projected out on all read paths
 - **Index strategy** — Unique index on primary key per resource; compound index on `(ResourceName, ResourceRecordKey)` for child collections used by `$expand`
+
+### SQLite-Specific Behavior
+
+- **WAL journal mode** — Enables concurrent reads while writing; set on connection open via `PRAGMA journal_mode = WAL`
+- **REGEXP function** — Registered as a custom function for OData `matchesPattern` support; uses JavaScript `RegExp`
+- **Dates as TEXT** — All `Edm.Date` and `Edm.DateTimeOffset` values are stored as ISO 8601 strings; `strftime()` used for date extraction functions
+- **Booleans as INTEGER** — Stored as `0`/`1`; coerced to `true`/`false` on read
+- **Collections as TEXT** — Multi-value fields stored as JSON strings; `json_each()` table-valued function used for lambda `any()`/`all()` queries
+- **No schema migration** — Tables are created with `CREATE TABLE IF NOT EXISTS` on startup; schema changes require dropping the database file
+
+### $filter Translation (SQLite)
+
+The `$filter` query option is parsed into an AST by `@reso/odata-filter-parser` and translated to parameterized SQLite SQL. All values use `?` positional placeholders.
+
+| OData | SQLite |
+|-------|--------|
+| `eq`, `ne`, `gt`, `ge`, `lt`, `le` | `=`, `!=`, `>`, `>=`, `<`, `<=` |
+| `and`, `or`, `not` | `AND`, `OR`, `NOT` |
+| `contains(f, 'v')` | `f LIKE '%v%'` |
+| `startswith(f, 'v')` | `f LIKE 'v%'` |
+| `endswith(f, 'v')` | `f LIKE '%v'` |
+| `year(f)`, `month(f)`, etc. | `CAST(strftime('%Y', f) AS INTEGER)` |
+| `round(f)`, `floor(f)`, `ceiling(f)` | `ROUND(f)`, `floor(f)`, `ceil(f)` |
+| `now()` | `strftime('%Y-%m-%dT%H:%M:%fZ', 'now')` |
+| `any(v:v eq 'x')` | `EXISTS (SELECT 1 FROM json_each(col) WHERE value = ?)` |
 
 ### $filter Translation (MongoDB)
 

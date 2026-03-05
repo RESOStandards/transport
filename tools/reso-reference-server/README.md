@@ -4,7 +4,7 @@ A metadata-driven OData 4.01 reference server for the [RESO Data Dictionary](htt
 
 ## Quick Start (Docker)
 
-The server supports two database backends: **PostgreSQL** (default) and **MongoDB**. Each has its own Docker Compose profile.
+The server supports three database backends: **PostgreSQL** (default), **MongoDB**, and **SQLite**. Each has its own Docker Compose profile.
 
 ### PostgreSQL (default)
 
@@ -42,13 +42,31 @@ Seed with test data:
 docker compose --profile seed-mongo up seed-mongo
 ```
 
+### SQLite
+
+```bash
+cd tools/reso-reference-server
+docker compose --profile sqlite up -d server-sqlite ui-sqlite
+```
+
+This starts:
+- **UI** at `http://localhost:5173`
+- **Server** at `http://localhost:8080` (OData API, `DB_BACKEND=sqlite`)
+- No external database — SQLite file stored in a Docker volume
+
+Seed with test data:
+
+```bash
+docker compose --profile sqlite --profile seed-sqlite up seed-sqlite
+```
+
 ### Switching Between Backends
 
 Stop the current backend and start the other:
 
 ```bash
 # Stop everything and remove volumes
-docker compose --profile mongodb down -v
+docker compose --profile mongodb --profile sqlite down -v
 
 # Start with PostgreSQL
 docker compose up -d
@@ -56,7 +74,11 @@ docker compose --profile seed up seed
 
 # — or start with MongoDB —
 docker compose --profile mongodb up -d mongodb server-mongo ui-mongo
-docker compose --profile seed-mongo up seed-mongo
+docker compose --profile mongodb --profile seed-mongo up seed-mongo
+
+# — or start with SQLite —
+docker compose --profile sqlite up -d server-sqlite ui-sqlite
+docker compose --profile sqlite --profile seed-sqlite up seed-sqlite
 ```
 
 ### Verify
@@ -105,12 +127,12 @@ reso-reference-server/
 
 The server is **metadata-driven**: it reads `server-metadata.json` (RESO Data Dictionary 2.0) at startup and dynamically:
 
-1. Creates database schema (PostgreSQL tables or MongoDB collections/indexes) for each target resource
+1. Creates database schema (PostgreSQL tables, MongoDB collections/indexes, or SQLite tables) for each target resource
 2. Registers OData CRUD routes with proper headers, annotations, and error format
 3. Generates EDMX XML metadata at `/$metadata`
 4. Generates OpenAPI 3.0 documentation at `/api-docs`
 
-The `DataAccessLayer` interface abstracts persistence, allowing the same OData handlers to work with either PostgreSQL or MongoDB. See [server/README.md](server/README.md) for backend-specific details.
+The `DataAccessLayer` interface abstracts persistence, allowing the same OData handlers to work with PostgreSQL, MongoDB, or SQLite. See [server/README.md](server/README.md) for backend-specific details.
 
 ## Supported Resources
 
@@ -176,8 +198,13 @@ docker compose --profile compliance-core up --build --exit-code-from compliance-
 
 # MongoDB
 docker compose --profile mongodb up -d --build --wait mongodb server-mongo ui-mongo
-docker compose --profile seed-mongo up seed-mongo
+docker compose --profile mongodb --profile seed-mongo up seed-mongo
 docker compose --profile compliance-core-mongo up --build --exit-code-from compliance-core-mongo
+
+# SQLite
+docker compose --profile sqlite up -d --build --wait server-sqlite
+docker compose --profile sqlite --profile seed-sqlite up seed-sqlite
+docker compose --profile sqlite --profile compliance-core-sqlite up --build --exit-code-from compliance-core-sqlite
 ```
 
 The test generates RESOScript XML configs dynamically from live server data (`compliance/generate-resoscripts.sh`), sampling records to find appropriate field values for each data type (integer, decimal, date, timestamp, single/multi-value lookups).
@@ -194,6 +221,9 @@ docker compose --profile compliance-dd up --build --exit-code-from compliance-dd
 
 # MongoDB
 docker compose --profile compliance-dd-mongo up --build --exit-code-from compliance-dd-mongo
+
+# SQLite
+docker compose --profile sqlite --profile compliance-dd-sqlite up --build --exit-code-from compliance-dd-sqlite
 ```
 
 ### Web API Add/Edit (RCP-010)

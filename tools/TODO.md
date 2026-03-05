@@ -80,12 +80,21 @@ Multi-level expansion like `$expand=Media($expand=Tags)` needs:
 5. Respect `$levels=N` and `$levels=max` parameters
 6. Add depth limit configuration to prevent unbounded recursive expansion
 
-### #3 — Data Access Layer: Additional Backends
+### ~~#3 — Data Access Layer: SQLite Backend~~
 **Package:** `reso-reference-server`
+**Status:** Closed
 
-Future backends to consider beyond PostgreSQL and MongoDB:
-- SQLite (lightweight local testing)
-- In-memory (unit testing without database)
+~~Added SQLite as a third `DataAccessLayer` backend, selected via `DB_BACKEND=sqlite`.
+Lightweight option requiring no external database — ideal for local development and testing.~~
+
+**Delivered:**
+- ~~`filter-to-sqlite.ts` — OData $filter AST to SQLite SQL translator (32 tests)~~
+- ~~`sqlite-schema-generator.ts` — Edm type to SQLite type mapping + DDL (14 tests)~~
+- ~~`sqlite-dal.ts` — Full DataAccessLayer implementation (CTE + LEFT JOIN for $expand)~~
+- ~~`sqlite-pool.ts` — Database handle with WAL mode + REGEXP function~~
+- ~~Config: `DB_BACKEND=sqlite`, `SQLITE_DB_PATH` env var~~
+- ~~Docker Compose SQLite profile (server, UI, seed, compliance)~~
+- ~~Web API Core 2.0.0: 42/42 passed, 3 skipped (same as PostgreSQL and MongoDB)~~
 
 ---
 
@@ -333,7 +342,7 @@ human-friendly `StandardName` values for string enumerations.~~
 - ~~Data generator updated to use human-friendly values when `ENUM_MODE=string`~~
 - ~~UI: browse/search Lookup resource (read-only, no editing)~~
 - ~~Service document and EDMX updated to include Lookup~~
-- ~~MongoDB `$ne` filter fixed to exclude null-valued documents (SQL three-valued logic)~~
+- ~~MongoDB `$ne` filter changed to exclude null-valued documents (SQL three-valued logic) — see #31 for spec review~~
 - ~~MongoDB `all()` lambda fixed to use correct "every element matches" semantics~~
 - ~~RESOScript generator: median value selection for dates/decimals, single-element collection preference for `all()` tests~~
 - ~~Web API Core 2.0.0: 42/42 passed on both PostgreSQL and MongoDB~~
@@ -366,6 +375,41 @@ the reference for test scenarios.
 
 **Prerequisite:** All current Commander-based Web API Core tests must pass first
 (ticket #19) before rewriting.
+
+### #31 — OData 4.01 `ne` Operator: Null Handling Spec Compliance
+**Package:** `reso-reference-server`
+
+The OData 4.01 spec (Part 2, Section 5.1.1.1) defines that `null ne 'value'` evaluates
+to **true** — records with null fields should be **included** in `ne` filter results.
+Both backends currently exclude them.
+
+**Full analysis:** See `tools/RESEARCH.md`
+
+**Current behavior (both backends exclude nulls):**
+- MongoDB: `{ field: { $nin: [value, null] } }` — explicitly excludes null (added in #29)
+- PostgreSQL: `field != $1` — SQL `NULL != value` → NULL → excluded by WHERE clause
+
+**OData 4.01 spec behavior (nulls should be included):**
+- MongoDB fix: revert to `{ field: { $ne: value } }` (original behavior was correct)
+- PostgreSQL fix: use `field IS DISTINCT FROM $1` or `(field != $1 OR field IS NULL)`
+
+**Complication:** The RESO `web-api-commander` compliance tool has a bug — it crashes
+with a NullPointerException when null values appear in `ne` results:
+```
+Cannot invoke "Object.toString()" because the return value of
+"java.util.HashMap.get(Object)" is null
+```
+This means spec-compliant `ne` behavior will cause commander test failures for
+`filter-*-ne` tests, which is a commander bug, not a server bug.
+
+**Decision needed:**
+1. Follow the OData 4.01 spec (correct, commander tests fail due to commander bug)
+2. Keep SQL semantics (commander tests pass, but `ne` doesn't match the spec)
+
+**Other audit findings (all correct):**
+All other comparison operators (`eq`, `gt`, `ge`, `lt`, `le`), logical operators
+(`and`, `or`, `not`), null comparisons (`eq null`, `ne null`), lambda expressions,
+functions, and arithmetic match the OData 4.01 spec in both backends.
 
 ### ~~#13 — Migrate TODOs to GitHub Issues~~
 ~~Move items from this file into GitHub Issues with proper labels,

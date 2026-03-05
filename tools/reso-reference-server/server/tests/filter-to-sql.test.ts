@@ -31,7 +31,7 @@ describe('filterToSql', () => {
       expect(result.values).toEqual(['Austin']);
     });
 
-    it('translates ne', () => {
+    it('translates ne (excludes null to match SQL semantics)', () => {
       const result = filterToSql("City ne 'Dallas'", fields, 'p');
       expect(result.where).toBe(`p."City" != $1`);
       expect(result.values).toEqual(['Dallas']);

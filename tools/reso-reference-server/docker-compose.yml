@@ -159,6 +159,72 @@ services:
       - seed-mongo
 
   # ---------------------------------------------------------------------------
+  # SQLite backend (lightweight, no external database)
+  # Usage: docker compose --profile sqlite up -d server-sqlite ui-sqlite
+  # Seed:  docker compose --profile sqlite --profile seed-sqlite up
+  # ---------------------------------------------------------------------------
+  server-sqlite:
+    build:
+      context: ..
+      dockerfile: reso-reference-server/server/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: 8080
+      DB_BACKEND: sqlite
+      SQLITE_DB_PATH: /data/reso_reference.db
+      METADATA_PATH: ./server-metadata.json
+      BASE_URL: http://localhost:8080
+      ENUM_MODE: string
+    volumes:
+      - sqlitedata:/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/health || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    restart: unless-stopped
+    profiles:
+      - sqlite
+
+  ui-sqlite:
+    build:
+      context: ..
+      dockerfile: reso-reference-server/ui/Dockerfile
+    ports:
+      - "5173:80"
+    environment:
+      API_UPSTREAM: server-sqlite:8080
+    depends_on:
+      - server-sqlite
+    restart: unless-stopped
+    profiles:
+      - sqlite
+
+  seed-sqlite:
+    build:
+      context: ..
+      dockerfile: reso-reference-server/server/Dockerfile
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        echo "Waiting for server at http://server-sqlite:8080..."
+        until wget -qO- http://server-sqlite:8080/health > /dev/null 2>&1; do sleep 2; done
+        echo "Server ready. Seeding data with dependency resolution..."
+
+        wget -qO- --post-data='{"resource":"Property","count":50,"resolveDependencies":true,"relatedRecords":{"Media":5,"OpenHouse":2,"Showing":2,"PropertyRooms":3,"PropertyGreenVerification":1,"PropertyPowerProduction":1,"PropertyUnitTypes":2}}' \
+          --header='Content-Type: application/json' --header='Authorization: Bearer admin-token' \
+          http://server-sqlite:8080/admin/data-generator || true
+
+        echo "Seed complete."
+    depends_on:
+      server-sqlite:
+        condition: service_healthy
+    profiles:
+      - seed-sqlite
+
+  # ---------------------------------------------------------------------------
   # Compliance: Data Dictionary 2.0 (PostgreSQL)
   # Usage: docker compose --profile compliance-dd up --build --exit-code-from compliance-dd
   # ---------------------------------------------------------------------------
@@ -244,10 +310,56 @@ services:
       - compliance-mongo
       - compliance-core-mongo
 
+  # ---------------------------------------------------------------------------
+  # Compliance: Data Dictionary 2.0 (SQLite)
+  # Usage: docker compose --profile sqlite --profile compliance-dd-sqlite up --build --exit-code-from compliance-dd-sqlite
+  # ---------------------------------------------------------------------------
+  compliance-dd-sqlite:
+    build:
+      context: compliance
+      dockerfile: Dockerfile.dd
+    entrypoint: ["/bin/sh", "/config/entrypoint-dd.sh"]
+    environment:
+      SERVER_URL: http://server-sqlite:8080
+    volumes:
+      - ./compliance:/config:ro
+      - compliance-dd-sqlite-results:/reso-certification-utils/results
+    depends_on:
+      server-sqlite:
+        condition: service_healthy
+    profiles:
+      - compliance-sqlite
+      - compliance-dd-sqlite
+
+  # ---------------------------------------------------------------------------
+  # Compliance: Web API Core 2.0.0 (SQLite)
+  # Usage: docker compose --profile sqlite --profile compliance-core-sqlite up --build --exit-code-from compliance-core-sqlite
+  # ---------------------------------------------------------------------------
+  compliance-core-sqlite:
+    build:
+      context: compliance
+      dockerfile: Dockerfile.core
+    entrypoint: ["/bin/sh", "/config/entrypoint-core.sh"]
+    environment:
+      SERVER_URL: http://server-sqlite:8080
+      AUTH_TOKEN: admin-token
+    volumes:
+      - ./compliance:/config:ro
+      - compliance-core-sqlite-results:/commander/build/certification
+    depends_on:
+      server-sqlite:
+        condition: service_healthy
+    profiles:
+      - compliance-sqlite
+      - compliance-core-sqlite
+
 volumes:
   pgdata:
   mongodata:
+  sqlitedata:
   compliance-dd-results:
   compliance-core-results:
   compliance-dd-mongo-results:
   compliance-core-mongo-results:
+  compliance-dd-sqlite-results:
+  compliance-core-sqlite-results:

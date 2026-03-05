@@ -67,6 +67,20 @@ const main = async (): Promise<void> => {
     console.log('MongoDB initialization complete.');
 
     dal = createMongoDal(db);
+  } else if (config.dbBackend === 'sqlite') {
+    console.log(`  SQLite: ${config.sqliteDbPath}`);
+    const { createSqliteDb } = await import('./db/sqlite-pool.js');
+    const { createSqliteDal } = await import('./db/sqlite-dal.js');
+    const { generateSqliteSchema } = await import('./db/sqlite-schema-generator.js');
+
+    const sqliteDb = createSqliteDb(config.sqliteDbPath);
+    const ddl = generateSqliteSchema(resourceSpecs);
+    for (const stmt of ddl) {
+      sqliteDb.exec(stmt);
+    }
+    console.log(`SQLite schema initialized (${ddl.length} statements).`);
+
+    dal = createSqliteDal(sqliteDb);
   } else {
     console.log(`  PostgreSQL: ${config.databaseUrl.replace(/\/\/.*@/, '//***@')}`);
     const pool = createPool(config.databaseUrl);
