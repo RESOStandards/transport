@@ -82,7 +82,7 @@ curl -X POST http://localhost:8080/Property \
   -d '{"ListPrice": 250000, "City": "Austin", "StateOrProvince": "TX", "PostalCode": "78701", "Country": "US", "BedroomsTotal": 3}'
 ```
 
-Seeding generates 50 Property records (with Media, OpenHouse, Showing), 20 Members, and 10 Offices using the built-in data generator.
+Seeding uses the data generator with automatic dependency resolution (`resolveDependencies: true`). A single seed call creates all resources in topological order with valid FK linkages: Office (10), Member (25), OUID (2), Teams (5), Property (50), plus child collections (Media, OpenHouse, Showing, Rooms, etc.) — 892 records total.
 
 ### Reseed (drop existing data)
 
@@ -118,9 +118,16 @@ The `DataAccessLayer` interface abstracts persistence, allowing the same OData h
 | Property | ListingKey | 652 |
 | Member | MemberKey | 87 |
 | Office | OfficeKey | 73 |
-| Media | MediaKey | 35 |
-| OpenHouse | OpenHouseKey | 34 |
-| Showing | ShowingKey | 22 |
+| Media | MediaKey | 41 |
+| OpenHouse | OpenHouseKey | 26 |
+| Showing | ShowingKey | 44 |
+| PropertyGreenVerification | GreenVerificationKey | 15 |
+| PropertyPowerProduction | PowerProductionKey | 12 |
+| PropertyRooms | RoomKey | 19 |
+| PropertyUnitTypes | UnitTypeKey | 17 |
+| Teams | TeamKey | 45 |
+| TeamMembers | TeamMemberKey | 21 |
+| OUID | OUIDKey | 46 |
 
 ## OData Compliance
 
@@ -142,10 +149,13 @@ The server implements OData 4.01 features required by the RESO Web API Add/Edit 
 | GET | `/api-docs` | Swagger UI documentation |
 | GET | `/health` | Health check |
 | POST | `/oauth/token` | Mock OAuth2 token endpoint |
+| GET | `/{Resource}` | Query collection (`$filter`, `$select`, `$orderby`, `$top`, `$skip`, `$count`, `$expand`) |
 | POST | `/{Resource}` | Create a new record |
-| GET | `/{Resource}('{key}')` | Get a record by key |
+| GET | `/{Resource}('{key}')` | Get a record by key (supports `$expand`) |
 | PATCH | `/{Resource}('{key}')` | Update a record |
 | DELETE | `/{Resource}('{key}')` | Delete a record |
+| GET | `/admin/data-generator/status` | Resource counts and available generators |
+| POST | `/admin/data-generator` | Generate seed data (supports `resolveDependencies`) |
 
 ## Cross-Tool Validation
 

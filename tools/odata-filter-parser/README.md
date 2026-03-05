@@ -140,12 +140,26 @@ The parser produces a `FilterExpression` discriminated union:
 | `PropertyExpr` | Property path reference |
 | `CollectionExpr` | Collection of expressions (for `in` operator) |
 
+## AST Serializer
+
+Convert an AST back to a canonical OData `$filter` string with `astToFilterString`:
+
+```typescript
+import { parseFilter, astToFilterString } from '@reso/odata-filter-parser';
+
+const ast = parseFilter("ListPrice gt 200000 and contains(City, 'Austin')");
+const roundTripped = astToFilterString(ast);
+// → "ListPrice gt 200000 and contains(City, 'Austin')"
+```
+
+Handles all node types: comparison, logical, not, arithmetic, function, lambda, literal, property, and collection.
+
 ## Development
 
 ```bash
 npm install
 npm run build
-npm test        # 97 tests
+npm test        # 152 tests
 ```
 
 ## License

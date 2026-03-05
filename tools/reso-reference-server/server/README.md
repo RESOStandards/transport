@@ -57,11 +57,13 @@ The server starts at `http://localhost:8080` by default.
 npm test
 ```
 
-Tests include:
+137 tests across 8 test files:
 - `metadata.test.ts` — Metadata loader and helpers
-- `edmx-generator.test.ts` — EDMX XML generation and fast-xml-parser compatibility
+- `edmx-generator.test.ts` — EDMX XML generation, EntityContainer, NavigationProperty
 - `schema-generator.test.ts` — PostgreSQL DDL generation
-- `validation.test.ts` — Request body validation
+- `validation.test.ts` — Request body validation with business rules
+- `navigation.test.ts` — Navigation property bindings, $expand, expansion field filtering
+- `auth.test.ts` — Authentication and authorization middleware
 - `filter-to-sql.test.ts` — OData `$filter` to parameterized SQL WHERE translation (31 tests)
 - `filter-to-mongo.test.ts` — OData `$filter` to MongoDB query translation (33 tests)
 
@@ -107,11 +109,14 @@ server/
 │   │   ├── errors.ts           # OData error response builder
 │   │   └── validation.ts       # Request body validation against metadata
 │   ├── auth/
+│   │   ├── middleware.ts       # Bearer token auth middleware (read/write/admin roles)
 │   │   └── mock-oauth.ts       # Mock OAuth2 Client Credentials endpoint
+│   ├── admin/
+│   │   └── data-generator.ts   # Admin data generator endpoint (resolveDependencies support)
 │   └── docs/
 │       └── swagger.ts          # Swagger UI at /api-docs
 ├── tests/                      # Vitest tests
-├── server-metadata.json        # RESO Data Dictionary v1.7 metadata
+├── server-metadata.json        # RESO Data Dictionary 2.0 metadata (1,727 fields, 3,611 lookups)
 ├── Dockerfile
 ├── package.json
 ├── tsconfig.json
@@ -191,7 +196,15 @@ The `$filter` query option is parsed into an AST by `@reso/odata-filter-parser` 
 
 ### Navigation Properties ($expand)
 
-Navigation bindings are auto-detected via the RESO convention: child tables have `ResourceName` and `ResourceRecordKey` columns. The router discovers these at startup and logs them.
+Navigation bindings are auto-detected at startup using three FK strategies:
+
+| Strategy | Description | Example |
+|----------|-------------|---------|
+| `resource-record-key` | Polymorphic FK via `ResourceName` + `ResourceRecordKey` columns | Media on any parent resource |
+| `direct` | Child has the parent's key field directly | OpenHouse.ListingKey, PropertyRooms.ListingKey |
+| `parent-fk` | Parent holds a FK to the target (to-one navigation) | Property.ListAgentKey → Member.MemberKey |
+
+The router discovers these bindings from `isExpansion` metadata attributes and logs them at startup. Expansion fields (e.g., HistoryTransactional, SocialMedia) are excluded from responses unless explicitly requested via `$expand`.
 
 ## UI Configuration
 

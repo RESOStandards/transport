@@ -41,8 +41,10 @@ Validates resource-specific constraints:
 
 **Property:**
 - Required: City, StateOrProvince, PostalCode, Country
-- Price fields (0 to $1B): ListPrice, OriginalListPrice, PreviousListPrice, ClosePrice, ListPriceLow
+- Price fields (> 0 to $1B): ListPrice, OriginalListPrice, PreviousListPrice, ClosePrice, ListPriceLow
 - Room counts (0 to 100): BedroomsTotal, BathroomsFull, BathroomsHalf, etc.
+- Expense/fee/amount fields ($0 to $10K): matched via `fieldPattern` regex `/(?:Expense|Amount|Fee\d?)$/`
+- Latitude and Longitude are exempt from the non-negative rule (negative coordinates are valid)
 - Cross-field: `ListPrice >= ListPriceLow`
 - Cross-field: `BathroomsTotalInteger = sum(BathroomsFull + BathroomsHalf + ...)`
 
@@ -70,6 +72,7 @@ interface ValidationFailure {
 
 interface FieldRule {
   readonly fieldName: string;
+  readonly fieldPattern?: RegExp;  // regex alternative to fieldName for matching multiple fields
   readonly required?: boolean;
   readonly min?: number;
   readonly max?: number;
