@@ -22,7 +22,7 @@ const DECIMAL_TYPES = new Set(['Edm.Decimal', 'Edm.Double', 'Edm.Single']);
 
 /** Deserializes a database row value back to its API representation. */
 const deserializeValue = (value: unknown, field: ResoField): unknown => {
-  if (value == null) return value;
+  if (value == null) return field.isCollection ? [] : value;
   if (field.isCollection && typeof value === 'string') {
     return JSON.parse(value) as unknown;
   }

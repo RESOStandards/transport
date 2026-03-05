@@ -153,10 +153,12 @@ export const generateMemberRecords = (
     record.MemberPostalCode = String(randomInt(10000, 99999));
     record.MemberCountry = 'US';
 
-    // Designations
+    // Designations — prefer lookup values, fall back to hardcoded
+    const designationValues = lookups['org.reso.metadata.enums.MemberDesignation'];
     const numDesignations = randomInt(0, 3);
     if (numDesignations > 0) {
-      const shuffled = [...DESIGNATIONS].sort(() => Math.random() - 0.5);
+      const source = designationValues?.length ? designationValues.map(v => v.lookupValue) : DESIGNATIONS;
+      const shuffled = [...source].sort(() => Math.random() - 0.5);
       record.MemberDesignation = shuffled.slice(0, numDesignations);
     }
 

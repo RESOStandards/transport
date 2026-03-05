@@ -104,7 +104,7 @@ const main = async (): Promise<void> => {
   const authConfig = loadAuthConfig();
 
   // Generate EDMX metadata
-  const edmxXml = generateEdmx(metadata, activeResources);
+  const edmxXml = generateEdmx(metadata, activeResources, config.enumMode);
 
   // Generate OpenAPI spec
   const openApiSpec = generateOpenApiSpec(metadata, activeResources, config.baseUrl);

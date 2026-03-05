@@ -40,6 +40,14 @@ const stripId = (doc: Record<string, unknown>): Record<string, unknown> => {
   return rest;
 };
 
+/** Coerce null collection fields to [] for DD 2.0 compliance. */
+const coerceCollections = (doc: Record<string, unknown>, collectionFields: ReadonlySet<string>): Record<string, unknown> => {
+  for (const field of collectionFields) {
+    if (doc[field] == null) doc[field] = [];
+  }
+  return doc;
+};
+
 // ---------------------------------------------------------------------------
 // Batch expand resolution (document store pattern)
 // ---------------------------------------------------------------------------
@@ -167,6 +175,10 @@ const batchExpandNavigation = async (
  * @param db - MongoDB Db instance (from MongoClient.db())
  */
 export const createMongoDal = (db: Db): DataAccessLayer => {
+  /** Returns the set of collection field names for a resource context. */
+  const collectionFieldSet = (ctx: ResourceContext): ReadonlySet<string> =>
+    new Set(ctx.fields.filter(f => f.isCollection).map(f => f.fieldName));
+
   const queryCollection = async (ctx: ResourceContext, options?: CollectionQueryOptions): Promise<CollectionResult> => {
     const collection = db.collection(ctx.resource);
 
@@ -216,7 +228,8 @@ export const createMongoDal = (db: Db): DataAccessLayer => {
     if (options?.$skip !== undefined) cursor = cursor.skip(options.$skip);
     if (options?.$top !== undefined) cursor = cursor.limit(options.$top);
 
-    const docs = (await cursor.toArray()) as Record<string, unknown>[];
+    const collFields = collectionFieldSet(ctx);
+    const docs = ((await cursor.toArray()) as Record<string, unknown>[]).map(d => coerceCollections(d, collFields));
 
     // $count — uses the same filter for accurate count
     let count: number | undefined;
@@ -247,6 +260,7 @@ export const createMongoDal = (db: Db): DataAccessLayer => {
     for (const name of expansionNames) readProjection[name] = 0;
     const doc = await collection.findOne({ [ctx.keyField]: keyValue }, { projection: readProjection });
     if (!doc) return undefined;
+    coerceCollections(doc as Record<string, unknown>, collectionFieldSet(ctx));
 
     // Apply $select
     let entity: EntityRecord = doc;

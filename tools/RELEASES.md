@@ -2,6 +2,74 @@
 
 ---
 
+## v0.0.24 — 2026-03-05
+
+### DD 2.0 Compliance: Collection Nulls + Lookup/Data Generator Sync (#32)
+
+Fixed all 2,012 DD 2.0 schema validation errors discovered during compliance
+testing with human-friendly string enumerations and the Lookup Resource.
+
+**Collection field null → empty array (1,869 errors):**
+- PostgreSQL/SQLite (`queries.ts`): `deserializeValue` now returns `[]` for null
+  collection fields instead of `null`
+- MongoDB (`mongo-dal.ts`): Added `coerceCollections` post-processing to replace
+  null/missing collection fields with `[]` in both `queryCollection` and `readByKey`
+- Affects 93 collection-valued fields (Appliances, Heating, Cooling, etc.)
+
+**Data generator / Lookup Resource value sync (143 errors):**
+- `PropertyType`, `PropertySubType`: Generator now draws from DD lookup map values
+  instead of hardcoded arrays, with hardcoded fallback when no lookups exist
+- `MemberDesignation`: Same pattern — prefers DD lookup values over hardcoded list
+- `City`: Added 15 real city names to `server-metadata.json` lookup entries
+  (was a single placeholder)
+- `StreetSuffix`: Added 10 real suffixes to `server-metadata.json` lookup entries
+  (was a single placeholder)
+- Total lookups: 3,634 (up from 3,611)
+
+**DD 2.0 compliance result:** 1,034 passed, 0 failed, 0 schema validation errors,
+0 variations. Full compliance achieved on PostgreSQL with string enumerations.
+
+**Test counts:** 198 server tests, 104 data generator tests — all passing.
+
+---
+
+## v0.0.23 — 2026-03-05
+
+### EnumType Mode — OData Edm.EnumType Support (#30, #27)
+
+Added `ENUM_MODE=enum-type` as an alternative to string enumerations. When
+enabled, the server uses OData `Edm.EnumType` definitions in EDMX metadata
+instead of `Edm.String` with `LookupName` annotations.
+
+**EDMX metadata (`$metadata`):**
+- Second Schema block (`org.reso.metadata.enums`) with `<EnumType>` definitions
+- Enum fields reference fully-qualified type names (e.g.,
+  `org.reso.metadata.enums.StandardStatus`) instead of `Edm.String`
+- Collection enum fields use `Collection(org.reso.metadata.enums.X)` syntax
+- `LookupName` annotations omitted in enum-type mode
+- No Lookup Resource exposed (only needed for string mode)
+- EnumType members use PascalCase `lookupValue` identifiers with sequential
+  integer values (0, 1, 2, ...)
+- Only enum types referenced by active resources are included
+- Members validated against OData SimpleIdentifier rules
+
+**Compliance testing:**
+- RESOScript generator (`generate-resoscripts.sh`) updated for dual-mode
+  field extraction — matches `Type="org.reso.metadata.enums.*"` in enum-type
+  mode vs `Edm.String` with `LookupName` in string mode
+- Namespace parameters (`SingleValueLookupNamespace`,
+  `MultipleValueLookupNamespace`) populated from EDMX type attributes
+- Commander flag `-DuseStringEnums=true` conditionally omitted in enum-type mode
+- Docker Compose compliance services accept `ENUM_MODE` env var override
+
+**Configuration:**
+- `ENUM_MODE=enum-type` selects EnumType mode (default remains `string`)
+- Run compliance with enum-type: `ENUM_MODE=enum-type docker compose --profile compliance-core up`
+
+**Tests:** 9 new enum-type EDMX tests (198 total).
+
+---
+
 ## v0.0.22 — 2026-03-05
 
 ### SQLite Data Access Layer Backend (#3)

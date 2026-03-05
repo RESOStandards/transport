@@ -152,3 +152,112 @@ describe('generateEdmx', () => {
     expect(properties.length).toBeGreaterThan(100);
   });
 });
+
+describe('generateEdmx (enum-type mode)', () => {
+  it('maps enum fields to fully-qualified type names', async () => {
+    const metadata = await loadMetadata(metadataPath);
+    const edmx = generateEdmx(metadata, ['Property'], 'enum-type');
+
+    expect(edmx).toMatch(/Property Name="StandardStatus" Type="org\.reso\.metadata\.enums\.StandardStatus"/);
+  });
+
+  it('maps collection enum fields to Collection(fully-qualified) with Nullable="false"', async () => {
+    const metadata = await loadMetadata(metadataPath);
+    const edmx = generateEdmx(metadata, ['Property'], 'enum-type');
+
+    expect(edmx).toMatch(
+      /Property Name="AccessibilityFeatures" Type="Collection\(org\.reso\.metadata\.enums\.AccessibilityFeatures\)" Nullable="false"/
+    );
+  });
+
+  it('does not include LookupName annotations', async () => {
+    const metadata = await loadMetadata(metadataPath);
+    const edmx = generateEdmx(metadata, ['Property'], 'enum-type');
+
+    expect(edmx).not.toContain('RESO.OData.Metadata.LookupName');
+  });
+
+  it('generates a second Schema block with EnumType definitions', async () => {
+    const metadata = await loadMetadata(metadataPath);
+    const edmx = generateEdmx(metadata, ['Property'], 'enum-type');
+
+    expect(edmx).toContain('Schema Namespace="org.reso.metadata.enums"');
+    expect(edmx).toContain('EnumType Name="StandardStatus"');
+    expect(edmx).toMatch(/<Member Name="Active" Value="\d+"/);
+  });
+
+  it('EnumType members have sequential integer values starting from 0', async () => {
+    const metadata = await loadMetadata(metadataPath);
+    const edmx = generateEdmx(metadata, ['Property'], 'enum-type');
+
+    // Extract StandardStatus EnumType block and check sequential values
+    const enumMatch = edmx.match(/<EnumType Name="StandardStatus">([\s\S]*?)<\/EnumType>/);
+    expect(enumMatch).toBeTruthy();
+    const memberMatches = [...enumMatch![1].matchAll(/Value="(\d+)"/g)];
+    expect(memberMatches.length).toBeGreaterThan(0);
+    for (let i = 0; i < memberMatches.length; i++) {
+      expect(memberMatches[i][1]).toBe(String(i));
+    }
+  });
+
+  it('only includes enum types referenced by active resources', async () => {
+    const metadata = await loadMetadata(metadataPath);
+    // Only include Member — should not include Property-specific enums
+    const edmx = generateEdmx(metadata, ['Member'], 'enum-type');
+
+    expect(edmx).toContain('EnumType Name="MemberStatus"');
+    // PropertyType is only used by Property, not Member
+    expect(edmx).not.toContain('EnumType Name="PropertyType"');
+  });
+
+  it('non-enum fields remain unchanged', async () => {
+    const metadata = await loadMetadata(metadataPath);
+    const edmx = generateEdmx(metadata, ['Property'], 'enum-type');
+
+    expect(edmx).toMatch(/Property Name="ListPrice" Type="Edm\.Decimal"/);
+    expect(edmx).toMatch(/Property Name="ListingKey" Type="Edm\.String"/);
+  });
+
+  it('can be parsed by fast-xml-parser', async () => {
+    const { XMLParser } = await import('fast-xml-parser');
+    const metadata = await loadMetadata(metadataPath);
+    const edmx = generateEdmx(metadata, ['Property'], 'enum-type');
+
+    const parser = new XMLParser({
+      ignoreAttributes: false,
+      attributeNamePrefix: '@_',
+      isArray: (name: string) => ['Schema', 'EntityType', 'EnumType', 'Property', 'PropertyRef', 'Annotation', 'Member'].includes(name)
+    });
+
+    const parsed = parser.parse(edmx);
+    const schemas = parsed?.['edmx:Edmx']?.['edmx:DataServices']?.Schema;
+    expect(Array.isArray(schemas)).toBe(true);
+    expect(schemas.length).toBe(2);
+
+    // First schema: entity types
+    expect(schemas[0]['@_Namespace']).toBe('org.reso.metadata');
+    expect(schemas[0].EntityType).toBeDefined();
+
+    // Second schema: enum types
+    expect(schemas[1]['@_Namespace']).toBe('org.reso.metadata.enums');
+    expect(schemas[1].EnumType).toBeDefined();
+    expect(schemas[1].EnumType.length).toBeGreaterThan(0);
+
+    const statusEnum = schemas[1].EnumType.find((e: Record<string, unknown>) => e['@_Name'] === 'StandardStatus');
+    expect(statusEnum).toBeDefined();
+    expect(statusEnum.Member.length).toBeGreaterThan(0);
+    expect(statusEnum.Member[0]['@_Name']).toBeDefined();
+    expect(statusEnum.Member[0]['@_Value']).toBeDefined();
+  });
+
+  it('string mode (default) is unchanged', async () => {
+    const metadata = await loadMetadata(metadataPath);
+    // No third argument — defaults to 'string'
+    const edmx = generateEdmx(metadata, ['Property']);
+
+    expect(edmx).toMatch(/Property Name="StandardStatus" Type="Edm\.String"/);
+    expect(edmx).toContain('RESO.OData.Metadata.LookupName');
+    expect(edmx).not.toContain('EnumType');
+    expect(edmx).not.toContain('org.reso.metadata.enums');
+  });
+});

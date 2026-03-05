@@ -279,17 +279,14 @@ Requires either:
 - Multiple RESOScript variants per resource (one per supported test subset)
 - Upstream commander changes to skip tests when parameters are blank
 
-### #27 — RESOScript Generation: OData Edm.EnumType Namespace Support
+### ~~#27 — RESOScript Generation: OData Edm.EnumType Namespace Support~~
 **Package:** `reso-reference-server`
+**Status:** Closed (delivered as part of #30)
 
-The RESOScript generator currently sets `SingleValueLookupNamespace` and
-`MultipleValueLookupNamespace` to empty strings because the RESO Data Dictionary
-uses string enums (`Edm.String` with `LookupName` annotations) and the commander
-is invoked with `-DuseStringEnums=true`.
-
-When the server adds support for OData `Edm.EnumType` typed enums, the generator
-must resolve the full enum namespace (e.g., `org.reso.metadata.enums.StandardStatus`)
-from `$metadata` and populate these parameters accordingly.
+~~The RESOScript generator now resolves enum namespaces from `$metadata` in
+enum-type mode and populates `SingleValueLookupNamespace` and
+`MultipleValueLookupNamespace` accordingly. In string mode, these remain
+empty strings with `-DuseStringEnums=true`.~~
 
 ### ~~#19 — Fix Web API Core 2.0.0 Compliance Test Failures~~
 **Package:** `reso-reference-server`
@@ -347,23 +344,25 @@ human-friendly `StandardName` values for string enumerations.~~
 - ~~RESOScript generator: median value selection for dates/decimals, single-element collection preference for `all()` tests~~
 - ~~Web API Core 2.0.0: 42/42 passed on both PostgreSQL and MongoDB~~
 
-### #30 — EnumType Mode (OData Edm.EnumType Support)
+### ~~#30 — EnumType Mode (OData Edm.EnumType Support)~~
 **Package:** `reso-reference-server`, `data-generator`
+**Status:** Closed
 
-Add `ENUM_MODE=enum-type` support as an alternative to string enumerations. When
-enabled, the server uses OData `Edm.EnumType` definitions in EDMX instead of
-`Edm.String` with `LookupName` annotations. Data payloads use CamelCase
-`lookupValue` identifiers (e.g., `"ActiveUnderContract"`). No Lookup Resource is
-needed in this mode.
+~~Added `ENUM_MODE=enum-type` support as an alternative to string enumerations.
+When enabled, the server uses OData `Edm.EnumType` definitions in EDMX instead
+of `Edm.String` with `LookupName` annotations. Data payloads use PascalCase
+`lookupValue` identifiers (e.g., `"ActiveUnderContract"`). No Lookup Resource
+is needed in this mode.~~
 
-**Deliverables:**
-- Second EDMX Schema block (`org.reso.metadata.enums`) with `<EnumType>` definitions
-- Fields use fully-qualified enum type names instead of `Edm.String`
-- Data generator uses `lookupValue` (CamelCase) — current behavior
-- RESOScript generator: omit `-DuseStringEnums=true`, provide enum namespace
-- Web API Core compliance: pass correct flags for EnumType mode
-
-**Prerequisite:** #29 (ENUM_MODE config infrastructure).
+~~**Delivered:**~~
+- ~~Second EDMX Schema block (`org.reso.metadata.enums`) with `<EnumType>` definitions~~
+- ~~Fields use fully-qualified enum type names instead of `Edm.String`~~
+- ~~EnumType members validated against OData SimpleIdentifier rules~~
+- ~~Data generator uses `lookupValue` (PascalCase) — existing behavior~~
+- ~~RESOScript generator: dual-mode field extraction, enum namespace parameters~~
+- ~~Compliance entrypoint: conditional `-DuseStringEnums=true` flag~~
+- ~~Docker Compose: `ENUM_MODE` env var passthrough for compliance services~~
+- ~~9 new enum-type EDMX tests (198 total)~~
 
 ### #28 — Rewrite Web API Core Testing Tools
 **Package:** `reso-reference-server`
@@ -410,6 +409,18 @@ This means spec-compliant `ne` behavior will cause commander test failures for
 All other comparison operators (`eq`, `gt`, `ge`, `lt`, `le`), logical operators
 (`and`, `or`, `not`), null comparisons (`eq null`, `ne null`), lambda expressions,
 functions, and arithmetic match the OData 4.01 spec in both backends.
+
+### ~~#32 — DD 2.0 Compliance: Collection Nulls + Lookup/Data Generator Sync~~
+**Package:** `reso-reference-server`, `data-generator`
+**Status:** Closed
+
+~~Fixed all 2,012 DD 2.0 schema validation errors. Collection-valued fields now
+return `[]` instead of `null` across all three DALs. Data generator synced with
+DD lookup values for PropertyType, PropertySubType, City, StreetSuffix, and
+MemberDesignation. Added 24 lookup entries to `server-metadata.json` (total 3,634).
+DD 2.0 compliance: 1,034 passed, 0 failed, 0 schema errors, 0 variations.~~
+
+---
 
 ### ~~#13 — Migrate TODOs to GitHub Issues~~
 ~~Move items from this file into GitHub Issues with proper labels,

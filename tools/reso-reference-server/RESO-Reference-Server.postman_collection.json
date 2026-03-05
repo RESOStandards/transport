@@ -1,0 +1,590 @@
+{
+  "info": {
+    "name": "RESO Reference Server",
+    "description": "Sample requests for the RESO Reference Server OData 4.01 API.\n\nSet the `baseUrl` and `authToken` collection variables before use.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "test-token",
+      "type": "string"
+    },
+    {
+      "key": "listingKey",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "memberKey",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "officeKey",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{authToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Discovery",
+      "item": [
+        {
+          "name": "Service Document",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": ["{{baseUrl}}"],
+              "path": [""]
+            },
+            "description": "OData service document listing all available EntitySets."
+          }
+        },
+        {
+          "name": "EDMX Metadata",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/$metadata",
+              "host": ["{{baseUrl}}"],
+              "path": ["$metadata"]
+            },
+            "description": "EDMX XML metadata document with entity types, fields, annotations, and navigation properties."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Property",
+      "item": [
+        {
+          "name": "Get Properties",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();",
+                  "if (response.value && response.value.length > 0) {",
+                  "    pm.collectionVariables.set('listingKey', response.value[0].ListingKey);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/Property?$top=10&$count=true",
+              "host": ["{{baseUrl}}"],
+              "path": ["Property"],
+              "query": [
+                { "key": "$top", "value": "10" },
+                { "key": "$count", "value": "true" }
+              ]
+            },
+            "description": "Retrieve properties with count. Saves the first ListingKey to a variable."
+          }
+        },
+        {
+          "name": "Get Property by Key",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/Property('{{listingKey}}')",
+              "host": ["{{baseUrl}}"],
+              "path": ["Property('{{listingKey}}')"]
+            },
+            "description": "Retrieve a single property by its ListingKey."
+          }
+        },
+        {
+          "name": "Property — $select",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/Property?$top=5&$select=ListingKey,ListPrice,City,StateOrProvince,StandardStatus",
+              "host": ["{{baseUrl}}"],
+              "path": ["Property"],
+              "query": [
+                { "key": "$top", "value": "5" },
+                { "key": "$select", "value": "ListingKey,ListPrice,City,StateOrProvince,StandardStatus" }
+              ]
+            },
+            "description": "Return only selected fields."
+          }
+        },
+        {
+          "name": "Property — $filter (ListPrice gt)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/Property?$filter=ListPrice gt 500000&$top=5&$select=ListingKey,ListPrice,City",
+              "host": ["{{baseUrl}}"],
+              "path": ["Property"],
+              "query": [
+                { "key": "$filter", "value": "ListPrice gt 500000" },
+                { "key": "$top", "value": "5" },
+                { "key": "$select", "value": "ListingKey,ListPrice,City" }
+              ]
+            },
+            "description": "Filter properties with list price greater than $500,000."
+          }
+        },
+        {
+          "name": "Property — $filter (City and Status)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/Property?$filter=StandardStatus eq 'Active' and StateOrProvince eq 'CA'&$top=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["Property"],
+              "query": [
+                { "key": "$filter", "value": "StandardStatus eq 'Active' and StateOrProvince eq 'CA'" },
+                { "key": "$top", "value": "5" }
+              ]
+            },
+            "description": "Filter by status and state with combined conditions."
+          }
+        },
+        {
+          "name": "Property — $filter (contains)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/Property?$filter=contains(City,'Clinton')&$top=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["Property"],
+              "query": [
+                { "key": "$filter", "value": "contains(City,'Clinton')" },
+                { "key": "$top", "value": "5" }
+              ]
+            },
+            "description": "Filter using the contains() string function."
+          }
+        },
+        {
+          "name": "Property — $filter (lambda any)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/Property?$filter=AccessibilityFeatures/any(x:x eq 'Accessible Approach with Ramp')&$top=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["Property"],
+              "query": [
+                { "key": "$filter", "value": "AccessibilityFeatures/any(x:x eq 'Accessible Approach with Ramp')" },
+                { "key": "$top", "value": "5" }
+              ]
+            },
+            "description": "Lambda any() expression on a collection field."
+          }
+        },
+        {
+          "name": "Property — $orderby",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/Property?$orderby=ListPrice desc&$top=10&$select=ListingKey,ListPrice,City",
+              "host": ["{{baseUrl}}"],
+              "path": ["Property"],
+              "query": [
+                { "key": "$orderby", "value": "ListPrice desc" },
+                { "key": "$top", "value": "10" },
+                { "key": "$select", "value": "ListingKey,ListPrice,City" }
+              ]
+            },
+            "description": "Sort properties by list price descending."
+          }
+        },
+        {
+          "name": "Property — $expand ListAgent + ListOffice",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/Property('{{listingKey}}')?$expand=ListAgent,ListOffice&$select=ListingKey,ListPrice,City",
+              "host": ["{{baseUrl}}"],
+              "path": ["Property('{{listingKey}}')"],
+              "query": [
+                { "key": "$expand", "value": "ListAgent,ListOffice" },
+                { "key": "$select", "value": "ListingKey,ListPrice,City" }
+              ]
+            },
+            "description": "Expand navigation properties to include the listing agent and office inline."
+          }
+        },
+        {
+          "name": "Property — $expand Media",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/Property('{{listingKey}}')?$expand=Media",
+              "host": ["{{baseUrl}}"],
+              "path": ["Property('{{listingKey}}')"],
+              "query": [
+                { "key": "$expand", "value": "Media" }
+              ]
+            },
+            "description": "Expand the Media collection on a property."
+          }
+        },
+        {
+          "name": "Create Property",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/Property",
+              "host": ["{{baseUrl}}"],
+              "path": ["Property"]
+            },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ListPrice\": 450000,\n  \"StandardStatus\": \"Active\",\n  \"City\": \"Denver\",\n  \"StateOrProvince\": \"CO\",\n  \"PostalCode\": \"80202\",\n  \"Country\": \"US\"\n}"
+            },
+            "description": "Create a new property listing. The server validates against DD 2.0 field rules and business rules."
+          }
+        },
+        {
+          "name": "Update Property",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "{{baseUrl}}/Property('{{listingKey}}')",
+              "host": ["{{baseUrl}}"],
+              "path": ["Property('{{listingKey}}')"]
+            },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ListPrice\": 475000,\n  \"StandardStatus\": \"Active Under Contract\"\n}"
+            },
+            "description": "Update an existing property with a partial payload (PATCH)."
+          }
+        },
+        {
+          "name": "Delete Property",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/Property('{{listingKey}}')",
+              "host": ["{{baseUrl}}"],
+              "path": ["Property('{{listingKey}}')"]
+            },
+            "description": "Delete a property by key."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Member",
+      "item": [
+        {
+          "name": "Get Members",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();",
+                  "if (response.value && response.value.length > 0) {",
+                  "    pm.collectionVariables.set('memberKey', response.value[0].MemberKey);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/Member?$top=10&$count=true",
+              "host": ["{{baseUrl}}"],
+              "path": ["Member"],
+              "query": [
+                { "key": "$top", "value": "10" },
+                { "key": "$count", "value": "true" }
+              ]
+            },
+            "description": "Retrieve members with count. Saves the first MemberKey to a variable."
+          }
+        },
+        {
+          "name": "Get Member by Key",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/Member('{{memberKey}}')",
+              "host": ["{{baseUrl}}"],
+              "path": ["Member('{{memberKey}}')"]
+            }
+          }
+        },
+        {
+          "name": "Member — $expand Office",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/Member('{{memberKey}}')?$expand=Office",
+              "host": ["{{baseUrl}}"],
+              "path": ["Member('{{memberKey}}')"],
+              "query": [
+                { "key": "$expand", "value": "Office" }
+              ]
+            },
+            "description": "Expand a member's office."
+          }
+        },
+        {
+          "name": "Member — $filter (name contains)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/Member?$filter=contains(MemberLastName,'Harris')&$select=MemberKey,MemberFirstName,MemberLastName,MemberEmail",
+              "host": ["{{baseUrl}}"],
+              "path": ["Member"],
+              "query": [
+                { "key": "$filter", "value": "contains(MemberLastName,'Harris')" },
+                { "key": "$select", "value": "MemberKey,MemberFirstName,MemberLastName,MemberEmail" }
+              ]
+            },
+            "description": "Search members by last name."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Office",
+      "item": [
+        {
+          "name": "Get Offices",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();",
+                  "if (response.value && response.value.length > 0) {",
+                  "    pm.collectionVariables.set('officeKey', response.value[0].OfficeKey);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/Office?$top=10&$count=true",
+              "host": ["{{baseUrl}}"],
+              "path": ["Office"],
+              "query": [
+                { "key": "$top", "value": "10" },
+                { "key": "$count", "value": "true" }
+              ]
+            },
+            "description": "Retrieve offices with count. Saves the first OfficeKey to a variable."
+          }
+        },
+        {
+          "name": "Get Office by Key",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/Office('{{officeKey}}')",
+              "host": ["{{baseUrl}}"],
+              "path": ["Office('{{officeKey}}')"]
+            }
+          }
+        },
+        {
+          "name": "Office — $expand OfficeBroker",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/Office('{{officeKey}}')?$expand=OfficeBroker,OfficeManager",
+              "host": ["{{baseUrl}}"],
+              "path": ["Office('{{officeKey}}')"],
+              "query": [
+                { "key": "$expand", "value": "OfficeBroker,OfficeManager" }
+              ]
+            },
+            "description": "Expand the office broker and manager (to-one Member references)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Media",
+      "item": [
+        {
+          "name": "Get Media",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/Media?$top=10&$count=true",
+              "host": ["{{baseUrl}}"],
+              "path": ["Media"],
+              "query": [
+                { "key": "$top", "value": "10" },
+                { "key": "$count", "value": "true" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Media — $filter by Resource",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/Media?$filter=ResourceName eq 'Property' and ResourceRecordKey eq '{{listingKey}}'&$orderby=Order asc",
+              "host": ["{{baseUrl}}"],
+              "path": ["Media"],
+              "query": [
+                { "key": "$filter", "value": "ResourceName eq 'Property' and ResourceRecordKey eq '{{listingKey}}'" },
+                { "key": "$orderby", "value": "Order asc" }
+              ]
+            },
+            "description": "Get all media for a specific property listing."
+          }
+        }
+      ]
+    },
+    {
+      "name": "OpenHouse",
+      "item": [
+        {
+          "name": "Get Open Houses",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/OpenHouse?$top=10&$count=true",
+              "host": ["{{baseUrl}}"],
+              "path": ["OpenHouse"],
+              "query": [
+                { "key": "$top", "value": "10" },
+                { "key": "$count", "value": "true" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Lookup",
+      "item": [
+        {
+          "name": "Get Lookups",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/Lookup?$top=10&$count=true",
+              "host": ["{{baseUrl}}"],
+              "path": ["Lookup"],
+              "query": [
+                { "key": "$top", "value": "10" },
+                { "key": "$count", "value": "true" }
+              ]
+            },
+            "description": "Browse the Lookup Resource (3,611 enumeration values)."
+          }
+        },
+        {
+          "name": "Lookup — Filter by LookupName",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/Lookup?$filter=LookupName eq 'StandardStatus'",
+              "host": ["{{baseUrl}}"],
+              "path": ["Lookup"],
+              "query": [
+                { "key": "$filter", "value": "LookupName eq 'StandardStatus'" }
+              ]
+            },
+            "description": "Get all valid values for the StandardStatus enumeration."
+          }
+        },
+        {
+          "name": "Lookup — Filter by LookupName (PropertyType)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/Lookup?$filter=LookupName eq 'PropertyType'",
+              "host": ["{{baseUrl}}"],
+              "path": ["Lookup"],
+              "query": [
+                { "key": "$filter", "value": "LookupName eq 'PropertyType'" }
+              ]
+            },
+            "description": "Get all valid values for the PropertyType enumeration."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Teams",
+      "item": [
+        {
+          "name": "Get Teams",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/Teams?$top=10&$count=true",
+              "host": ["{{baseUrl}}"],
+              "path": ["Teams"],
+              "query": [
+                { "key": "$top", "value": "10" },
+                { "key": "$count", "value": "true" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Generate Test Data",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/admin/data-generator",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "data-generator"]
+            },
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resource\": \"Property\",\n  \"count\": 10,\n  \"resolveDependencies\": true\n}"
+            },
+            "description": "Generate test data with automatic FK dependency resolution. Creates Office, Member, Teams, etc. before the target resource."
+          }
+        }
+      ]
+    }
+  ]
+}

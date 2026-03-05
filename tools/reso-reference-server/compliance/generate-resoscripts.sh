@@ -17,6 +17,9 @@ set -e
 SERVER_URL="${1:?Usage: generate-resoscripts.sh <server_url> <auth_token> <output_dir>}"
 AUTH_TOKEN="${2:?Missing auth_token}"
 OUTPUT_DIR="${3:?Missing output_dir}"
+ENUM_MODE="${ENUM_MODE:-string}"
+
+echo "Enum mode: $ENUM_MODE"
 
 mkdir -p "$OUTPUT_DIR"
 
@@ -49,29 +52,66 @@ extract_fields_by_type() {
 }
 
 # ---------------------------------------------------------------------------
-# Helper: extract all non-collection enum fields (Type="Edm.String" with
-# LookupName annotation) from metadata for a specific EntityType.
+# Helper: extract all non-collection enum fields from metadata for a specific
+# EntityType. In string mode, matches Type="Edm.String" with LookupName
+# annotation. In enum-type mode, matches Type="org.reso.metadata.enums.*".
 # ---------------------------------------------------------------------------
 extract_single_lookup_fields() {
   ENTITY_TYPE="$1"
-  echo "$METADATA" | sed -n "/<EntityType Name=\"${ENTITY_TYPE}\"/,/<\/EntityType>/p" \
-    | sed -n '/<Property .*Type="Edm\.String"/{
-      /Collection/!{
-        N
-        /LookupName/{ s/.*Name="\([^"]*\)".*/\1/; p; }
-      }
-    }'
+  if [ "$ENUM_MODE" = "enum-type" ]; then
+    echo "$METADATA" | sed -n "/<EntityType Name=\"${ENTITY_TYPE}\"/,/<\/EntityType>/p" \
+      | grep 'Property ' \
+      | grep 'Type="org\.reso\.metadata\.enums\.' \
+      | grep -v 'Collection(' \
+      | sed 's/.*Name="\([^"]*\)".*/\1/'
+  else
+    echo "$METADATA" | sed -n "/<EntityType Name=\"${ENTITY_TYPE}\"/,/<\/EntityType>/p" \
+      | sed -n '/<Property .*Type="Edm\.String"/{
+        /Collection/!{
+          N
+          /LookupName/{ s/.*Name="\([^"]*\)".*/\1/; p; }
+        }
+      }'
+  fi
 }
 
 # ---------------------------------------------------------------------------
-# Helper: extract collection enum fields (Type="Collection(Edm.String)")
-# from metadata for a specific EntityType.
+# Helper: extract collection enum fields from metadata for a specific
+# EntityType. In string mode, matches Type="Collection(Edm.String)". In
+# enum-type mode, matches Type="Collection(org.reso.metadata.enums.*)".
 # ---------------------------------------------------------------------------
 extract_multi_lookup_fields() {
   ENTITY_TYPE="$1"
+  if [ "$ENUM_MODE" = "enum-type" ]; then
+    echo "$METADATA" | sed -n "/<EntityType Name=\"${ENTITY_TYPE}\"/,/<\/EntityType>/p" \
+      | grep 'Type="Collection(org\.reso\.metadata\.enums\.' \
+      | sed 's/.*Name="\([^"]*\)".*/\1/'
+  else
+    echo "$METADATA" | sed -n "/<EntityType Name=\"${ENTITY_TYPE}\"/,/<\/EntityType>/p" \
+      | grep 'Type="Collection(Edm\.String)"' \
+      | sed 's/.*Name="\([^"]*\)".*/\1/'
+  fi
+}
+
+# ---------------------------------------------------------------------------
+# Helper: extract the enum namespace (fully-qualified type) for a field from
+# metadata. For single-value fields, extracts Type="X" directly. For
+# collection fields, extracts the inner type from Type="Collection(X)".
+# Only used in enum-type mode.
+# ---------------------------------------------------------------------------
+extract_enum_namespace() {
+  ENTITY_TYPE="$1"
+  FIELD_NAME="$2"
+  IS_COLLECTION="$3"
   echo "$METADATA" | sed -n "/<EntityType Name=\"${ENTITY_TYPE}\"/,/<\/EntityType>/p" \
-    | grep 'Type="Collection(Edm\.String)"' \
-    | sed 's/.*Name="\([^"]*\)".*/\1/'
+    | grep "Name=\"${FIELD_NAME}\"" \
+    | head -1 \
+    | sed 's/.*Type="\([^"]*\)".*/\1/' \
+    | if [ "$IS_COLLECTION" = "true" ]; then
+        sed 's/^Collection(\(.*\))$/\1/'
+      else
+        cat
+      fi
 }
 
 # ---------------------------------------------------------------------------
@@ -288,14 +328,26 @@ for entry in $RESOURCES; do
     fi
   done
 
+  # --- Resolve enum namespaces (enum-type mode only) ---
+  SINGLE_LOOKUP_NAMESPACE=""
+  MULTI_LOOKUP_NAMESPACE=""
+  if [ "$ENUM_MODE" = "enum-type" ]; then
+    if [ -n "$SINGLE_LOOKUP_FIELD" ]; then
+      SINGLE_LOOKUP_NAMESPACE=$(extract_enum_namespace "$RESOURCE" "$SINGLE_LOOKUP_FIELD" "false")
+    fi
+    if [ -n "$MULTI_LOOKUP_FIELD" ]; then
+      MULTI_LOOKUP_NAMESPACE=$(extract_enum_namespace "$RESOURCE" "$MULTI_LOOKUP_FIELD" "true")
+    fi
+  fi
+
   # --- Diagnostics ---
   echo "  Key: $KEY_FIELD=$KEY_VALUE"
   echo "  Integer: ${INTEGER_FIELD:-(none)}=${INTEGER_VALUE:-(none)}"
   echo "  Decimal: ${DECIMAL_FIELD:-(none)}=${DECIMAL_VALUE:-(none)}"
   echo "  Date: ${DATE_FIELD:-(none)}=${DATE_VALUE:-(none)}"
   echo "  Timestamp: ${TIMESTAMP_FIELD:-(none)}=${TIMESTAMP_VALUE:-(none)}"
-  echo "  SingleLookup: ${SINGLE_LOOKUP_FIELD:-(none)}=${SINGLE_LOOKUP_VALUE:-(none)}"
-  echo "  MultiLookup: ${MULTI_LOOKUP_FIELD:-(none)}=${MULTI_LOOKUP_VALUE1:-(none)}, ${MULTI_LOOKUP_VALUE2:-(none)}"
+  echo "  SingleLookup: ${SINGLE_LOOKUP_FIELD:-(none)}=${SINGLE_LOOKUP_VALUE:-(none)} ns=${SINGLE_LOOKUP_NAMESPACE:-(none)}"
+  echo "  MultiLookup: ${MULTI_LOOKUP_FIELD:-(none)}=${MULTI_LOOKUP_VALUE1:-(none)}, ${MULTI_LOOKUP_VALUE2:-(none)} ns=${MULTI_LOOKUP_NAMESPACE:-(none)}"
 
   # --- Validate REQUIRED data types are filled ---
   MISSING=""
@@ -303,9 +355,15 @@ for entry in $RESOURCES; do
   [ -z "$DECIMAL_FIELD" ]        && MISSING="${MISSING}  - Decimal (Edm.Decimal)\n"
   [ -z "$DATE_FIELD" ]           && MISSING="${MISSING}  - Date (Edm.Date)\n"
   [ -z "$TIMESTAMP_FIELD" ]      && MISSING="${MISSING}  - Timestamp (Edm.DateTimeOffset)\n"
-  [ -z "$SINGLE_LOOKUP_FIELD" ]  && MISSING="${MISSING}  - SingleValueLookup (Edm.String with LookupName)\n"
-  [ -z "$MULTI_LOOKUP_FIELD" ] || [ -z "$MULTI_LOOKUP_VALUE2" ] && \
-    MISSING="${MISSING}  - MultipleValueLookup (Collection(Edm.String) with 2+ values)\n"
+  if [ "$ENUM_MODE" = "enum-type" ]; then
+    [ -z "$SINGLE_LOOKUP_FIELD" ]  && MISSING="${MISSING}  - SingleValueLookup (EnumType field)\n"
+    [ -z "$MULTI_LOOKUP_FIELD" ] || [ -z "$MULTI_LOOKUP_VALUE2" ] && \
+      MISSING="${MISSING}  - MultipleValueLookup (Collection(EnumType) with 2+ values)\n"
+  else
+    [ -z "$SINGLE_LOOKUP_FIELD" ]  && MISSING="${MISSING}  - SingleValueLookup (Edm.String with LookupName)\n"
+    [ -z "$MULTI_LOOKUP_FIELD" ] || [ -z "$MULTI_LOOKUP_VALUE2" ] && \
+      MISSING="${MISSING}  - MultipleValueLookup (Collection(Edm.String) with 2+ values)\n"
+  fi
 
   if [ -n "$MISSING" ]; then
     echo ""
@@ -343,14 +401,14 @@ for entry in $RESOURCES; do
     <!-- REQUIRED: Decimal field -->
     <Parameter Name="DecimalField" Value="$(xml_escape "$DECIMAL_FIELD")"/>
 
-    <!-- REQUIRED: Single-value lookup (string enum) -->
+    <!-- REQUIRED: Single-value lookup -->
     <Parameter Name="SingleValueLookupField" Value="$(xml_escape "$SINGLE_LOOKUP_FIELD")"/>
     <Parameter Name="SingleLookupValue" Value="$(xml_escape "$SINGLE_LOOKUP_VALUE")"/>
-    <Parameter Name="SingleValueLookupNamespace" Value=""/>
+    <Parameter Name="SingleValueLookupNamespace" Value="$(xml_escape "$SINGLE_LOOKUP_NAMESPACE")"/>
 
-    <!-- REQUIRED: Multi-value lookup (collection enum) -->
+    <!-- REQUIRED: Multi-value lookup -->
     <Parameter Name="MultipleValueLookupField" Value="$(xml_escape "$MULTI_LOOKUP_FIELD")"/>
-    <Parameter Name="MultipleValueLookupNamespace" Value=""/>
+    <Parameter Name="MultipleValueLookupNamespace" Value="$(xml_escape "$MULTI_LOOKUP_NAMESPACE")"/>
     <Parameter Name="MultipleLookupValue1" Value="$(xml_escape "$MULTI_LOOKUP_VALUE1")"/>
     <Parameter Name="MultipleLookupValue2" Value="$(xml_escape "$MULTI_LOOKUP_VALUE2")"/>
 

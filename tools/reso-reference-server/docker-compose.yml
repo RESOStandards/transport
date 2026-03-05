@@ -257,6 +257,7 @@ services:
     environment:
       SERVER_URL: http://server:8080
       AUTH_TOKEN: admin-token
+      ENUM_MODE: ${ENUM_MODE:-string}
     volumes:
       - ./compliance:/config:ro
       - compliance-core-results:/commander/build/certification
@@ -300,6 +301,7 @@ services:
     environment:
       SERVER_URL: http://server-mongo:8080
       AUTH_TOKEN: admin-token
+      ENUM_MODE: ${ENUM_MODE:-string}
     volumes:
       - ./compliance:/config:ro
       - compliance-core-mongo-results:/commander/build/certification
@@ -343,6 +345,7 @@ services:
     environment:
       SERVER_URL: http://server-sqlite:8080
       AUTH_TOKEN: admin-token
+      ENUM_MODE: ${ENUM_MODE:-string}
     volumes:
       - ./compliance:/config:ro
       - compliance-core-sqlite-results:/commander/build/certification
