@@ -1,6 +1,6 @@
 import type { ResourceName } from '../types';
 import { KEY_FIELD_MAP } from '../types';
-import { ADDRESS_FIELDS, formatAddress, formatFieldValue } from '../utils/format';
+import { ADDRESS_FIELDS, formatAddress, formatFieldValue, getDisplayNameFromMap } from '../utils/format';
 import { MediaCarousel } from './media-carousel';
 
 interface ResultsCardProps {
@@ -52,7 +52,7 @@ export const ResultsCard = ({ resource, record, summaryFields, fieldMap, onClick
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-0.5">
             {displayFields.slice(0, 9).map(fieldName => (
               <div key={fieldName} className="flex items-baseline gap-1 text-sm truncate">
-                <span className="text-gray-500 dark:text-gray-400 shrink-0">{fieldName}:</span>
+                <span className="text-gray-500 dark:text-gray-400 shrink-0">{getDisplayNameFromMap(fieldName, fieldMap)}:</span>
                 <span className="text-gray-800 dark:text-gray-200 truncate">
                   {formatFieldValue(record[fieldName], fieldMap.get(fieldName))}
                 </span>

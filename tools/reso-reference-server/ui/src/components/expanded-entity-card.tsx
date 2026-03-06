@@ -102,17 +102,27 @@ export const ExpandedEntityCard = ({ title, targetResource, records, isCollectio
         </div>
       </div>
 
-      {/* Two-column field list, vertically scrollable, max 4 rows visible */}
-      <div className="overflow-y-auto max-h-28 px-3 py-1">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-0.5">
-          {displayFields.map(([key, value]) => (
-            <div key={key} className="flex items-baseline gap-2 py-0.5 text-sm">
-              <span className="text-gray-500 dark:text-gray-400 shrink-0 w-40 sm:w-44 truncate">{key}</span>
-              <span className="text-gray-800 dark:text-gray-200 truncate" title={formatValue(value)}>
-                {formatValue(value)}
-              </span>
-            </div>
-          ))}
+      {/* Content: thumbnail + field list */}
+      <div className="flex gap-3 px-3 py-1">
+        {/* Media thumbnail */}
+        {targetResource === 'Media' && typeof current.MediaURL === 'string' && current.MediaURL.length > 0 && (
+          <div className="shrink-0 w-20 h-20 rounded overflow-hidden bg-gray-100 dark:bg-gray-700">
+            <img src={current.MediaURL} alt="Media thumbnail" className="w-full h-full object-cover" />
+          </div>
+        )}
+
+        {/* Two-column field list, vertically scrollable, max 4 rows visible */}
+        <div className="overflow-y-auto max-h-28 flex-1 min-w-0">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-0.5">
+            {displayFields.map(([key, value]) => (
+              <div key={key} className="flex items-baseline gap-2 py-0.5 text-sm">
+                <span className="text-gray-500 dark:text-gray-400 shrink-0 w-40 sm:w-44 truncate">{key}</span>
+                <span className="text-gray-800 dark:text-gray-200 truncate" title={formatValue(value)}>
+                  {formatValue(value)}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

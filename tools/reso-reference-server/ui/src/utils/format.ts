@@ -74,6 +74,39 @@ export const formatFieldValue = (value: unknown, field: ResoField | undefined): 
   return String(value);
 };
 
+const STANDARD_NAME_TERM = 'RESO.OData.Metadata.StandardName';
+
+/**
+ * Returns the human-friendly display name for a field.
+ * Uses the RESO.OData.Metadata.StandardName annotation if present, otherwise falls back to fieldName.
+ */
+export const getDisplayName = (field: ResoField): string => {
+  const annotation = field.annotations.find(a => a.term === STANDARD_NAME_TERM);
+  return annotation?.value ?? field.fieldName;
+};
+
+/**
+ * Returns the human-friendly display name for a fieldName using a pre-built lookup map.
+ * Falls back to the raw fieldName if the field is not in the map.
+ */
+export const getDisplayNameFromMap = (fieldName: string, fieldMap: ReadonlyMap<string, ResoField>): string => {
+  const field = fieldMap.get(fieldName);
+  return field ? getDisplayName(field) : fieldName;
+};
+
+/** Returns true if a string value looks like a URL. */
+export const isUrlValue = (value: unknown): value is string =>
+  typeof value === 'string' && (value.startsWith('http://') || value.startsWith('https://'));
+
+/** Video media type extensions/values. */
+const VIDEO_TYPES = new Set(['mp4', 'webm', 'ogg', 'avi', 'mov', 'video/mp4', 'video/webm', 'video/ogg']);
+
+/** Returns true if the MediaType indicates video content. */
+export const isVideoMediaType = (mediaType?: string): boolean => typeof mediaType === 'string' && VIDEO_TYPES.has(mediaType.toLowerCase());
+
+/** Returns true if the MediaType indicates image content (or is unknown/null, since most media is photos). */
+export const isImageMediaType = (mediaType?: string): boolean => !isVideoMediaType(mediaType);
+
 /** All address-related field names used to compose a formatted address. */
 export const ADDRESS_FIELDS = new Set([
   'StreetNumber',

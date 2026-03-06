@@ -2,6 +2,7 @@ import { type FormEvent, useCallback, useEffect, useRef, useState } from 'react'
 import type { FieldGroups, ResoField, ResoLookup, ResourceName } from '../types';
 import { isEnumType, isNumericEdmType } from '../types';
 import { type FilterEntry, buildFilterString, parseFilterToEntries } from '../utils/filter-sync.js';
+import { getDisplayName } from '../utils/format';
 import { FieldGroupSection } from './field-group-section';
 
 interface AdvancedSearchProps {
@@ -141,7 +142,9 @@ export const AdvancedSearch = ({ resource, fields, lookups, fieldGroups, filterS
         <div
           key={field.fieldName}
           className={`flex flex-col sm:flex-row gap-1 sm:gap-2 items-start sm:items-center py-2.5 px-2 rounded opacity-50 ${stripe}`}>
-          <span className="text-xs text-gray-600 dark:text-gray-400 w-full sm:w-48 shrink-0 truncate">{field.fieldName}</span>
+          <span className="text-xs text-gray-600 dark:text-gray-400 w-full sm:w-56 shrink-0 truncate" title={field.fieldName}>
+            {getDisplayName(field)}
+          </span>
           <span className="text-xs text-gray-400 dark:text-gray-500 italic">expansion — filtering not yet supported</span>
         </div>
       );
@@ -151,7 +154,9 @@ export const AdvancedSearch = ({ resource, fields, lookups, fieldGroups, filterS
       <div
         key={field.fieldName}
         className={`flex flex-col sm:flex-row gap-1 sm:gap-2 items-start sm:items-center py-2.5 px-2 rounded ${stripe}`}>
-        <span className="text-xs text-gray-600 dark:text-gray-400 w-full sm:w-48 shrink-0 truncate">{field.fieldName}</span>
+        <span className="text-xs text-gray-600 dark:text-gray-400 w-full sm:w-56 shrink-0 truncate" title={field.fieldName}>
+          {getDisplayName(field)}
+        </span>
         <select
           value={entry?.operator ?? defaultOp}
           onChange={e => handleChange(field.fieldName, e.target.value, entry?.value ?? '')}

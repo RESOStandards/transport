@@ -9,6 +9,7 @@ import { useMetadata } from '../hooks/use-metadata';
 import { useUiConfig } from '../hooks/use-ui-config';
 import type { ResourceName } from '../types';
 import { KEY_FIELD_MAP, READ_ONLY_RESOURCES, TARGET_RESOURCES } from '../types';
+import { getDisplayNameFromMap } from '../utils/format';
 
 /** Search page with filter bar, optional advanced search, and infinite scroll results. */
 export const SearchPage = () => {
@@ -43,6 +44,9 @@ export const SearchPage = () => {
   const resourceConfig = config?.resources?.[resourceName];
   const isAllFields = !resourceConfig || resourceConfig.summaryFields === '__all__';
   const summaryFields: string[] = isAllFields ? fields.map(f => f.fieldName) : [...resourceConfig.summaryFields];
+
+  // Build field lookup map for display names
+  const fieldMap = new Map(fields.map(f => [f.fieldName, f]));
 
   // Determine $select and $expand for the collection query
   const hasMedia = resourceName === 'Property';
@@ -165,6 +169,36 @@ export const SearchPage = () => {
           validationError={validationError}
         />
 
+        {/* Sortable column headers */}
+        {rows.length > 0 && (
+          <div className="flex flex-wrap gap-1">
+            <span className="text-xs text-gray-500 dark:text-gray-400 mr-1">Sort by:</span>
+            {summaryFields.slice(0, 6).map(f => (
+              <button
+                type="button"
+                key={f}
+                onClick={() => handleSort(f)}
+                className={`text-xs px-2 py-0.5 rounded border ${
+                  orderby.includes(f)
+                    ? 'bg-blue-50 dark:bg-blue-900/30 border-blue-300 dark:border-blue-600 text-blue-700 dark:text-blue-400'
+                    : 'border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'
+                }`}>
+                {getDisplayNameFromMap(f, fieldMap)} {orderby === `${f} asc` ? '↑' : orderby === `${f} desc` ? '↓' : ''}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Result count */}
+        {count !== undefined && (
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            {count.toLocaleString()} result{count !== 1 ? 's' : ''}
+          </p>
+        )}
+      </div>
+
+      {/* Scrollable results */}
+      <div className="flex-1 overflow-y-auto min-h-0 px-4 sm:px-6 py-4 space-y-4">
         {/* Advanced search panel */}
         {isAdvanced && (
           <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
@@ -180,36 +214,6 @@ export const SearchPage = () => {
           </div>
         )}
 
-        {/* Sortable column headers */}
-        {rows.length > 0 && (
-          <div className="flex flex-wrap gap-1">
-            <span className="text-xs text-gray-500 dark:text-gray-400 mr-1">Sort by:</span>
-            {summaryFields.slice(0, 6).map(f => (
-              <button
-                type="button"
-                key={f}
-                onClick={() => handleSort(f)}
-                className={`text-xs px-2 py-0.5 rounded border ${
-                  orderby.includes(f)
-                    ? 'bg-blue-50 dark:bg-blue-900/30 border-blue-300 dark:border-blue-600 text-blue-700 dark:text-blue-400'
-                    : 'border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'
-                }`}>
-                {f} {orderby === `${f} asc` ? '↑' : orderby === `${f} desc` ? '↓' : ''}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {/* Result count */}
-        {count !== undefined && (
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            {count.toLocaleString()} result{count !== 1 ? 's' : ''}
-          </p>
-        )}
-      </div>
-
-      {/* Scrollable results */}
-      <div className="flex-1 overflow-y-auto min-h-0 px-4 sm:px-6 py-4">
         <ResultsList
           resource={resourceName}
           rows={rows}

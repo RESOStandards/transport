@@ -9,7 +9,21 @@ import { useMetadata } from '../hooks/use-metadata';
 import { useUiConfig } from '../hooks/use-ui-config';
 import type { ResoField, ResourceName } from '../types';
 import { KEY_FIELD_MAP, READ_ONLY_RESOURCES, TARGET_RESOURCES } from '../types';
-import { ADDRESS_FIELDS, formatAddress, formatFieldValue } from '../utils/format';
+import { ADDRESS_FIELDS, formatAddress, formatFieldValue, getDisplayName, isUrlValue, isVideoMediaType } from '../utils/format';
+
+/** Renders a media preview (image or video) for a URL based on MediaType. */
+const MediaPreview = ({ url, mediaType }: { readonly url: string; readonly mediaType?: string }) => {
+  if (isVideoMediaType(mediaType)) {
+    return (
+      <video controls className="w-full max-h-96 rounded-lg bg-black">
+        <source src={url} />
+        <track kind="captions" />
+      </video>
+    );
+  }
+  // Default to image for photos, unknown types, and picsum URLs
+  return <img src={url} alt="Media preview" className="w-full max-h-96 object-contain rounded-lg bg-gray-100 dark:bg-gray-800" />;
+};
 
 /** Detail page showing a full record with fields grouped by RESO Data Dictionary categories. */
 export const DetailPage = () => {
@@ -177,14 +191,33 @@ export const DetailPage = () => {
   // Sort expansions alphabetically by nav prop name
   expansions.sort((a, b) => a.fieldName.localeCompare(b.fieldName));
 
+  // Right pane shows either an expanded Media carousel or a direct Media record preview
+  const hasMediaPreview = resourceName === 'Media' && isUrlValue(record.MediaURL);
+  const hasRightPane = media.length > 0 || hasMediaPreview;
+
   const renderFieldList = (fieldList: ResoField[], columns: 1 | 2 = 2) => (
     <div className={`grid grid-cols-1 ${columns === 2 ? 'sm:grid-cols-2' : ''} gap-x-6 gap-y-1`}>
-      {fieldList.map(field => (
-        <div key={field.fieldName} className="flex items-baseline gap-2 py-0.5 text-sm">
-          <span className="text-gray-500 dark:text-gray-400 shrink-0 w-40 sm:w-52 truncate">{field.fieldName}</span>
-          <span className="text-gray-800 dark:text-gray-200 truncate">{formatFieldValue(record[field.fieldName], field)}</span>
-        </div>
-      ))}
+      {fieldList.map(field => {
+        const value = record[field.fieldName];
+        return (
+          <div key={field.fieldName} className="flex items-baseline gap-2 py-0.5 text-sm">
+            <span className="text-gray-500 dark:text-gray-400 shrink-0 w-48 sm:w-64 truncate" title={field.fieldName}>
+              {getDisplayName(field)}
+            </span>
+            {isUrlValue(value) ? (
+              <a
+                href={value}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 dark:text-blue-400 hover:underline truncate">
+                {value}
+              </a>
+            ) : (
+              <span className="text-gray-800 dark:text-gray-200 truncate">{formatFieldValue(value, field)}</span>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 
@@ -220,11 +253,11 @@ export const DetailPage = () => {
 
       {/* Scrollable content */}
       <div className="flex-1 overflow-y-auto min-h-0 px-4 sm:px-6 py-4 space-y-4">
-        {/* Summary/fields + Media carousel side-by-side */}
-        <div className={`flex flex-col ${media.length > 0 ? 'lg:flex-row' : ''} gap-4`}>
+        {/* Summary/fields + Media side-by-side */}
+        <div className={`flex flex-col ${hasRightPane ? 'lg:flex-row' : ''} gap-4`}>
           {/* Left pane: Summary (grouped resources) or all fields (ungrouped resources) */}
           <div
-            className={`bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 ${media.length > 0 ? 'lg:w-1/2' : 'w-full'}`}>
+            className={`bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 ${hasRightPane ? 'lg:w-1/2' : 'w-full'}`}>
             {resourceName === 'Property' && address && (
               <div className="text-base font-medium text-gray-900 dark:text-gray-100 mb-2">{address}</div>
             )}
@@ -272,11 +305,17 @@ export const DetailPage = () => {
             {!hasGroupings && ungrouped.length > 0 && renderFieldList(ungrouped, 2)}
           </div>
 
-          {/* Right pane: Media carousel */}
+          {/* Right pane: Media carousel (Property etc.) or Media preview (Media resource) */}
           {media.length > 0 && (
             <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 lg:w-1/2">
               <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Media ({media.length})</h3>
               <MediaCarousel media={media} />
+            </div>
+          )}
+          {hasMediaPreview && (
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 lg:w-1/2">
+              <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Preview</h3>
+              <MediaPreview url={record.MediaURL as string} mediaType={record.MediaType as string | undefined} />
             </div>
           )}
         </div>
