@@ -507,7 +507,7 @@
                 { "key": "$count", "value": "true" }
               ]
             },
-            "description": "Browse the Lookup Resource (3,611 enumeration values)."
+            "description": "Browse the Lookup Resource (3,634 enumeration values)."
           }
         },
         {

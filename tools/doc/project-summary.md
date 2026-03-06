@@ -42,11 +42,13 @@ A tool that creates realistic-looking real estate data for testing purposes. It 
 
 ### 4. Automated Compliance Testing
 
-We integrated with RESO's official certification tools (the RESO Commander) to run automated compliance checks. The system:
+We integrated with RESO's official certification tools (the RESO Commander) and built a custom Add/Edit compliance test runner. The system:
 
 - Generates test configurations automatically from the server's metadata
 - Runs 42 Web API Core 2.0.0 specification tests (all passing)
-- Runs 928 Data Dictionary 2.0 field-level compliance checks
+- Runs 1,034 Data Dictionary 2.0 field-level compliance checks (0 failures, 0 schema errors)
+- Runs 8 Add/Edit (RCP-010) compliance scenarios covering Create, Update, and Delete
+- Generates structured JSON compliance reports for API submission
 - Supports both Docker-based and local testing workflows
 - Tests both enumeration modes (string-based and OData EnumType — see below)
 
@@ -74,14 +76,15 @@ Both modes are fully functional and independently testable, giving implementers 
 | Metric | Value |
 |--------|-------|
 | Packages built | 7 |
-| Automated tests | ~650 |
+| Automated tests | 718 |
 | Database backends | 3 (PostgreSQL, MongoDB, SQLite) |
 | RESO resources supported | 13 |
 | Data Dictionary fields | 1,727 |
-| Lookup values | 3,611 |
+| Lookup values | 3,634 |
 | Web API Core tests passing | 42/42 |
-| DD compliance checks | 928 |
-| Releases | 23 (v0.0.1 – v0.0.23) |
+| DD 2.0 compliance checks | 1,034 passed, 0 failed |
+| Add/Edit (RCP-010) scenarios | 8 passed, 0 failed |
+| Releases | 26 (v0.0.1 – v0.0.26) |
 
 ---
 

@@ -31,6 +31,9 @@ and compliance testing tools.
 4. [Enumeration Modes](#enumeration-modes)
 5. [Database Backends](#database-backends)
 6. [Compliance Testing](#compliance-testing)
+   - [Web API Core 2.0.0](#web-api-core-200)
+   - [Data Dictionary 2.0](#data-dictionary-20)
+   - [Add/Edit (RCP-010)](#addedit-rcp-010)
 7. [Data Generator CLI](#data-generator-cli)
 
 ---
@@ -346,6 +349,10 @@ details.
 
 ### Updating Records
 
+PATCH performs a partial update — only the fields included in the request body
+are modified. Required-field validation is skipped for PATCH requests, so you
+can update a single field without providing the full required set.
+
 ```bash
 curl -X PATCH "http://localhost:8080/Property('702851eb-ac15-40f4-8c00-3256edf538e5')" \
   -H 'Authorization: Bearer test-token' \
@@ -500,7 +507,7 @@ ENUM_MODE=string  # or simply omit — this is the default
 - Enum fields use `Edm.String` types in EDMX metadata
 - Fields have `RESO.OData.Metadata.LookupName` annotations
 - Values are human-readable display names: `"Active Under Contract"`
-- The **Lookup Resource** is exposed at `/Lookup` with all 3,611 valid values
+- The **Lookup Resource** is exposed at `/Lookup` with all 3,634 valid values
 - Collection enums are `Collection(Edm.String)`
 
 ### EnumType Mode
@@ -603,7 +610,29 @@ against the DD 2.0 specification:
 docker compose --profile compliance-dd up compliance-dd
 ```
 
-**Results:** 928 passed, 676 skipped, 0 variations, 0 schema validation errors.
+**Results:** 1,034 passed, 570 skipped, 0 failed, 0 schema validation errors,
+0 variations.
+
+### Add/Edit (RCP-010)
+
+Uses the custom `@reso/certification-add-edit` test runner to validate Create,
+Update, and Delete operations with representation and minimal response modes:
+
+```bash
+# Docker
+docker compose --profile compliance-addedit up compliance-addedit
+
+# Local CLI
+cd tools/certification/add-edit
+npx tsx src/cli/index.ts --server-url http://localhost:8080 --auth-token test-token \
+  --compliance-report ./compliance-report.json --spec-version 2.0.0
+```
+
+**Results:** 8 passed, 0 failed.
+
+The `--compliance-report` flag generates a structured JSON report with per-scenario
+details (fields tested, enum values, expansion names, failure details) suitable
+for API submission. The `--spec-version` flag sets the version in the report.
 
 ### Compliance Results
 

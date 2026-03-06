@@ -18,7 +18,7 @@ Key capabilities:
 - **Three database backends**: PostgreSQL (default), MongoDB, and SQLite — abstracted behind a common DAL interface
 - **Navigation property expansion** (`$expand`) with three FK resolution strategies: `resource-record-key` (polymorphic), `direct` (child→parent), and `parent-fk` (parent→child)
 - **1,727 DD 2.0 fields** across all resources with correct Edm types and annotations
-- **3,611 lookup values** from the DD 2.0 reference metadata
+- **3,634 lookup values** from the DD 2.0 reference metadata
 - **Server-driven pagination** with `@odata.nextLink`
 - **EDMX metadata** and OData service document generation from DD metadata
 
@@ -51,13 +51,15 @@ Generates referentially correct seed data across all DD 2.0 resources:
 
 ### Compliance Testing Pipeline
 
-Docker-based integration with the RESO Commander for automated certification testing:
+Docker-based integration with the RESO Commander and a custom Add/Edit test runner:
 
 - **RESOScript generation** — Automatically extracts test parameters (single/multi lookup fields, enum namespaces) from the server's EDMX metadata
-- **Web API Core 2.0.0** — 42/42 specification tests passing
-- **Data Dictionary 2.0** — 928 field-level compliance checks
+- **Web API Core 2.0.0** — 42 passed, 0 failed, 3 skipped (45 specification tests)
+- **Data Dictionary 2.0** — 1,034 passed, 570 skipped, 0 failed, 0 schema validation errors
+- **Add/Edit (RCP-010)** — 8 passed, 0 failed. Structured JSON compliance report generation with per-scenario details
 - **Both enum modes** tested independently via `ENUM_MODE` environment variable
-- Configurable via Docker Compose profiles (`compliance-core`, `compliance-dd`)
+- **PATCH validation** — Partial updates skip required-field checks (`skipRequired` parameter)
+- Configurable via Docker Compose profiles (`compliance-core`, `compliance-dd`, `compliance-addedit`)
 
 ### Reusable Libraries
 
@@ -75,12 +77,12 @@ Docker-based integration with the RESO Commander for automated certification tes
 - **ESM modules** with Node16 resolution (`.js` import extensions)
 - **Shared metadata** — DD 2.0 JSON metadata drives server schema, EDMX generation, data generation, and validation
 - **DAL abstraction** — `CollectionResult { value, count? }` interface with PostgreSQL (CTE-based pagination + LEFT JOIN expand), MongoDB (cursor pagination + batch `$in` expand), and SQLite adapters
-- **~650 automated tests** across 7 packages
+- **718 automated tests** across 7 packages
 - **Biome** for linting/formatting, **Lefthook** for pre-commit hooks
 
 ## Certification Status
 
-The reference server has passed **RESO Certification** for Web API Core 2.0.0.
+The reference server has passed **RESO Certification** for Web API Core 2.0.0, Data Dictionary 2.0, and Add/Edit (RCP-010).
 
 ---
 

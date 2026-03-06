@@ -71,7 +71,7 @@ The server starts at `http://localhost:8080` by default.
 npm test
 ```
 
-189 tests across 10 test files:
+198 tests across 10 test files:
 - `metadata.test.ts` — Metadata loader and helpers
 - `edmx-generator.test.ts` — EDMX XML generation, EntityContainer, NavigationProperty
 - `schema-generator.test.ts` — PostgreSQL DDL generation
@@ -94,6 +94,7 @@ npm test
 | `SQLITE_DB_PATH` | `./reso_reference.db` | SQLite database file path (used when `DB_BACKEND=sqlite`) |
 | `METADATA_PATH` | `./server-metadata.json` | Path to RESO metadata JSON file |
 | `BASE_URL` | `http://localhost:{PORT}` | Base URL for OData annotations (Location, @odata.id, etc.) |
+| `ENUM_MODE` | `string` | Enumeration mode: `string` (Edm.String + Lookup Resource) or `enum-type` (Edm.EnumType definitions) |
 
 ## Project Structure
 
@@ -137,7 +138,7 @@ server/
 │   └── docs/
 │       └── swagger.ts          # Swagger UI at /api-docs
 ├── tests/                      # Vitest tests
-├── server-metadata.json        # RESO Data Dictionary 2.0 metadata (1,727 fields, 3,611 lookups)
+├── server-metadata.json        # RESO Data Dictionary 2.0 metadata (1,727 fields, 3,634 lookups)
 ├── Dockerfile
 ├── package.json
 ├── tsconfig.json

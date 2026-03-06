@@ -44,6 +44,9 @@ npx reso-cert-add-edit \
 | `--token-url <url>` | OAuth2 token endpoint URL |
 | `--mock` | Start a built-in mock OData server on port 8800 |
 | `--json` | Output results as JSON instead of console format |
+| `--compliance-report <path>` | Write structured JSON compliance report to file |
+| `--spec-version <version>` | Spec version for the compliance report (default: `2.0.0`) |
+| `--server-url <url>` | Alias for `--url` |
 
 ### Exit Codes
 
@@ -131,7 +134,7 @@ npx reso-cert-add-edit \
 ```bash
 npm install
 npm run build
-npm test        # 49 tests
+npm test        # 60 tests
 ```
 
 ## License

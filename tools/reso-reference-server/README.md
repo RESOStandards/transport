@@ -180,9 +180,26 @@ The server implements OData 4.01 features required by the RESO Web API Add/Edit 
 | GET | `/admin/data-generator/status` | Resource counts and available generators |
 | POST | `/admin/data-generator` | Generate seed data (supports `resolveDependencies`) |
 
+## Enumeration Modes
+
+The server supports two enumeration representations via `ENUM_MODE` environment variable:
+
+- **`string` (default)** — Enum fields use `Edm.String` with `LookupName` annotations. A Lookup Resource at `/Lookup` exposes all 3,634 valid values. Human-readable display names (e.g., "Active Under Contract").
+- **`enum-type`** — Enum fields reference `Edm.EnumType` definitions in EDMX metadata. PascalCase member names (e.g., `ActiveUnderContract`). No Lookup Resource.
+
+```bash
+# Start in enum-type mode
+ENUM_MODE=enum-type docker compose up -d --build
+
+# Run compliance in enum-type mode
+ENUM_MODE=enum-type docker compose --profile compliance-core up compliance-core
+```
+
+Both modes pass all Web API Core 2.0.0 compliance tests.
+
 ## Compliance Testing
 
-The server includes Docker-based compliance testing against both RESO certification tools. Tests run against seeded data and validate OData protocol compliance, metadata structure, field mappings, and query behavior.
+The server includes Docker-based compliance testing against RESO certification tools and a custom Add/Edit test runner. Tests run against seeded data and validate OData protocol compliance, metadata structure, field mappings, and query behavior.
 
 ### Web API Core 2.0.0
 
@@ -213,7 +230,7 @@ The test generates RESOScript XML configs dynamically from live server data (`co
 
 Validates metadata compliance, field mappings, and data availability against the RESO Data Dictionary 2.0 specification. Uses the RESO [reso-certification-utils](https://github.com/RESOStandards/reso-certification-utils).
 
-**Current status: 928 passed, 676 skipped, 0 schema validation errors**
+**Current status: 1,034 passed, 570 skipped, 0 failed, 0 schema validation errors**
 
 ```bash
 # PostgreSQL
@@ -228,14 +245,25 @@ docker compose --profile sqlite --profile compliance-dd-sqlite up --build --exit
 
 ### Web API Add/Edit (RCP-010)
 
+Validates Create, Update, and Delete operations with representation and minimal response modes. Uses the custom `@reso/certification-add-edit` test runner.
+
+**Current status: 8 passed, 0 failed**
+
 ```bash
+# Docker
+docker compose --profile compliance-addedit up --build --exit-code-from compliance-addedit
+
+# Local CLI
 cd ../certification/add-edit
 npx reso-cert-add-edit \
-  --url http://localhost:8080 \
+  --server-url http://localhost:8080 \
   --resource Property \
-  --payloads ./sample-payloads \
-  --auth-token test
+  --auth-token test \
+  --compliance-report ./compliance-report.json \
+  --spec-version 2.0.0
 ```
+
+The `--compliance-report` flag generates a structured JSON compliance report with per-scenario details suitable for API submission.
 
 ### CI/CD
 
