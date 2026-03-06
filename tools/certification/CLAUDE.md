@@ -20,11 +20,14 @@
 - Use `.js` extensions in import paths (required for Node16 module resolution with ESM).
 
 # Directory Structure
-- `/src/lib` — Core SDK: types, metadata parser, HTTP client, validators, test runner, reporter.
-- `/src/cli` — CLI entry point using commander.
-- `/src/mock` — Express mock OData server for local testing.
+- `/src/test-runner` — Shared infrastructure: types, validators, HTTP client, auth, metadata, reporter, helpers.
+- `/src/add-edit` — RCP-010 Add/Edit spec: scenario runner, compliance report, mock server.
+- `/src/web-api-core` — Web API Core 2.0.0 (stub).
+- `/src/data-dictionary` — Data Dictionary 2.0 (stub).
+- `/src/cli` — Unified CLI entry point using commander.
+- `/src/index.ts` — Public SDK exports.
 - `/tests` — Vitest tests.
-- `/sample-payloads` — Example JSON payload files for testing.
+- `/sample-payloads` — Example JSON payload files for Add/Edit testing.
 
 # Commands
 - Build: `npm run build`
@@ -35,5 +38,5 @@
 # Prohibitions
 - DO NOT use classes or `this`.
 - Prefer `map`, `filter`, `reduce`; `for...of` / `for await...of` is allowed when sequential async processing requires it.
-- Avoid `console.log` in library code (`src/lib`) — only use it in `src/cli` and `src/mock`.
+- Avoid `console.log` in library code (`src/test-runner`, `src/add-edit`) — only use it in `src/cli` and mock servers.
 - DO NOT use `any`. Use `unknown` and narrow with type guards.
