@@ -14,7 +14,7 @@
     "test:client": "cd tools/odata-client && npx vitest run",
     "test:data-generator": "cd tools/data-generator && npx vitest run",
     "test:server": "cd tools/reso-reference-server/server && npx vitest run",
-    "test:certification": "cd tools/certification/add-edit && npx vitest run"
+    "test:certification": "cd tools/certification && npx vitest run"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.0",

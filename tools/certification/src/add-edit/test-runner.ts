@@ -22,8 +22,8 @@ import {
   validateResponseContainsPayload,
   validateStatusCode,
   validateStatusCodeRange
-} from '@reso/certification-test-runner';
-import type { EntityType, ScenarioResult, TestAssertion, TestConfig, TestReport } from '@reso/certification-test-runner';
+} from '../test-runner/index.js';
+import type { EntityType, ScenarioResult, TestAssertion, TestConfig, TestReport } from '../test-runner/types.js';
 import type { DeletePayload, PayloadSet, ScenarioName } from './types.js';
 
 // ── Public API ──

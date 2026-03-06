@@ -6,7 +6,7 @@
  * - Per-scenario details with fields, enumerations, expansions, and failure info
  */
 
-import type { EntityProperty, EntityType, ScenarioResult, TestReport } from '@reso/certification-test-runner';
+import type { EntityProperty, EntityType, ScenarioResult, TestReport } from '../test-runner/types.js';
 
 // ── Public Types ──
 

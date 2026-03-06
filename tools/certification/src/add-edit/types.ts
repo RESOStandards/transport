@@ -11,7 +11,7 @@ export type {
   TestReport,
   ODataResponse,
   MockServerOptions
-} from '@reso/certification-test-runner';
+} from '../test-runner/types.js';
 
 // ── Add/Edit-specific types ──
 

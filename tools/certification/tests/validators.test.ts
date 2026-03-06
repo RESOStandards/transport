@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { EntityType, ODataResponse } from '../src/lib/types.js';
+import type { EntityType, ODataResponse } from '../src/test-runner/types.js';
 import {
   validateEmptyResponse,
   validateEntityIdHeader,
@@ -12,7 +12,7 @@ import {
   validateResponseContainsPayload,
   validateStatusCode,
   validateStatusCodeRange
-} from '../src/lib/validators.js';
+} from '../src/test-runner/validators.js';
 
 const makeResponse = (overrides: Partial<ODataResponse> = {}): ODataResponse => ({
   status: 200,

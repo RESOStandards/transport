@@ -30,13 +30,8 @@ pre-commit:
       run: npx tsc --noEmit
       priority: 2
 
-    typecheck-test-runner:
-      root: "tools/certification/test-runner/"
-      run: npx tsc --noEmit
-      priority: 2
-
     typecheck-certification:
-      root: "tools/certification/add-edit/"
+      root: "tools/certification/"
       run: npx tsc --noEmit
       priority: 3
 
@@ -71,6 +66,6 @@ pre-commit:
       priority: 4
 
     test-certification:
-      root: "tools/certification/add-edit/"
+      root: "tools/certification/"
       run: npx vitest run
       priority: 5

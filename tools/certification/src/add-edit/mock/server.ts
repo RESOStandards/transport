@@ -7,7 +7,7 @@ import type { Server } from 'node:http';
  * Uses port 0 for OS-assigned ports in tests, or a fixed port (default 8800) for CLI usage.
  */
 import express from 'express';
-import type { MockServerOptions } from '../lib/types.js';
+import type { MockServerOptions } from '../types.js';
 import { handleCreate, handleDelete, handleGet, handleMetadata, handleTokenEndpoint, handleUpdate } from './handlers.js';
 
 /**

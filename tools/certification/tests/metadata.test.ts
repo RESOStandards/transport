@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { getEntityType, parseMetadataXml, validatePayloadAgainstMetadata } from '../src/lib/metadata.js';
+import { getEntityType, parseMetadataXml, validatePayloadAgainstMetadata } from '../src/test-runner/metadata.js';
 
 const sampleXml = readFileSync(resolve(import.meta.dirname, '../sample-metadata.xml'), 'utf-8');
 

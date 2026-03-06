@@ -1,7 +1,7 @@
 import type { Server } from 'node:http';
 import express from 'express';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { fetchAccessToken, resolveAuthToken } from '../src/lib/auth.js';
+import { fetchAccessToken, resolveAuthToken } from '../src/test-runner/auth.js';
 
 let server: Server;
 let tokenUrl: string;

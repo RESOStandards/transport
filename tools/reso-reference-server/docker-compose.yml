@@ -400,7 +400,7 @@ services:
   compliance-addedit:
     build:
       context: ..
-      dockerfile: certification/add-edit/Dockerfile
+      dockerfile: certification/Dockerfile
     entrypoint: ["/bin/sh", "/config/entrypoint-addedit.sh"]
     environment:
       SERVER_URL: http://server-addedit:8080

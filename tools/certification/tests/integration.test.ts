@@ -2,9 +2,9 @@ import { readFileSync } from 'node:fs';
 import type { Server } from 'node:http';
 import { resolve } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { runAllScenarios } from '../src/lib/test-runner.js';
-import { seedStore } from '../src/mock/handlers.js';
-import { startMockServer, stopMockServer } from '../src/mock/server.js';
+import { seedStore } from '../src/add-edit/mock/handlers.js';
+import { startMockServer, stopMockServer } from '../src/add-edit/mock/server.js';
+import { runAllScenarios } from '../src/add-edit/test-runner.js';
 
 const metadataXml = readFileSync(resolve(import.meta.dirname, '../sample-metadata.xml'), 'utf-8');
 

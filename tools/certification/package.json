@@ -1,15 +1,21 @@
 {
-  "name": "@reso/certification-add-edit",
+  "name": "@reso/certification",
   "version": "0.1.0",
-  "description": "RESO Web API Add/Edit Endorsement (RCP-010) compliance testing tool",
+  "description": "RESO certification testing toolkit — Add/Edit (RCP-010), Web API Core, Data Dictionary",
   "type": "module",
   "engines": {
     "node": ">=18.0.0"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "bin": {
-    "reso-cert-add-edit": "./dist/cli/index.js"
+    "reso-cert": "./dist/cli/index.js"
   },
   "scripts": {
     "build": "tsc",
@@ -19,9 +25,8 @@
     "lint": "tsc --noEmit"
   },
   "dependencies": {
-    "@reso/certification-test-runner": "file:../test-runner",
-    "@reso/odata-client": "file:../../odata-client",
-    "@reso/validation": "file:../../validation",
+    "@reso/odata-client": "file:../odata-client",
+    "@reso/validation": "file:../validation",
     "commander": "^12.0.0",
     "express": "^4.21.0"
   },

@@ -6,7 +6,6 @@ WORKDIR /app
 COPY odata-filter-parser/ /deps/odata-filter-parser/
 COPY validation/ /deps/validation/
 COPY odata-client/ /deps/odata-client/
-COPY certification/test-runner/ /deps/test-runner/
 
 # Build odata-filter-parser
 WORKDIR /deps/odata-filter-parser
@@ -23,27 +22,20 @@ RUN rm -f package-lock.json \
  && sed -i 's|file:../validation|file:/deps/validation|' package.json \
  && npm install && npm run build
 
-# Build test-runner (depends on odata-client + validation)
-WORKDIR /deps/test-runner
-RUN rm -f package-lock.json \
- && sed -i 's|file:../../odata-client|file:/deps/odata-client|' package.json \
- && sed -i 's|file:../../validation|file:/deps/validation|' package.json \
- && npm install && npm run build
-
-# Build add-edit (depends on test-runner + odata-client + validation)
+# Build certification (depends on odata-client + validation)
 WORKDIR /app
-COPY certification/add-edit/package.json ./
-RUN sed -i 's|file:../test-runner|file:/deps/test-runner|' package.json \
- && sed -i 's|file:../../odata-client|file:/deps/odata-client|' package.json \
- && sed -i 's|file:../../validation|file:/deps/validation|' package.json \
+COPY certification/package.json ./
+RUN sed -i 's|file:../odata-client|file:/deps/odata-client|' package.json \
+ && sed -i 's|file:../validation|file:/deps/validation|' package.json \
  && npm install --ignore-scripts
 
-COPY certification/add-edit/tsconfig.json ./
-COPY certification/add-edit/src/ ./src/
+COPY certification/tsconfig.json ./
+COPY certification/src/ ./src/
 RUN npm run build
 
-# Copy sample payloads
-COPY certification/add-edit/sample-payloads/ ./sample-payloads/
+# Copy sample payloads and metadata
+COPY certification/sample-payloads/ ./sample-payloads/
+COPY certification/sample-metadata.xml ./
 
 # --- Runtime stage ---
 FROM node:22-alpine
@@ -54,10 +46,10 @@ COPY --from=build /app/dist ./dist
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/package.json ./
 COPY --from=build /app/sample-payloads ./sample-payloads
+COPY --from=build /app/sample-metadata.xml ./
 COPY --from=build /deps/odata-filter-parser /deps/odata-filter-parser
 COPY --from=build /deps/validation /deps/validation
 COPY --from=build /deps/odata-client /deps/odata-client
-COPY --from=build /deps/test-runner /deps/test-runner
 
 # Install wget for health checks in entrypoint
 RUN apk add --no-cache wget

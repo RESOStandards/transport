@@ -16,12 +16,12 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { Command } from 'commander';
-import { generateComplianceReport } from '../lib/compliance-report.js';
-import { fetchMetadata, getEntityType, loadMetadataFromFile, parseMetadataXml } from '../lib/metadata.js';
-import { formatConsoleReport, formatJsonReport } from '../lib/reporter.js';
-import { runAllScenarios } from '../lib/test-runner.js';
-import type { AuthConfig, TestConfig } from '../lib/types.js';
-import { startMockServer, stopMockServer } from '../mock/server.js';
+import { generateComplianceReport } from '../add-edit/compliance-report.js';
+import { startMockServer, stopMockServer } from '../add-edit/mock/server.js';
+import { runAllScenarios } from '../add-edit/test-runner.js';
+import { fetchMetadata, getEntityType, loadMetadataFromFile, parseMetadataXml } from '../test-runner/metadata.js';
+import { formatConsoleReport, formatJsonReport } from '../test-runner/reporter.js';
+import type { AuthConfig, TestConfig } from '../test-runner/types.js';
 
 /** Default port for the mock OData server when started via --mock. */
 const DEFAULT_MOCK_PORT = 8800;

@@ -1,6 +1,6 @@
-import type { EntityType, ScenarioResult, TestReport } from '@reso/certification-test-runner';
 import { describe, expect, it } from 'vitest';
-import { generateComplianceReport } from '../src/lib/compliance-report.js';
+import { generateComplianceReport } from '../src/add-edit/compliance-report.js';
+import type { EntityType, ScenarioResult, TestReport } from '../src/test-runner/types.js';
 
 const makeEntityType = (): EntityType => ({
   name: 'Property',
