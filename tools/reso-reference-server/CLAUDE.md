@@ -34,6 +34,10 @@
 - Start: `npm start`
 - Seed: `npm run seed`
 
+# Docker
+- All Dockerfiles MUST run as a non-root user in the runtime stage. Create a dedicated user (e.g., `addgroup -S reso && adduser -S reso -G reso`) and switch with `USER reso` before `CMD`/`ENTRYPOINT`.
+- Exception: third-party base images that handle their own user (e.g., `nginx:alpine`).
+
 # Prohibitions
 - DO NOT use classes or `this`.
 - Prefer `map`, `filter`, `reduce`; `for...of` / `for await...of` is allowed when sequential async processing requires it.

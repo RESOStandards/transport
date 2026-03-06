@@ -20,7 +20,8 @@ const ALLOW_NEGATIVE_FIELDS = new Set(['Latitude', 'Longitude']);
  */
 export const validateRecord = (
   body: Readonly<Record<string, unknown>>,
-  fields: ReadonlyArray<ResoField>
+  fields: ReadonlyArray<ResoField>,
+  skipRequired = false
 ): ReadonlyArray<ValidationFailure> => {
   const fieldMap = new Map(fields.map(f => [f.fieldName, f]));
   const failures: ValidationFailure[] = [];
@@ -65,7 +66,7 @@ export const validateRecord = (
   const resourceName = fields[0]?.resourceName;
   if (resourceName) {
     const failedFields = new Set(failures.map(f => f.field));
-    const ruleFailures = validateBusinessRules(resourceName, body);
+    const ruleFailures = validateBusinessRules(resourceName, body, skipRequired);
     for (const rf of ruleFailures) {
       if (!failedFields.has(rf.field)) failures.push(rf);
     }

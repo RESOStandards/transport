@@ -134,7 +134,8 @@ export const updateHandler =
 
       const body = req.body as Record<string, unknown>;
 
-      const failures = validateRequestBody(body, ctx.resourceCtx.fields);
+      // PATCH is a partial update — skip required-field validation
+      const failures = validateRequestBody(body, ctx.resourceCtx.fields, true);
       if (failures.length > 0) {
         setODataHeaders(res);
         res.status(400).json(buildValidationError(failures, 'Update'));

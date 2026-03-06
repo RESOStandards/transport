@@ -51,6 +51,10 @@ COPY reso-reference-server/server/public ./public
 ENV PORT=8080
 ENV METADATA_PATH=./server-metadata.json
 
+# Run as non-root user
+RUN addgroup -S reso && adduser -S reso -G reso
+USER reso
+
 EXPOSE 8080
 
 CMD ["node", "dist/index.js"]

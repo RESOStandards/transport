@@ -2,6 +2,48 @@
 
 ---
 
+## v0.0.26 — 2026-03-06
+
+### Add/Edit Compliance Report + PATCH Validation Fix (#41)
+
+Structured compliance report generation for the Add/Edit (RCP-010) endorsement,
+and a fix for PATCH (partial update) validation that was incorrectly enforcing
+required fields.
+
+**Add/Edit compliance report (#41):**
+- New `compliance-report.ts` module generates a structured JSON report from test
+  results for API submission
+- Report includes `description`, `version`, `generatedOn`, `outcome`, `remarks`,
+  and per-scenario `scenarios` array
+- `outcome`: `passed` if all 8 scenarios pass, `failed` if any fail
+- `remarks`: human-friendly summary of operations tested (Create/Update/Delete),
+  response modes (representation/minimal), resource name, and field counts
+- Per-scenario details: field names tested (excluding keys, no values for privacy),
+  enumeration values (DD standard values, not sensitive), expansion names, and
+  failure details (assertion, expected, actual)
+- CLI flags: `--compliance-report <path>` and `--spec-version <version>`
+- 11 new tests covering all report facets (60 total in add-edit package)
+
+**PATCH validation fix:**
+- `validateBusinessRules` now accepts `skipRequired` parameter (default `false`)
+- Server update handler passes `skipRequired: true` for PATCH requests
+- Fixes 400 errors on valid partial updates that omitted required fields
+  (City, StateOrProvince, PostalCode, Country)
+
+**Docker Add/Edit compliance:**
+- New `compliance-addedit` Docker Compose service with entrypoint script
+- Fixed URL routing: server OData routes are at root (`/$metadata`, `/Property`),
+  not under `/odata/` prefix
+- Dockerfile for add-edit package added to support Docker builds
+- All 8 Add/Edit scenarios pass with compliance report generated
+
+**All three compliance suites verified:**
+- Web API Core 2.0.0: 42 passed, 3 skipped, 0 failed
+- Data Dictionary 2.0: 1,034 passed, 570 skipped, 0 failed, 0 variations
+- Add/Edit (RCP-010): 8 passed, 0 failed
+
+---
+
 ## v0.0.25 — 2026-03-05
 
 ### UI: Human-Friendly Field Names, Detail Page Improvements (#40)

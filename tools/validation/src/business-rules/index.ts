@@ -39,9 +39,14 @@ const formatRangeMessage = (rule: FieldRule, value: number): string => {
 /**
  * Validates a record against business rules for the given resource.
  * Checks per-field range rules first, then cross-field relationship rules.
+ * When `skipRequired` is true (e.g., for PATCH partial updates), required-field checks are skipped.
  * Returns an array of failures (empty if valid).
  */
-export const validateBusinessRules = (resourceName: string, body: Readonly<Record<string, unknown>>): ReadonlyArray<ValidationFailure> => {
+export const validateBusinessRules = (
+  resourceName: string,
+  body: Readonly<Record<string, unknown>>,
+  skipRequired = false
+): ReadonlyArray<ValidationFailure> => {
   const failures: ValidationFailure[] = [];
 
   // Per-field rules
@@ -55,11 +60,14 @@ export const validateBusinessRules = (resourceName: string, body: Readonly<Recor
     }
 
     // Required field checks — iterate rules looking for missing fields
-    for (const rule of rules) {
-      if (!rule.required) continue;
-      const value = body[rule.fieldName];
-      if (value === undefined || value === null || value === '') {
-        failures.push({ field: rule.fieldName, reason: rule.message ?? `${rule.fieldName} is required.` });
+    // Skipped for partial updates (PATCH) where only supplied fields are validated
+    if (!skipRequired) {
+      for (const rule of rules) {
+        if (!rule.required) continue;
+        const value = body[rule.fieldName];
+        if (value === undefined || value === null || value === '') {
+          failures.push({ field: rule.fieldName, reason: rule.message ?? `${rule.fieldName} is required.` });
+        }
       }
     }
 

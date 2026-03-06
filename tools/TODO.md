@@ -365,15 +365,43 @@ is needed in this mode.~~
 - ~~9 new enum-type EDMX tests (198 total)~~
 
 ### #28 — Rewrite Web API Core Testing Tools
-**Package:** `reso-reference-server`
+**Package:** `certification`
 
 Rewrite the current Web API Core compliance testing tools. Current approach uses
 the RESO `web-api-commander` Java/Gradle tool via Docker. The new approach will
-implement tests natively. The Cucumber spec for Web API Core 2.0.0 will serve as
-the reference for test scenarios.
+implement tests natively in TypeScript using the existing `@reso/certification-test-runner`
+framework (same pattern as the Add/Edit tool in `certification/add-edit/`).
+
+**Multi-step plan:**
+1. Parse the Cucumber `.feature` files from Web API Core 2.0.0 spec into structured test scenarios
+2. Implement OData query validation scenarios (filter, orderby, select, expand, top, skip, count)
+3. Implement metadata validation scenarios (EDMX parsing, entity type checks)
+4. Implement response validation (OData headers, annotations, error format)
+5. RESOScript-equivalent config generation (auto-detect fields/types from metadata)
+6. Report generation matching existing compliance JSON format
+7. Docker Compose integration replacing the `web-api-commander` service
 
 **Prerequisite:** All current Commander-based Web API Core tests must pass first
-(ticket #19) before rewriting.
+(ticket #19, done). Add/Edit tool (#41) serves as the architectural template.
+
+### #42 — Rewrite Data Dictionary Testing Tools
+**Package:** `certification`
+
+Rewrite the current DD 2.0 compliance testing tools. Current approach uses
+`reso-certification-utils` (Node.js + embedded Java) via Docker. The new approach
+will implement tests natively in TypeScript.
+
+**Multi-step plan:**
+1. Enumerate DD 2.0 test categories: metadata validation, field presence, data type checks,
+   lookup value validation, schema validation, data availability/replication
+2. Implement metadata-driven field checks against the DD 2.0 reference spreadsheet
+3. Implement data replication validation (fetch records, validate against JSON schemas)
+4. Implement lookup value validation (enum values match DD 2.0 reference)
+5. Report generation matching existing DD compliance JSON format
+6. Docker Compose integration replacing the `reso-certification-utils` service
+
+**Prerequisite:** All current DD compliance tests must pass first (#18/#32, done).
+Web API Core rewrite (#28) should be completed first as a simpler starting point.
 
 ### #31 — OData 4.01 `ne` Operator: Null Handling Spec Compliance
 **Package:** `reso-reference-server`
@@ -475,6 +503,23 @@ annotations with `fieldName` fallback. Applied across all UI surfaces: detail
 pages, results cards, advanced search, add/edit forms, sort buttons. Added
 tooltips on all truncated labels/values, pill chips for enum arrays, zebra
 stripes, floated media preview layout, and data generator input fix.
+
+### ~~#41 — Add/Edit Compliance Report Generation~~
+**Package:** `certification/add-edit`
+**Status:** Closed
+
+~~Structured compliance report generated after Add/Edit (RCP-010) testing.
+Report includes `description`, `version`, `generatedOn`, `outcome`, `remarks`,
+and per-scenario details (fields tested, enumerations, expansions, failures).~~
+
+~~**Delivered:**~~
+- ~~`compliance-report.ts` — report generator with per-scenario field/enum/expansion extraction~~
+- ~~CLI flags: `--compliance-report <path>`, `--spec-version <version>`~~
+- ~~`outcome`: `passed` if all scenarios pass, `failed` if any fail~~
+- ~~`remarks`: human-friendly summary of operations, response modes, resource, and field counts~~
+- ~~Per-scenario: field names (excluding keys, no values for privacy), enum values (DD standard), failure details~~
+- ~~11 new tests (60 total in add-edit package)~~
+- ~~Docker entrypoint updated for compliance report generation~~
 
 ### #39 — Improvement: HistoryTransactional Writer
 **Package:** `data-generator`, `reso-reference-server`

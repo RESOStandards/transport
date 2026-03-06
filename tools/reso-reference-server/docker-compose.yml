@@ -356,6 +356,64 @@ services:
       - compliance-sqlite
       - compliance-core-sqlite
 
+  # ---------------------------------------------------------------------------
+  # Compliance: Add/Edit RCP-010 (ephemeral PostgreSQL)
+  # Usage: docker compose --profile compliance-addedit up --build --exit-code-from compliance-addedit
+  # ---------------------------------------------------------------------------
+  db-addedit:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: reso
+      POSTGRES_PASSWORD: reso
+      POSTGRES_DB: reso_addedit
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U reso -d reso_addedit"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    profiles:
+      - compliance-addedit
+
+  server-addedit:
+    build:
+      context: ..
+      dockerfile: reso-reference-server/server/Dockerfile
+    environment:
+      PORT: 8080
+      DB_BACKEND: postgres
+      DATABASE_URL: postgresql://reso:reso@db-addedit:5432/reso_addedit
+      METADATA_PATH: ./server-metadata.json
+      BASE_URL: http://server-addedit:8080
+      ENUM_MODE: string
+    depends_on:
+      db-addedit:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/health || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    profiles:
+      - compliance-addedit
+
+  compliance-addedit:
+    build:
+      context: ..
+      dockerfile: certification/add-edit/Dockerfile
+    entrypoint: ["/bin/sh", "/config/entrypoint-addedit.sh"]
+    environment:
+      SERVER_URL: http://server-addedit:8080
+      AUTH_TOKEN: admin-token
+      RESOURCE: Property
+    volumes:
+      - ./compliance:/config:ro
+    depends_on:
+      server-addedit:
+        condition: service_healthy
+    profiles:
+      - compliance-addedit
+
 volumes:
   pgdata:
   mongodata:

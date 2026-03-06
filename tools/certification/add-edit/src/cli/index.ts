@@ -13,9 +13,11 @@
  * Exit codes: 0 = all scenarios passed, 1 = one or more failed, 2 = runtime error.
  */
 
-import { readFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { Command } from 'commander';
+import { generateComplianceReport } from '../lib/compliance-report.js';
+import { fetchMetadata, getEntityType, loadMetadataFromFile, parseMetadataXml } from '../lib/metadata.js';
 import { formatConsoleReport, formatJsonReport } from '../lib/reporter.js';
 import { runAllScenarios } from '../lib/test-runner.js';
 import type { AuthConfig, TestConfig } from '../lib/types.js';
@@ -39,6 +41,8 @@ program
   .option('--metadata <path>', 'Path to local XML metadata file')
   .option('--mock', 'Start a mock OData server instead of testing a real server')
   .option('--output <format>', 'Output format: console or json', 'console')
+  .option('--compliance-report <path>', 'Write compliance report JSON to file')
+  .option('--spec-version <version>', 'Specification version for compliance report', '2.0.0')
   .action(
     async (opts: {
       url: string;
@@ -51,6 +55,8 @@ program
       metadata?: string;
       mock?: boolean;
       output: string;
+      complianceReport?: string;
+      specVersion: string;
     }) => {
       let serverUrl = opts.url;
       let mockServer: Awaited<ReturnType<typeof startMockServer>> | null = null;
@@ -86,6 +92,26 @@ program
           console.log(formatJsonReport(report));
         } else {
           console.log(formatConsoleReport(report));
+        }
+
+        // Generate compliance report if requested
+        if (opts.complianceReport) {
+          const metadataXml = opts.metadata
+            ? await loadMetadataFromFile(resolve(opts.metadata))
+            : await fetchMetadata(serverUrl, opts.authToken ?? '');
+          const metadata = parseMetadataXml(metadataXml);
+          const entityType = getEntityType(metadata, opts.resource);
+
+          if (entityType) {
+            const payloads = await loadPayloadMap(resolve(opts.payloads));
+            const complianceReport = generateComplianceReport(report, {
+              version: opts.specVersion,
+              payloads,
+              entityType
+            });
+            await writeFile(resolve(opts.complianceReport), JSON.stringify(complianceReport, null, 2));
+            console.log(`\nCompliance report written to: ${opts.complianceReport}`);
+          }
         }
 
         process.exitCode = report.summary.failed > 0 ? 1 : 0;
@@ -145,6 +171,23 @@ const buildAuthConfig = (
     clientId: opts.clientId,
     clientSecret: opts.clientSecret,
     tokenUrl
+  };
+};
+
+/** Loads all payload JSON files from a directory into a keyed map for the compliance report. */
+const loadPayloadMap = async (payloadsDir: string): Promise<Record<string, Record<string, unknown>>> => {
+  const loadJson = async (filename: string): Promise<Record<string, unknown>> => {
+    const content = await readFile(resolve(payloadsDir, filename), 'utf-8');
+    return JSON.parse(content) as Record<string, unknown>;
+  };
+
+  return {
+    createSucceeds: await loadJson('create-succeeds.json'),
+    createFails: await loadJson('create-fails.json'),
+    updateSucceeds: await loadJson('update-succeeds.json'),
+    updateFails: await loadJson('update-fails.json'),
+    deleteSucceeds: await loadJson('delete-succeeds.json'),
+    deleteFails: await loadJson('delete-fails.json')
   };
 };
 

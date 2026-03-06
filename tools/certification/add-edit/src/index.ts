@@ -1,6 +1,10 @@
 // Add/Edit scenario runner
 export { runAllScenarios } from './lib/test-runner.js';
 
+// Compliance report
+export { generateComplianceReport } from './lib/compliance-report.js';
+export type { ComplianceReport, ScenarioDetail, ReportConfig } from './lib/compliance-report.js';
+
 // Mock server
 export { startMockServer, stopMockServer } from './mock/server.js';
 
