@@ -6,3 +6,6 @@ results.*
 lefthook-local.yml
 tools/PLAN.md
 tools/PR.md
+*.db
+*.db-shm
+*.db-wal

@@ -2,6 +2,78 @@
 
 ---
 
+## v0.0.28 — 2026-03-06
+
+### EntityEvent Compliance Testing Tool (#44)
+
+Native TypeScript compliance testing tool for the RESO EntityEvent Resource (RCP-027).
+Validates that servers correctly implement change tracking via monotonically increasing
+sequence numbers.
+
+**Two testing modes:**
+- **Observe mode** — read-only, for third-party servers. Polls for new events with
+  configurable timeout (`--poll-timeout`). Tests 8 scenarios + incremental sync via polling.
+- **Full mode** — write access, for reference server or servers with a writable canary
+  resource. Creates/updates/deletes records and verifies corresponding EntityEvent entries.
+  Tests all 11 scenarios.
+
+**Scenarios (11 total):**
+- Both modes: `metadata-valid`, `read-only-enforced`, `event-structure`,
+  `sequence-monotonic`, `query-filter`, `query-orderby-top-skip`, `query-count`,
+  `incremental-sync`
+- Full mode only: `create-triggers-event`, `update-triggers-event`, `delete-triggers-event`
+
+**Data validation:**
+- Batch-fetches records referenced by EntityEvent entries using OData `in` operator
+  (configurable batch size, max 1000 events)
+- Validates each record's fields against `$metadata` using a new lightweight Edm type checker
+- Tracks 404s (deleted records), validates `ResourceRecordUrl` when present
+- `--strict` flag: unknown fields are failures (default: warnings)
+
+**Lightweight Edm type checker** (`edm-validator.ts`):
+- Shared infrastructure in `test-runner/` — reusable by future compliance tools
+- Validates: `Edm.String`, `Boolean`, `Int16/32/64`, `Decimal/Double/Single`,
+  `DateTimeOffset`, `Date`, `TimeOfDay`, `Guid`, `Binary`, `Duration`, `Collection(X)`
+- Non-Edm types (enum types) return `skip` status — full enum validation deferred to
+  DD compliance tool (#42)
+
+**Compliance report generation:**
+- Per-scenario details with mode classification (`both`/`full`), pass/fail status, failures
+- Data validation summary: total events, unique resources, sequence range, not-found keys
+- Human-readable remarks with mode, event count, resources, and failure summary
+
+**CLI:**
+- Restructured from flat command to subcommands: `reso-cert add-edit`, `reso-cert entity-event`
+- `reso-cert entity-event` options: `--url`, `--mode`, `--writable-resource`, `--payloads-dir`,
+  `--max-events`, `--batch-size`, `--poll-interval`, `--poll-timeout`, `--strict`, `--mock`,
+  `--compliance-report`, `--spec-version`, plus auth options
+
+**Mock server:**
+- Express-based mock OData server for test isolation (same pattern as Add/Edit tool)
+- In-memory EntityEvent store with auto-incrementing sequence
+- Canary resource CRUD that triggers EntityEvent writes
+- Simple OData `$filter` parser (`eq`, `gt`, `in` operators, `and` combinator)
+
+**New files (10):**
+- `src/entity-event/types.ts` — config, mode, scenario names, record shape, report types
+- `src/entity-event/test-runner.ts` — scenario runner for both modes
+- `src/entity-event/data-validator.ts` — batch record fetching and Edm validation
+- `src/entity-event/compliance-report.ts` — report generation
+- `src/entity-event/index.ts` — public exports
+- `src/entity-event/mock/handlers.ts` — mock server request handlers
+- `src/entity-event/mock/server.ts` — mock server setup/teardown
+- `src/test-runner/edm-validator.ts` — shared Edm type checker
+- `tests/edm-validator.test.ts` — 30 tests for Edm validator
+- `tests/entity-event-runner.test.ts` — 6 integration tests with mock server
+- `tests/entity-event-compliance-report.test.ts` — 6 report generation tests
+
+**Tests:**
+- 42 new tests (30 edm-validator + 6 runner + 6 compliance-report)
+- 102 total certification tests (up from 60)
+- 777 total across all packages
+
+---
+
 ## v0.0.27 — 2026-03-06
 
 ### EntityEvent Resource — RCP-27 (#43)

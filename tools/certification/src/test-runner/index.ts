@@ -51,3 +51,6 @@ export {
 
 // Helpers
 export { extractPrimaryKey, stripPrimaryKey, makeSchemaAssertion, buildScenarioResult } from './helpers.js';
+
+// Edm type validator
+export { validateValueAgainstEdm, validateRecordAgainstMetadata } from './edm-validator.js';

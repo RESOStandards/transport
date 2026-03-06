@@ -38,6 +38,9 @@ export {
 // Helpers
 export { extractPrimaryKey, stripPrimaryKey, makeSchemaAssertion, buildScenarioResult } from './test-runner/helpers.js';
 
+// Edm type validator
+export { validateValueAgainstEdm, validateRecordAgainstMetadata } from './test-runner/edm-validator.js';
+
 // Types
 export type {
   AuthConfig,
@@ -62,6 +65,25 @@ export { generateComplianceReport } from './add-edit/index.js';
 export type { ComplianceReport, ScenarioDetail, ReportConfig } from './add-edit/compliance-report.js';
 export { startMockServer, stopMockServer } from './add-edit/index.js';
 export type { PayloadSet, DeletePayload, ScenarioName } from './add-edit/types.js';
+
+// ── EntityEvent (RCP-027) ──
+
+export { runAllEntityEventScenarios } from './entity-event/index.js';
+export { generateEntityEventComplianceReport } from './entity-event/index.js';
+export { validateEventData } from './entity-event/index.js';
+export type {
+  EntityEventComplianceReport,
+  EntityEventScenarioDetail,
+  EntityEventReportConfig
+} from './entity-event/compliance-report.js';
+export type {
+  EntityEventConfig,
+  EntityEventMode,
+  EntityEventScenarioName,
+  EntityEventRecord,
+  DataValidationResult,
+  EntityEventTestReport
+} from './entity-event/types.js';
 
 // ── Web API Core (stub) ──
 

@@ -7,63 +7,6 @@ to GitHub Issues once the repository is ready for public collaboration.
 
 ## High Priority
 
-### ~~#1 — Data Access Layer: MongoDB Backend~~
-**Package:** `reso-reference-server`
-**Status:** Closed
-
-~~The server defines a `DataAccessLayer` interface. Currently only the
-PostgreSQL implementation exists. Add MongoDB as a fully functional
-alternative backend, selectable via `DB_BACKEND` environment variable.~~
-
-- ~~`filter-to-mongo.ts` — OData $filter AST to MongoDB query translator (33 tests)~~
-- ~~`mongo-dal.ts` — Production MongoDB DAL adapter~~
-- ~~`mongo-init.ts` — Collection and index setup~~
-- ~~Config/startup updates for backend selection~~
-- ~~Docker Compose profile for MongoDB~~
-- ~~Documentation: server README, reference-server README, module READMEs~~
-
-### ~~#16 — UI: Fixed Header/Sidebar and Request URI Fix~~
-**Package:** `reso-reference-server/ui`
-**Status:** Closed
-
-~~Header and left navigation sidebar now stay fixed while only the main content
-area scrolls. Also fixed "Request URI too large" error caused by sending all
-field names in `$select` for `__all__` resources, and increased nginx header
-buffer limit to 32k for complex OData queries.~~
-
-~~Affected files:~~
-- ~~`ui/src/components/layout.tsx`~~
-- ~~`ui/src/pages/search-page.tsx`~~
-- ~~`ui/nginx.conf.template`~~
-
-### ~~#15 — UI: Detail Page Layout — Summary Pane + Media Carousel~~
-**Package:** `reso-reference-server/ui`
-**Status:** Closed
-
-~~Redesign the detail page layout so the media carousel takes half the horizontal
-space on the right, with a summary pane on the left. For Property (which has
-groupings), the left pane shows address, key, timestamp, and configured summary
-fields; grouped field sections appear below. For resources without groupings,
-all fields display alphabetically in a two-column layout beside the carousel.~~
-
-~~Affected files:~~
-- ~~`ui/src/pages/detail-page.tsx`~~
-
-### ~~#14 — UI: Remove "Other" Group When No Groupings Are Defined~~
-**Package:** `reso-reference-server/ui`
-**Status:** Closed
-
-~~When a resource has no field groupings defined in the Data Dictionary Google Sheet
-(e.g., Member, Office, Media, OpenHouse, Showing), all fields end up in a
-collapsible "Other" section. Instead, display them as a flat alphabetical list
-without any group wrapper. Only use the "Other" section when a resource HAS
-groupings defined (like Property) and some fields fall outside those groups.~~
-
-~~Affected files:~~
-- ~~`ui/src/pages/detail-page.tsx`~~
-- ~~`ui/src/components/record-form.tsx`~~
-- ~~`ui/src/components/advanced-search.tsx`~~
-
 ### #2 — Multi-Level $expand Support
 **Package:** `reso-reference-server`, `odata-client`
 
@@ -80,50 +23,9 @@ Multi-level expansion like `$expand=Media($expand=Tags)` needs:
 5. Respect `$levels=N` and `$levels=max` parameters
 6. Add depth limit configuration to prevent unbounded recursive expansion
 
-### ~~#3 — Data Access Layer: SQLite Backend~~
-**Package:** `reso-reference-server`
-**Status:** Closed
-
-~~Added SQLite as a third `DataAccessLayer` backend, selected via `DB_BACKEND=sqlite`.
-Lightweight option requiring no external database — ideal for local development and testing.~~
-
-**Delivered:**
-- ~~`filter-to-sqlite.ts` — OData $filter AST to SQLite SQL translator (32 tests)~~
-- ~~`sqlite-schema-generator.ts` — Edm type to SQLite type mapping + DDL (14 tests)~~
-- ~~`sqlite-dal.ts` — Full DataAccessLayer implementation (CTE + LEFT JOIN for $expand)~~
-- ~~`sqlite-pool.ts` — Database handle with WAL mode + REGEXP function~~
-- ~~Config: `DB_BACKEND=sqlite`, `SQLITE_DB_PATH` env var~~
-- ~~Docker Compose SQLite profile (server, UI, seed, compliance)~~
-- ~~Web API Core 2.0.0: 42/42 passed, 3 skipped (same as PostgreSQL and MongoDB)~~
-
 ---
 
 ## Medium Priority
-
-### ~~#43 — EntityEvent Resource (RCP-27)~~
-**Package:** `reso-reference-server`
-**Status:** Closed
-
-~~Add the RESO EntityEvent Resource (RCP-27) for change tracking via monotonically
-increasing sequence numbers. Every Create, Update, or Delete operation on the server
-writes an EntityEvent entry with the affected ResourceName, ResourceRecordKey, and a
-database-managed auto-increment EntityEventSequence.~~
-
-~~**Delivered:**~~
-- ~~`ENTITY_EVENT=true` env var (opt-in, disabled by default)~~
-- ~~`ENTITY_EVENT_RESOURCE_RECORD_URL=true` env var (optional ResourceRecordUrl field)~~
-- ~~DAL decorator pattern — wraps any backend to intercept all writes (including seeding)~~
-- ~~Database-native auto-increment sequences (PG BIGSERIAL, SQLite AUTOINCREMENT, MongoDB counter)~~
-- ~~EntityEvent exposed as read-only OData resource (GET collection + GET by key, no POST/PATCH/DELETE)~~
-- ~~Compaction scheduler: removes duplicate (ResourceName, ResourceRecordKey) entries, keeps latest~~
-- ~~`COMPACTION_INTERVAL_MS` env var (default 1 hour, 0 = disabled)~~
-- ~~Docker Compose: `${ENTITY_EVENT:-false}` passthrough on all 3 server services~~
-- ~~17 new tests (215 total, 735 across all packages)~~
-- ~~Manual testing: SQLite + MongoDB confirmed working~~
-
-**Future work:**
-- HistoryTransactional integration (shared DAL write module)
-- Compliance testing for EntityEvent queries
 
 ### #4 — Batch Operations (`$batch`)
 **Package:** `odata-client`, `reso-reference-server`
@@ -213,116 +115,6 @@ bearer token and client credentials auth.
 **Target resources:** Property, Member, Office, Media, OpenHouse, Showing,
 PropertyGreenVerification, PropertyPowerProduction, PropertyRooms, PropertyUnitTypes
 
-### ~~#18 — Fix DD 2.0 Compliance Test Failures~~
-**Package:** `reso-reference-server`
-**Status:** Closed
-
-~~DD 2.0 compliance tests now pass: 928 passed, 676 skipped, 0 variations.~~
-
-**Fixes applied:**
-- ~~Replaced `server-metadata.json` with `reso-certification-etl` DD 2.0 reference (fixes 6 `ID`→`Id` casing issues)~~
-- ~~Fixed expansion fields (HistoryTransactional, SocialMedia) returned without `$expand` — both PostgreSQL and MongoDB DALs~~
-- ~~Fixed data generator non-DD fields: removed MimeType, OpenHouse/Showing ResourceName/ResourceRecordKey, fixed Showing field names to DD 2.0 (ShowingStartTimestamp, ShowingEndTimestamp)~~
-- ~~Fixed DateTimeOffset fractional seconds in filter parser (replication phase `$filter` queries)~~
-
-**Remaining post-test issue:** Client credentials replication requires HTTPS tokenUri (tracked in #20)
-
-### ~~#22 — UI: Auto-Expand Field Groups Containing Validation Errors~~
-**Package:** `reso-reference-server/ui`
-**Status:** Closed
-
-~~When editing a Property record (or any resource with field groups), validation errors
-may be inside collapsed group sections. The error banner says "Please fix the 2 field
-errors highlighted below" but the user has to manually open each group to find which
-fields have errors.~~
-
-~~**Fix:** When validation errors occur (client-side or server-side), automatically expand
-any `FieldGroupSection` that contains a field with an error. Groups without errors
-can remain in their current collapsed/expanded state.~~
-
-~~Affected files:~~
-- ~~`ui/src/components/record-form.tsx` — pass error field names to determine which groups should be open~~
-- ~~`ui/src/components/field-group-section.tsx` — accept a `forceOpen` prop or similar to override collapsed state~~
-
-~~**Note:** Only applies to resources with field groups (e.g., Property). Resources without
-groups display fields in a flat list and are unaffected.~~
-
-### ~~#23 — UI: Pin Search Toolbar and Detail Header~~
-**Package:** `reso-reference-server/ui`
-**Status:** Closed
-
-~~On search pages, the resource title, search bar, sort buttons, and result count
-now stay pinned at the top while only the result cards scroll. On detail pages,
-the back link, title, and Edit/Delete buttons stay pinned while the content scrolls.
-Each page manages its own scroll container since `<main>` is now `overflow-hidden`.~~
-
-~~Affected files:~~
-- ~~`ui/src/components/layout.tsx` — `<main>` changed to `overflow-hidden`, padding removed~~
-- ~~`ui/src/pages/search-page.tsx` — flex layout with pinned toolbar + scrollable results~~
-- ~~`ui/src/components/results-list.tsx` — count display moved to search page~~
-- ~~`ui/src/pages/detail-page.tsx` — flex layout with pinned header + scrollable content~~
-- ~~`ui/src/pages/add-page.tsx`, `edit-page.tsx`, `delete-page.tsx`, `not-found-page.tsx`, `admin-layout.tsx` — scroll wrappers + padding~~
-
-### ~~#24 — Data Generator Improvements~~
-**Package:** `data-generator`, `reso-reference-server`
-**Status:** Closed
-
-~~Referentially correct multi-resource seed data with FK resolution, dependency
-graph, cycle breaking (Office ↔ Member), three output modes (HTTP/JSON/curl),
-CLI `--deps` flag, server `resolveDependencies` endpoint, and UI integration.
-Docker-verified on both PostgreSQL and MongoDB (892 records, 0 errors each).~~
-
-~~Sub-tasks 1–6 complete. Sub-task 7 (HistoryTransactional as child collection)
-deferred to a future ticket.~~
-
-### ~~#25 — UI: Expansion Cards for Navigation Properties~~
-**Package:** `reso-reference-server/ui`
-**Status:** Closed
-
-~~Inset cards in a collapsible "Related Records" section display field-value data
-for expanded navigation properties. To-one expansions show a single card with
-"View" link; to-many show paginated cards with back/next navigation. Each card
-uses a two-column, vertically scrollable field layout (max 4 rows). Also fixed
-nginx proxy missing Teams, TeamMembers, and OUID resources.~~
-
-~~Affected files:~~
-- ~~`ui/src/components/expanded-entity-card.tsx` — new component~~
-- ~~`ui/src/pages/detail-page.tsx` — filter expansions, render in Related Records section~~
-- ~~`ui/nginx.conf.template` — add Teams, TeamMembers, OUID to proxy allowlist~~
-
-### #26 — RESOScript Generation: Allow Null Parameters for Partial Resources
-**Package:** `reso-reference-server`
-
-Currently, if a resource cannot fill every required data type parameter (Integer,
-Decimal, Date, Timestamp, SingleValueLookup, MultipleValueLookup), it is skipped
-entirely during Web API Core compliance testing. Only Property has all types.
-
-Allow partial RESOScript generation so resources with some missing types can still
-run the tests they support (e.g., Member has timestamps and lookups but no integers).
-Requires either:
-- Conditional parameter omission with commander-side graceful skipping
-- Multiple RESOScript variants per resource (one per supported test subset)
-- Upstream commander changes to skip tests when parameters are blank
-
-### ~~#27 — RESOScript Generation: OData Edm.EnumType Namespace Support~~
-**Package:** `reso-reference-server`
-**Status:** Closed (delivered as part of #30)
-
-~~The RESOScript generator now resolves enum namespaces from `$metadata` in
-enum-type mode and populates `SingleValueLookupNamespace` and
-`MultipleValueLookupNamespace` accordingly. In string mode, these remain
-empty strings with `-DuseStringEnums=true`.~~
-
-### ~~#19 — Fix Web API Core 2.0.0 Compliance Test Failures~~
-**Package:** `reso-reference-server`
-**Status:** Closed
-
-~~All 42 applicable Web API Core 2.0.0 tests pass (3 skipped: `has` operator,
-N/A for string enumerations). Fixes: PostgreSQL numeric coercion, Edm.Date
-truncation, lambda any()/all() SQL + MongoDB translation, RESOScript generator
-improvements (date format, timestamp field selection, integer median, multi-value
-lookup population), fractional seconds in filter parser, service document endpoint.~~
-
 ### #20 — Client Credentials Compliance: HTTPS Token URI
 **Package:** `reso-reference-server`
 
@@ -348,46 +140,45 @@ Set up GitHub Actions for:
 - Cross-tool validation (reference server + test tool)
 - Publish packages to npm (when ready)
 
-### ~~#29 — Lookup Resource + Human-Friendly String Enumerations~~
-**Package:** `reso-reference-server`, `data-generator`
-**Status:** Closed
+### #26 — RESOScript Generation: Allow Null Parameters for Partial Resources
+**Package:** `reso-reference-server`
 
-~~The server now exposes a Lookup Resource per DD 2.0 Section 2.2 and uses
-human-friendly `StandardName` values for string enumerations.~~
+Currently, if a resource cannot fill every required data type parameter (Integer,
+Decimal, Date, Timestamp, SingleValueLookup, MultipleValueLookup), it is skipped
+entirely during Web API Core compliance testing. Only Property has all types.
 
-~~**Delivered:**~~
-- ~~`ENUM_MODE` environment variable (`string` | `enum-type`, default `string`)~~
-- ~~Lookup entity set in `$metadata` (EDMX) — 6 fields per DD 2.0 Section 2.2~~
-- ~~`/Lookup` OData endpoint (read-only: GET collection + GET by key, `$filter`, `$top`, `$skip`, `$count`)~~
-- ~~Auto-seed 3,611 Lookup records from `server-metadata.json` at startup (SHA-3 256 hash for LookupKey)~~
-- ~~Human-friendly `StandardName` values in data payloads and queries (string mode)~~
-- ~~Data generator updated to use human-friendly values when `ENUM_MODE=string`~~
-- ~~UI: browse/search Lookup resource (read-only, no editing)~~
-- ~~Service document and EDMX updated to include Lookup~~
-- ~~MongoDB `$ne` filter changed to exclude null-valued documents (SQL three-valued logic) — see #31 for spec review~~
-- ~~MongoDB `all()` lambda fixed to use correct "every element matches" semantics~~
-- ~~RESOScript generator: median value selection for dates/decimals, single-element collection preference for `all()` tests~~
-- ~~Web API Core 2.0.0: 42/42 passed on both PostgreSQL and MongoDB~~
+Allow partial RESOScript generation so resources with some missing types can still
+run the tests they support (e.g., Member has timestamps and lookups but no integers).
+Requires either:
+- Conditional parameter omission with commander-side graceful skipping
+- Multiple RESOScript variants per resource (one per supported test subset)
+- Upstream commander changes to skip tests when parameters are blank
 
-### ~~#30 — EnumType Mode (OData Edm.EnumType Support)~~
-**Package:** `reso-reference-server`, `data-generator`
-**Status:** Closed
+### #44 — EntityEvent (RCP-027) Compliance Testing Tool
+**Package:** `certification`
 
-~~Added `ENUM_MODE=enum-type` support as an alternative to string enumerations.
-When enabled, the server uses OData `Edm.EnumType` definitions in EDMX instead
-of `Edm.String` with `LookupName` annotations. Data payloads use PascalCase
-`lookupValue` identifiers (e.g., `"ActiveUnderContract"`). No Lookup Resource
-is needed in this mode.~~
+Native TypeScript compliance testing tool for the RESO EntityEvent Resource (RCP-027).
+Tests change tracking via monotonically increasing sequence numbers.
 
-~~**Delivered:**~~
-- ~~Second EDMX Schema block (`org.reso.metadata.enums`) with `<EnumType>` definitions~~
-- ~~Fields use fully-qualified enum type names instead of `Edm.String`~~
-- ~~EnumType members validated against OData SimpleIdentifier rules~~
-- ~~Data generator uses `lookupValue` (PascalCase) — existing behavior~~
-- ~~RESOScript generator: dual-mode field extraction, enum namespace parameters~~
-- ~~Compliance entrypoint: conditional `-DuseStringEnums=true` flag~~
-- ~~Docker Compose: `ENUM_MODE` env var passthrough for compliance services~~
-- ~~9 new enum-type EDMX tests (198 total)~~
+**Two modes:**
+- **Observe** — read-only, for third-party servers. Polls for new events with configurable timeout.
+- **Full** — write access, for reference server. Creates/updates/deletes a canary resource and
+  verifies corresponding EntityEvent records appear.
+
+**Scenarios (11 total):**
+- Both modes: metadata-valid, read-only-enforced, event-structure, sequence-monotonic,
+  query-filter, query-orderby-top-skip, query-count, incremental-sync
+- Full mode only: create-triggers-event, update-triggers-event, delete-triggers-event
+
+**Features:**
+- Batch data validation: fetches records referenced by EntityEvent entries using OData `in` operator,
+  validates against `$metadata` using lightweight Edm type checker
+- `--strict` flag: unknown fields are failures (default: warnings)
+- Compliance report generation with per-scenario details and data validation summary
+- Mock Express server for test isolation (same pattern as Add/Edit tool)
+- CLI subcommand: `reso-cert entity-event`
+
+**Status:** Implementation complete. 42 new tests (30 edm-validator + 6 runner + 6 compliance-report).
 
 ### #28 — Rewrite Web API Core Testing Tools
 **Package:** `certification`
@@ -419,11 +210,16 @@ will implement tests natively in TypeScript.
 **Multi-step plan:**
 1. Enumerate DD 2.0 test categories: metadata validation, field presence, data type checks,
    lookup value validation, schema validation, data availability/replication
-2. Implement metadata-driven field checks against the DD 2.0 reference spreadsheet
-3. Implement data replication validation (fetch records, validate against JSON schemas)
-4. Implement lookup value validation (enum values match DD 2.0 reference)
-5. Report generation matching existing DD compliance JSON format
-6. Docker Compose integration replacing the `reso-certification-utils` service
+2. **EDMX→JSON Schema generator** — Convert parsed `$metadata` EntityType definitions to
+   JSON Schema documents (Edm type→JSON Schema type mapping, nullable, maxLength, precision,
+   Collection→array, EnumType→enum). Use `ajv` for validation. This replaces the lightweight
+   Edm type checker used in EntityEvent compliance and becomes the shared schema validation
+   layer for all compliance tools.
+3. Implement metadata-driven field checks against the DD 2.0 reference spreadsheet
+4. Implement data replication validation (fetch records, validate against JSON schemas)
+5. Implement lookup value validation (enum values match DD 2.0 reference)
+6. Report generation matching existing DD compliance JSON format
+7. Docker Compose integration replacing the `reso-certification-utils` service
 
 **Prerequisite:** All current DD compliance tests must pass first (#18/#32, done).
 Web API Core rewrite (#28) should be completed first as a simpler starting point.
@@ -462,18 +258,6 @@ This means spec-compliant `ne` behavior will cause commander test failures for
 All other comparison operators (`eq`, `gt`, `ge`, `lt`, `le`), logical operators
 (`and`, `or`, `not`), null comparisons (`eq null`, `ne null`), lambda expressions,
 functions, and arithmetic match the OData 4.01 spec in both backends.
-
-### ~~#32 — DD 2.0 Compliance: Collection Nulls + Lookup/Data Generator Sync~~
-**Package:** `reso-reference-server`, `data-generator`
-**Status:** Closed
-
-~~Fixed all 2,012 DD 2.0 schema validation errors. Collection-valued fields now
-return `[]` instead of `null` across all three DALs. Data generator synced with
-DD lookup values for PropertyType, PropertySubType, City, StreetSuffix, and
-MemberDesignation. Added 24 lookup entries to `server-metadata.json` (total 3,634).
-DD 2.0 compliance: 1,034 passed, 0 failed, 0 schema errors, 0 variations.~~
-
----
 
 ---
 
@@ -522,39 +306,8 @@ Improve business rule display and handling in the UI. Add the ability to
 disable business rules when needed (e.g., for testing or data import scenarios
 where strict validation is not desired).
 
-### #40 — ✅ Closed: Human-Friendly Field Names in UI (v0.0.25)
-Implemented `getDisplayName(field)` using `RESO.OData.Metadata.StandardName`
-annotations with `fieldName` fallback. Applied across all UI surfaces: detail
-pages, results cards, advanced search, add/edit forms, sort buttons. Added
-tooltips on all truncated labels/values, pill chips for enum arrays, zebra
-stripes, floated media preview layout, and data generator input fix.
-
-### ~~#41 — Add/Edit Compliance Report Generation~~
-**Package:** `certification/add-edit`
-**Status:** Closed
-
-~~Structured compliance report generated after Add/Edit (RCP-010) testing.
-Report includes `description`, `version`, `generatedOn`, `outcome`, `remarks`,
-and per-scenario details (fields tested, enumerations, expansions, failures).~~
-
-~~**Delivered:**~~
-- ~~`compliance-report.ts` — report generator with per-scenario field/enum/expansion extraction~~
-- ~~CLI flags: `--compliance-report <path>`, `--spec-version <version>`~~
-- ~~`outcome`: `passed` if all scenarios pass, `failed` if any fail~~
-- ~~`remarks`: human-friendly summary of operations, response modes, resource, and field counts~~
-- ~~Per-scenario: field names (excluding keys, no values for privacy), enum values (DD standard), failure details~~
-- ~~11 new tests (60 total in add-edit package)~~
-- ~~Docker entrypoint updated for compliance report generation~~
-
 ### #39 — Improvement: HistoryTransactional Writer
 **Package:** `data-generator`, `reso-reference-server`
 
 Create a HistoryTransactional data writer that generates historical transaction
 records for properties. This was deferred from #24 (sub-task 7).
-
----
-
-### ~~#13 — Migrate TODOs to GitHub Issues~~
-~~Move items from this file into GitHub Issues with proper labels,
-milestones, and assignees once the repository is public.~~
-Tracking with ticket numbers in this file for now.
