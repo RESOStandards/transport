@@ -22,6 +22,8 @@ export const DataGeneratorPage = () => {
   // Form state
   const [selectedResource, setSelectedResource] = useState('Property');
   const [count, setCount] = useState(10);
+  const [countInput, setCountInput] = useState('10');
+  const [countError, setCountError] = useState<string | null>(null);
   const [relatedConfig, setRelatedConfig] = useState<Record<string, { enabled: boolean; count: number }>>({});
 
   // Generation state
@@ -166,12 +168,39 @@ export const DataGeneratorPage = () => {
               <input
                 id="count"
                 type="number"
-                value={count}
-                onChange={e => setCount(Math.max(1, Number(e.target.value)))}
+                value={countInput}
+                onChange={e => {
+                  setCountInput(e.target.value);
+                  const raw = e.target.value.trim();
+                  if (raw === '') {
+                    setCountError(null);
+                    return;
+                  }
+                  const n = Number(raw);
+                  if (!Number.isFinite(n) || !Number.isInteger(n)) {
+                    setCountError('Must be a whole number');
+                  } else if (n < 1) {
+                    setCountError('Must be at least 1');
+                  } else if (n > 10000) {
+                    setCountError('Maximum is 10,000');
+                  } else {
+                    setCountError(null);
+                    setCount(n);
+                  }
+                }}
+                onBlur={() => {
+                  const n = Math.max(1, Math.min(10000, Math.round(Number(countInput) || 1)));
+                  setCount(n);
+                  setCountInput(String(n));
+                  setCountError(null);
+                }}
                 min={1}
                 max={10000}
-                className="w-32 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className={`w-32 px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  countError ? 'border-red-400 dark:border-red-500' : 'border-gray-300 dark:border-gray-600'
+                }`}
               />
+              {countError && <p className="text-xs text-red-600 dark:text-red-400 mt-1">{countError}</p>}
             </div>
           </div>
 

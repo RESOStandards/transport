@@ -422,6 +422,68 @@ DD 2.0 compliance: 1,034 passed, 0 failed, 0 schema errors, 0 variations.~~
 
 ---
 
+---
+
+## UI
+
+### #33 — Bug: Scrolling Blocked When Advanced Search Is Active
+**Package:** `reso-reference-server/ui`
+
+When the Advanced Search bar is open, the main content area scroll is blocked.
+The user cannot scroll through results while the search panel is visible.
+
+### #34 — Improvement: Pin Action Buttons to Bottom of Content Pane
+**Package:** `reso-reference-server/ui`
+
+Action buttons (Save, Cancel, Delete, etc.) currently scroll with the content
+pane. They should be pinned to the bottom so they remain visible regardless of
+scroll position.
+
+### #35 — Improvement: Natural Language Filter Display + Edit Icon
+**Package:** `reso-reference-server/ui`
+
+Display the current OData `$filter` expression as a human-readable natural
+language summary (e.g., "ListPrice greater than $500,000 and City equals
+'Austin'"). Add an icon/button to switch to the raw OData filter expression
+editor.
+
+### #36 — Improvement: Add Basic Search
+**Package:** `reso-reference-server/ui`
+
+Add a basic search mode in addition to the existing advanced search. Basic
+search should provide a simple text input that searches across common fields
+(address, name, key, etc.) without requiring the user to build OData filter
+expressions.
+
+### #37 — Improvement: "Errors Only" Filter for Add/Edit Forms
+**Package:** `reso-reference-server/ui`
+
+When adding or editing records, provide an "Errors Only" toggle/filter that
+hides fields without validation errors, making it easier to find and fix
+problems in large forms.
+
+### #38 — Improvement: Business Rule Handling + Disable Option
+**Package:** `reso-reference-server/ui`, `validation`
+
+Improve business rule display and handling in the UI. Add the ability to
+disable business rules when needed (e.g., for testing or data import scenarios
+where strict validation is not desired).
+
+### #40 — ✅ Closed: Human-Friendly Field Names in UI (v0.0.25)
+Implemented `getDisplayName(field)` using `RESO.OData.Metadata.StandardName`
+annotations with `fieldName` fallback. Applied across all UI surfaces: detail
+pages, results cards, advanced search, add/edit forms, sort buttons. Added
+tooltips on all truncated labels/values, pill chips for enum arrays, zebra
+stripes, floated media preview layout, and data generator input fix.
+
+### #39 — Improvement: HistoryTransactional Writer
+**Package:** `data-generator`, `reso-reference-server`
+
+Create a HistoryTransactional data writer that generates historical transaction
+records for properties. This was deferred from #24 (sub-task 7).
+
+---
+
 ### ~~#13 — Migrate TODOs to GitHub Issues~~
 ~~Move items from this file into GitHub Issues with proper labels,
 milestones, and assignees once the repository is public.~~

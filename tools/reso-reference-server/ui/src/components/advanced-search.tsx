@@ -142,7 +142,7 @@ export const AdvancedSearch = ({ resource, fields, lookups, fieldGroups, filterS
         <div
           key={field.fieldName}
           className={`flex flex-col sm:flex-row gap-1 sm:gap-2 items-start sm:items-center py-2.5 px-2 rounded opacity-50 ${stripe}`}>
-          <span className="text-xs text-gray-600 dark:text-gray-400 w-full sm:w-56 shrink-0 truncate" title={field.fieldName}>
+          <span className="text-xs text-gray-600 dark:text-gray-400 w-full sm:w-56 shrink-0 truncate" title={getDisplayName(field)}>
             {getDisplayName(field)}
           </span>
           <span className="text-xs text-gray-400 dark:text-gray-500 italic">expansion — filtering not yet supported</span>

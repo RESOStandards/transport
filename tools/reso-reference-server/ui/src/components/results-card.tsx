@@ -42,22 +42,32 @@ export const ResultsCard = ({ resource, record, summaryFields, fieldMap, onClick
           {/* Key + primary info */}
           <div className="flex items-baseline gap-2 mb-1">
             <span className="text-xs text-gray-500 dark:text-gray-400">{keyField}:</span>
-            <span className="text-sm font-mono text-gray-700 dark:text-gray-300 truncate">{key}</span>
+            <span className="text-sm font-mono text-gray-700 dark:text-gray-300 truncate" title={key}>
+              {key}
+            </span>
           </div>
 
           {/* Address line for Property */}
-          {address && <div className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate mb-1">{address}</div>}
+          {address && (
+            <div className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate mb-1" title={address}>
+              {address}
+            </div>
+          )}
 
           {/* Summary fields in a responsive grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-0.5">
-            {displayFields.slice(0, 9).map(fieldName => (
-              <div key={fieldName} className="flex items-baseline gap-1 text-sm truncate">
-                <span className="text-gray-500 dark:text-gray-400 shrink-0">{getDisplayNameFromMap(fieldName, fieldMap)}:</span>
-                <span className="text-gray-800 dark:text-gray-200 truncate">
-                  {formatFieldValue(record[fieldName], fieldMap.get(fieldName))}
-                </span>
-              </div>
-            ))}
+            {displayFields.slice(0, 9).map(fieldName => {
+              const formatted = formatFieldValue(record[fieldName], fieldMap.get(fieldName));
+              return (
+                <div
+                  key={fieldName}
+                  className="flex items-baseline gap-1 text-sm truncate"
+                  title={`${getDisplayNameFromMap(fieldName, fieldMap)}: ${formatted}`}>
+                  <span className="text-gray-500 dark:text-gray-400 shrink-0">{getDisplayNameFromMap(fieldName, fieldMap)}:</span>
+                  <span className="text-gray-800 dark:text-gray-200 truncate">{formatted}</span>
+                </div>
+              );
+            })}
           </div>
 
           {displayFields.length > 9 && (

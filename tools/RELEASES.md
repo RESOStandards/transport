@@ -2,6 +2,37 @@
 
 ---
 
+## v0.0.25 — 2026-03-05
+
+### UI: Human-Friendly Field Names, Detail Page Improvements (#40)
+
+Display human-friendly field names throughout the UI using
+`RESO.OData.Metadata.StandardName` annotations, with fallback to raw field names.
+
+**Human-friendly display names (#40):**
+- Added `getDisplayName(field)` and `getDisplayNameFromMap(fieldName, fieldMap)`
+  utilities to extract `StandardName` annotations — O(1) via `Map.get()` lookup
+- Applied across all UI surfaces: detail pages, search results cards, advanced
+  search form, add/edit form labels, sort-by buttons
+- Labels show display name with tooltip; raw `fieldName` no longer exposed in UI
+
+**Detail page layout improvements:**
+- Enum array values render as bordered pill chips instead of truncated
+  comma-separated strings
+- Zebra-striped rows on field lists (light/dark mode compatible)
+- Media preview floated right with fields flowing around and below it, replacing
+  the rigid 50/50 split — gives fields full width and eliminates value truncation
+- Summary header (key, timestamp, address) separated into its own card
+- Tooltips on all truncated labels and values site-wide (detail, results cards,
+  advanced search, form inputs)
+
+**Data generator fix:**
+- Number-of-records input now allows clearing and retyping (was stuck at 1)
+- Added inline validation with error messages for non-numeric, fractional, or
+  out-of-range values
+
+---
+
 ## v0.0.24 — 2026-03-05
 
 ### DD 2.0 Compliance: Collection Nulls + Lookup/Data Generator Sync (#32)

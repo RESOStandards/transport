@@ -22,7 +22,7 @@ export const FieldInput = ({ field, value, onChange, lookups, disabled = false, 
   if (isEnumType(field.type) && lookups && lookups.length > 0) {
     return (
       <div>
-        <label htmlFor={id} className="block text-xs text-gray-500 dark:text-gray-400 mb-0.5" title={field.fieldName}>
+        <label htmlFor={id} className="block text-xs text-gray-500 dark:text-gray-400 mb-0.5" title={getDisplayName(field)}>
           {getDisplayName(field)}
         </label>
         <select
@@ -55,7 +55,7 @@ export const FieldInput = ({ field, value, onChange, lookups, disabled = false, 
             disabled={disabled}
             className="rounded border-gray-300 dark:border-gray-600"
           />
-          <span className="text-gray-700 dark:text-gray-300" title={field.fieldName}>
+          <span className="text-gray-700 dark:text-gray-300" title={getDisplayName(field)}>
             {getDisplayName(field)}
           </span>
         </label>
@@ -68,7 +68,7 @@ export const FieldInput = ({ field, value, onChange, lookups, disabled = false, 
   if (field.type === 'Edm.Date') {
     return (
       <div>
-        <label htmlFor={id} className="block text-xs text-gray-500 dark:text-gray-400 mb-0.5" title={field.fieldName}>
+        <label htmlFor={id} className="block text-xs text-gray-500 dark:text-gray-400 mb-0.5" title={getDisplayName(field)}>
           {getDisplayName(field)}
         </label>
         <input
@@ -88,7 +88,7 @@ export const FieldInput = ({ field, value, onChange, lookups, disabled = false, 
   if (field.type === 'Edm.DateTimeOffset') {
     return (
       <div>
-        <label htmlFor={id} className="block text-xs text-gray-500 dark:text-gray-400 mb-0.5" title={field.fieldName}>
+        <label htmlFor={id} className="block text-xs text-gray-500 dark:text-gray-400 mb-0.5" title={getDisplayName(field)}>
           {getDisplayName(field)}
         </label>
         <input
@@ -113,7 +113,7 @@ export const FieldInput = ({ field, value, onChange, lookups, disabled = false, 
         : '1';
     return (
       <div>
-        <label htmlFor={id} className="block text-xs text-gray-500 dark:text-gray-400 mb-0.5" title={field.fieldName}>
+        <label htmlFor={id} className="block text-xs text-gray-500 dark:text-gray-400 mb-0.5" title={getDisplayName(field)}>
           {getDisplayName(field)}
         </label>
         <input
@@ -133,7 +133,7 @@ export const FieldInput = ({ field, value, onChange, lookups, disabled = false, 
   // Default: string input
   return (
     <div>
-      <label htmlFor={id} className="block text-xs text-gray-500 mb-0.5" title={field.fieldName}>
+      <label htmlFor={id} className="block text-xs text-gray-500 mb-0.5" title={getDisplayName(field)}>
         {getDisplayName(field)}
       </label>
       <input

@@ -4,3 +4,5 @@ node_modules/
 dist/
 results.*
 lefthook-local.yml
+tools/PLAN.md
+tools/PR.md
