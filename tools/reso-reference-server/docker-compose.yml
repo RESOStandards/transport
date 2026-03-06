@@ -16,6 +16,7 @@ services:
       METADATA_PATH: ./server-metadata.json
       BASE_URL: http://localhost:8080
       ENUM_MODE: string
+      ENTITY_EVENT: ${ENTITY_EVENT:-false}
     depends_on:
       db:
         condition: service_healthy
@@ -109,6 +110,7 @@ services:
       METADATA_PATH: ./server-metadata.json
       BASE_URL: http://localhost:8080
       ENUM_MODE: string
+      ENTITY_EVENT: ${ENTITY_EVENT:-false}
     depends_on:
       mongodb:
         condition: service_healthy
@@ -176,6 +178,7 @@ services:
       METADATA_PATH: ./server-metadata.json
       BASE_URL: http://localhost:8080
       ENUM_MODE: string
+      ENTITY_EVENT: ${ENTITY_EVENT:-false}
     volumes:
       - sqlitedata:/data
     healthcheck:

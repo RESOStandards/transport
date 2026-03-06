@@ -11,6 +11,9 @@ export interface ServerConfig {
   readonly port: number;
   readonly dbBackend: DbBackend;
   readonly enumMode: EnumMode;
+  readonly entityEvent: boolean;
+  readonly entityEventResourceRecordUrl: boolean;
+  readonly compactionIntervalMs: number;
   readonly databaseUrl: string;
   readonly mongodbUrl: string;
   readonly sqliteDbPath: string;
@@ -28,6 +31,9 @@ export const loadConfig = (): ServerConfig => {
   const sqliteDbPath = process.env.SQLITE_DB_PATH ?? resolve(import.meta.dirname, '../reso_reference.db');
   const metadataPath = process.env.METADATA_PATH ?? resolve(import.meta.dirname, '../server-metadata.json');
   const baseUrl = process.env.BASE_URL ?? `http://localhost:${port}`;
+  const entityEvent = process.env.ENTITY_EVENT === 'true';
+  const entityEventResourceRecordUrl = process.env.ENTITY_EVENT_RESOURCE_RECORD_URL === 'true';
+  const compactionIntervalMs = Number(process.env.COMPACTION_INTERVAL_MS ?? 3600000);
 
   if (dbBackend !== 'postgres' && dbBackend !== 'mongodb' && dbBackend !== 'sqlite') {
     throw new Error(`Invalid DB_BACKEND: ${dbBackend}. Must be "postgres", "mongodb", or "sqlite".`);
@@ -37,5 +43,17 @@ export const loadConfig = (): ServerConfig => {
     throw new Error(`Invalid ENUM_MODE: ${enumMode}. Must be "string" or "enum-type".`);
   }
 
-  return { port, dbBackend, enumMode, databaseUrl, mongodbUrl, sqliteDbPath, metadataPath, baseUrl };
+  return {
+    port,
+    dbBackend,
+    enumMode,
+    entityEvent,
+    entityEventResourceRecordUrl,
+    compactionIntervalMs,
+    databaseUrl,
+    mongodbUrl,
+    sqliteDbPath,
+    metadataPath,
+    baseUrl
+  };
 };

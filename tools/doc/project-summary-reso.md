@@ -21,6 +21,7 @@ Key capabilities:
 - **3,634 lookup values** from the DD 2.0 reference metadata
 - **Server-driven pagination** with `@odata.nextLink`
 - **EDMX metadata** and OData service document generation from DD metadata
+- **EntityEvent Resource (RCP-027)** — opt-in change tracking via monotonically increasing sequence numbers. DAL decorator pattern captures all writes (API, seeding, admin). Database-native auto-increment (PG BIGSERIAL, SQLite AUTOINCREMENT, MongoDB atomic counter). Scheduled compaction removes superseded events. Read-only OData resource with standard query options.
 
 ### Enumeration Modes
 
@@ -57,6 +58,7 @@ Docker-based integration with the RESO Commander and a custom Add/Edit test runn
 - **Web API Core 2.0.0** — 42 passed, 0 failed, 3 skipped (45 specification tests)
 - **Data Dictionary 2.0** — 1,034 passed, 570 skipped, 0 failed, 0 schema validation errors
 - **Add/Edit (RCP-010)** — 8 passed, 0 failed. Structured JSON compliance report generation with per-scenario details
+- **EntityEvent (RCP-027)** — manual testing verified on SQLite and MongoDB backends. Compliance testing tool planned.
 - **Both enum modes** tested independently via `ENUM_MODE` environment variable
 - **PATCH validation** — Partial updates skip required-field checks (`skipRequired` parameter)
 - Configurable via Docker Compose profiles (`compliance-core`, `compliance-dd`, `compliance-addedit`)
@@ -77,7 +79,7 @@ Docker-based integration with the RESO Commander and a custom Add/Edit test runn
 - **ESM modules** with Node16 resolution (`.js` import extensions)
 - **Shared metadata** — DD 2.0 JSON metadata drives server schema, EDMX generation, data generation, and validation
 - **DAL abstraction** — `CollectionResult { value, count? }` interface with PostgreSQL (CTE-based pagination + LEFT JOIN expand), MongoDB (cursor pagination + batch `$in` expand), and SQLite adapters
-- **718 automated tests** across 7 packages
+- **735 automated tests** across 7 packages
 - **Biome** for linting/formatting, **Lefthook** for pre-commit hooks
 
 ## Certification Status
@@ -91,7 +93,7 @@ The reference server has passed **RESO Certification** for Web API Core 2.0.0, D
 | Feature | RCP | Description |
 |---------|-----|-------------|
 | Validation Expressions | RCP-019 | Server-side validation expression evaluation and client exposure via metadata annotations |
-| EntityEvent | RCP-027 | Change tracking and event notification support for incremental data synchronization |
+| ~~EntityEvent~~ | ~~RCP-027~~ | ~~Change tracking — delivered in v0.0.27. Compliance testing tool planned.~~ |
 | Webhooks | RCP-028 | Push-based notification delivery for real-time data change subscriptions |
 
 ---
@@ -116,4 +118,7 @@ docker compose --profile compliance-dd up compliance-dd
 
 # Enum-type mode
 ENUM_MODE=enum-type docker compose up -d --build
+
+# Enable EntityEvent change tracking
+ENTITY_EVENT=true docker compose up -d --build
 ```

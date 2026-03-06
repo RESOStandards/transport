@@ -51,6 +51,7 @@ We integrated with RESO's official certification tools (the RESO Commander) and 
 - Generates structured JSON compliance reports for API submission
 - Supports both Docker-based and local testing workflows
 - Tests both enumeration modes (string-based and OData EnumType — see below)
+- Tracks all write operations (creates, updates, deletes) as EntityEvent records for change notification support (RCP-027)
 
 ### 5. Reusable Code Libraries
 
@@ -69,6 +70,10 @@ Real estate data uses thousands of standardized values (like property types: "Re
 
 Both modes are fully functional and independently testable, giving implementers flexibility in how they build their systems.
 
+### 7. Change Tracking (EntityEvent)
+
+The server tracks every data change — every record created, updated, or deleted — in an EntityEvent log. Each event gets a unique, ever-increasing sequence number. This allows consumers to ask "what changed since I last checked?" by querying for events with a sequence number higher than the one they last saw. The system also periodically compacts the log, keeping only the latest event per record to prevent unbounded growth. This feature is opt-in and works across all three database backends.
+
 ---
 
 ## By the Numbers
@@ -76,7 +81,7 @@ Both modes are fully functional and independently testable, giving implementers 
 | Metric | Value |
 |--------|-------|
 | Packages built | 7 |
-| Automated tests | 718 |
+| Automated tests | 735 |
 | Database backends | 3 (PostgreSQL, MongoDB, SQLite) |
 | RESO resources supported | 13 |
 | Data Dictionary fields | 1,727 |
@@ -84,7 +89,7 @@ Both modes are fully functional and independently testable, giving implementers 
 | Web API Core tests passing | 42/42 |
 | DD 2.0 compliance checks | 1,034 passed, 0 failed |
 | Add/Edit (RCP-010) scenarios | 8 passed, 0 failed |
-| Releases | 26 (v0.0.1 – v0.0.26) |
+| Releases | 27 (v0.0.1 – v0.0.27) |
 
 ---
 

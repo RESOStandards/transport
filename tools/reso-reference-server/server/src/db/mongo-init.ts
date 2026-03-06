@@ -5,7 +5,7 @@
  * is schemaless so we only create indexes (no DDL).
  */
 
-import type { Db } from 'mongodb';
+import type { Db, Document } from 'mongodb';
 
 /** Resource specification for MongoDB index creation. */
 export interface MongoResourceSpec {
@@ -33,5 +33,11 @@ export const initializeMongoCollections = async (db: Db, resourceSpecs: Readonly
     if (spec.hasResourceRecordKey) {
       await collection.createIndex({ ResourceName: 1, ResourceRecordKey: 1 }, { name: `idx_${spec.resourceName}_fk` });
     }
+  }
+
+  // EntityEvent counter for monotonic sequence generation
+  if (resourceSpecs.some(s => s.resourceName === 'EntityEvent')) {
+    const counters = db.collection('counters');
+    await counters.updateOne({ _id: 'EntityEventSequence' } as Document, { $setOnInsert: { seq: 0 } }, { upsert: true });
   }
 };

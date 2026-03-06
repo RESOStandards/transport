@@ -100,6 +100,31 @@ Lightweight option requiring no external database — ideal for local developmen
 
 ## Medium Priority
 
+### ~~#43 — EntityEvent Resource (RCP-27)~~
+**Package:** `reso-reference-server`
+**Status:** Closed
+
+~~Add the RESO EntityEvent Resource (RCP-27) for change tracking via monotonically
+increasing sequence numbers. Every Create, Update, or Delete operation on the server
+writes an EntityEvent entry with the affected ResourceName, ResourceRecordKey, and a
+database-managed auto-increment EntityEventSequence.~~
+
+~~**Delivered:**~~
+- ~~`ENTITY_EVENT=true` env var (opt-in, disabled by default)~~
+- ~~`ENTITY_EVENT_RESOURCE_RECORD_URL=true` env var (optional ResourceRecordUrl field)~~
+- ~~DAL decorator pattern — wraps any backend to intercept all writes (including seeding)~~
+- ~~Database-native auto-increment sequences (PG BIGSERIAL, SQLite AUTOINCREMENT, MongoDB counter)~~
+- ~~EntityEvent exposed as read-only OData resource (GET collection + GET by key, no POST/PATCH/DELETE)~~
+- ~~Compaction scheduler: removes duplicate (ResourceName, ResourceRecordKey) entries, keeps latest~~
+- ~~`COMPACTION_INTERVAL_MS` env var (default 1 hour, 0 = disabled)~~
+- ~~Docker Compose: `${ENTITY_EVENT:-false}` passthrough on all 3 server services~~
+- ~~17 new tests (215 total, 735 across all packages)~~
+- ~~Manual testing: SQLite + MongoDB confirmed working~~
+
+**Future work:**
+- HistoryTransactional integration (shared DAL write module)
+- Compliance testing for EntityEvent queries
+
 ### #4 — Batch Operations (`$batch`)
 **Package:** `odata-client`, `reso-reference-server`
 

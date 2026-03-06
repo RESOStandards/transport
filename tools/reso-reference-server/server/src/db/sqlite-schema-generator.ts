@@ -35,7 +35,12 @@ export const edmTypeToSqlite = (field: ResoField): string => {
 
 /** Generates a CREATE TABLE IF NOT EXISTS DDL statement for a resource. */
 export const generateCreateTable = (resourceName: string, keyField: string, fields: ReadonlyArray<ResoField>): string => {
+  const isEntityEvent = resourceName === 'EntityEvent';
+
   const columns = fields.map(field => {
+    if (isEntityEvent && field.fieldName === keyField) {
+      return `  "${field.fieldName}" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT`;
+    }
     const sqlType = edmTypeToSqlite(field);
     const pk = field.fieldName === keyField ? ' PRIMARY KEY' : '';
     const nullable = field.fieldName === keyField ? ' NOT NULL' : '';

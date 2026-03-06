@@ -44,7 +44,12 @@ export const edmTypeToSql = (field: ResoField): string => {
 
 /** Generates a CREATE TABLE IF NOT EXISTS DDL statement for a resource. */
 export const generateCreateTable = (resourceName: string, keyField: string, fields: ReadonlyArray<ResoField>): string => {
+  const isEntityEvent = resourceName === 'EntityEvent';
+
   const columns = fields.map(field => {
+    if (isEntityEvent && field.fieldName === keyField) {
+      return `  "${field.fieldName}" BIGSERIAL NOT NULL PRIMARY KEY`;
+    }
     const sqlType = edmTypeToSql(field);
     const pk = field.fieldName === keyField ? ' PRIMARY KEY' : '';
     const nullable = field.fieldName === keyField ? ' NOT NULL' : '';
@@ -61,4 +66,16 @@ export const generateSchema = (
     readonly keyField: string;
     readonly fields: ReadonlyArray<ResoField>;
   }>
-): ReadonlyArray<string> => resourceFields.map(({ resourceName, keyField, fields }) => generateCreateTable(resourceName, keyField, fields));
+): ReadonlyArray<string> => {
+  const statements: string[] = [];
+
+  for (const { resourceName, keyField, fields } of resourceFields) {
+    statements.push(generateCreateTable(resourceName, keyField, fields));
+
+    if (resourceName === 'EntityEvent') {
+      statements.push('CREATE INDEX IF NOT EXISTS "idx_EntityEvent_resource" ON "EntityEvent" ("ResourceName", "ResourceRecordKey");');
+    }
+  }
+
+  return statements;
+};

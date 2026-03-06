@@ -2,6 +2,61 @@
 
 ---
 
+## v0.0.27 — 2026-03-06
+
+### EntityEvent Resource — RCP-27 (#43)
+
+Adds the RESO EntityEvent Resource for change tracking via monotonically
+increasing sequence numbers. Every Create, Update, or Delete operation on the
+server automatically writes an EntityEvent record with the affected ResourceName,
+ResourceRecordKey, and a database-managed auto-increment EntityEventSequence.
+
+**Core implementation:**
+- DAL decorator pattern — wraps any `DataAccessLayer` to intercept all writes
+  (including seeding and admin data generation) without modifying handler code
+- Database-native auto-increment sequences: PostgreSQL `BIGSERIAL`, SQLite
+  `AUTOINCREMENT`, MongoDB atomic counter collection
+- `EntityEventWriter` interface — backend-agnostic abstraction for event persistence
+- EntityEvent exposed as read-only OData resource (GET collection + GET by key,
+  `$filter`, `$orderby`, `$top`, `$skip`, `$count` — no POST/PATCH/DELETE)
+- Opt-in via `ENTITY_EVENT=true` environment variable (disabled by default)
+
+**Compaction:**
+- `CompactionRunner` removes duplicate (ResourceName, ResourceRecordKey) entries,
+  keeping only the highest EntityEventSequence per pair
+- Scheduled via `setInterval` with configurable interval (`COMPACTION_INTERVAL_MS`,
+  default 1 hour, 0 = disabled)
+- PostgreSQL/SQLite: single `DELETE ... NOT IN (SELECT MAX(...) GROUP BY ...)`
+- MongoDB: `$group` aggregation + `deleteMany`
+
+**Configuration:**
+- `ENTITY_EVENT=true` — enable EntityEvent tracking
+- `ENTITY_EVENT_RESOURCE_RECORD_URL=true` — include optional ResourceRecordUrl field
+- `COMPACTION_INTERVAL_MS=3600000` — compaction interval (default 1 hour)
+
+**Docker Compose:**
+- All three server services (PostgreSQL, MongoDB, SQLite) pass through `ENTITY_EVENT`
+  via `${ENTITY_EVENT:-false}` — enable from the shell:
+  `ENTITY_EVENT=true docker compose --profile mongodb up -d mongodb server-mongo ui-mongo`
+
+**Schema:**
+- PostgreSQL: `BIGSERIAL NOT NULL PRIMARY KEY` + `idx_EntityEvent_resource` index
+- SQLite: `INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT` + existing FK index pattern
+- MongoDB: `counters` collection with atomic sequence + unique index on EntityEventSequence
+
+**Tests:**
+- 17 new tests covering DAL decorator (insert/update/delete event capture, recursion
+  guard, passthrough reads, URL encoding), compaction (timer, stop, error handling),
+  and schema generation (BIGSERIAL, AUTOINCREMENT, index)
+- 215 total reference server tests (198 existing + 17 new)
+- 735 total across all packages
+
+**Security audit:** No issues found. All SQL uses parameterized queries, MongoDB uses
+structured document operations, auth inherited from existing middleware, no new attack
+surface. npm audit: 5 moderate (dev-only: vitest/vite/esbuild).
+
+---
+
 ## v0.0.26 — 2026-03-06
 
 ### Add/Edit Compliance Report + PATCH Validation Fix (#41)

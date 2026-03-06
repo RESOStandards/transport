@@ -6,6 +6,15 @@ import { loadAuthConfig } from './auth/config.js';
 import { createMockOAuthRouter } from './auth/mock-oauth.js';
 import { loadConfig } from './config.js';
 import type { DataAccessLayer } from './db/data-access.js';
+import type { CompactionRunner } from './db/entity-event-compaction.js';
+import {
+  createMongoCompactionRunner,
+  createPostgresCompactionRunner,
+  createSqliteCompactionRunner,
+  startCompaction
+} from './db/entity-event-compaction.js';
+import { createEntityEventDal } from './db/entity-event-dal.js';
+import { createMongoEntityEventWriter, createPostgresEntityEventWriter, createSqliteEntityEventWriter } from './db/entity-event-writers.js';
 import { runMigrations } from './db/migrate.js';
 import { createPool } from './db/pool.js';
 import { createPostgresDal } from './db/postgres-dal.js';
@@ -24,17 +33,25 @@ const main = async (): Promise<void> => {
   console.log(`  Port: ${config.port}`);
   console.log(`  Backend: ${config.dbBackend}`);
   console.log(`  Enum mode: ${config.enumMode}`);
+  console.log(`  EntityEvent: ${config.entityEvent ? 'enabled' : 'disabled'}`);
   console.log(`  Metadata: ${config.metadataPath}`);
 
   // Load metadata
   const metadata = await loadMetadata(config.metadataPath);
   console.log(`Loaded RESO metadata v${metadata.version}: ${metadata.fields.length} fields, ${metadata.lookups.length} lookups`);
 
-  // Build active resource list — include Lookup in string enum mode
-  const activeResources: ReadonlyArray<string> = config.enumMode === 'string' ? [...TARGET_RESOURCES, 'Lookup'] : TARGET_RESOURCES;
+  // Build active resource list — include Lookup in string enum mode, EntityEvent when enabled
+  const activeResources: ReadonlyArray<string> = [
+    ...TARGET_RESOURCES,
+    ...(config.enumMode === 'string' ? ['Lookup'] : []),
+    ...(config.entityEvent ? ['EntityEvent'] : [])
+  ];
 
   // Read-only resources should not have POST/PATCH/DELETE routes
-  const readOnlyResources: ReadonlySet<string> = new Set(config.enumMode === 'string' ? ['Lookup'] : []);
+  const readOnlyResources: ReadonlySet<string> = new Set([
+    ...(config.enumMode === 'string' ? ['Lookup'] : []),
+    ...(config.entityEvent ? ['EntityEvent'] : [])
+  ]);
 
   const resourceSpecs = activeResources
     .map(resource => ({
@@ -46,6 +63,7 @@ const main = async (): Promise<void> => {
 
   // Create data access layer based on configured backend
   let dal: DataAccessLayer;
+  let compactionRunner: CompactionRunner | undefined;
 
   if (config.dbBackend === 'mongodb') {
     console.log(`  MongoDB: ${config.mongodbUrl.replace(/\/\/.*@/, '//***@')}`);
@@ -67,6 +85,13 @@ const main = async (): Promise<void> => {
     console.log('MongoDB initialization complete.');
 
     dal = createMongoDal(db);
+    if (config.entityEvent) {
+      dal = createEntityEventDal(dal, createMongoEntityEventWriter(db), {
+        baseUrl: config.baseUrl,
+        includeResourceRecordUrl: config.entityEventResourceRecordUrl
+      });
+      compactionRunner = createMongoCompactionRunner(db);
+    }
   } else if (config.dbBackend === 'sqlite') {
     console.log(`  SQLite: ${config.sqliteDbPath}`);
     const { createSqliteDb } = await import('./db/sqlite-pool.js');
@@ -81,6 +106,13 @@ const main = async (): Promise<void> => {
     console.log(`SQLite schema initialized (${ddl.length} statements).`);
 
     dal = createSqliteDal(sqliteDb);
+    if (config.entityEvent) {
+      dal = createEntityEventDal(dal, createSqliteEntityEventWriter(sqliteDb), {
+        baseUrl: config.baseUrl,
+        includeResourceRecordUrl: config.entityEventResourceRecordUrl
+      });
+      compactionRunner = createSqliteCompactionRunner(sqliteDb);
+    }
   } else {
     console.log(`  PostgreSQL: ${config.databaseUrl.replace(/\/\/.*@/, '//***@')}`);
     const pool = createPool(config.databaseUrl);
@@ -90,6 +122,19 @@ const main = async (): Promise<void> => {
     console.log('Database migrations complete.');
 
     dal = createPostgresDal(pool);
+    if (config.entityEvent) {
+      dal = createEntityEventDal(dal, createPostgresEntityEventWriter(pool), {
+        baseUrl: config.baseUrl,
+        includeResourceRecordUrl: config.entityEventResourceRecordUrl
+      });
+      compactionRunner = createPostgresCompactionRunner(pool);
+    }
+  }
+
+  // Start EntityEvent compaction scheduler
+  if (compactionRunner && config.compactionIntervalMs > 0) {
+    startCompaction(compactionRunner, config.compactionIntervalMs);
+    console.log(`EntityEvent compaction scheduled every ${config.compactionIntervalMs}ms.`);
   }
 
   // Auto-seed Lookup resource from metadata in string enum mode

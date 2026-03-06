@@ -17,6 +17,7 @@ and compliance testing tools.
    - [Field Selection](#field-selection)
    - [Expanding Related Records](#expanding-related-records)
    - [Lookup Resource](#lookup-resource)
+   - [EntityEvent Resource](#entityevent-resource)
    - [Creating Records](#creating-records)
    - [Updating Records](#updating-records)
    - [Deleting Records](#deleting-records)
@@ -327,6 +328,59 @@ The Lookup Resource supports standard OData query options (`$filter`, `$select`,
 `$orderby`, `$top`, `$skip`, `$count`) but is read-only — POST, PATCH, and
 DELETE are not available.
 
+### EntityEvent Resource
+
+When EntityEvent tracking is enabled (`ENTITY_EVENT=true`), every Create, Update,
+and Delete operation on the server automatically writes an EntityEvent record with
+a monotonically increasing sequence number. This allows consumers to detect what
+has changed since their last sync.
+
+```bash
+# Get the 10 most recent entity events
+curl 'http://localhost:8080/EntityEvent?$orderby=EntityEventSequence%20desc&$top=10' \
+  -H 'Authorization: Bearer test-token'
+```
+
+**Response:**
+
+```json
+{
+  "@odata.context": "http://localhost:8080/$metadata#EntityEvent",
+  "value": [
+    {
+      "EntityEventSequence": 4521,
+      "ResourceName": "Property",
+      "ResourceRecordKey": "702851eb-ac15-40f4-8c00-3256edf538e5"
+    },
+    {
+      "EntityEventSequence": 4520,
+      "ResourceName": "Member",
+      "ResourceRecordKey": "c8fa2607-7b0f-4919-bfe3-1431295586b1"
+    }
+  ]
+}
+```
+
+```bash
+# Get all events since a known sequence number (incremental sync)
+curl 'http://localhost:8080/EntityEvent?$filter=EntityEventSequence%20gt%204500&$orderby=EntityEventSequence%20asc' \
+  -H 'Authorization: Bearer test-token'
+
+# Filter events for a specific resource
+curl 'http://localhost:8080/EntityEvent?$filter=ResourceName%20eq%20%27Property%27&$orderby=EntityEventSequence%20desc&$top=5' \
+  -H 'Authorization: Bearer test-token'
+```
+
+The EntityEvent resource is read-only — POST, PATCH, and DELETE are not available.
+
+**Configuration:**
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `ENTITY_EVENT` | `false` | Enable EntityEvent tracking |
+| `ENTITY_EVENT_RESOURCE_RECORD_URL` | `false` | Include optional ResourceRecordUrl field |
+| `COMPACTION_INTERVAL_MS` | `3600000` | Compaction interval in ms (0 = disabled) |
+
 ### Creating Records
 
 ```bash
@@ -549,6 +603,9 @@ Three backends are available, selectable via Docker Compose profiles:
 ```bash
 docker compose up -d --build
 docker compose --profile seed up seed
+
+# With EntityEvent tracking
+ENTITY_EVENT=true docker compose up -d --build
 ```
 
 ### MongoDB
@@ -556,6 +613,9 @@ docker compose --profile seed up seed
 ```bash
 docker compose --profile mongodb up -d mongodb server-mongo ui-mongo
 docker compose --profile seed-mongo up seed-mongo
+
+# With EntityEvent tracking
+ENTITY_EVENT=true docker compose --profile mongodb up -d mongodb server-mongo ui-mongo
 ```
 
 Server runs on port 8080 (or 8081 if both profiles are active).
@@ -565,6 +625,9 @@ Server runs on port 8080 (or 8081 if both profiles are active).
 ```bash
 docker compose --profile sqlite up -d
 docker compose --profile sqlite --profile seed-sqlite up seed-sqlite
+
+# With EntityEvent tracking
+ENTITY_EVENT=true docker compose --profile sqlite up -d
 ```
 
 Lightweight option with no external database process — ideal for local
