@@ -1,0 +1,24 @@
+---
+layout: default
+---
+<div style="margin-bottom: 1rem;">
+  <a href="{{ '/' | relative_url }}" class="view-link">&larr; Back to all specifications</a>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h3>{{ page.title }}</h3>
+    {% if page.status == "Ratified" %}
+      <span class="badge badge-green">{{ page.rcp }} &middot; v{{ page.version }}</span>
+    {% elsif page.status == "Approved" %}
+      <span class="badge badge-blue">{{ page.rcp }} &middot; v{{ page.version }}</span>
+    {% elsif page.status == "Draft" %}
+      <span class="badge badge-orange">{{ page.rcp }} &middot; v{{ page.version }}</span>
+    {% elsif page.rcp %}
+      <span class="badge badge-navy">{{ page.rcp }} &middot; v{{ page.version }}</span>
+    {% endif %}
+  </div>
+  <div class="card-body content">
+    {{ content }}
+  </div>
+</div>

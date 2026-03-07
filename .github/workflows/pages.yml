@@ -1,0 +1,94 @@
+name: GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate proposal pages from markdown specs
+        run: |
+          mkdir -p .github/pages/_proposals
+
+          # Ratified specifications with metadata
+          declare -A specs
+          specs=(
+            ["web-api-core"]="Web API Core|RCP-37|2.1.0|Ratified"
+            ["web-api-add-edit"]="Web API Add/Edit|RCP-10|2.0.0|Ratified"
+            ["data-dictionary"]="Data Dictionary|RCP-36|2.0|Ratified"
+            ["entity-events"]="EntityEvent Resource and Replication|RCP-27|2.0.2|Ratified"
+            ["webhooks-push"]="Push Replication with Webhooks|RCP-28|1.0.1|Ratified"
+            ["reso-common-format"]="RESO Common Format|RCP-25|1.7|Ratified"
+            ["validation-expressions"]="Validation Expressions|RCP-19|1.0.0|Ratified"
+          )
+
+          for slug in "${!specs[@]}"; do
+            IFS='|' read -r title rcp version status <<< "${specs[$slug]}"
+            if [ -f "proposals/$slug.md" ]; then
+              cat > ".github/pages/_proposals/$slug.md" <<FRONT
+          ---
+          title: "$title"
+          rcp: "$rcp"
+          version: "$version"
+          status: "$status"
+          layout: proposal
+          permalink: /proposals/$slug/
+          ---
+
+          FRONT
+              cat "proposals/$slug.md" >> ".github/pages/_proposals/$slug.md"
+            fi
+          done
+
+          # Top-level docs (RCP process, versioning, certification)
+          for doc in reso-rcp-process versioning certification-reso-analytics; do
+            if [ -f "$doc.md" ]; then
+              title=$(head -1 "$doc.md" | sed 's/^#* //')
+              cat > ".github/pages/_proposals/$doc.md" <<FRONT
+          ---
+          title: "$title"
+          layout: proposal
+          permalink: /$doc/
+          ---
+
+          FRONT
+              cat "$doc.md" >> ".github/pages/_proposals/$doc.md"
+            fi
+          done
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Build with Jekyll
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./.github/pages
+          destination: ./_site
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

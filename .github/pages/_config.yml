@@ -1,0 +1,8 @@
+title: RESO Transport Specifications
+description: Specifications and Change Proposals for the RESO Web API
+url: https://transport.reso.org
+
+collections:
+  proposals:
+    output: true
+    permalink: /proposals/:slug/
