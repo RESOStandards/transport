@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ page.title | default: site.title }}</title>
+  <meta name="description" content="{{ page.description | default: site.description }}">
+  {% seo %}
+  <style>
+    :root {
+      --reso-navy: #1a2f58;
+      --reso-navy-dark: #0f1d38;
+      --reso-navy-light: #2a4a7f;
+      --reso-orange: #ff9900;
+      --reso-orange-light: #fff3e0;
+      --reso-green: #38a169;
+      --reso-green-light: #e6f7ed;
+      --reso-blue: #007e9e;
+      --reso-blue-light: #e0f4f8;
+      --reso-gray-50: #f7fafc;
+      --reso-gray-100: #edf2f7;
+      --reso-gray-200: #e2e8f0;
+      --reso-gray-300: #cbd5e0;
+      --reso-gray-500: #718096;
+      --reso-gray-600: #4a5568;
+      --reso-gray-700: #2d3748;
+      --reso-gray-800: #1a202c;
+      --reso-gray-900: #171923;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: var(--reso-gray-50);
+      color: var(--reso-gray-700);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .site-header {
+      background: var(--reso-navy);
+      padding: 0 1.5rem;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .site-header a { color: white; text-decoration: none; }
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+    }
+    .header-logo img { height: 36px; width: auto; }
+    .header-nav { display: flex; gap: 1.5rem; align-items: center; }
+    .header-nav a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      opacity: 0.85;
+      transition: opacity 0.15s;
+    }
+    .header-nav a:hover { opacity: 1; color: var(--reso-orange); }
+
+    /* Main */
+    .site-main {
+      flex: 1;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    /* Cards */
+    .card {
+      background: white;
+      border: 1px solid var(--reso-gray-200);
+      border-radius: 0.5rem;
+      overflow: hidden;
+      transition: box-shadow 0.15s;
+    }
+    .card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    .card-header {
+      background: var(--reso-navy);
+      color: white;
+      padding: 0.75rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .card-header h3 {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    .card-body { padding: 1.25rem; }
+
+    /* Badge */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .badge-green { background: var(--reso-green); color: white; }
+    .badge-blue { background: var(--reso-blue); color: white; }
+    .badge-orange { background: var(--reso-orange); color: white; }
+    .badge-navy { background: var(--reso-navy-light); color: white; }
+    .badge-outline {
+      background: transparent;
+      border: 1px solid var(--reso-gray-300);
+      color: var(--reso-gray-600);
+    }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 3rem 1.5rem 2rem;
+      background: linear-gradient(135deg, var(--reso-navy) 0%, var(--reso-navy-light) 100%);
+      border-radius: 0.75rem;
+      margin-bottom: 2rem;
+      color: white;
+    }
+    .hero h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: white;
+      letter-spacing: -0.025em;
+    }
+    .hero p {
+      color: rgba(255,255,255,0.8);
+      margin-top: 0.5rem;
+      font-size: 1.05rem;
+      max-width: 640px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      margin-top: 1.75rem;
+    }
+    .hero-stat { text-align: center; }
+    .hero-stat .number {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--reso-orange);
+    }
+    .hero-stat .label {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.7);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Intro blurb */
+    .intro-blurb {
+      text-align: center;
+      max-width: 720px;
+      margin: 0 auto 2rem;
+      font-size: 0.95rem;
+      color: var(--reso-gray-600);
+      line-height: 1.7;
+    }
+
+    /* Section headings */
+    .section-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--reso-blue);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .section-title svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+      flex-shrink: 0;
+    }
+    .section-group { margin-bottom: 2rem; }
+
+    /* Section accent borders */
+    .section-group .card { border-top: 3px solid transparent; }
+    .section-ratified .card { border-top-color: var(--reso-green); }
+    .section-approved .card { border-top-color: var(--reso-blue); }
+    .section-draft .card { border-top-color: var(--reso-orange); }
+    .section-progress .card { border-top-color: var(--reso-navy-light); }
+    .section-process .card { border-top-color: var(--reso-navy); }
+    .section-resources .card { border-top-color: var(--reso-blue); }
+
+    /* Proposal items */
+    .proposal-item {
+      padding: 0.875rem 1.25rem;
+      border-bottom: 1px solid var(--reso-gray-100);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .proposal-item:last-child { border-bottom: none; }
+    .proposal-info { flex: 1; min-width: 0; }
+    .proposal-name {
+      font-weight: 600;
+      font-size: 0.9375rem;
+      color: var(--reso-navy);
+    }
+    .proposal-desc {
+      font-size: 0.8125rem;
+      color: var(--reso-gray-500);
+      margin-top: 0.125rem;
+    }
+    .proposal-meta {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 0.375rem;
+      flex-wrap: wrap;
+    }
+    .proposal-meta span {
+      font-size: 0.75rem;
+      color: var(--reso-gray-500);
+    }
+    .proposal-actions {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    /* View link */
+    .view-link {
+      font-size: 0.8125rem;
+      color: var(--reso-blue);
+      font-weight: 500;
+      white-space: nowrap;
+      text-decoration: none;
+    }
+    .view-link:hover { text-decoration: underline; }
+
+    /* Process steps */
+    .process-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      padding: 1.25rem;
+    }
+    @media (min-width: 768px) {
+      .process-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+    .process-step {
+      text-align: center;
+      padding: 1rem;
+      position: relative;
+    }
+    .process-step-number {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--reso-navy);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.875rem;
+      font-weight: 700;
+      margin: 0 auto 0.75rem;
+    }
+    .process-step h4 {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--reso-gray-800);
+      margin-bottom: 0.375rem;
+    }
+    .process-step p {
+      font-size: 0.75rem;
+      color: var(--reso-gray-500);
+      line-height: 1.5;
+    }
+
+    /* Resource links */
+    .resource-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    @media (min-width: 768px) {
+      .resource-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .resource-item {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--reso-gray-100);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.1s;
+    }
+    .resource-item:hover { background: var(--reso-gray-50); }
+    .resource-item:last-child { border-bottom: none; }
+    @media (min-width: 768px) {
+      .resource-item { border-right: 1px solid var(--reso-gray-100); }
+      .resource-item:nth-child(2n) { border-right: none; }
+      .resource-item:nth-last-child(-n+2) { border-bottom: none; }
+    }
+    .resource-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 0.375rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .resource-icon svg { width: 18px; height: 18px; }
+    .resource-icon-navy { background: rgba(26,47,88,0.1); }
+    .resource-icon-navy svg { fill: var(--reso-navy); }
+    .resource-icon-blue { background: rgba(0,126,158,0.1); }
+    .resource-icon-blue svg { fill: var(--reso-blue); }
+    .resource-icon-orange { background: rgba(255,153,0,0.1); }
+    .resource-icon-orange svg { fill: var(--reso-orange); }
+    .resource-icon-green { background: rgba(56,161,105,0.1); }
+    .resource-icon-green svg { fill: var(--reso-green); }
+    .resource-text h4 {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--reso-gray-800);
+    }
+    .resource-text p {
+      font-size: 0.75rem;
+      color: var(--reso-gray-500);
+      margin-top: 0.125rem;
+    }
+
+    /* Footer */
+    .site-footer {
+      background: var(--reso-navy);
+      color: rgba(255,255,255,0.6);
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.8125rem;
+    }
+    .site-footer a { color: rgba(255,255,255,0.8); text-decoration: none; }
+    .site-footer a:hover { color: var(--reso-orange); }
+
+    /* Markdown content */
+    .content h1, .content h2, .content h3 { margin-top: 1.5rem; margin-bottom: 0.75rem; color: var(--reso-gray-800); }
+    .content h1 { font-size: 1.5rem; }
+    .content h2 { font-size: 1.25rem; border-bottom: 1px solid var(--reso-gray-200); padding-bottom: 0.5rem; }
+    .content h3 { font-size: 1.1rem; }
+    .content p { margin-bottom: 0.75rem; }
+    .content pre {
+      background: var(--reso-gray-900);
+      color: #e2e8f0;
+      padding: 1rem;
+      border-radius: 0.375rem;
+      overflow-x: auto;
+      font-size: 0.8125rem;
+      margin-bottom: 1rem;
+    }
+    .content code {
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      font-size: 0.875em;
+    }
+    .content p code, .content li code {
+      background: var(--reso-gray-100);
+      padding: 0.125rem 0.375rem;
+      border-radius: 0.25rem;
+      color: var(--reso-gray-700);
+    }
+    .content ul, .content ol { padding-left: 1.5rem; margin-bottom: 0.75rem; }
+    .content li { margin-bottom: 0.25rem; }
+    .content a { color: var(--reso-blue); }
+    .content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1rem;
+    }
+    .content th, .content td {
+      border: 1px solid var(--reso-gray-200);
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      font-size: 0.875rem;
+    }
+    .content th { background: var(--reso-gray-100); font-weight: 600; }
+    .content img { max-width: 100%; height: auto; border-radius: 0.375rem; }
+    .content blockquote {
+      border-left: 3px solid var(--reso-blue);
+      padding: 0.5rem 1rem;
+      margin: 0 0 1rem;
+      background: var(--reso-blue-light);
+      border-radius: 0 0.25rem 0.25rem 0;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a href="{{ '/' | relative_url }}" class="header-logo">
+      <img src="{{ '/assets/reso-logo-white.png' | relative_url }}" alt="RESO" />
+    </a>
+    <nav class="header-nav">
+      <a href="{{ '/' | relative_url }}">Home</a>
+      <a href="https://github.com/RESOStandards/transport">GitHub</a>
+      <a href="https://github.com/RESOStandards/transport/discussions">Discussions</a>
+      <a href="https://tools.reso.org">RESO Tools</a>
+      <a href="https://certification.reso.org">Certification</a>
+      <a href="https://reso.org">RESO.org</a>
+    </nav>
+  </header>
+
+  <main class="site-main">
+    {{ content }}
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; {{ 'now' | date: '%Y' }} <a href="https://reso.org">Real Estate Standards Organization (RESO)</a>. All rights reserved.</p>
+    <p style="margin-top: 0.5rem;">
+      <a href="https://github.com/RESOStandards/transport">Source</a> &middot;
+      <a href="https://certification.reso.org">Certification Analytics</a> &middot;
+      <a href="https://www.reso.org/eula/">Terms of Use</a>
+    </p>
+  </footer>
+</body>
+</html>

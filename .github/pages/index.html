@@ -1,0 +1,372 @@
+---
+layout: default
+title: RESO Transport Specifications
+---
+
+<div class="hero">
+  <h1>RESO Transport Specifications</h1>
+  <p>Modular specifications and change proposals that define how real estate data is exchanged across the industry.</p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="number">9</div>
+      <div class="label">Ratified Standards</div>
+    </div>
+    <div class="hero-stat">
+      <div class="number">12</div>
+      <div class="label">In Progress</div>
+    </div>
+    <div class="hero-stat">
+      <div class="number">OData 4.01</div>
+      <div class="label">Protocol</div>
+    </div>
+  </div>
+</div>
+
+<!-- What is this? -->
+<div class="intro-blurb">
+  <strong>RESO Endorsements</strong> are modular specifications associated with the RESO Web API transport protocol.
+  Each endorsement starts as a <a href="{{ '/reso-rcp-process' | relative_url }}">RESO Change Proposal (RCP)</a>,
+  progresses through community review and implementation, and is eventually ratified as a standard.
+  Specifications use <a href="{{ '/versioning' | relative_url }}">semantic versioning</a>.
+</div>
+
+<!-- RCP Process -->
+<div class="section-group section-process">
+  <div class="section-title">
+    <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+    How Specifications Are Made
+  </div>
+  <div class="card">
+    <div class="process-grid">
+      <div class="process-step">
+        <div class="process-step-number">1</div>
+        <h4>Proposal</h4>
+        <p>A change proposal is submitted via <a href="https://github.com/RESOStandards/transport/discussions">GitHub Discussions</a> with a business case and requirements.</p>
+      </div>
+      <div class="process-step">
+        <div class="process-step-number">2</div>
+        <h4>Draft &amp; Review</h4>
+        <p>The Transport Workgroup reviews the draft specification and testing rules. At least two vendor implementations are required.</p>
+      </div>
+      <div class="process-step">
+        <div class="process-step-number">3</div>
+        <h4>Approval</h4>
+        <p>Once implementations are verified, the proposal is approved by Transport and Certification. Testing tools are built.</p>
+      </div>
+      <div class="process-step">
+        <div class="process-step-number">4</div>
+        <h4>Ratification</h4>
+        <p>The specification is ratified by the RESO Board of Directors and becomes a standard with certification requirements.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Ratified Standards -->
+<div class="section-group section-ratified">
+  <div class="section-title">
+    <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+    Ratified Standards
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <h3>Adopted Standards</h3>
+      <span class="badge badge-green">Ratified</span>
+    </div>
+
+    <div class="proposal-item">
+      <div class="proposal-info">
+        <div class="proposal-name">Web API Core</div>
+        <div class="proposal-desc">Core OData 4.01 query capabilities &mdash; $filter, $select, $orderby, $expand, pagination, and metadata.</div>
+        <div class="proposal-meta">
+          <span>RCP-37</span>
+          <span>&middot;</span>
+          <span>v2.1.0</span>
+          <span>&middot;</span>
+          <span>Dec 2023</span>
+        </div>
+      </div>
+      <div class="proposal-actions">
+        <a href="{{ '/proposals/web-api-core' | relative_url }}" class="view-link">Read spec &rarr;</a>
+      </div>
+    </div>
+
+    <div class="proposal-item">
+      <div class="proposal-info">
+        <div class="proposal-name">Data Dictionary</div>
+        <div class="proposal-desc">Standard field names, types, and enumerations for real estate data. Defines Property, Member, Office, Media, and more.</div>
+        <div class="proposal-meta">
+          <span>RCP-36/40</span>
+          <span>&middot;</span>
+          <span>v2.0</span>
+          <span>&middot;</span>
+          <span>Nov 2023</span>
+        </div>
+      </div>
+      <div class="proposal-actions">
+        <a href="{{ '/proposals/data-dictionary' | relative_url }}" class="view-link">Read spec &rarr;</a>
+      </div>
+    </div>
+
+    <div class="proposal-item">
+      <div class="proposal-info">
+        <div class="proposal-name">Web API Add/Edit</div>
+        <div class="proposal-desc">Create, update, and delete operations for RESO resources via OData POST, PATCH, and DELETE.</div>
+        <div class="proposal-meta">
+          <span>RCP-10</span>
+          <span>&middot;</span>
+          <span>v2.0.0</span>
+          <span>&middot;</span>
+          <span>Dec 2023</span>
+        </div>
+      </div>
+      <div class="proposal-actions">
+        <a href="{{ '/proposals/web-api-add-edit' | relative_url }}" class="view-link">Read spec &rarr;</a>
+      </div>
+    </div>
+
+    <div class="proposal-item">
+      <div class="proposal-info">
+        <div class="proposal-name">EntityEvent Resource and Replication</div>
+        <div class="proposal-desc">Change tracking and incremental replication using the EntityEvent resource. Enables efficient data synchronization.</div>
+        <div class="proposal-meta">
+          <span>RCP-27</span>
+          <span>&middot;</span>
+          <span>v2.0.2</span>
+          <span>&middot;</span>
+          <span>Dec 2023</span>
+        </div>
+      </div>
+      <div class="proposal-actions">
+        <a href="{{ '/proposals/entity-events' | relative_url }}" class="view-link">Read spec &rarr;</a>
+      </div>
+    </div>
+
+    <div class="proposal-item">
+      <div class="proposal-info">
+        <div class="proposal-name">Push Replication with Webhooks</div>
+        <div class="proposal-desc">Server-push replication using webhooks and the EntityEvent resource for real-time data delivery.</div>
+        <div class="proposal-meta">
+          <span>RCP-28</span>
+          <span>&middot;</span>
+          <span>v1.0.1</span>
+          <span>&middot;</span>
+          <span>Dec 2023</span>
+        </div>
+      </div>
+      <div class="proposal-actions">
+        <a href="{{ '/proposals/webhooks-push' | relative_url }}" class="view-link">Read spec &rarr;</a>
+      </div>
+    </div>
+
+    <div class="proposal-item">
+      <div class="proposal-info">
+        <div class="proposal-name">Validation Expressions</div>
+        <div class="proposal-desc">Machine-readable validation rules for field-level constraints, cross-field dependencies, and business logic.</div>
+        <div class="proposal-meta">
+          <span>RCP-19</span>
+          <span>&middot;</span>
+          <span>v1.0.0</span>
+          <span>&middot;</span>
+          <span>Dec 2023</span>
+        </div>
+      </div>
+      <div class="proposal-actions">
+        <a href="{{ '/proposals/validation-expressions' | relative_url }}" class="view-link">Read spec &rarr;</a>
+      </div>
+    </div>
+
+    <div class="proposal-item">
+      <div class="proposal-info">
+        <div class="proposal-name">RESO Common Format</div>
+        <div class="proposal-desc">Standard JSON payload format for exchanging RESO data outside of the OData protocol.</div>
+        <div class="proposal-meta">
+          <span>RCP-25</span>
+          <span>&middot;</span>
+          <span>v1.7</span>
+          <span>&middot;</span>
+          <span>Nov 2023</span>
+        </div>
+      </div>
+      <div class="proposal-actions">
+        <a href="{{ '/proposals/reso-common-format' | relative_url }}" class="view-link">Read spec &rarr;</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- In Progress -->
+<div class="section-group section-progress">
+  <div class="section-title">
+    <svg viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    In Progress Proposals
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <h3>Active Change Proposals</h3>
+      <span class="badge badge-navy">In Review</span>
+    </div>
+
+    <div class="proposal-item">
+      <div class="proposal-info">
+        <div class="proposal-name">Autofill Service</div>
+        <div class="proposal-meta"><span>RCP-22</span> <span>&middot;</span> <span>v1.0.0</span></div>
+      </div>
+      <a href="https://github.com/RESOStandards/transport/blob/43-migrate-rcp-022-from-confluence/autofill-service.md" class="view-link">View &rarr;</a>
+    </div>
+
+    <div class="proposal-item">
+      <div class="proposal-info">
+        <div class="proposal-name">Supporting Single Feeds</div>
+        <div class="proposal-meta"><span>RCP-35</span> <span>&middot;</span> <span>v1.0.0</span></div>
+      </div>
+      <a href="https://github.com/RESOStandards/transport/blob/e222c800f2e6ef091fe6c334ce5160456a4e5c56/proposals/rcp-035-single-feeds.md" class="view-link">View &rarr;</a>
+    </div>
+
+    <div class="proposal-item">
+      <div class="proposal-info">
+        <div class="proposal-name">Model and Field Resources</div>
+        <div class="proposal-meta"><span>RCP-42</span> <span>&middot;</span> <span>v1.0.0</span></div>
+      </div>
+      <a href="https://github.com/RESOStandards/transport/blob/b21579a147a476a95fb0a9457ab6b23d5b7afc0a/proposals/model-and-field-resources.md" class="view-link">View &rarr;</a>
+    </div>
+
+    <div class="proposal-item">
+      <div class="proposal-info">
+        <div class="proposal-name">Local Fields and Predictability</div>
+        <div class="proposal-meta"><span>RCP-43</span> <span>&middot;</span> <span>v1.0.0</span></div>
+      </div>
+      <a href="https://github.com/RESOStandards/transport/issues/77" class="view-link">View &rarr;</a>
+    </div>
+
+    <div class="proposal-item">
+      <div class="proposal-info">
+        <div class="proposal-name">Metadata Internationalization and Locale</div>
+        <div class="proposal-meta"><span>RCP-44</span> <span>&middot;</span> <span>v1.0.0</span></div>
+      </div>
+      <a href="https://github.com/RESOStandards/transport/blob/rcp-44-supporting-multiple-metadata-locales/proposals/metadata-locales.md" class="view-link">View &rarr;</a>
+    </div>
+
+    <div class="proposal-item">
+      <div class="proposal-info">
+        <div class="proposal-name">Legacy and Deprecated Data Elements</div>
+        <div class="proposal-meta"><span>RCP-45</span> <span>&middot;</span> <span>v1.0.0</span></div>
+      </div>
+      <a href="https://github.com/RESOStandards/transport/blob/ddb8bc9792173ef1a1d57eb5cb560af21d0fc558/proposals/rcp-45-legacy-deprecated-fields-lookups.md" class="view-link">View &rarr;</a>
+    </div>
+
+    <div class="proposal-item">
+      <div class="proposal-info">
+        <div class="proposal-name">RelatedLookup Resource</div>
+        <div class="proposal-meta"><span>RCP-47</span> <span>&middot;</span> <span>v1.0.0</span></div>
+      </div>
+      <a href="https://github.com/RESOStandards/transport/blob/015bd6181a3a9f56b1c5b767685761a842e0284c/proposals/related-lookups.md" class="view-link">View &rarr;</a>
+    </div>
+
+    <div class="proposal-item">
+      <div class="proposal-info">
+        <div class="proposal-name">Add/Edit with Media</div>
+        <div class="proposal-meta"><span>RCP-48</span> <span>&middot;</span> <span>v1.0.0</span></div>
+      </div>
+      <a href="https://github.com/RESOStandards/transport/blob/fc35c711487bcd59ffecd02780feb56269fabd73/proposals/web-api-add-edit-with-media.md" class="view-link">View &rarr;</a>
+    </div>
+
+    <div class="proposal-item">
+      <div class="proposal-info">
+        <div class="proposal-name">EntityEvent Subscriptions and Filtering</div>
+        <div class="proposal-meta"><span>RCP-49</span> <span>&middot;</span> <span>v1.0.0</span></div>
+      </div>
+      <a href="https://github.com/RESOStandards/transport/issues/142" class="view-link">View &rarr;</a>
+    </div>
+
+    <div class="proposal-item">
+      <div class="proposal-info">
+        <div class="proposal-name">Data Provenance</div>
+        <div class="proposal-meta"><span>RCP-50</span> <span>&middot;</span> <span>v1.0.0</span></div>
+      </div>
+      <a href="https://github.com/RESOStandards/transport/blob/rcp-50-data-provenance/proposals/data-provenance.md" class="view-link">View &rarr;</a>
+    </div>
+
+    <div class="proposal-item">
+      <div class="proposal-info">
+        <div class="proposal-name">DOM Increment</div>
+        <div class="proposal-meta"><span>RCP-51</span> <span>&middot;</span> <span>v1.0.0</span></div>
+      </div>
+      <a href="https://github.com/RESOStandards/transport/pull/157" class="view-link">View &rarr;</a>
+    </div>
+
+    <div class="proposal-item">
+      <div class="proposal-info">
+        <div class="proposal-name">Listing Advertisement</div>
+        <div class="proposal-meta"><span>RCP-52</span> <span>&middot;</span> <span>v1.0.0</span></div>
+      </div>
+      <a href="https://github.com/RESOStandards/transport/discussions/162" class="view-link">View &rarr;</a>
+    </div>
+  </div>
+</div>
+
+<!-- Resources -->
+<div class="section-group section-resources">
+  <div class="section-title">
+    <svg viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+    Resources
+  </div>
+  <div class="card">
+    <div class="resource-grid">
+      <a href="{{ '/reso-rcp-process' | relative_url }}" class="resource-item">
+        <div class="resource-icon resource-icon-navy">
+          <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        </div>
+        <div class="resource-text">
+          <h4>RCP Process</h4>
+          <p>How to submit and advance a RESO Change Proposal</p>
+        </div>
+      </a>
+      <a href="{{ '/versioning' | relative_url }}" class="resource-item">
+        <div class="resource-icon resource-icon-blue">
+          <svg viewBox="0 0 24 24"><path d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"/></svg>
+        </div>
+        <div class="resource-text">
+          <h4>Versioning Policy</h4>
+          <p>How RESO uses semantic versioning in specifications</p>
+        </div>
+      </a>
+      <a href="https://github.com/RESOStandards/transport/discussions" class="resource-item">
+        <div class="resource-icon resource-icon-orange">
+          <svg viewBox="0 0 24 24"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+        </div>
+        <div class="resource-text">
+          <h4>Discussion Forum</h4>
+          <p>Propose ideas and discuss specifications with the community</p>
+        </div>
+      </a>
+      <a href="{{ '/certification-reso-analytics' | relative_url }}" class="resource-item">
+        <div class="resource-icon resource-icon-green">
+          <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        </div>
+        <div class="resource-text">
+          <h4>Certification &amp; RESO Analytics</h4>
+          <p>How specifications are tested and certified</p>
+        </div>
+      </a>
+      <a href="https://ddwiki.reso.org" class="resource-item">
+        <div class="resource-icon resource-icon-navy">
+          <svg viewBox="0 0 24 24"><path d="M4 7v10c0 2 1 3 3 3h10c2 0 3-1 3-3V7c0-2-1-3-3-3H7c-2 0-3 1-3 3zm5 1h6m-6 3h6m-6 3h4"/></svg>
+        </div>
+        <div class="resource-text">
+          <h4>Data Dictionary Wiki</h4>
+          <p>Browse all standard fields, resources, and enumerations</p>
+        </div>
+      </a>
+      <a href="https://tools.reso.org" class="resource-item">
+        <div class="resource-icon resource-icon-blue">
+          <svg viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.573-1.066z"/><circle cx="12" cy="12" r="3"/></svg>
+        </div>
+        <div class="resource-text">
+          <h4>RESO Tools</h4>
+          <p>Open-source testing and reference implementation tools</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
