@@ -80,7 +80,9 @@ jobs:
           destination: ./_site
 
       - name: Build search index with Pagefind
-        run: npx pagefind --site ./_site
+        run: |
+          chmod -R u+w ./_site
+          npx pagefind --site ./_site
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
