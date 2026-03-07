@@ -72,6 +72,39 @@
     }
     .header-nav a:hover { opacity: 1; color: var(--reso-orange); }
 
+    /* Hamburger menu button */
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem;
+      color: white;
+    }
+    .menu-toggle svg { width: 24px; height: 24px; fill: currentColor; }
+
+    @media (max-width: 768px) {
+      .site-header { flex-wrap: wrap; height: auto; min-height: 64px; }
+      .menu-toggle { display: block; }
+      .header-nav {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        gap: 0;
+        padding: 0.5rem 0 1rem;
+        border-top: 1px solid rgba(255,255,255,0.15);
+      }
+      .header-nav.open { display: flex; }
+      .header-nav a {
+        padding: 0.625rem 0;
+        opacity: 1;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+      }
+      .header-nav a:last-of-type { border-bottom: none; }
+      .search-trigger { margin-top: 0.5rem; justify-content: center; }
+      .search-trigger kbd { display: none; }
+    }
+
     /* Main */
     .site-main {
       flex: 1;
@@ -488,7 +521,10 @@
     <a href="{{ '/' | relative_url }}" class="header-logo">
       <img src="{{ '/assets/reso-logo-white.png' | relative_url }}" alt="RESO" />
     </a>
-    <nav class="header-nav">
+    <button class="menu-toggle" id="menuToggle" type="button" aria-label="Toggle menu">
+      <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+    </button>
+    <nav class="header-nav" id="headerNav">
       <a href="{{ '/' | relative_url }}">Home</a>
       <a href="https://github.com/RESOStandards/transport">GitHub</a>
       <a href="https://github.com/RESOStandards/transport/discussions">Discussions</a>
@@ -523,6 +559,13 @@
         showSubResults: true,
         showImages: false,
         resetStyles: false
+      });
+
+      // Hamburger menu toggle
+      var menuToggle = document.getElementById('menuToggle');
+      var headerNav = document.getElementById('headerNav');
+      menuToggle.addEventListener('click', function() {
+        headerNav.classList.toggle('open');
       });
 
       var overlay = document.getElementById('searchOverlay');
