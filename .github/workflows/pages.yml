@@ -81,13 +81,13 @@ jobs:
 
       - name: Build search index with Pagefind
         run: |
-          cp -r ./_site ./_site_writable
-          npx pagefind --site ./_site_writable
-          rm -rf ./_site
-          mv ./_site_writable ./_site
+          cp -r ./_site ./_site_searchable
+          npx pagefind --site ./_site_searchable
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./_site_searchable
 
   deploy:
     environment:
