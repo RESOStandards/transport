@@ -79,9 +79,6 @@ jobs:
           source: ./.github/pages
           destination: ./_site
 
-      - name: Build search index with Pagefind
-        run: npx pagefind --site ./_site
-
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
 
