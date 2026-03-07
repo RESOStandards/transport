@@ -81,8 +81,10 @@ jobs:
 
       - name: Build search index with Pagefind
         run: |
-          chmod -R u+w ./_site
-          npx pagefind --site ./_site
+          cp -r ./_site ./_site_writable
+          npx pagefind --site ./_site_writable
+          rm -rf ./_site
+          mv ./_site_writable ./_site
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
