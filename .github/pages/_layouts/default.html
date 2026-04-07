@@ -72,6 +72,13 @@
     }
     .header-nav a:hover { opacity: 1; color: var(--reso-orange); }
 
+    /* Header actions (search, theme, hamburger) */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
     /* Hamburger menu button */
     .menu-toggle {
       display: none;
@@ -86,6 +93,7 @@
     @media (max-width: 768px) {
       .site-header { flex-wrap: wrap; height: auto; min-height: 64px; }
       .menu-toggle { display: block; }
+      .search-trigger kbd { display: none; }
       .header-nav {
         display: none;
         flex-direction: column;
@@ -98,11 +106,10 @@
       .header-nav a {
         padding: 0.625rem 0;
         opacity: 1;
+        text-align: center;
         border-bottom: 1px solid rgba(255,255,255,0.08);
       }
       .header-nav a:last-of-type { border-bottom: none; }
-      .search-trigger { margin-top: 0.5rem; justify-content: center; }
-      .search-trigger kbd { display: none; }
     }
 
     /* Main */
@@ -513,17 +520,67 @@
     .pagefind-ui .pagefind-ui__result-link {
       color: var(--reso-navy) !important;
     }
+
+    /* Theme toggle */
+    .theme-toggle {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 0.375rem;
+      color: rgba(255,255,255,0.7);
+      cursor: pointer;
+      padding: 0.375rem 0.5rem;
+      display: flex;
+      align-items: center;
+      transition: background 0.15s;
+    }
+    .theme-toggle:hover { background: rgba(255,255,255,0.25); color: white; }
+    .theme-toggle svg { width: 16px; height: 16px; fill: currentColor; }
+    .theme-toggle .icon-moon { display: block; }
+    .theme-toggle .icon-sun { display: none; }
+    html.dark .theme-toggle .icon-moon { display: none; }
+    html.dark .theme-toggle .icon-sun { display: block; }
+
+    /* Dark mode overrides */
+    html.dark body { background: #1a202c; color: #e2e8f0; }
+    html.dark .site-main { color: #e2e8f0; }
+    html.dark .hero { background: linear-gradient(135deg, #0f1d38 0%, #1a2f58 100%); }
+    html.dark .card { background: #2d3748; border-color: #4a5568; }
+    html.dark .card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+    html.dark .card-body { color: #e2e8f0; }
+    html.dark .intro-blurb { color: #a0aec0; }
+    html.dark .section-title { color: #63b3ed; }
+    html.dark .badge-outline { border-color: #4a5568; color: #a0aec0; }
+    html.dark .proposal-item { border-color: #4a5568; }
+    html.dark .proposal-name { color: #e2e8f0; }
+    html.dark .proposal-desc, html.dark .proposal-meta span { color: #a0aec0; }
+    html.dark .view-link { color: #63b3ed; }
+    html.dark .process-step h4 { color: #e2e8f0; }
+    html.dark .process-step p { color: #a0aec0; }
+    html.dark .resource-item { border-color: #4a5568; }
+    html.dark .resource-item:hover { background: rgba(255,255,255,0.05); }
+    html.dark .resource-text h4 { color: #e2e8f0; }
+    html.dark .resource-text p { color: #a0aec0; }
+    html.dark .resource-icon-navy { background: rgba(99,179,237,0.15); }
+    html.dark .resource-icon-navy svg { fill: #63b3ed; }
+    html.dark .content h1, html.dark .content h2, html.dark .content h3 { color: #e2e8f0; }
+    html.dark .content h2 { border-color: #4a5568; }
+    html.dark .content p code, html.dark .content li code { background: #1a202c; color: #e2e8f0; }
+    html.dark .content th { background: #1a202c; }
+    html.dark .content th, html.dark .content td { border-color: #4a5568; }
+    html.dark .content blockquote { background: rgba(0,126,158,0.15); }
+    html.dark .search-modal { background: #2d3748; }
+    html.dark .pagefind-ui .pagefind-ui__search-input { background: #1a202c !important; border-color: #4a5568 !important; color: #e2e8f0 !important; }
+    html.dark .pagefind-ui .pagefind-ui__result-link { color: #63b3ed !important; }
+    html.dark .pagefind-ui .pagefind-ui__result-excerpt { color: #a0aec0 !important; }
   </style>
   <link href="/pagefind/pagefind-ui.css" rel="stylesheet">
+  <script>(function(){var t=localStorage.getItem('transport-theme');if(t==='dark'||(t===null&&window.matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.classList.add('dark');})()</script>
 </head>
 <body>
   <header class="site-header">
     <a href="{{ '/' | relative_url }}" class="header-logo">
       <img src="{{ '/assets/reso-logo-white.png' | relative_url }}" alt="RESO" />
     </a>
-    <button class="menu-toggle" id="menuToggle" type="button" aria-label="Toggle menu">
-      <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
-    </button>
     <nav class="header-nav" id="headerNav">
       <a href="{{ '/' | relative_url }}">Home</a>
       <a href="https://github.com/RESOStandards/transport">GitHub</a>
@@ -531,11 +588,20 @@
       <a href="https://tools.reso.org">RESO Tools</a>
       <a href="https://certification.reso.org">Certification</a>
       <a href="https://reso.org">RESO.org</a>
+    </nav>
+    <div class="header-actions">
       <button class="search-trigger" id="searchTrigger" type="button">
         <svg viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
         Search<kbd>/</kbd>
       </button>
-    </nav>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode">
+        <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      </button>
+      <button class="menu-toggle" id="menuToggle" type="button" aria-label="Toggle menu">
+        <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+      </button>
+    </div>
   </header>
 
   <main class="site-main">
@@ -566,6 +632,12 @@
       var headerNav = document.getElementById('headerNav');
       menuToggle.addEventListener('click', function() {
         headerNav.classList.toggle('open');
+      });
+
+      // Theme toggle
+      document.getElementById('themeToggle').addEventListener('click', function() {
+        var isDark = document.documentElement.classList.toggle('dark');
+        localStorage.setItem('transport-theme', isDark ? 'dark' : 'light');
       });
 
       var overlay = document.getElementById('searchOverlay');
