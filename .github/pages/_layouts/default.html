@@ -572,6 +572,74 @@
     html.dark .pagefind-ui .pagefind-ui__search-input { background: #1a202c !important; border-color: #4a5568 !important; color: #e2e8f0 !important; }
     html.dark .pagefind-ui .pagefind-ui__result-link { color: #63b3ed !important; }
     html.dark .pagefind-ui .pagefind-ui__result-excerpt { color: #a0aec0 !important; }
+
+    /* Heading anchors — fix anchor-jump shift caused by sticky header,
+       and surface a click-to-copy link icon on hover. Scoped to .content
+       so the home page hero h1 is not affected. */
+    .content h1[id], .content h2[id], .content h3[id],
+    .content h4[id], .content h5[id], .content h6[id] {
+      scroll-margin-top: 5rem;
+    }
+    .content .heading-anchor {
+      display: inline-flex;
+      align-items: center;
+      color: inherit;
+      text-decoration: none;
+      position: relative;
+    }
+    .content .heading-anchor .anchor-icon {
+      position: absolute;
+      left: -1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.125rem;
+      height: 1.125rem;
+      color: #94a3b8;
+      opacity: 0;
+      transition: opacity 0.18s ease, color 0.18s ease, transform 0.18s ease;
+    }
+    .content h1[id]:hover .anchor-icon,
+    .content h2[id]:hover .anchor-icon,
+    .content h3[id]:hover .anchor-icon,
+    .content h4[id]:hover .anchor-icon,
+    .content h5[id]:hover .anchor-icon,
+    .content h6[id]:hover .anchor-icon {
+      opacity: 1;
+    }
+    .content .heading-anchor:hover .anchor-icon { color: #007e9e; }
+    html.dark .content .heading-anchor .anchor-icon { color: #64748b; }
+    html.dark .content .heading-anchor:hover .anchor-icon { color: #60a5fa; }
+    .content .heading-anchor.just-copied .anchor-icon {
+      opacity: 1;
+      color: #16a34a;
+      transform: translateY(-50%) scale(1.15);
+    }
+    html.dark .content .heading-anchor.just-copied .anchor-icon { color: #4ade80; }
+
+    .heading-copy-toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(0.5rem);
+      padding: 0.5rem 0.875rem;
+      background: rgba(15, 23, 42, 0.92);
+      color: white;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      border-radius: 0.5rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.18);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 200;
+    }
+    .heading-copy-toast.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
   </style>
   <link href="/pagefind/pagefind-ui.css" rel="stylesheet">
   <script>(function(){var t=localStorage.getItem('transport-theme');if(t==='dark'||(t===null&&window.matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.classList.add('dark');})()</script>
@@ -677,5 +745,75 @@
       <a href="https://www.reso.org/eula/">Terms of Use</a>
     </p>
   </footer>
+
+  <div class="heading-copy-toast" id="heading-copy-toast" role="status" aria-live="polite">
+    Link copied
+  </div>
+  <script>
+    (function () {
+      'use strict';
+      var doc = document.querySelector('.content');
+      if (!doc) return;
+      var headings = doc.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]');
+      if (!headings.length) return;
+      var toast = document.getElementById('heading-copy-toast');
+      var toastTimer = null;
+
+      function flashToast() {
+        if (!toast) return;
+        toast.classList.add('visible');
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () { toast.classList.remove('visible'); }, 1400);
+      }
+
+      function buildIcon() {
+        var ns = 'http://www.w3.org/2000/svg';
+        var svg = document.createElementNS(ns, 'svg');
+        svg.setAttribute('viewBox', '0 0 20 20');
+        svg.setAttribute('fill', 'currentColor');
+        svg.setAttribute('aria-hidden', 'true');
+        svg.setAttribute('width', '18');
+        svg.setAttribute('height', '18');
+        var path = document.createElementNS(ns, 'path');
+        path.setAttribute('fill-rule', 'evenodd');
+        path.setAttribute('clip-rule', 'evenodd');
+        path.setAttribute('d', 'M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z');
+        svg.appendChild(path);
+        return svg;
+      }
+
+      headings.forEach(function (h) {
+        var id = h.getAttribute('id');
+        if (!id) return;
+        if (h.querySelector('.heading-anchor')) return;
+
+        var anchor = document.createElement('a');
+        anchor.className = 'heading-anchor';
+        anchor.href = '#' + id;
+        anchor.setAttribute('aria-label', 'Link to this section');
+        while (h.firstChild) anchor.appendChild(h.firstChild);
+
+        var iconWrap = document.createElement('span');
+        iconWrap.className = 'anchor-icon';
+        iconWrap.appendChild(buildIcon());
+        anchor.appendChild(iconWrap);
+        h.appendChild(anchor);
+
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          history.pushState(null, '', '#' + id);
+          h.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          var fullUrl = window.location.origin + window.location.pathname + '#' + id;
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(fullUrl).then(flashToast).catch(flashToast);
+          } else {
+            flashToast();
+          }
+          anchor.classList.add('just-copied');
+          setTimeout(function () { anchor.classList.remove('just-copied'); }, 900);
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
