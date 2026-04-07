@@ -190,8 +190,9 @@
     }
     .hero-stats {
       display: flex;
+      flex-wrap: wrap;
       justify-content: center;
-      gap: 3rem;
+      gap: 1.5rem 3rem;
       margin-top: 1.75rem;
     }
     .hero-stat { text-align: center; }
@@ -548,30 +549,54 @@
     html.dark .card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
     html.dark .card-body { color: #e2e8f0; }
     html.dark .intro-blurb { color: #a0aec0; }
+    html.dark .intro-blurb a, html.dark .intro-blurb a:visited { color: #63b3ed; }
+    html.dark .intro-blurb a:hover { color: #90cdf4; }
     html.dark .section-title { color: #63b3ed; }
     html.dark .badge-outline { border-color: #4a5568; color: #a0aec0; }
     html.dark .proposal-item { border-color: #4a5568; }
     html.dark .proposal-name { color: #e2e8f0; }
     html.dark .proposal-desc, html.dark .proposal-meta span { color: #a0aec0; }
-    html.dark .view-link { color: #63b3ed; }
+    html.dark .view-link, html.dark .view-link:visited { color: #63b3ed; }
+    html.dark .view-link:hover { color: #90cdf4; }
     html.dark .process-step h4 { color: #e2e8f0; }
     html.dark .process-step p { color: #a0aec0; }
+    html.dark .process-step p a, html.dark .process-step p a:visited { color: #63b3ed; }
+    html.dark .process-step p a:hover { color: #90cdf4; }
     html.dark .resource-item { border-color: #4a5568; }
     html.dark .resource-item:hover { background: rgba(255,255,255,0.05); }
     html.dark .resource-text h4 { color: #e2e8f0; }
     html.dark .resource-text p { color: #a0aec0; }
     html.dark .resource-icon-navy { background: rgba(99,179,237,0.15); }
     html.dark .resource-icon-navy svg { fill: #63b3ed; }
-    html.dark .content h1, html.dark .content h2, html.dark .content h3 { color: #e2e8f0; }
+    html.dark .content { color: #e2e8f0; }
+    html.dark .content h1, html.dark .content h2, html.dark .content h3, html.dark .content h4 { color: #e2e8f0; }
     html.dark .content h2 { border-color: #4a5568; }
+    html.dark .content a, html.dark .content a:visited { color: #63b3ed; }
+    html.dark .content a:hover { color: #90cdf4; }
     html.dark .content p code, html.dark .content li code { background: #1a202c; color: #e2e8f0; }
     html.dark .content th { background: #1a202c; }
     html.dark .content th, html.dark .content td { border-color: #4a5568; }
-    html.dark .content blockquote { background: rgba(0,126,158,0.15); }
+    html.dark .content blockquote { background: rgba(0,126,158,0.15); border-color: #63b3ed; }
+    html.dark .content pre { background: #0f1419; }
     html.dark .search-modal { background: #2d3748; }
     html.dark .pagefind-ui .pagefind-ui__search-input { background: #1a202c !important; border-color: #4a5568 !important; color: #e2e8f0 !important; }
     html.dark .pagefind-ui .pagefind-ui__result-link { color: #63b3ed !important; }
     html.dark .pagefind-ui .pagefind-ui__result-excerpt { color: #a0aec0 !important; }
+
+    /* Keyboard focus visibility */
+    .header-nav a:focus-visible,
+    .search-trigger:focus-visible,
+    .theme-toggle:focus-visible,
+    .menu-toggle:focus-visible,
+    .view-link:focus-visible,
+    .resource-item:focus-visible,
+    .proposal-actions a:focus-visible,
+    .content a:focus-visible,
+    .intro-blurb a:focus-visible {
+      outline: 2px solid var(--reso-orange);
+      outline-offset: 2px;
+      border-radius: 0.25rem;
+    }
   </style>
   <link href="/pagefind/pagefind-ui.css" rel="stylesheet">
   <script>(function(){var t=localStorage.getItem('transport-theme');if(t==='dark'||(t===null&&window.matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.classList.add('dark');})()</script>
