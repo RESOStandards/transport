@@ -5,6 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ page.title | default: site.title }}</title>
   <meta name="description" content="{{ page.description | default: site.description }}">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <meta property="og:title" content="{{ page.title | default: site.title }}">
+  <meta property="og:description" content="{{ page.description | default: site.description }}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="RESO Transport">
+  <meta property="og:image" content="https://www.reso.org/wp-content/uploads/2020/06/RESO-Logo-Fullname_Horizontal_Blue.png">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="{{ page.title | default: site.title }}">
+  <meta name="twitter:description" content="{{ page.description | default: site.description }}">
+  <meta name="twitter:image" content="https://www.reso.org/wp-content/uploads/2020/06/RESO-Logo-Fullname_Horizontal_Blue.png">
   {% seo %}
   <style>
     :root {
