@@ -5,6 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ page.title | default: site.title }}</title>
   <meta name="description" content="{{ page.description | default: site.description }}">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <meta property="og:title" content="{{ page.title | default: site.title }}">
+  <meta property="og:description" content="{{ page.description | default: site.description }}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="RESO Transport">
+  <meta property="og:image" content="https://www.reso.org/wp-content/uploads/2020/06/RESO-Logo-Fullname_Horizontal_Blue.png">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="{{ page.title | default: site.title }}">
+  <meta name="twitter:description" content="{{ page.description | default: site.description }}">
+  <meta name="twitter:image" content="https://www.reso.org/wp-content/uploads/2020/06/RESO-Logo-Fullname_Horizontal_Blue.png">
   {% seo %}
   <style>
     :root {
@@ -63,7 +73,7 @@
       letter-spacing: -0.025em;
     }
     .header-logo img { height: 36px; width: auto; }
-    .header-nav { display: flex; gap: 1.5rem; align-items: center; }
+    .header-nav { display: flex; gap: 1.5rem; align-items: center; margin-left: auto; margin-right: 1.5rem; }
     .header-nav a {
       font-size: 0.875rem;
       font-weight: 500;
@@ -99,6 +109,7 @@
         flex-direction: column;
         width: 100%;
         gap: 0;
+        margin: 0;
         padding: 0.5rem 0 1rem;
         border-top: 1px solid rgba(255,255,255,0.15);
       }
@@ -106,7 +117,7 @@
       .header-nav a {
         padding: 0.625rem 0;
         opacity: 1;
-        text-align: center;
+        text-align: left;
         border-bottom: 1px solid rgba(255,255,255,0.08);
       }
       .header-nav a:last-of-type { border-bottom: none; }
@@ -190,8 +201,9 @@
     }
     .hero-stats {
       display: flex;
+      flex-wrap: wrap;
       justify-content: center;
-      gap: 3rem;
+      gap: 1.5rem 3rem;
       margin-top: 1.75rem;
     }
     .hero-stat { text-align: center; }
@@ -548,30 +560,54 @@
     html.dark .card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
     html.dark .card-body { color: #e2e8f0; }
     html.dark .intro-blurb { color: #a0aec0; }
+    html.dark .intro-blurb a, html.dark .intro-blurb a:visited { color: #63b3ed; }
+    html.dark .intro-blurb a:hover { color: #90cdf4; }
     html.dark .section-title { color: #63b3ed; }
     html.dark .badge-outline { border-color: #4a5568; color: #a0aec0; }
     html.dark .proposal-item { border-color: #4a5568; }
     html.dark .proposal-name { color: #e2e8f0; }
     html.dark .proposal-desc, html.dark .proposal-meta span { color: #a0aec0; }
-    html.dark .view-link { color: #63b3ed; }
+    html.dark .view-link, html.dark .view-link:visited { color: #63b3ed; }
+    html.dark .view-link:hover { color: #90cdf4; }
     html.dark .process-step h4 { color: #e2e8f0; }
     html.dark .process-step p { color: #a0aec0; }
+    html.dark .process-step p a, html.dark .process-step p a:visited { color: #63b3ed; }
+    html.dark .process-step p a:hover { color: #90cdf4; }
     html.dark .resource-item { border-color: #4a5568; }
     html.dark .resource-item:hover { background: rgba(255,255,255,0.05); }
     html.dark .resource-text h4 { color: #e2e8f0; }
     html.dark .resource-text p { color: #a0aec0; }
     html.dark .resource-icon-navy { background: rgba(99,179,237,0.15); }
     html.dark .resource-icon-navy svg { fill: #63b3ed; }
-    html.dark .content h1, html.dark .content h2, html.dark .content h3 { color: #e2e8f0; }
+    html.dark .content { color: #e2e8f0; }
+    html.dark .content h1, html.dark .content h2, html.dark .content h3, html.dark .content h4 { color: #e2e8f0; }
     html.dark .content h2 { border-color: #4a5568; }
+    html.dark .content a, html.dark .content a:visited { color: #63b3ed; }
+    html.dark .content a:hover { color: #90cdf4; }
     html.dark .content p code, html.dark .content li code { background: #1a202c; color: #e2e8f0; }
     html.dark .content th { background: #1a202c; }
     html.dark .content th, html.dark .content td { border-color: #4a5568; }
-    html.dark .content blockquote { background: rgba(0,126,158,0.15); }
+    html.dark .content blockquote { background: rgba(0,126,158,0.15); border-color: #63b3ed; }
+    html.dark .content pre { background: #0f1419; }
     html.dark .search-modal { background: #2d3748; }
     html.dark .pagefind-ui .pagefind-ui__search-input { background: #1a202c !important; border-color: #4a5568 !important; color: #e2e8f0 !important; }
     html.dark .pagefind-ui .pagefind-ui__result-link { color: #63b3ed !important; }
     html.dark .pagefind-ui .pagefind-ui__result-excerpt { color: #a0aec0 !important; }
+
+    /* Keyboard focus visibility */
+    .header-nav a:focus-visible,
+    .search-trigger:focus-visible,
+    .theme-toggle:focus-visible,
+    .menu-toggle:focus-visible,
+    .view-link:focus-visible,
+    .resource-item:focus-visible,
+    .proposal-actions a:focus-visible,
+    .content a:focus-visible,
+    .intro-blurb a:focus-visible {
+      outline: 2px solid var(--reso-orange);
+      outline-offset: 2px;
+      border-radius: 0.25rem;
+    }
 
     /* Heading anchors — fix anchor-jump shift caused by sticky header,
        and surface a click-to-copy link icon on hover. Scoped to .content
