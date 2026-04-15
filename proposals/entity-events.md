@@ -2,7 +2,7 @@
 
 | **RCP** | 27 |
 | :--- |:--- |
-| **Version** | **2.0.2** |
+| **Version** | **1.0.0** |
 | **Authors** | Joshua Darnell ([RESO](mailto:josh@reso.org))<br />Paul Stusiak ([Falcon Technologies](pstusiak@falcontechnologies.com)) | 
 | **Status** | **RATIFIED** |
 | **Date Submitted** | January 2019 |
