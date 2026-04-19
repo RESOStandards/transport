@@ -4,6 +4,14 @@ title: Recent Policy Changes
 permalink: /policy-changes/
 ---
 
+<style>
+  .policy-list { padding-left: 1.5rem; }
+  .policy-list li { margin-bottom: 0.75rem; line-height: 1.6; font-size: 0.9375rem; }
+  .policy-list li em { color: #a0aec0; }
+  .policy-card h3 { font-size: 1.125rem; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+  html:not(.dark) .policy-card h3 { border-bottom-color: rgba(0,0,0,0.1); }
+</style>
+
 <div class="section-group">
   <div class="section-title">
     <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
@@ -11,19 +19,19 @@ permalink: /policy-changes/
   </div>
   <p class="intro-blurb" style="margin-bottom: 1.5rem;">Approved by the RESO Board of Directors. Effective December 2025.</p>
 
-  <div class="card" style="margin-bottom: 2rem;">
+  <div class="card policy-card" style="margin-bottom: 1.5rem;">
     <div class="card-body">
       <h3 style="margin-top: 0;">Workgroups: Staff Planning</h3>
-      <ol>
+      <ol class="policy-list">
         <li>The RESO CEO will appoint one chair and one or more vice-chairs to workgroups. Vice-chairs do not automatically succeed chairs.</li>
       </ol>
     </div>
   </div>
 
-  <div class="card" style="margin-bottom: 2rem;">
+  <div class="card policy-card" style="margin-bottom: 1.5rem;">
     <div class="card-body">
       <h3 style="margin-top: 0;">Specifications</h3>
-      <ol>
+      <ol class="policy-list">
         <li>RESO Data Dictionary and Transport Workgroups are able to approve Minor Data Dictionary versions without requiring ratification by the RESO Board of Directors.</li>
         <li>No breaking changes can be introduced in Minor versions of the Data Dictionary.
           <br><em>Note: Breaking changes are defined on <a href="/versioning">transport.reso.org/versioning</a>.</em>
@@ -35,10 +43,10 @@ permalink: /policy-changes/
     </div>
   </div>
 
-  <div class="card" style="margin-bottom: 2rem;">
+  <div class="card policy-card" style="margin-bottom: 1.5rem;">
     <div class="card-body">
       <h3 style="margin-top: 0;">Certification</h3>
-      <ol>
+      <ol class="policy-list">
         <li>Adding new testing rules to existing data elements is a major change. New testing rules may be added for new data elements as a minor change.</li>
         <li>RESO will always certify on the latest minor version in a given major branch since new data elements added in a minor version will always be non-breaking additions to the standard.</li>
         <li>Fast Track suggestions will only be required in the next major version. Providers will receive warnings about items prior to that release.</li>
