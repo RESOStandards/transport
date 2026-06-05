@@ -31,7 +31,7 @@ The full set of fitness principles the downstream JSON projection must satisfy l
 
 ## Pre-publish review
 
-Non-trivial PRs against `references/dd/` are reviewed against codified invariants before they reach the cert backend's publish gate. The review applies refute-by-default precision against a private library of review patterns — the patterns themselves are RESO review IP and live in a separate private location, so this CLAUDE.md does not reproduce them. PR authors don't need to invoke the review themselves; it runs on the maintainer side before merge.
+Non-trivial PRs against `references/dd/` are reviewed against codified invariants before they reach the cert backend's publish gate. The review applies a high-precision discipline against a private review framework — the framework itself is RESO review IP and lives in a separate private location, so this CLAUDE.md does not reproduce it. PR authors don't need to invoke the review themselves; it runs on the maintainer side before merge.
 
 If you author a DD sheet PR, the **most useful upstream signal** for the review is a clear PR body that:
 
