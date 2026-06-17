@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://transport.reso.org/urep/schemas/response-envelope.json",
+  "title": "UREP Response Envelope",
+  "description": "Common response envelope for UREP transports.",
+  "type": "object",
+  "required": ["urep"],
+  "properties": {
+    "urep": {
+      "type": "object",
+      "required": ["version", "status"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["success", "error", "pending"]
+        },
+        "services": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "$ref": "service.json#/$defs/response_service"
+            }
+          }
+        },
+        "capabilities": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "$ref": "capability.json#/$defs/response_capability"
+            }
+          }
+        },
+        "request_id": {
+          "type": "string"
+        },
+        "activity_id": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "additionalProperties": true
+    },
+    "data": true,
+    "errors": {
+      "type": "array",
+      "items": {
+        "$ref": "real-estate/validation-error.json#/$defs/error"
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code", "message"],
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "activity": {
+      "$ref": "real-estate/activity.json#/$defs/activity"
+    }
+  },
+  "additionalProperties": true
+}

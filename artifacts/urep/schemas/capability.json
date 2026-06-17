@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://transport.reso.org/urep/schemas/capability.json",
+  "title": "UREP Capability",
+  "description": "A versioned capability or extension declared in a UREP profile.",
+  "$defs": {
+    "reverse_domain_name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:\\.[a-z][a-z0-9_-]*)+$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "capability": {
+      "type": "object",
+      "required": ["version", "spec", "schema"],
+      "properties": {
+        "version": {
+          "$ref": "#/$defs/version"
+        },
+        "spec": {
+          "type": "string",
+          "format": "uri"
+        },
+        "schema": {
+          "type": "string",
+          "format": "uri"
+        },
+        "extends": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/reverse_domain_name"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/reverse_domain_name"
+              },
+              "minItems": 1,
+              "uniqueItems": true
+            }
+          ]
+        },
+        "config": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "response_capability": {
+      "type": "object",
+      "required": ["version"],
+      "properties": {
+        "version": {
+          "$ref": "#/$defs/version"
+        },
+        "extends": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/reverse_domain_name"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/reverse_domain_name"
+              },
+              "minItems": 1,
+              "uniqueItems": true
+            }
+          ]
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "$ref": "#/$defs/capability"
+}

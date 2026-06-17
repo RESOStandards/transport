@@ -1,0 +1,60 @@
+{
+  "profile_type": "consumer",
+  "participant": {
+    "name": "Example Listing Assistant",
+    "url": "https://assistant.example.com",
+    "identifiers": [
+      {
+        "type": "usi",
+        "value": "urn:reso:usi:example-listing-assistant"
+      }
+    ]
+  },
+  "urep": {
+    "version": "1.0.0",
+    "services": {
+      "org.reso.realestate": [
+        {
+          "version": "1.0.0",
+          "transport": "mcp",
+          "spec": "https://transport.reso.org/urep/services/real-estate/mcp.openrpc.json",
+          "schema": "https://transport.reso.org/urep/services/real-estate/mcp.openrpc.json",
+          "endpoint": "https://assistant.example.com/mcp"
+        }
+      ]
+    },
+    "capabilities": {
+      "org.reso.realestate.listing.discovery": [
+        {
+          "version": "1.0.0",
+          "spec": "https://transport.reso.org/proposals/rcp-052-listing-advertisement.md#section-52-listing-discovery",
+          "schema": "https://transport.reso.org/urep/schemas/real-estate/listing.json"
+        }
+      ],
+      "org.reso.realestate.listing.workspace": [
+        {
+          "version": "1.0.0",
+          "spec": "https://transport.reso.org/proposals/rcp-052-listing-advertisement.md#section-53-listing-workspace",
+          "schema": "https://transport.reso.org/urep/schemas/real-estate/workspace.json"
+        }
+      ],
+      "org.reso.realestate.activity.stream": [
+        {
+          "version": "1.0.0",
+          "spec": "https://transport.reso.org/proposals/rcp-052-listing-advertisement.md#section-57-activity-stream",
+          "schema": "https://transport.reso.org/urep/schemas/real-estate/activity.json"
+        }
+      ]
+    },
+    "authorization": [
+      {
+        "type": "oauth2",
+        "issuer": "https://assistant.example.com",
+        "scopes": [
+          "urep:listings.read",
+          "urep:workspaces.write"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "urep": {
+    "version": "1.0.0",
+    "status": "success",
+    "request_id": "req_01JY0UREPSEARCH",
+    "capabilities": {
+      "org.reso.realestate.listing.discovery": [
+        {
+          "version": "1.0.0"
+        }
+      ]
+    }
+  },
+  "data": {
+    "value": [
+      {
+        "reference": {
+          "resource": "Property",
+          "key": "ABC123",
+          "url": "https://mls.example.com/Property('ABC123')"
+        },
+        "lifecycle_phase": "premarketing",
+        "record": {
+          "@reso.context": "urn:reso:metadata:2.0:resource:property",
+          "ListingKey": "ABC123",
+          "StandardStatus": "Incomplete",
+          "UnparsedAddress": "123 Main Street, Anywhere USA, 12345",
+          "ListAgentUli": "urn:reso:uli:1.0:442ed030-12a1-467b-8356-e330863865c3",
+          "ListOfficeMlsId": "Broker1",
+          "ModificationTimestamp": "2026-06-17T14:30:00Z"
+        }
+      }
+    ]
+  }
+}

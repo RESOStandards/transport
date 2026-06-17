@@ -1,0 +1,221 @@
+{
+  "openrpc": "1.3.2",
+  "info": {
+    "title": "UREP Real Estate MCP Service",
+    "version": "1.0.0",
+    "description": "MCP/OpenRPC binding for the Universal Real Estate Protocol real-estate service."
+  },
+  "methods": [
+    {
+      "name": "urep.real_estate.search_listings",
+      "summary": "Search authorized listing records",
+      "params": [
+        {
+          "name": "request",
+          "required": true,
+          "schema": {
+            "$ref": "../../schemas/real-estate/listing.json#/$defs/search_request"
+          }
+        }
+      ],
+      "result": {
+        "name": "response",
+        "schema": {
+          "$ref": "../../schemas/real-estate/listing.json#/$defs/search_response"
+        }
+      }
+    },
+    {
+      "name": "urep.real_estate.get_listing",
+      "summary": "Get a listing by resource and key",
+      "params": [
+        {
+          "name": "resource",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "key",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "result": {
+        "name": "listing",
+        "schema": {
+          "$ref": "../../schemas/real-estate/listing.json#/$defs/listing"
+        }
+      }
+    },
+    {
+      "name": "urep.real_estate.create_listing_workspace",
+      "summary": "Create a collaborative listing workspace",
+      "params": [
+        {
+          "name": "request",
+          "required": true,
+          "schema": {
+            "$ref": "../../schemas/real-estate/workspace.json#/$defs/create_request"
+          }
+        }
+      ],
+      "result": {
+        "name": "workspace",
+        "schema": {
+          "$ref": "../../schemas/real-estate/workspace.json#/$defs/workspace"
+        }
+      }
+    },
+    {
+      "name": "urep.real_estate.update_listing_workspace",
+      "summary": "Update a collaborative listing workspace",
+      "params": [
+        {
+          "name": "workspace_id",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "request",
+          "required": true,
+          "schema": {
+            "$ref": "../../schemas/real-estate/workspace.json#/$defs/update_request"
+          }
+        }
+      ],
+      "result": {
+        "name": "workspace",
+        "schema": {
+          "$ref": "../../schemas/real-estate/workspace.json#/$defs/workspace"
+        }
+      }
+    },
+    {
+      "name": "urep.real_estate.request_listing_validation",
+      "summary": "Request validation for a listing workspace",
+      "params": [
+        {
+          "name": "workspace_id",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "validator",
+          "required": false,
+          "schema": { "type": "string", "format": "uri" }
+        }
+      ],
+      "result": {
+        "name": "validation_result",
+        "schema": {
+          "$ref": "../../schemas/real-estate/validation-error.json#/$defs/validation_result"
+        }
+      }
+    },
+    {
+      "name": "urep.real_estate.request_showing",
+      "summary": "Request a showing appointment",
+      "params": [
+        {
+          "name": "showing",
+          "required": true,
+          "schema": {
+            "$ref": "../../schemas/real-estate/showing.json#/$defs/showing"
+          }
+        }
+      ],
+      "result": {
+        "name": "showing",
+        "schema": {
+          "$ref": "../../schemas/real-estate/showing.json#/$defs/showing"
+        }
+      }
+    },
+    {
+      "name": "urep.real_estate.update_showing",
+      "summary": "Accept, decline, reschedule, cancel, or complete a showing",
+      "params": [
+        {
+          "name": "showing_id",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "showing",
+          "required": true,
+          "schema": {
+            "$ref": "../../schemas/real-estate/showing.json#/$defs/showing"
+          }
+        }
+      ],
+      "result": {
+        "name": "showing",
+        "schema": {
+          "$ref": "../../schemas/real-estate/showing.json#/$defs/showing"
+        }
+      }
+    },
+    {
+      "name": "urep.real_estate.submit_offer",
+      "summary": "Submit an offer",
+      "params": [
+        {
+          "name": "offer",
+          "required": true,
+          "schema": {
+            "$ref": "../../schemas/real-estate/offer.json#/$defs/offer"
+          }
+        }
+      ],
+      "result": {
+        "name": "offer",
+        "schema": {
+          "$ref": "../../schemas/real-estate/offer.json#/$defs/offer"
+        }
+      }
+    },
+    {
+      "name": "urep.real_estate.update_offer",
+      "summary": "Counter, accept, reject, withdraw, or expire an offer",
+      "params": [
+        {
+          "name": "offer_id",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "offer",
+          "required": true,
+          "schema": {
+            "$ref": "../../schemas/real-estate/offer.json#/$defs/offer"
+          }
+        }
+      ],
+      "result": {
+        "name": "offer",
+        "schema": {
+          "$ref": "../../schemas/real-estate/offer.json#/$defs/offer"
+        }
+      }
+    },
+    {
+      "name": "urep.real_estate.append_activity",
+      "summary": "Append an ActivityStreams-compatible event",
+      "params": [
+        {
+          "name": "activity",
+          "required": true,
+          "schema": {
+            "$ref": "../../schemas/real-estate/activity.json#/$defs/activity"
+          }
+        }
+      ],
+      "result": {
+        "name": "activity",
+        "schema": {
+          "$ref": "../../schemas/real-estate/activity.json#/$defs/activity"
+        }
+      }
+    }
+  ]
+}

@@ -67,7 +67,7 @@ In progress proposals are ones that are in review by Transport and Certification
 | [**RCP-49**](https://github.com/RESOStandards/transport/issues/142) | **EntityEvent Subscriptions and Filtering** | **1.0.0** | **March 2024** |
 | [**RCP-50**](https://github.com/RESOStandards/transport/blob/rcp-50-data-provenance/proposals/data-provenance.md) | **Data Provenance** | **1.0.0** | **March 2024** |
 | [**RCP-51**](https://github.com/RESOStandards/transport/pull/157) | **DOM Increment** | **1.0.0** | **May 2025** |
-| [**RCP-52**](https://github.com/RESOStandards/transport/discussions/162) | **Listing Advertisement** | **1.0.0** | **May 2025** |
+| [**RCP-52**](/proposals/rcp-052-listing-advertisement.md) | **Universal Real Estate Protocol** | **1.0.0** | **May 2025** |
 
 ---
 
@@ -82,4 +82,3 @@ More information about [**RESO Certification**](./certification-reso-analytics.m
 [**About RESO**](https://reso.org)
 
 [**RESO Data Dictionary**](https://ddwiki.reso.org)
-

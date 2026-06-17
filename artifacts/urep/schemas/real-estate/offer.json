@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://transport.reso.org/urep/schemas/real-estate/offer.json",
+  "title": "UREP Offer",
+  "description": "Offer workflow payload for a listing.",
+  "$defs": {
+    "money": {
+      "type": "object",
+      "required": ["amount", "currency"],
+      "properties": {
+        "amount": {
+          "type": "integer",
+          "description": "Amount in minor currency units."
+        },
+        "currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "offer": {
+      "type": "object",
+      "required": ["offer_id", "listing", "state"],
+      "properties": {
+        "offer_id": {
+          "type": "string"
+        },
+        "listing": {
+          "$ref": "listing.json#/$defs/listing_reference"
+        },
+        "state": {
+          "type": "string",
+          "enum": ["draft", "submitted", "countered", "accepted", "rejected", "withdrawn", "expired"]
+        },
+        "price": {
+          "$ref": "#/$defs/money"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "buyer_agent": {
+          "$ref": "workspace.json#/$defs/actor_ref"
+        },
+        "listing_agent": {
+          "$ref": "workspace.json#/$defs/actor_ref"
+        },
+        "secure_documents": {
+          "type": "array",
+          "items": {
+            "$ref": "listing.json#/$defs/link"
+          }
+        },
+        "activity_thread": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "$ref": "#/$defs/offer"
+}

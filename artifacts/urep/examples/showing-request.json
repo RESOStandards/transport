@@ -1,0 +1,32 @@
+{
+  "showing_id": "showing_123",
+  "listing": {
+    "resource": "Property",
+    "key": "ABC123",
+    "url": "https://mls.example.com/Property('ABC123')"
+  },
+  "state": "requested",
+  "requested_windows": [
+    {
+      "start": "2026-06-19T15:00:00Z",
+      "end": "2026-06-19T16:00:00Z"
+    },
+    {
+      "start": "2026-06-19T18:00:00Z",
+      "end": "2026-06-19T19:00:00Z"
+    }
+  ],
+  "requesting_party": {
+    "id": "urn:reso:uli:1.0:buyer-agent-example",
+    "type": "licensee",
+    "name": "Kim Agent",
+    "url": "https://showing.example.com/actors/KimAgent"
+  },
+  "responding_party": {
+    "id": "urn:reso:uli:1.0:442ed030-12a1-467b-8356-e330863865c3",
+    "type": "licensee",
+    "name": "Bob Agent",
+    "url": "https://listing.example.com/actors/BobAgent"
+  },
+  "activity_thread": "https://listing.example.com/workspaces/ws_ABC123/thread"
+}

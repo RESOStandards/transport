@@ -1,0 +1,64 @@
+{
+  "urep": {
+    "version": "1.0.0",
+    "status": "error",
+    "request_id": "req_01JY0UREPVALIDATION",
+    "activity_id": "https://mls.example.com/activities/validation/ABC123/00001",
+    "capabilities": {
+      "org.reso.realestate.listing.validation": [
+        {
+          "version": "1.0.0"
+        }
+      ],
+      "org.reso.realestate.activity.stream": [
+        {
+          "version": "1.0.0"
+        }
+      ]
+    }
+  },
+  "data": {
+    "status": "rejected",
+    "errors": [
+      {
+        "code": "ValidationError",
+        "message": "The listing failed MLS validation.",
+        "details": [
+          {
+            "target": "ListPrice",
+            "message": "ListPrice is required before marketing."
+          }
+        ]
+      }
+    ]
+  },
+  "activity": {
+    "@context": "https://www.w3.org/ns/activitystreams",
+    "type": "Create",
+    "id": "https://mls.example.com/activities/validation/ABC123/00001",
+    "published": "2026-06-17T14:35:00Z",
+    "actor": "https://mls.example.com/actors/input",
+    "to": [
+      "https://listing.example.com/actors/BobAgent"
+    ],
+    "cc": [
+      "https://listing.example.com/actors/Broker1"
+    ],
+    "inReplyTo": "https://listing.example.com/workspaces/ws_ABC123/thread",
+    "content": "#rejected",
+    "object": {
+      "type": "Note",
+      "content": "#rejected",
+      "url": {
+        "type": "Link",
+        "href": "https://mls.example.com/inputerrors/ABC123/00001.json",
+        "mediaType": "application/json"
+      }
+    },
+    "urep": {
+      "capability": "org.reso.realestate.listing.validation",
+      "state": "rejected",
+      "resource": "Property"
+    }
+  }
+}

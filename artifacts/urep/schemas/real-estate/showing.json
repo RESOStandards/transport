@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://transport.reso.org/urep/schemas/real-estate/showing.json",
+  "title": "UREP Showing",
+  "description": "Showing appointment request and state payload.",
+  "$defs": {
+    "time_window": {
+      "type": "object",
+      "required": ["start", "end"],
+      "properties": {
+        "start": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "additionalProperties": false
+    },
+    "showing": {
+      "type": "object",
+      "required": ["showing_id", "listing", "state"],
+      "properties": {
+        "showing_id": {
+          "type": "string"
+        },
+        "listing": {
+          "$ref": "listing.json#/$defs/listing_reference"
+        },
+        "state": {
+          "type": "string",
+          "enum": ["requested", "accepted", "declined", "rescheduled", "cancelled", "completed"]
+        },
+        "requested_windows": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/time_window"
+          }
+        },
+        "appointment_time": {
+          "$ref": "#/$defs/time_window"
+        },
+        "requesting_party": {
+          "$ref": "workspace.json#/$defs/actor_ref"
+        },
+        "responding_party": {
+          "$ref": "workspace.json#/$defs/actor_ref"
+        },
+        "activity_thread": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "$ref": "#/$defs/showing"
+}

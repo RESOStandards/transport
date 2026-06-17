@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://transport.reso.org/urep/schemas/real-estate/listing.json",
+  "title": "UREP Listing",
+  "description": "Listing or pre-listing payload reference used by UREP workflows.",
+  "$defs": {
+    "reso_common_format_payload": {
+      "type": "object",
+      "required": ["@reso.context"],
+      "properties": {
+        "@reso.context": {
+          "type": "string",
+          "pattern": "^urn:reso:metadata:"
+        }
+      },
+      "additionalProperties": true
+    },
+    "link": {
+      "type": "object",
+      "required": ["href"],
+      "properties": {
+        "href": {
+          "type": "string",
+          "format": "uri"
+        },
+        "mediaType": {
+          "type": "string"
+        },
+        "rel": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "listing_reference": {
+      "type": "object",
+      "required": ["resource", "key"],
+      "properties": {
+        "resource": {
+          "type": "string",
+          "examples": ["Property"]
+        },
+        "key": {
+          "type": "string"
+        },
+        "listing_id": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "additionalProperties": true
+    },
+    "listing": {
+      "type": "object",
+      "required": ["record"],
+      "properties": {
+        "reference": {
+          "$ref": "#/$defs/listing_reference"
+        },
+        "lifecycle_phase": {
+          "type": "string",
+          "enum": ["draft", "premarketing", "marketing", "under_contract", "closed", "withdrawn", "archived"]
+        },
+        "record": {
+          "$ref": "#/$defs/reso_common_format_payload"
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/link"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "search_request": {
+      "type": "object",
+      "properties": {
+        "filter": {
+          "type": "object",
+          "properties": {
+            "lifecycle_phase": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "standard_status": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "city": {
+              "type": "string"
+            },
+            "state_or_province": {
+              "type": "string"
+            },
+            "postal_code": {
+              "type": "string"
+            },
+            "list_agent_uli": {
+              "type": "string"
+            },
+            "list_office_uoi": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        },
+        "page": {
+          "type": "object",
+          "properties": {
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200
+            },
+            "cursor": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "search_response": {
+      "type": "object",
+      "required": ["value"],
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/listing"
+          }
+        },
+        "next_cursor": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "$ref": "#/$defs/listing"
+}

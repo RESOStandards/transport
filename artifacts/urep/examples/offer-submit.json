@@ -1,0 +1,34 @@
+{
+  "offer_id": "offer_XYZ999",
+  "listing": {
+    "resource": "Property",
+    "key": "ABC123",
+    "url": "https://mls.example.com/Property('ABC123')"
+  },
+  "state": "submitted",
+  "price": {
+    "amount": 53000000,
+    "currency": "USD"
+  },
+  "summary": "Offer of $530,000 contingent on inspection.",
+  "buyer_agent": {
+    "id": "urn:reso:uli:1.0:buyer-agent-example",
+    "type": "licensee",
+    "name": "Amy Agent",
+    "url": "https://offer.example.com/actors/AmyAgent"
+  },
+  "listing_agent": {
+    "id": "urn:reso:uli:1.0:442ed030-12a1-467b-8356-e330863865c3",
+    "type": "licensee",
+    "name": "Bob Agent",
+    "url": "https://listing.example.com/actors/BobAgent"
+  },
+  "secure_documents": [
+    {
+      "href": "https://offer.example.com/offers/XYZ999/package",
+      "mediaType": "application/json",
+      "rel": "offer-package"
+    }
+  ],
+  "activity_thread": "https://listing.example.com/workspaces/ws_ABC123/thread"
+}

@@ -1,0 +1,153 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://transport.reso.org/urep/schemas/urep.json",
+  "title": "UREP Discovery Profile",
+  "description": "Discovery profile for Universal Real Estate Protocol providers and consumers.",
+  "$defs": {
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "reverse_domain_name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:\\.[a-z][a-z0-9_-]*)+$"
+    },
+    "identifier": {
+      "type": "object",
+      "required": ["type", "value"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["uli", "uoi", "usi", "license", "local"]
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "participant": {
+      "type": "object",
+      "required": ["name", "identifiers"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "identifiers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/identifier"
+          },
+          "minItems": 1
+        }
+      },
+      "additionalProperties": true
+    },
+    "authorization_method": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["oauth2", "oidc", "api_key", "mtls", "signed_request"]
+        },
+        "issuer": {
+          "type": "string",
+          "format": "uri"
+        },
+        "scopes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["version", "services", "capabilities"],
+      "properties": {
+        "version": {
+          "$ref": "#/$defs/version"
+        },
+        "supported_versions": {
+          "type": "object",
+          "propertyNames": {
+            "$ref": "#/$defs/version"
+          },
+          "additionalProperties": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "services": {
+          "type": "object",
+          "propertyNames": {
+            "$ref": "#/$defs/reverse_domain_name"
+          },
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "$ref": "service.json#/$defs/service"
+            },
+            "minItems": 1
+          }
+        },
+        "capabilities": {
+          "type": "object",
+          "propertyNames": {
+            "$ref": "#/$defs/reverse_domain_name"
+          },
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "$ref": "capability.json#/$defs/capability"
+            },
+            "minItems": 1
+          }
+        },
+        "authorization": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/authorization_method"
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "type": "object",
+  "required": ["profile_type", "participant", "urep"],
+  "properties": {
+    "profile_type": {
+      "type": "string",
+      "enum": ["provider", "consumer"]
+    },
+    "participant": {
+      "$ref": "#/$defs/participant"
+    },
+    "urep": {
+      "$ref": "#/$defs/metadata"
+    },
+    "signing_keys": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["kid", "kty"],
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

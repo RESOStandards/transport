@@ -1,0 +1,30 @@
+{
+  "phase": "premarketing",
+  "listing": {
+    "lifecycle_phase": "premarketing",
+    "record": {
+      "@reso.context": "urn:reso:metadata:2.0:resource:property",
+      "UnparsedAddress": "123 Main Street, Anywhere USA, 12345",
+      "AttributionContact": "email@example.com",
+      "ListAgentStateLicense": "11111",
+      "ListAgentUli": "urn:reso:uli:1.0:442ed030-12a1-467b-8356-e330863865c3",
+      "ListOfficeMlsId": "Broker1",
+      "ListingContractDate": "2026-06-15",
+      "ModificationTimestamp": "2026-06-17T14:30:00Z"
+    }
+  },
+  "participants": [
+    {
+      "id": "urn:reso:uli:1.0:442ed030-12a1-467b-8356-e330863865c3",
+      "type": "licensee",
+      "name": "Bob Agent",
+      "url": "https://listing.example.com/actors/BobAgent"
+    },
+    {
+      "id": "urn:reso:uoi:example-brokerage",
+      "type": "organization",
+      "name": "Example Brokerage",
+      "url": "https://listing.example.com/actors/Broker1"
+    }
+  ]
+}

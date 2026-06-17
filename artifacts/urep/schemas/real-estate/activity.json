@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://transport.reso.org/urep/schemas/real-estate/activity.json",
+  "title": "UREP Activity",
+  "description": "ActivityStreams-compatible event for UREP workflow threads.",
+  "$defs": {
+    "link": {
+      "type": "object",
+      "required": ["type", "href"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "Link"
+        },
+        "href": {
+          "type": "string",
+          "format": "uri"
+        },
+        "mediaType": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "activity": {
+      "type": "object",
+      "required": ["@context", "type", "id", "published", "actor"],
+      "properties": {
+        "@context": {
+          "oneOf": [
+            {
+              "type": "string",
+              "const": "https://www.w3.org/ns/activitystreams"
+            },
+            {
+              "type": "array",
+              "contains": {
+                "const": "https://www.w3.org/ns/activitystreams"
+              }
+            }
+          ]
+        },
+        "type": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "format": "uri"
+        },
+        "published": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "actor": {
+          "oneOf": [
+            {
+              "type": "string",
+              "format": "uri"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          ]
+        },
+        "object": true,
+        "content": {
+          "type": "string"
+        },
+        "to": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "cc": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "inReplyTo": {
+          "type": "string",
+          "format": "uri"
+        },
+        "attributedTo": {
+          "oneOf": [
+            {
+              "type": "string",
+              "format": "uri"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          ]
+        },
+        "url": {
+          "$ref": "#/$defs/link"
+        },
+        "urep": {
+          "type": "object",
+          "properties": {
+            "capability": {
+              "type": "string"
+            },
+            "state": {
+              "type": "string"
+            },
+            "resource": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "$ref": "#/$defs/activity"
+}

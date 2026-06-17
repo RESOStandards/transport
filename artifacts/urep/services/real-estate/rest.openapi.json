@@ -1,0 +1,563 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "UREP Real Estate Service",
+    "version": "1.0.0",
+    "description": "Canonical REST binding for the Universal Real Estate Protocol real-estate service. Endpoint base URL is discovered from the provider profile at /.well-known/urep under services[\"org.reso.realestate\"][transport=rest].endpoint."
+  },
+  "servers": [
+    {
+      "url": "{endpoint}",
+      "description": "Provider endpoint discovered from the UREP profile.",
+      "variables": {
+        "endpoint": {
+          "default": "https://provider.example.com/urep",
+          "description": "Provider-provided REST base URL."
+        }
+      }
+    }
+  ],
+  "paths": {
+    "/listings/search": {
+      "post": {
+        "operationId": "search_listings",
+        "summary": "Search authorized listing records",
+        "description": "Search listing or pre-listing records that the consumer principal is authorized to access.",
+        "parameters": [
+          { "$ref": "#/components/parameters/authorization" },
+          { "$ref": "#/components/parameters/urep_consumer" },
+          { "$ref": "#/components/parameters/idempotency_key" },
+          { "$ref": "#/components/parameters/request_id" }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/real-estate/listing.json#/$defs/search_request"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Listing search result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    { "$ref": "../../schemas/response-envelope.json" },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "../../schemas/real-estate/listing.json#/$defs/search_response"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/listings/{resource}/{key}": {
+      "get": {
+        "operationId": "get_listing",
+        "summary": "Get a listing record",
+        "description": "Fetch a listing or pre-listing record by resource and key.",
+        "parameters": [
+          { "$ref": "#/components/parameters/authorization" },
+          { "$ref": "#/components/parameters/urep_consumer" },
+          { "$ref": "#/components/parameters/request_id" },
+          {
+            "name": "resource",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Listing record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    { "$ref": "../../schemas/response-envelope.json" },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "../../schemas/real-estate/listing.json#/$defs/listing"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workspaces": {
+      "post": {
+        "operationId": "create_listing_workspace",
+        "summary": "Create a listing workspace",
+        "description": "Create a collaborative listing workspace from a RESO Common Format listing payload.",
+        "parameters": [
+          { "$ref": "#/components/parameters/authorization" },
+          { "$ref": "#/components/parameters/urep_consumer" },
+          { "$ref": "#/components/parameters/idempotency_key" },
+          { "$ref": "#/components/parameters/request_id" }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/real-estate/workspace.json#/$defs/create_request"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Listing workspace created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    { "$ref": "../../schemas/response-envelope.json" },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "../../schemas/real-estate/workspace.json#/$defs/workspace"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workspaces/{workspace_id}": {
+      "get": {
+        "operationId": "get_listing_workspace",
+        "summary": "Get a listing workspace",
+        "parameters": [
+          { "$ref": "#/components/parameters/authorization" },
+          { "$ref": "#/components/parameters/urep_consumer" },
+          { "$ref": "#/components/parameters/request_id" },
+          { "$ref": "#/components/parameters/workspace_id" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Listing workspace",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    { "$ref": "../../schemas/response-envelope.json" },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "../../schemas/real-estate/workspace.json#/$defs/workspace"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "update_listing_workspace",
+        "summary": "Update a listing workspace",
+        "parameters": [
+          { "$ref": "#/components/parameters/authorization" },
+          { "$ref": "#/components/parameters/urep_consumer" },
+          { "$ref": "#/components/parameters/idempotency_key" },
+          { "$ref": "#/components/parameters/request_id" },
+          { "$ref": "#/components/parameters/workspace_id" }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/real-estate/workspace.json#/$defs/update_request"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Listing workspace updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    { "$ref": "../../schemas/response-envelope.json" },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "../../schemas/real-estate/workspace.json#/$defs/workspace"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workspaces/{workspace_id}/validation-requests": {
+      "post": {
+        "operationId": "request_listing_validation",
+        "summary": "Request listing validation",
+        "parameters": [
+          { "$ref": "#/components/parameters/authorization" },
+          { "$ref": "#/components/parameters/urep_consumer" },
+          { "$ref": "#/components/parameters/idempotency_key" },
+          { "$ref": "#/components/parameters/request_id" },
+          { "$ref": "#/components/parameters/workspace_id" }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "validator": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "message": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Validation request accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    { "$ref": "../../schemas/response-envelope.json" },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "../../schemas/real-estate/validation-error.json#/$defs/validation_result"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/showings": {
+      "post": {
+        "operationId": "request_showing",
+        "summary": "Request a showing appointment",
+        "parameters": [
+          { "$ref": "#/components/parameters/authorization" },
+          { "$ref": "#/components/parameters/urep_consumer" },
+          { "$ref": "#/components/parameters/idempotency_key" },
+          { "$ref": "#/components/parameters/request_id" }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/real-estate/showing.json#/$defs/showing"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Showing requested",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    { "$ref": "../../schemas/response-envelope.json" },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "../../schemas/real-estate/showing.json#/$defs/showing"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/showings/{showing_id}": {
+      "patch": {
+        "operationId": "update_showing",
+        "summary": "Accept, decline, reschedule, cancel, or complete a showing",
+        "parameters": [
+          { "$ref": "#/components/parameters/authorization" },
+          { "$ref": "#/components/parameters/urep_consumer" },
+          { "$ref": "#/components/parameters/idempotency_key" },
+          { "$ref": "#/components/parameters/request_id" },
+          {
+            "name": "showing_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/real-estate/showing.json#/$defs/showing"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Showing updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    { "$ref": "../../schemas/response-envelope.json" },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "../../schemas/real-estate/showing.json#/$defs/showing"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/offers": {
+      "post": {
+        "operationId": "submit_offer",
+        "summary": "Submit an offer",
+        "parameters": [
+          { "$ref": "#/components/parameters/authorization" },
+          { "$ref": "#/components/parameters/urep_consumer" },
+          { "$ref": "#/components/parameters/idempotency_key" },
+          { "$ref": "#/components/parameters/request_id" }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/real-estate/offer.json#/$defs/offer"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Offer submitted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    { "$ref": "../../schemas/response-envelope.json" },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "../../schemas/real-estate/offer.json#/$defs/offer"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/offers/{offer_id}": {
+      "patch": {
+        "operationId": "update_offer",
+        "summary": "Counter, accept, reject, withdraw, or expire an offer",
+        "parameters": [
+          { "$ref": "#/components/parameters/authorization" },
+          { "$ref": "#/components/parameters/urep_consumer" },
+          { "$ref": "#/components/parameters/idempotency_key" },
+          { "$ref": "#/components/parameters/request_id" },
+          {
+            "name": "offer_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/real-estate/offer.json#/$defs/offer"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Offer updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    { "$ref": "../../schemas/response-envelope.json" },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "../../schemas/real-estate/offer.json#/$defs/offer"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/activities": {
+      "post": {
+        "operationId": "append_activity",
+        "summary": "Append an activity to a workflow thread",
+        "parameters": [
+          { "$ref": "#/components/parameters/authorization" },
+          { "$ref": "#/components/parameters/urep_consumer" },
+          { "$ref": "#/components/parameters/idempotency_key" },
+          { "$ref": "#/components/parameters/request_id" }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/activity+json": {
+              "schema": {
+                "$ref": "../../schemas/real-estate/activity.json#/$defs/activity"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "../../schemas/real-estate/activity.json#/$defs/activity"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Activity appended",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    { "$ref": "../../schemas/response-envelope.json" },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "../../schemas/real-estate/activity.json#/$defs/activity"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "authorization": {
+        "name": "Authorization",
+        "in": "header",
+        "required": true,
+        "schema": { "type": "string" },
+        "description": "OAuth2 bearer token or another negotiated authorization scheme."
+      },
+      "urep_consumer": {
+        "name": "UREP-Consumer",
+        "in": "header",
+        "required": false,
+        "schema": { "type": "string" },
+        "description": "Consumer profile advertisement, for example: profile=\"https://consumer.example.com/.well-known/urep\"."
+      },
+      "idempotency_key": {
+        "name": "Idempotency-Key",
+        "in": "header",
+        "required": false,
+        "schema": { "type": "string" }
+      },
+      "request_id": {
+        "name": "Request-Id",
+        "in": "header",
+        "required": false,
+        "schema": { "type": "string" }
+      },
+      "workspace_id": {
+        "name": "workspace_id",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" }
+      }
+    }
+  }
+}

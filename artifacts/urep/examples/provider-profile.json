@@ -1,0 +1,106 @@
+{
+  "profile_type": "provider",
+  "participant": {
+    "name": "Example MLS",
+    "url": "https://mls.example.com",
+    "identifiers": [
+      {
+        "type": "uoi",
+        "value": "urn:reso:uoi:example-mls"
+      },
+      {
+        "type": "usi",
+        "value": "urn:reso:usi:example-mls-input"
+      }
+    ]
+  },
+  "urep": {
+    "version": "1.0.0",
+    "services": {
+      "org.reso.realestate": [
+        {
+          "version": "1.0.0",
+          "transport": "rest",
+          "spec": "https://transport.reso.org/urep/services/real-estate/rest.openapi.json",
+          "schema": "https://transport.reso.org/urep/services/real-estate/rest.openapi.json",
+          "endpoint": "https://mls.example.com/urep"
+        },
+        {
+          "version": "1.0.0",
+          "transport": "activitypub",
+          "spec": "https://www.w3.org/TR/activitypub/",
+          "endpoint": "https://mls.example.com/actors/input/outbox"
+        }
+      ]
+    },
+    "capabilities": {
+      "org.reso.realestate.listing.discovery": [
+        {
+          "version": "1.0.0",
+          "spec": "https://transport.reso.org/proposals/rcp-052-listing-advertisement.md#section-52-listing-discovery",
+          "schema": "https://transport.reso.org/urep/schemas/real-estate/listing.json"
+        }
+      ],
+      "org.reso.realestate.listing.workspace": [
+        {
+          "version": "1.0.0",
+          "spec": "https://transport.reso.org/proposals/rcp-052-listing-advertisement.md#section-53-listing-workspace",
+          "schema": "https://transport.reso.org/urep/schemas/real-estate/workspace.json"
+        }
+      ],
+      "org.reso.realestate.listing.validation": [
+        {
+          "version": "1.0.0",
+          "spec": "https://transport.reso.org/proposals/rcp-052-listing-advertisement.md#section-54-listing-validation",
+          "schema": "https://transport.reso.org/urep/schemas/real-estate/validation-error.json"
+        }
+      ],
+      "org.reso.realestate.showing": [
+        {
+          "version": "1.0.0",
+          "spec": "https://transport.reso.org/proposals/rcp-052-listing-advertisement.md#section-55-showing",
+          "schema": "https://transport.reso.org/urep/schemas/real-estate/showing.json"
+        }
+      ],
+      "org.reso.realestate.offer": [
+        {
+          "version": "1.0.0",
+          "spec": "https://transport.reso.org/proposals/rcp-052-listing-advertisement.md#section-56-offer",
+          "schema": "https://transport.reso.org/urep/schemas/real-estate/offer.json"
+        }
+      ],
+      "org.reso.realestate.activity.stream": [
+        {
+          "version": "1.0.0",
+          "spec": "https://transport.reso.org/proposals/rcp-052-listing-advertisement.md#section-57-activity-stream",
+          "schema": "https://transport.reso.org/urep/schemas/real-estate/activity.json"
+        }
+      ]
+    },
+    "authorization": [
+      {
+        "type": "oauth2",
+        "issuer": "https://login.mls.example.com",
+        "scopes": [
+          "urep:listings.read",
+          "urep:workspaces.write",
+          "urep:validation.write",
+          "urep:showings.write",
+          "urep:offers.write"
+        ]
+      },
+      {
+        "type": "signed_request"
+      }
+    ]
+  },
+  "signing_keys": [
+    {
+      "kid": "example-mls-2026-01",
+      "kty": "EC",
+      "crv": "P-256",
+      "x": "base64url-x-coordinate",
+      "y": "base64url-y-coordinate"
+    }
+  ]
+}

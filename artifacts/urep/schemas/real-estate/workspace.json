@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://transport.reso.org/urep/schemas/real-estate/workspace.json",
+  "title": "UREP Listing Workspace",
+  "description": "Collaborative listing workspace for premarketing, validation, and marketing workflows.",
+  "$defs": {
+    "actor_ref": {
+      "type": "object",
+      "required": ["id"],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["licensee", "office", "organization", "system", "service", "principal"]
+        },
+        "name": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "additionalProperties": true
+    },
+    "workspace": {
+      "type": "object",
+      "required": ["workspace_id", "phase", "listing"],
+      "properties": {
+        "workspace_id": {
+          "type": "string"
+        },
+        "phase": {
+          "type": "string",
+          "enum": ["draft", "premarketing", "validation", "marketing", "under_contract", "closed", "archived"]
+        },
+        "listing": {
+          "$ref": "listing.json#/$defs/listing"
+        },
+        "participants": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/actor_ref"
+          }
+        },
+        "activity_thread": {
+          "type": "string",
+          "format": "uri"
+        },
+        "validation_status": {
+          "type": "string",
+          "enum": ["not_requested", "pending", "accepted", "accepted_with_warnings", "rejected", "pending_manual_review"]
+        },
+        "source_links": {
+          "type": "array",
+          "items": {
+            "$ref": "listing.json#/$defs/link"
+          }
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "additionalProperties": true
+    },
+    "create_request": {
+      "type": "object",
+      "required": ["listing"],
+      "properties": {
+        "phase": {
+          "type": "string",
+          "enum": ["draft", "premarketing", "validation", "marketing"]
+        },
+        "listing": {
+          "$ref": "listing.json#/$defs/listing"
+        },
+        "participants": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/actor_ref"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "update_request": {
+      "type": "object",
+      "properties": {
+        "phase": {
+          "type": "string"
+        },
+        "listing": {
+          "$ref": "listing.json#/$defs/listing"
+        },
+        "participants": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/actor_ref"
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "$ref": "#/$defs/workspace"
+}

@@ -1,0 +1,68 @@
+{
+  "protocol": "Universal Real Estate Protocol",
+  "version": "1.0.0",
+  "profiles": [
+    {
+      "name": "provider-profile",
+      "schema": "../schemas/urep.json",
+      "fixture": "../examples/provider-profile.json",
+      "requirement": "A provider publishes services, capabilities, identifiers, and authorization methods."
+    },
+    {
+      "name": "consumer-profile",
+      "schema": "../schemas/urep.json",
+      "fixture": "../examples/consumer-profile.json",
+      "requirement": "A consumer declares supported services and capabilities before invoking provider operations."
+    }
+  ],
+  "services": [
+    {
+      "name": "real-estate-rest",
+      "artifact": "../services/real-estate/rest.openapi.json",
+      "requirement": "REST transport exposes listing discovery, workspaces, validation, showings, offers, and activity append operations."
+    },
+    {
+      "name": "real-estate-mcp",
+      "artifact": "../services/real-estate/mcp.openrpc.json",
+      "requirement": "MCP transport exposes equivalent real estate operations for agentic consumers."
+    }
+  ],
+  "fixtures": [
+    {
+      "name": "listing-search-response",
+      "schema": "../schemas/response-envelope.json",
+      "fixture": "../examples/listing-search-response.json",
+      "capability": "org.reso.realestate.listing.discovery"
+    },
+    {
+      "name": "workspace-create-request",
+      "schema": "../schemas/real-estate/workspace.json#/$defs/create_request",
+      "fixture": "../examples/workspace-create-request.json",
+      "capability": "org.reso.realestate.listing.workspace"
+    },
+    {
+      "name": "validation-rejected-response",
+      "schema": "../schemas/response-envelope.json",
+      "fixture": "../examples/validation-rejected-response.json",
+      "capability": "org.reso.realestate.listing.validation"
+    },
+    {
+      "name": "showing-request",
+      "schema": "../schemas/real-estate/showing.json",
+      "fixture": "../examples/showing-request.json",
+      "capability": "org.reso.realestate.showing"
+    },
+    {
+      "name": "offer-submit",
+      "schema": "../schemas/real-estate/offer.json",
+      "fixture": "../examples/offer-submit.json",
+      "capability": "org.reso.realestate.offer"
+    },
+    {
+      "name": "activity-premarketing",
+      "schema": "../schemas/real-estate/activity.json",
+      "fixture": "../examples/activity-premarketing.json",
+      "capability": "org.reso.realestate.activity.stream"
+    }
+  ]
+}

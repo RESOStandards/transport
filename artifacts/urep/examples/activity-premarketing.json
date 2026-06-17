@@ -1,0 +1,37 @@
+{
+  "@context": "https://www.w3.org/ns/activitystreams",
+  "type": "Create",
+  "id": "https://listing.example.com/activities/ws_ABC123/1",
+  "published": "2026-06-17T14:31:00Z",
+  "actor": [
+    "https://listing.example.com/actors/BobAgent",
+    "https://listing.example.com/actors/MyListingApp"
+  ],
+  "to": [
+    "https://listing.example.com/actors/BobAgent"
+  ],
+  "cc": [
+    "https://listing.example.com/actors/Broker1",
+    "https://service.example.com/actors/AIPhotoApp",
+    "https://records.example.com/actors/CountyAssessorApp"
+  ],
+  "object": {
+    "type": "Note",
+    "id": "https://listing.example.com/workspaces/ws_ABC123/thread",
+    "content": "#premarketing",
+    "url": {
+      "type": "Link",
+      "href": "https://listing.example.com/workspaces/ws_ABC123",
+      "mediaType": "application/json"
+    },
+    "attributedTo": [
+      "https://listing.example.com/actors/BobAgent",
+      "https://listing.example.com/actors/Broker1"
+    ]
+  },
+  "urep": {
+    "capability": "org.reso.realestate.activity.stream",
+    "state": "premarketing",
+    "resource": "Property"
+  }
+}

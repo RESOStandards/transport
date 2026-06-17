@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://transport.reso.org/urep/schemas/service.json",
+  "title": "UREP Service Binding",
+  "description": "Transport binding for a UREP service.",
+  "$defs": {
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "transport": {
+      "type": "string",
+      "enum": ["rest", "mcp", "activitypub"]
+    },
+    "service": {
+      "type": "object",
+      "required": ["version", "transport", "spec"],
+      "properties": {
+        "version": {
+          "$ref": "#/$defs/version"
+        },
+        "transport": {
+          "$ref": "#/$defs/transport"
+        },
+        "spec": {
+          "type": "string",
+          "format": "uri"
+        },
+        "schema": {
+          "type": "string",
+          "format": "uri"
+        },
+        "endpoint": {
+          "type": "string",
+          "format": "uri"
+        },
+        "config": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "transport": {
+                "enum": ["rest", "mcp"]
+              }
+            },
+            "required": ["transport"]
+          },
+          "then": {
+            "required": ["schema", "endpoint"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "transport": {
+                "const": "activitypub"
+              }
+            },
+            "required": ["transport"]
+          },
+          "then": {
+            "required": ["endpoint"]
+          }
+        }
+      ]
+    },
+    "response_service": {
+      "type": "object",
+      "required": ["version", "transport"],
+      "properties": {
+        "version": {
+          "$ref": "#/$defs/version"
+        },
+        "transport": {
+          "$ref": "#/$defs/transport"
+        },
+        "endpoint": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "$ref": "#/$defs/service"
+}

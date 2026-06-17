@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://transport.reso.org/urep/schemas/real-estate/validation-error.json",
+  "title": "UREP Validation Error",
+  "description": "Validation error compatible with RESO Web API Add/Edit error responses.",
+  "$defs": {
+    "detail": {
+      "type": "object",
+      "required": ["target", "message"],
+      "properties": {
+        "target": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "error": {
+      "type": "object",
+      "required": ["code", "message"],
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/detail"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "validation_result": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["accepted", "accepted_with_warnings", "rejected", "pending_manual_review"]
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/error"
+          }
+        },
+        "validated_record": {
+          "$ref": "listing.json#/$defs/listing"
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "$ref": "#/$defs/error"
+}
