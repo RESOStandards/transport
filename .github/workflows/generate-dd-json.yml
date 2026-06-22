@@ -117,14 +117,19 @@ jobs:
       - name: Post PR comment
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
+        # Pass the comment body through the environment, not via `${{ }}` interpolation into the
+        # script. The body is markdown containing backticks; interpolating it into a JS template
+        # literal lets those backticks break out of the string (SyntaxError). Reading process.env
+        # treats it as an opaque string.
+        env:
+          COMMENT_BODY: ${{ steps.diff.outputs.comment }}
         with:
           script: |
-            const body = `${{ steps.diff.outputs.comment }}`;
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              body
+              body: process.env.COMMENT_BODY,
             });
 
       - name: Commit regenerated JSON back to main (push only)
