@@ -1,0 +1,14 @@
+{
+  "name": "reso-dd-reference-tools",
+  "version": "1.0.0",
+  "description": "RESO Data Dictionary reference tooling: generate dd-{ver}.json from the XLSX sheets, lint/validate the sheets, and run fitness checks on the generated JSON. Invoked by the generate-dd-json workflow.",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "xlsx": "0.18.5"
+  }
+}
