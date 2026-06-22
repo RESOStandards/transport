@@ -35,9 +35,10 @@ All DD reference tooling lives in [`references/dd/tools/`](references/dd/tools/)
 
 **Automated — the [`generate-dd-json`](.github/workflows/generate-dd-json.yml) workflow** runs on any change to `references/dd/RESODataDictionary-*.xlsx`:
 
-- Regenerates `references/dd/json/dd-{ver}.json` from each XLSX via `generate-reference-metadata.py`.
-- Runs `check-dd-reference-fitness.py` over the generated JSON; a fitness failure fails the build.
-- On a pull request it posts a summary comment with per-version counts; on a push to `main` it commits the regenerated JSON back to `main`.
+- Regenerates `references/dd/json/dd-{ver}.json` from each XLSX via `generate-reference-metadata.py` (one shared `generatedOn` per build).
+- Validates each sheet with `dd-sheet-linter.py` (gates on errors) and runs `check-dd-reference-fitness.py` over the generated JSON (gates on failures).
+- **On a pull request:** commits the regenerated JSON back to the **PR branch** — so it lands on `main` through the PR, never a direct push to protected `main` — and posts the per-version counts and the lint report as comments, so issues are fixable in-branch before merge.
+- **On merge to `main`:** re-runs generate + lint + fitness as a post-merge check, committing nothing.
 
 **The tools** (all Python + openpyxl):
 

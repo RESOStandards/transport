@@ -26,6 +26,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          # On a PR, check out the head branch itself (not the detached merge ref) so the regenerated
+          # JSON can be committed straight back to it. On push to main this resolves to main.
+          ref: ${{ github.head_ref || github.ref_name }}
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -59,12 +62,33 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p references/dd/json
+          # One timestamp for the whole build, so every dd-{ver}.json shares the same generatedOn.
+          export DD_GENERATED_ON="$(date -u +%Y-%m-%dT%H:%M:%S.000Z)"
           for v in ${{ steps.versions.outputs.list }}; do
             xlsx="references/dd/RESODataDictionary-${v}.xlsx"
             out="references/dd/json/dd-${v}.json"
             echo "Generating ${out} from ${xlsx}"
             python references/dd/tools/generate-reference-metadata.py "${xlsx}" "${v}" "${out}"
           done
+
+      - name: Lint DD sheets
+        # Read-only validation of each XLSX (structure, PascalCase, duplicates, Unicode cleanliness,
+        # SimpleDataType/LookupStatus agreement). Writes a markdown report (posted to the PR by the
+        # next step) and exits non-zero on errors — so a structurally broken sheet fails the build.
+        # Warnings do not fail; they surface in the report for in-branch fixing before merge.
+        run: |
+          set -uo pipefail
+          : > /tmp/lint-report.md
+          status=0
+          for v in ${{ steps.versions.outputs.list }}; do
+            echo "### DD ${v}" >> /tmp/lint-report.md
+            echo '```text' >> /tmp/lint-report.md
+            python references/dd/tools/dd-sheet-linter.py "references/dd/RESODataDictionary-${v}.xlsx" >> /tmp/lint-report.md 2>&1 || status=1
+            echo '```' >> /tmp/lint-report.md
+            echo >> /tmp/lint-report.md
+          done
+          cat /tmp/lint-report.md
+          exit "${status}"
 
       - name: Run DD reference fitness checks
         run: |
@@ -129,17 +153,46 @@ jobs:
               body: process.env.COMMENT_BODY,
             });
 
-      - name: Commit regenerated JSON back to main (push only)
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      - name: Post lint comment
+        # success() || failure() => runs even when the lint gate above failed, so the report (errors
+        # included) reaches the PR for in-branch fixing. Reads the report file directly (no template
+        # interpolation); skips quietly if the lint step never produced one.
+        if: github.event_name == 'pull_request' && (success() || failure())
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let report;
+            try {
+              report = fs.readFileSync('/tmp/lint-report.md', 'utf8');
+            } catch {
+              return;
+            }
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: '## DD sheet validation\n\n' + report,
+            });
+
+      - name: Commit regenerated JSON to the PR branch (pull_request only)
+        # Push the regenerated JSON to the PR's own (unprotected) branch — never to protected main,
+        # which rejects direct pushes. The JSON then lands on main through the PR like any other
+        # change. Same-repo PRs only (a fork's token is read-only). The [skip ci] tag stops this
+        # commit from re-triggering the workflow. On merge, the push-to-main run re-runs generate +
+        # fitness as a post-merge check but commits nothing.
+        if: >-
+          github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.full_name == github.repository
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add references/dd/json/dd-*.json
           if git diff --cached --quiet; then
-            echo "No JSON changes to commit."
+            echo "JSON already up to date — nothing to commit."
             exit 0
           fi
           versions="${{ steps.versions.outputs.list }}"
           git commit -m "Regenerate DD reference JSON (${versions}) [skip ci]"
-          git push origin HEAD:main
+          git push origin "HEAD:${{ github.head_ref }}"
