@@ -31,37 +31,43 @@ The full set of fitness principles the downstream JSON projection must satisfy l
 
 ## DD reference tooling and JSON generation
 
-All DD reference tooling lives in [`references/dd/tools/`](references/dd/tools/), self-contained with its own pinned `package.json` (`xlsx` for the JS tools). It previously lived in reso-tools and was sparse-checked-out by CI; it now lives here so the build owns the source it operates on and carries no cross-repo dependency.
+All DD reference tooling lives in [`references/dd/tools/`](references/dd/tools/) and is **single-runtime Python** (openpyxl, no npm). It previously lived in reso-tools and was sparse-checked-out by CI; it now lives here so the build owns the source it operates on and carries no cross-repo dependency. Python because openpyxl is the only XLSX library that preserves cell formatting, comments, and merged cells on write (SheetJS strips them) — and once the writer must be Python, keeping every tool Python means one runtime and one pinned dependency (`requirements.txt`).
 
 **Automated — the [`generate-dd-json`](.github/workflows/generate-dd-json.yml) workflow** runs on any change to `references/dd/RESODataDictionary-*.xlsx`:
 
-- Regenerates `references/dd/json/dd-{ver}.json` from each XLSX via `generate-reference-metadata.js`.
-- Runs `check-dd-reference-fitness.js` over the generated JSON; a fitness failure fails the build.
+- Regenerates `references/dd/json/dd-{ver}.json` from each XLSX via `generate-reference-metadata.py`.
+- Runs `check-dd-reference-fitness.py` over the generated JSON; a fitness failure fails the build.
 - On a pull request it posts a summary comment with per-version counts; on a push to `main` it commits the regenerated JSON back to `main`.
 
-**The tools:**
+**The tools** (all Python + openpyxl):
 
-| Tool | Runtime | Role |
-|---|---|---|
-| `generate-reference-metadata.js` | Node + xlsx | XLSX → `dd-{ver}.json` reference metadata. |
-| `check-dd-reference-fitness.js` | Node | Fitness checks on the generated JSON (principles in `dd-reference-fitness-principles.md`). |
-| `dd-sheet-linter.js` | Node + xlsx | Read-only structural validation of an XLSX (PascalCase, duplicate rows, Unicode cleanliness, referential integrity). |
-| `lint-dd-sheet.py` | Python + openpyxl | Normalizes an XLSX in place: canonical `dd.reso.org` URLs, whitespace trim, and the SimpleDataType/LookupStatus agreement check. The only sanctioned XLSX **writer** — openpyxl, never SheetJS. |
-| `diff-dd-sheet.py` | Python | Row-level XLSX/JSON diffs (markdown for PR comments and `CHANGELOG.md`). |
+| Tool | Role |
+|---|---|
+| `generate-reference-metadata.py` | XLSX → `dd-{ver}.json` reference metadata. |
+| `check-dd-reference-fitness.py` | Fitness checks on the generated JSON (principles in `dd-reference-fitness-principles.md`). |
+| `dd-sheet-linter.py` | Read-only **validation** of an XLSX: structure, PascalCase, duplicates, Unicode cleanliness, referential integrity, and the SimpleDataType/LookupStatus agreement check. |
+| `lint-dd-sheet.py` | The **writer**: normalizes an XLSX in place — canonical `dd.reso.org` URLs and whitespace trim. openpyxl, never SheetJS. |
+| `diff-dd-sheet.py` | Row-level XLSX/JSON diffs (markdown for PR comments and `CHANGELOG.md`). |
 
-**Setup and manual runs** (from the repo root):
+Validation (read-only) and normalization (write) are deliberately separate tools: `dd-sheet-linter.py` reports, `lint-dd-sheet.py` writes.
+
+**Setup and manual runs** (one-time venv, git-ignored; then from the repo root):
 
 ```bash
-# JS tools — the workflow runs this automatically
-npm ci --prefix references/dd/tools
-node references/dd/tools/generate-reference-metadata.js references/dd/RESODataDictionary-2.1.xlsx 2.1 references/dd/json/dd-2.1.json
-node references/dd/tools/check-dd-reference-fitness.js references/dd/json/dd-*.json
-
-# Python tools — one-time venv (git-ignored), then lint per version
 python3 -m venv references/dd/tools/.venv-dd-lint
-references/dd/tools/.venv-dd-lint/bin/pip install openpyxl pytest
-references/dd/tools/.venv-dd-lint/bin/python references/dd/tools/lint-dd-sheet.py references/dd/RESODataDictionary-2.1.xlsx 2.1
-references/dd/tools/.venv-dd-lint/bin/python -m pytest references/dd/tools/test_lint_dd_sheet.py
+references/dd/tools/.venv-dd-lint/bin/pip install -r references/dd/tools/requirements.txt pytest
+PY=references/dd/tools/.venv-dd-lint/bin/python
+
+# Generate + fitness (what the workflow runs)
+$PY references/dd/tools/generate-reference-metadata.py references/dd/RESODataDictionary-2.1.xlsx 2.1 references/dd/json/dd-2.1.json
+$PY references/dd/tools/check-dd-reference-fitness.py references/dd/json/dd-*.json
+
+# Validate a sheet (read-only), then normalize it (write)
+$PY references/dd/tools/dd-sheet-linter.py references/dd/RESODataDictionary-2.1.xlsx
+$PY references/dd/tools/lint-dd-sheet.py references/dd/RESODataDictionary-2.1.xlsx 2.1
+
+# Tests
+$PY -m pytest references/dd/tools/
 ```
 
 ## Pre-publish review

@@ -88,63 +88,6 @@ def test_trim_whitespace_idempotent():
     assert stats["whitespace_trimmed"] == first  # nothing more to trim
 
 
-# --- check_type_status_agreement -----------------------------------------------------------------
-
-_FIELDS_HEADER = ["ResourceName", "StandardName", "SimpleDataType", "LookupStatus"]
-
-
-def _fields_sheet(rows):
-    return _make_sheet(rows, title="Fields", header=_FIELDS_HEADER)
-
-
-def test_agreement_passes_consistent_rows():
-    ws = _fields_sheet([
-        ["Property", "StandardStatus", "String List, Single", "Locked with Enumerations"],
-        ["Property", "Appliances", "String List, Multi", "Open with Enumerations"],
-        ["Property", "ListPrice", "Number", None],
-        ["Property", "PublicRemarks", "String", None],
-        ["Media", "MediaModificationTimestamp", "Timestamp", None],
-        ["", "", None, None],  # blank trailing row — skipped
-    ])
-    assert lint.check_type_status_agreement(ws) == []
-
-
-def test_agreement_flags_lookupstatus_on_non_enum():
-    # Direction (a): the two real DD 2.1 cases.
-    ws = _fields_sheet([
-        ["HistoryTransactional", "ClassName", "String", "Open with Enumerations"],
-        ["Property", "BuiltPre1978YN", "Boolean", "Open"],
-    ])
-    warnings = lint.check_type_status_agreement(ws)
-    assert len(warnings) == 2
-    assert any(w.startswith("HistoryTransactional.ClassName:") and "not an enumeration" in w
-               for w in warnings)
-    assert any(w.startswith("Property.BuiltPre1978YN:") and "not an enumeration" in w
-               for w in warnings)
-
-
-def test_agreement_flags_enum_type_without_status():
-    # Direction (b): an enum data type with no LookupStatus.
-    ws = _fields_sheet([
-        ["Property", "OrphanEnum", "String List, Single", None],
-        ["Property", "OrphanMulti", "String List, Multi", ""],  # empty string counts as absent
-    ])
-    warnings = lint.check_type_status_agreement(ws)
-    assert len(warnings) == 2
-    assert all("carries no LookupStatus" in w for w in warnings)
-
-
-def test_agreement_qualifies_label_by_resource():
-    # ClassName appears on many resources; only one row disagrees — the label must pinpoint it.
-    ws = _fields_sheet([
-        ["ContactListings", "ClassName", "String List, Single", "Open with Enumerations"],
-        ["HistoryTransactional", "ClassName", "String", "Open with Enumerations"],
-    ])
-    warnings = lint.check_type_status_agreement(ws)
-    assert len(warnings) == 1
-    assert warnings[0].startswith("HistoryTransactional.ClassName:")
-
-
 # --- URL canonicalization ------------------------------------------------------------------------
 
 
