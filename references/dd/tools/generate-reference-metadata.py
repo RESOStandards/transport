@@ -19,6 +19,7 @@ Usage: python3 generate-reference-metadata.py <xlsx-path> <version> [output-path
 from __future__ import annotations
 
 import json
+import os
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -222,7 +223,12 @@ def build_lookups(lookups_raw: list[dict]) -> list[dict]:
 
 
 def iso_now() -> str:
-    """Match JavaScript new Date().toISOString(): millisecond precision, 'Z' suffix."""
+    """generatedOn timestamp. Prefer DD_GENERATED_ON from the environment so every file produced in a
+    single build shares one timestamp (the workflow sets it once); fall back to the current time for
+    ad-hoc local runs (millisecond precision + 'Z', matching JS new Date().toISOString())."""
+    override = os.environ.get("DD_GENERATED_ON")
+    if override:
+        return override
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
 
 
