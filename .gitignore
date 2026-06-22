@@ -1,8 +1,7 @@
 .vscode
 .DS_Store
 
-# DD reference tooling (references/dd/tools/)
-node_modules/
+# DD reference tooling (references/dd/tools/) — Python venv + caches
 .venv*/
 __pycache__/
 *.pyc

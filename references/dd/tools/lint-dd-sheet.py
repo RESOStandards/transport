@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """
-Lint and normalize a DD XLSX reference sheet.
+Normalize a DD XLSX reference sheet (the write side of the DD tooling).
+
+Read-only validation — sheet structure, PascalCase, duplicates, Unicode cleanliness, and the
+SimpleDataType/LookupStatus agreement check — lives in its counterpart dd-sheet-linter.py. This
+script only *writes*: canonical dd.reso.org URLs and whitespace normalization.
 
 Uses openpyxl (not SheetJS / xlsx) because openpyxl preserves cell formatting,
 comments, merged cells, column widths, and file size on round-trip. SheetJS
@@ -60,10 +64,6 @@ def set_value_and_hyperlink(cell, value: str, target: str) -> None:
     cell.hyperlink = Hyperlink(ref=cell.coordinate, target=target)
 
 
-# RESO DD enumeration data types — only these legitimately carry a LookupStatus.
-ENUM_DATA_TYPES = {"String List, Single", "String List, Multi"}
-
-
 def trim_whitespace(ws, stats: dict) -> None:
     """Strip leading/trailing whitespace from every text cell and hyperlink target — a deterministic
     cleanup like the URL canonicalization. DD text (definitions, names, values) should never carry
@@ -78,47 +78,6 @@ def trim_whitespace(ws, stats: dict) -> None:
             target = getattr(hl, "target", None)
             if isinstance(target, str) and target != target.strip():
                 hl.target = target.strip()
-
-
-def check_type_status_agreement(ws) -> list[str]:
-    """SimpleDataType and LookupStatus must agree: a field is an enumeration IF AND ONLY IF its data
-    type is 'String List, Single/Multi'. Flag both directions of disagreement —
-      (a) a LookupStatus on a non-enumeration type — e.g. BuiltPre1978YN (a Boolean carrying 'Open',
-          fixed by clearing the status) or HistoryTransactional.ClassName (a String that should be
-          'String List, Single', fixed by correcting the type); and
-      (b) an enumeration data type carrying no LookupStatus.
-    Warn rather than auto-fix — which side is authoritative (clear the status vs. correct the type)
-    depends on the field's true nature and is a human call. Warnings are qualified by Resource.Field
-    because a field name (e.g. ClassName) can appear on many resources with differing rows."""
-    headers = header_indexes(ws)
-    c_type = headers.get("SimpleDataType")
-    c_ls = headers.get("LookupStatus")
-    c_field = headers.get("StandardName")
-    c_res = headers.get("ResourceName")
-    if not (c_type and c_ls and c_field):
-        return []
-    warnings: list[str] = []
-    for row in ws.iter_rows(min_row=2):
-        field_name = row[c_field - 1].value
-        if not field_name:
-            continue
-        data_type = row[c_type - 1].value
-        lookup_status = row[c_ls - 1].value
-        resource = row[c_res - 1].value if c_res else None
-        label = f"{resource}.{field_name}" if resource else field_name
-        is_enum_type = str(data_type) in ENUM_DATA_TYPES
-        has_status = lookup_status not in (None, "")
-        if has_status and not is_enum_type:
-            warnings.append(
-                f"{label}: SimpleDataType={data_type!r} carries LookupStatus={lookup_status!r} "
-                f"but is not an enumeration data type"
-            )
-        elif is_enum_type and not has_status:
-            warnings.append(
-                f"{label}: SimpleDataType={data_type!r} is an enumeration data type "
-                f"but carries no LookupStatus"
-            )
-    return warnings
 
 
 def lint_fields(ws, base: str, stats: dict) -> None:
@@ -231,11 +190,9 @@ def main() -> None:
         "wiki_value": 0, "wiki_link": 0, "skipped": 0, "whitespace_trimmed": 0,
     }
 
-    type_status_warnings: list[str] = []
     if "Fields" in wb.sheetnames:
         trim_whitespace(wb["Fields"], field_stats)
         lint_fields(wb["Fields"], base, field_stats)
-        type_status_warnings = check_type_status_agreement(wb["Fields"])
     if "Lookups" in wb.sheetnames:
         trim_whitespace(wb["Lookups"], lookup_stats)
         lint_lookups(wb["Lookups"], base, lookup_stats)
@@ -261,14 +218,6 @@ def main() -> None:
         f"skipped={lookup_stats['skipped']} "
         f"whitespace-trimmed={lookup_stats['whitespace_trimmed']}"
     )
-
-    if type_status_warnings:
-        print(
-            f"\n  WARNING: {len(type_status_warnings)} field(s) have a SimpleDataType / LookupStatus "
-            f"disagreement (review — clear the status or correct the data type):"
-        )
-        for warning in type_status_warnings:
-            print(f"    - {warning}")
 
 
 if __name__ == "__main__":
