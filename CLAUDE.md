@@ -15,10 +15,10 @@ The DD sheets are the **upstream source of truth** for the entire RESO cert refe
 
 When mutating any `references/dd/RESODataDictionary-*.xlsx`:
 
-- **openpyxl only.** Never use SheetJS (or any JavaScript XLSX library) to write a DD sheet back to disk. SheetJS write-back strips cell formatting, comments, and merged-cell layout and roughly doubles file size. openpyxl preserves all of that and trims unused metadata. Linter script: [`reso-tools/reso-certification/utils/lint-dd-sheet.py`](https://github.com/RESOStandards/reso-tools/blob/main/reso-certification/utils/lint-dd-sheet.py).
+- **openpyxl only.** Never use SheetJS (or any JavaScript XLSX library) to write a DD sheet back to disk. SheetJS write-back strips cell formatting, comments, and merged-cell layout and roughly doubles file size. openpyxl preserves all of that and trims unused metadata. Linter script: [`references/dd/tools/lint-dd-sheet.py`](references/dd/tools/lint-dd-sheet.py).
 - **Lint after every edit.** The linter rewrites the canonical `dd.reso.org` hyperlinks deterministically. Post-lint file size is typically 0.81–0.84× the publisher's original; meaningfully larger sizes indicate non-openpyxl rewriting and should be investigated.
 - **Generate diffs at the end of the cycle.** After the lint pass, the JSON regeneration, and the adversarial review checks have all passed cleanly, generate the row-level diffs as the *final* artifact of the cycle:
-  - XLSX diff via [`reso-tools/reso-certification/utils/diff-dd-sheet.py`](https://github.com/RESOStandards/reso-tools/blob/main/reso-certification/utils/diff-dd-sheet.py) — emits markdown suitable for the PR comment AND for the `CHANGELOG.md` entry (`--changelog` flag).
+  - XLSX diff via [`references/dd/tools/diff-dd-sheet.py`](references/dd/tools/diff-dd-sheet.py) — emits markdown suitable for the PR comment AND for the `CHANGELOG.md` entry (`--changelog` flag).
   - JSON diff between the regenerated JSON and the prior published JSON — the projection delta. Useful as a sanity check that the JSON matches the XLSX edits faithfully (the JSON delta should be a clean projection of the XLSX delta).
 
   The ordering is load-bearing: diffs come *after* adversarial review passes, not before. A diff produced from a state that fails review is misleading — it captures content that may not survive the cycle. The diff is the artifact of a *clean* cycle, not a working-state preview. Generating it last makes the diff itself an audit trail that the review steps before it passed.
@@ -27,7 +27,42 @@ When mutating any `references/dd/RESODataDictionary-*.xlsx`:
 
 - **CHANGELOG.md entry on every revision.** Each XLSX change gets a row-level breakdown in `references/dd/CHANGELOG.md`, linked to the originating transport ticket. The CHANGELOG entry is generated from the same diff tool's `--changelog` output during the end-of-cycle diff step. Silent edits without a changelog entry mislead downstream consumers about coverage.
 
-The full set of fitness principles the downstream JSON projection must satisfy lives at [`reso-tools/reso-certification/docs/dd-reference-fitness-principles.md`](https://github.com/RESOStandards/reso-tools/blob/main/reso-certification/docs/dd-reference-fitness-principles.md). Read it before authoring an XLSX edit that touches structural columns (`SourceResource`, `LookupName`, `SimpleDataType`, `LookupStatus`).
+The full set of fitness principles the downstream JSON projection must satisfy lives at [`references/dd/tools/dd-reference-fitness-principles.md`](references/dd/tools/dd-reference-fitness-principles.md). Read it before authoring an XLSX edit that touches structural columns (`SourceResource`, `LookupName`, `SimpleDataType`, `LookupStatus`).
+
+## DD reference tooling and JSON generation
+
+All DD reference tooling lives in [`references/dd/tools/`](references/dd/tools/), self-contained with its own pinned `package.json` (`xlsx` for the JS tools). It previously lived in reso-tools and was sparse-checked-out by CI; it now lives here so the build owns the source it operates on and carries no cross-repo dependency.
+
+**Automated — the [`generate-dd-json`](.github/workflows/generate-dd-json.yml) workflow** runs on any change to `references/dd/RESODataDictionary-*.xlsx`:
+
+- Regenerates `references/dd/json/dd-{ver}.json` from each XLSX via `generate-reference-metadata.js`.
+- Runs `check-dd-reference-fitness.js` over the generated JSON; a fitness failure fails the build.
+- On a pull request it posts a summary comment with per-version counts; on a push to `main` it commits the regenerated JSON back to `main`.
+
+**The tools:**
+
+| Tool | Runtime | Role |
+|---|---|---|
+| `generate-reference-metadata.js` | Node + xlsx | XLSX → `dd-{ver}.json` reference metadata. |
+| `check-dd-reference-fitness.js` | Node | Fitness checks on the generated JSON (principles in `dd-reference-fitness-principles.md`). |
+| `dd-sheet-linter.js` | Node + xlsx | Read-only structural validation of an XLSX (PascalCase, duplicate rows, Unicode cleanliness, referential integrity). |
+| `lint-dd-sheet.py` | Python + openpyxl | Normalizes an XLSX in place: canonical `dd.reso.org` URLs, whitespace trim, and the SimpleDataType/LookupStatus agreement check. The only sanctioned XLSX **writer** — openpyxl, never SheetJS. |
+| `diff-dd-sheet.py` | Python | Row-level XLSX/JSON diffs (markdown for PR comments and `CHANGELOG.md`). |
+
+**Setup and manual runs** (from the repo root):
+
+```bash
+# JS tools — the workflow runs this automatically
+npm ci --prefix references/dd/tools
+node references/dd/tools/generate-reference-metadata.js references/dd/RESODataDictionary-2.1.xlsx 2.1 references/dd/json/dd-2.1.json
+node references/dd/tools/check-dd-reference-fitness.js references/dd/json/dd-*.json
+
+# Python tools — one-time venv (git-ignored), then lint per version
+python3 -m venv references/dd/tools/.venv-dd-lint
+references/dd/tools/.venv-dd-lint/bin/pip install openpyxl pytest
+references/dd/tools/.venv-dd-lint/bin/python references/dd/tools/lint-dd-sheet.py references/dd/RESODataDictionary-2.1.xlsx 2.1
+references/dd/tools/.venv-dd-lint/bin/python -m pytest references/dd/tools/test_lint_dd_sheet.py
+```
 
 ## Pre-publish review
 
@@ -51,6 +86,5 @@ A PR body in that shape lets the pre-publish review focus its attention precisel
 
 ## Related
 
-- [`reso-tools`](https://github.com/RESOStandards/reso-tools) — DD reference metadata generator, fitness principles, linter, diff tool.
-- [`reso-tools/CLAUDE.md`](https://github.com/RESOStandards/reso-tools/blob/main/CLAUDE.md) — full DD reference-metadata regeneration workflow.
+- [`reso-tools`](https://github.com/RESOStandards/reso-tools) — consumes the generated `dd-{ver}.json` as cert-runner reference metadata. The DD generation, lint, and fitness tooling lives here in [`references/dd/tools/`](references/dd/tools/).
 - [`dd.reso.org`](https://dd.reso.org) — authoritative published DD content, derived from these sheets.
