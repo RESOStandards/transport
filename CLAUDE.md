@@ -31,11 +31,12 @@ The full set of fitness principles the downstream JSON projection must satisfy l
 
 ## DD reference tooling and JSON generation
 
-All DD reference tooling lives in [`.reso/tools/dd/`](.reso/tools/dd/) and is **single-runtime Python** (openpyxl, no npm). It previously lived in reso-tools and was sparse-checked-out by CI; it now lives here so the build owns the source it operates on and carries no cross-repo dependency. Python because openpyxl is the only XLSX library that preserves cell formatting, comments, and merged cells on write (SheetJS strips them) — and once the writer must be Python, keeping every tool Python means one runtime and one pinned dependency (`requirements.txt`).
+All DD reference tooling lives in [`.reso/tools/dd/`](.reso/tools/dd/). The XLSX side is **Python** (openpyxl); the **reference EDMX generator** ([`generate-reference-edmx.mjs`](.reso/tools/dd/generate-reference-edmx.mjs)) is **Node**, calling reso-common's `generateEdmx`. It previously lived in reso-tools and was sparse-checked-out by CI; it now lives here so the build owns the source it operates on. Python for the XLSX side because openpyxl is the only library that preserves cell formatting, comments, and merged cells on write (SheetJS strips them); Node for the EDMX side because `generateEdmx` is the shared JS generator (`@reso-standards/reso-common`, pinned in `package.json`) the reference server uses too. Heterogeneous runtime is fine — correct ownership matters more: transport owns the reference artifacts (#219).
 
 **Automated — the [`generate-dd-json`](.github/workflows/generate-dd-json.yml) workflow** runs on any change to `references/dd/RESODataDictionary-*.xlsx`:
 
 - Regenerates `references/dd/json/dd-{ver}.json` from each XLSX via `generate-reference-metadata.py` (one shared `generatedOn` per build).
+- Renders the reference EDMX (`references/dd/edmx/dd-{ver}-{rep}.xml`, rep ∈ {lookup-resource, enum}) from each JSON via `generate-reference-edmx.mjs` (reso-common's `generateEdmx`).
 - Validates each sheet with `dd-sheet-linter.py` (gates on errors) and runs `check-dd-reference-fitness.py` over the generated JSON (gates on failures).
 - **On a pull request:** commits the regenerated JSON back to the **PR branch** — so it lands on `main` through the PR, never a direct push to protected `main` — and posts the per-version counts and the lint report as comments, so issues are fixable in-branch before merge.
 - **On merge to `main`:** re-runs generate + lint + fitness as a post-merge check, committing nothing.

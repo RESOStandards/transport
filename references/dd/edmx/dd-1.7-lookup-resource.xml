@@ -1,0 +1,2183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="org.reso.metadata" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="ContactListingNotes">
+        <Key>
+          <PropertyRef Name="ContactKey"/>
+        </Key>
+        <Property Name="ContactKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ContactListingNotesKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ListingId" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ListingKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ModificationTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="NoteContents" Type="Edm.String" MaxLength="500"/>
+        <Property Name="NotedBy" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="NotedBy"/>
+        </Property>
+        <NavigationProperty Name="Contact" Type="org.reso.metadata.Contacts"/>
+      </EntityType>
+      <EntityType Name="ContactListings">
+        <Key>
+          <PropertyRef Name="ContactListingsKey"/>
+        </Key>
+        <Property Name="AgentNotesUnreadYN" Type="Edm.Boolean"/>
+        <Property Name="ClassName" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ClassName"/>
+        </Property>
+        <Property Name="ContactKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ContactListingPreference" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ContactListingPreference"/>
+        </Property>
+        <Property Name="ContactListingsKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ContactLoginId" Type="Edm.String" MaxLength="25"/>
+        <Property Name="ContactNotesUnreadYN" Type="Edm.Boolean"/>
+        <Property Name="DirectEmailYN" Type="Edm.Boolean"/>
+        <Property Name="LastAgentNoteTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="LastContactNoteTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="ListingId" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ListingKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ListingModificationTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="ListingSentTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="ListingViewedYN" Type="Edm.Boolean"/>
+        <Property Name="ModificationTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="PortalLastVisitedTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="ResourceName" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ResourceName"/>
+        </Property>
+        <NavigationProperty Name="Contact" Type="org.reso.metadata.Contacts"/>
+        <NavigationProperty Name="Listing" Type="org.reso.metadata.Property"/>
+        <NavigationProperty Name="ListingNotes" Type="Collection(org.reso.metadata.ContactListingNotes)"/>
+      </EntityType>
+      <EntityType Name="Contacts">
+        <Key>
+          <PropertyRef Name="ContactKey"/>
+        </Key>
+        <Property Name="Anniversary" Type="Edm.Date"/>
+        <Property Name="AssistantEmail" Type="Edm.String" MaxLength="80"/>
+        <Property Name="AssistantName" Type="Edm.String" MaxLength="150"/>
+        <Property Name="AssistantPhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="AssistantPhoneExt" Type="Edm.String" MaxLength="10"/>
+        <Property Name="Birthdate" Type="Edm.Date"/>
+        <Property Name="BusinessFax" Type="Edm.String" MaxLength="16"/>
+        <Property Name="Children" Type="Edm.String" MaxLength="150"/>
+        <Property Name="Company" Type="Edm.String" MaxLength="50"/>
+        <Property Name="ContactKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ContactLoginId" Type="Edm.String" MaxLength="25"/>
+        <Property Name="ContactPassword" Type="Edm.String" MaxLength="25"/>
+        <Property Name="ContactStatus" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ContactStatus"/>
+        </Property>
+        <Property Name="ContactType" Type="Collection(Edm.String)" Nullable="false" MaxLength="255">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ContactType"/>
+        </Property>
+        <Property Name="Department" Type="Edm.String" MaxLength="50"/>
+        <Property Name="DirectPhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="Email" Type="Edm.String" MaxLength="80"/>
+        <Property Name="Email2" Type="Edm.String" MaxLength="80"/>
+        <Property Name="Email3" Type="Edm.String" MaxLength="80"/>
+        <Property Name="FirstName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="FullName" Type="Edm.String" MaxLength="150"/>
+        <Property Name="HomeAddress1" Type="Edm.String" MaxLength="50"/>
+        <Property Name="HomeAddress2" Type="Edm.String" MaxLength="50"/>
+        <Property Name="HomeCarrierRoute" Type="Edm.String" MaxLength="9"/>
+        <Property Name="HomeCity" Type="Edm.String" MaxLength="50"/>
+        <Property Name="HomeCountry" Type="Edm.String" MaxLength="2">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="Country"/>
+        </Property>
+        <Property Name="HomeCountyOrParish" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="CountyOrParish"/>
+        </Property>
+        <Property Name="HomeFax" Type="Edm.String" MaxLength="16"/>
+        <Property Name="HomePhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="HomePostalCode" Type="Edm.String" MaxLength="10"/>
+        <Property Name="HomePostalCodePlus4" Type="Edm.String" MaxLength="4"/>
+        <Property Name="HomeStateOrProvince" Type="Edm.String" MaxLength="2">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="StateOrProvince"/>
+        </Property>
+        <Property Name="JobTitle" Type="Edm.String" MaxLength="50"/>
+        <Property Name="Language" Type="Collection(Edm.String)" Nullable="false" MaxLength="150">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="Languages"/>
+        </Property>
+        <Property Name="LastName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="LeadSource" Type="Edm.String" MaxLength="150"/>
+        <Property Name="MiddleName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="MobilePhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="ModificationTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="NamePrefix" Type="Edm.String" MaxLength="10"/>
+        <Property Name="NameSuffix" Type="Edm.String" MaxLength="10"/>
+        <Property Name="Nickname" Type="Edm.String" MaxLength="50"/>
+        <Property Name="Notes" Type="Edm.String" MaxLength="1024"/>
+        <Property Name="OfficePhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="OfficePhoneExt" Type="Edm.String" MaxLength="10"/>
+        <Property Name="OriginalEntryTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="OriginatingSystemContactKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="OriginatingSystemID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="OriginatingSystemName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="OtherAddress1" Type="Edm.String" MaxLength="50"/>
+        <Property Name="OtherAddress2" Type="Edm.String" MaxLength="50"/>
+        <Property Name="OtherCarrierRoute" Type="Edm.String" MaxLength="9"/>
+        <Property Name="OtherCity" Type="Edm.String" MaxLength="50"/>
+        <Property Name="OtherCountry" Type="Edm.String" MaxLength="2">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="Country"/>
+        </Property>
+        <Property Name="OtherCountyOrParish" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="CountyOrParish"/>
+        </Property>
+        <Property Name="OtherPhoneType" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="OtherPhoneType"/>
+        </Property>
+        <Property Name="OtherPostalCode" Type="Edm.String" MaxLength="10"/>
+        <Property Name="OtherPostalCodePlus4" Type="Edm.String" MaxLength="4"/>
+        <Property Name="OtherStateOrProvince" Type="Edm.String" MaxLength="2">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="StateOrProvince"/>
+        </Property>
+        <Property Name="OwnerMemberID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="OwnerMemberKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="Pager" Type="Edm.String" MaxLength="16"/>
+        <Property Name="PhoneTTYTDD" Type="Edm.String" MaxLength="16"/>
+        <Property Name="PreferredAddress" Type="Edm.String" MaxLength="255">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="PreferredAddress"/>
+        </Property>
+        <Property Name="PreferredPhone" Type="Edm.String" MaxLength="255">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="PreferredPhone"/>
+        </Property>
+        <Property Name="ReferredBy" Type="Edm.String" MaxLength="150"/>
+        <Property Name="SocialMediaType" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="SocialMediaType"/>
+        </Property>
+        <Property Name="SourceSystemContactKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="SourceSystemID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="SourceSystemName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="SpousePartnerName" Type="Edm.String" MaxLength="150"/>
+        <Property Name="TollFreePhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="VoiceMail" Type="Edm.String" MaxLength="16"/>
+        <Property Name="VoiceMailExt" Type="Edm.String" MaxLength="10"/>
+        <Property Name="WorkAddress1" Type="Edm.String" MaxLength="50"/>
+        <Property Name="WorkAddress2" Type="Edm.String" MaxLength="50"/>
+        <Property Name="WorkCarrierRoute" Type="Edm.String" MaxLength="9"/>
+        <Property Name="WorkCity" Type="Edm.String" MaxLength="50"/>
+        <Property Name="WorkCountry" Type="Edm.String" MaxLength="2">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="Country"/>
+        </Property>
+        <Property Name="WorkCountyOrParish" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="CountyOrParish"/>
+        </Property>
+        <Property Name="WorkPostalCode" Type="Edm.String" MaxLength="10"/>
+        <Property Name="WorkPostalCodePlus4" Type="Edm.String" MaxLength="4"/>
+        <Property Name="WorkStateOrProvince" Type="Edm.String" MaxLength="2">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="StateOrProvince"/>
+        </Property>
+        <NavigationProperty Name="ContactsOtherPhones" Type="Collection(org.reso.metadata.OtherPhone)"/>
+        <NavigationProperty Name="ContactsSocialMedia" Type="Collection(org.reso.metadata.SocialMedia)"/>
+        <NavigationProperty Name="HistoryTransactional" Type="Collection(org.reso.metadata.HistoryTransactional)"/>
+        <NavigationProperty Name="Media" Type="Collection(org.reso.metadata.Media)"/>
+        <NavigationProperty Name="OriginatingSystem" Type="org.reso.metadata.OUID"/>
+        <NavigationProperty Name="OwnerMember" Type="org.reso.metadata.Member"/>
+        <NavigationProperty Name="SourceSystem" Type="org.reso.metadata.OUID"/>
+      </EntityType>
+      <EntityType Name="Field">
+        <Key>
+          <PropertyRef Name="FieldKey"/>
+        </Key>
+        <Property Name="DisplayName" Type="Edm.String"/>
+        <Property Name="FieldKey" Type="Edm.String"/>
+        <Property Name="FieldName" Type="Edm.String"/>
+        <Property Name="ModificationTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="ResourceName" Type="Edm.String"/>
+      </EntityType>
+      <EntityType Name="HistoryTransactional">
+        <Key>
+          <PropertyRef Name="HistoryTransactionalKey"/>
+        </Key>
+        <Property Name="ChangedByMemberID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="ChangedByMemberKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ChangeType" Type="Edm.String" MaxLength="255">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ChangeType"/>
+        </Property>
+        <Property Name="ClassName" Type="Edm.String" MaxLength="255">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ClassName"/>
+        </Property>
+        <Property Name="FieldKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="FieldName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="HistoryTransactionalKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ModificationTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="NewValue" Type="Edm.String" MaxLength="8000"/>
+        <Property Name="OriginatingSystemHistoryKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="OriginatingSystemID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="OriginatingSystemName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="PreviousValue" Type="Edm.String" MaxLength="8000"/>
+        <Property Name="ResourceName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ResourceRecordID" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ResourceRecordKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="SourceSystemHistoryKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="SourceSystemID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="SourceSystemName" Type="Edm.String" MaxLength="255"/>
+        <NavigationProperty Name="ChangedByMember" Type="org.reso.metadata.Member"/>
+        <NavigationProperty Name="OriginatingSystem" Type="org.reso.metadata.OUID"/>
+        <NavigationProperty Name="SourceSystem" Type="org.reso.metadata.OUID"/>
+      </EntityType>
+      <EntityType Name="InternetTracking">
+        <Key>
+          <PropertyRef Name="EventKey"/>
+        </Key>
+        <Property Name="ActorCity" Type="Edm.String" MaxLength="50"/>
+        <Property Name="ActorEmail" Type="Edm.String" MaxLength="80"/>
+        <Property Name="ActorID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="ActorIP" Type="Edm.String" MaxLength="39"/>
+        <Property Name="ActorKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ActorLatitude" Type="Edm.Decimal" Precision="12" Scale="8"/>
+        <Property Name="ActorLongitude" Type="Edm.Decimal" Precision="12" Scale="8"/>
+        <Property Name="ActorOriginatingSystemID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="ActorOriginatingSystemName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ActorPhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="ActorPhoneExt" Type="Edm.String" MaxLength="10"/>
+        <Property Name="ActorPostalCode" Type="Edm.String" MaxLength="10"/>
+        <Property Name="ActorPostalCodePlus4" Type="Edm.String" MaxLength="4"/>
+        <Property Name="ActorRegion" Type="Edm.String" MaxLength="150"/>
+        <Property Name="ActorSourceSystemID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="ActorSourceSystemName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ActorStateOrProvince" Type="Edm.String" MaxLength="2">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="StateOrProvince"/>
+        </Property>
+        <Property Name="ActorType" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ActorType"/>
+        </Property>
+        <Property Name="ColorDepth" Type="Edm.Int64"/>
+        <Property Name="DeviceType" Type="Edm.String" MaxLength="128">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="DeviceType"/>
+        </Property>
+        <Property Name="EventDescription" Type="Edm.String" MaxLength="1024"/>
+        <Property Name="EventKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="EventLabel" Type="Edm.String" MaxLength="50"/>
+        <Property Name="EventOriginatingSystemID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="EventOriginatingSystemName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="EventSourceSystemID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="EventSourceSystemName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="EventTarget" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="EventTarget"/>
+        </Property>
+        <Property Name="EventTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="EventType" Type="Edm.String" MaxLength="128">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="EventType"/>
+        </Property>
+        <Property Name="ObjectID" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ObjectIdType" Type="Edm.String" MaxLength="128">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ObjectIdType"/>
+        </Property>
+        <Property Name="ObjectKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ObjectOriginatingSystemID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="ObjectOriginatingSystemName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ObjectSourceSystemID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="ObjectSourceSystemName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ObjectType" Type="Edm.String" MaxLength="128">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ObjectType"/>
+        </Property>
+        <Property Name="ObjectURL" Type="Edm.String" MaxLength="8000"/>
+        <Property Name="OriginatingSystemActorKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="OriginatingSystemEventKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="OriginatingSystemObjectKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ReferringURL" Type="Edm.String" MaxLength="8000"/>
+        <Property Name="ScreenHeight" Type="Edm.Int64"/>
+        <Property Name="ScreenWidth" Type="Edm.Int64"/>
+        <Property Name="SessionID" Type="Edm.String" MaxLength="255"/>
+        <Property Name="SourceSystemActorKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="SourceSystemEventKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="SourceSystemObjectKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="TimeZoneOffset" Type="Edm.Int64"/>
+        <Property Name="UserAgent" Type="Edm.String" MaxLength="255"/>
+        <NavigationProperty Name="ActorOriginatingSystem" Type="org.reso.metadata.OUID"/>
+        <NavigationProperty Name="ActorSourceSystem" Type="org.reso.metadata.OUID"/>
+        <NavigationProperty Name="EventOriginatingSystem" Type="org.reso.metadata.OUID"/>
+        <NavigationProperty Name="EventSourceSystem" Type="org.reso.metadata.OUID"/>
+        <NavigationProperty Name="ObjectOriginatingSystem" Type="org.reso.metadata.OUID"/>
+        <NavigationProperty Name="ObjectSourceSystem" Type="org.reso.metadata.OUID"/>
+      </EntityType>
+      <EntityType Name="Lookup">
+        <Key>
+          <PropertyRef Name="LookupKey"/>
+        </Key>
+        <Property Name="LegacyODataValue" Type="Edm.String"/>
+        <Property Name="LookupKey" Type="Edm.String"/>
+        <Property Name="LookupName" Type="Edm.String"/>
+        <Property Name="LookupValue" Type="Edm.String"/>
+        <Property Name="ModificationTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="StandardLookupValue" Type="Edm.String"/>
+      </EntityType>
+      <EntityType Name="Media">
+        <Key>
+          <PropertyRef Name="MediaKey"/>
+        </Key>
+        <Property Name="ChangedByMemberID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="ChangedByMemberKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ClassName" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ClassName"/>
+        </Property>
+        <Property Name="ImageHeight" Type="Edm.Int64"/>
+        <Property Name="ImageOf" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ImageOf"/>
+        </Property>
+        <Property Name="ImageSizeDescription" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ImageSizeDescription"/>
+        </Property>
+        <Property Name="ImageWidth" Type="Edm.Int64"/>
+        <Property Name="LongDescription" Type="Edm.String" MaxLength="1024"/>
+        <Property Name="MediaCategory" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="MediaCategory"/>
+        </Property>
+        <Property Name="MediaHTML" Type="Edm.String" MaxLength="8500"/>
+        <Property Name="MediaKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="MediaModificationTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="MediaObjectID" Type="Edm.String" MaxLength="255"/>
+        <Property Name="MediaStatus" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="MediaStatus"/>
+        </Property>
+        <Property Name="MediaType" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="MediaType"/>
+        </Property>
+        <Property Name="MediaURL" Type="Edm.String" MaxLength="8000"/>
+        <Property Name="ModificationTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="Order" Type="Edm.Int64"/>
+        <Property Name="OriginatingSystemID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="OriginatingSystemMediaKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="OriginatingSystemName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="Permission" Type="Collection(Edm.String)" Nullable="false" MaxLength="255">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="Permission"/>
+        </Property>
+        <Property Name="PreferredPhotoYN" Type="Edm.Boolean"/>
+        <Property Name="ResourceName" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ResourceName"/>
+        </Property>
+        <Property Name="ResourceRecordID" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ResourceRecordKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ShortDescription" Type="Edm.String" MaxLength="50"/>
+        <Property Name="SourceSystemID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="SourceSystemMediaKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="SourceSystemName" Type="Edm.String" MaxLength="255"/>
+      </EntityType>
+      <EntityType Name="Member">
+        <Key>
+          <PropertyRef Name="MemberKey"/>
+        </Key>
+        <Property Name="JobTitle" Type="Edm.String" MaxLength="50"/>
+        <Property Name="LastLoginTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="MemberAddress1" Type="Edm.String" MaxLength="50"/>
+        <Property Name="MemberAddress2" Type="Edm.String" MaxLength="50"/>
+        <Property Name="MemberAOR" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="AOR"/>
+        </Property>
+        <Property Name="MemberAORkey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="MemberAORMlsId" Type="Edm.String" MaxLength="25"/>
+        <Property Name="MemberAssociationComments" Type="Edm.String" MaxLength="500"/>
+        <Property Name="MemberCarrierRoute" Type="Edm.String" MaxLength="9"/>
+        <Property Name="MemberCity" Type="Edm.String" MaxLength="50"/>
+        <Property Name="MemberCountry" Type="Edm.String" MaxLength="2">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="Country"/>
+        </Property>
+        <Property Name="MemberCountyOrParish" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="CountyOrParish"/>
+        </Property>
+        <Property Name="MemberDesignation" Type="Collection(Edm.String)" Nullable="false" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="MemberDesignation"/>
+        </Property>
+        <Property Name="MemberDirectPhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="MemberEmail" Type="Edm.String" MaxLength="80"/>
+        <Property Name="MemberFax" Type="Edm.String" MaxLength="16"/>
+        <Property Name="MemberFirstName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="MemberFullName" Type="Edm.String" MaxLength="150"/>
+        <Property Name="MemberHomePhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="MemberIsAssistantTo" Type="Edm.String" MaxLength="50"/>
+        <Property Name="MemberKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="MemberLanguages" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="Languages"/>
+        </Property>
+        <Property Name="MemberLastName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="MemberLoginId" Type="Edm.String" MaxLength="25"/>
+        <Property Name="MemberMiddleName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="MemberMlsAccessYN" Type="Edm.Boolean"/>
+        <Property Name="MemberMlsId" Type="Edm.String" MaxLength="25"/>
+        <Property Name="MemberMlsSecurityClass" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="MemberMlsSecurityClass"/>
+        </Property>
+        <Property Name="MemberMobilePhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="MemberNamePrefix" Type="Edm.String" MaxLength="10"/>
+        <Property Name="MemberNameSuffix" Type="Edm.String" MaxLength="10"/>
+        <Property Name="MemberNationalAssociationId" Type="Edm.String" MaxLength="25"/>
+        <Property Name="MemberNickname" Type="Edm.String" MaxLength="50"/>
+        <Property Name="MemberOfficePhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="MemberOfficePhoneExt" Type="Edm.String" MaxLength="10"/>
+        <Property Name="MemberOtherPhoneType" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="MemberOtherPhoneType"/>
+        </Property>
+        <Property Name="MemberPager" Type="Edm.String" MaxLength="16"/>
+        <Property Name="MemberPassword" Type="Edm.String" MaxLength="25"/>
+        <Property Name="MemberPhoneTTYTDD" Type="Edm.String" MaxLength="16"/>
+        <Property Name="MemberPostalCode" Type="Edm.String" MaxLength="10"/>
+        <Property Name="MemberPostalCodePlus4" Type="Edm.String" MaxLength="4"/>
+        <Property Name="MemberPreferredPhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="MemberPreferredPhoneExt" Type="Edm.String" MaxLength="10"/>
+        <Property Name="MemberStateLicense" Type="Edm.String" MaxLength="50"/>
+        <Property Name="MemberStateLicenseState" Type="Edm.String" MaxLength="2">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="StateOrProvince"/>
+        </Property>
+        <Property Name="MemberStateOrProvince" Type="Edm.String" MaxLength="2">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="StateOrProvince"/>
+        </Property>
+        <Property Name="MemberStatus" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="MemberStatus"/>
+        </Property>
+        <Property Name="MemberTollFreePhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="MemberType" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="MemberType"/>
+        </Property>
+        <Property Name="MemberVoiceMail" Type="Edm.String" MaxLength="16"/>
+        <Property Name="MemberVoiceMailExt" Type="Edm.String" MaxLength="10"/>
+        <Property Name="ModificationTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="OfficeKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="OfficeMlsId" Type="Edm.String" MaxLength="25"/>
+        <Property Name="OfficeName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="OriginalEntryTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="OriginatingSystemID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="OriginatingSystemMemberKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="OriginatingSystemName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="SocialMediaType" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="SocialMediaType"/>
+        </Property>
+        <Property Name="SourceSystemID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="SourceSystemMemberKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="SourceSystemName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="SyndicateTo" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="SyndicateTo"/>
+        </Property>
+        <NavigationProperty Name="HistoryTransactional" Type="Collection(org.reso.metadata.HistoryTransactional)"/>
+        <NavigationProperty Name="Media" Type="Collection(org.reso.metadata.Media)"/>
+        <NavigationProperty Name="MemberOtherPhones" Type="Collection(org.reso.metadata.OtherPhone)"/>
+        <NavigationProperty Name="MemberSocialMedia" Type="Collection(org.reso.metadata.SocialMedia)"/>
+        <NavigationProperty Name="Office" Type="org.reso.metadata.Office"/>
+        <NavigationProperty Name="OriginatingSystem" Type="org.reso.metadata.OUID"/>
+        <NavigationProperty Name="SourceSystem" Type="org.reso.metadata.OUID"/>
+      </EntityType>
+      <EntityType Name="OUID">
+        <Key>
+          <PropertyRef Name="OrganizationUniqueIdKey"/>
+        </Key>
+        <Property Name="ChangedByMemberID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="ChangedByMemberKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ModificationTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="OrganizationAddress1" Type="Edm.String" MaxLength="50"/>
+        <Property Name="OrganizationAddress2" Type="Edm.String" MaxLength="50"/>
+        <Property Name="OrganizationAOR" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="AOR"/>
+        </Property>
+        <Property Name="OrganizationAorOuid" Type="Edm.String" MaxLength="25"/>
+        <Property Name="OrganizationAorOuidKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="OrganizationCarrierRoute" Type="Edm.String" MaxLength="9"/>
+        <Property Name="OrganizationCity" Type="Edm.String" MaxLength="50"/>
+        <Property Name="OrganizationComments" Type="Edm.String" MaxLength="500"/>
+        <Property Name="OrganizationContactEmail" Type="Edm.String" MaxLength="80"/>
+        <Property Name="OrganizationContactFax" Type="Edm.String" MaxLength="16"/>
+        <Property Name="OrganizationContactFirstName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="OrganizationContactFullName" Type="Edm.String" MaxLength="150"/>
+        <Property Name="OrganizationContactJobTitle" Type="Edm.String" MaxLength="50"/>
+        <Property Name="OrganizationContactLastName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="OrganizationContactMiddleName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="OrganizationContactNamePrefix" Type="Edm.String" MaxLength="10"/>
+        <Property Name="OrganizationContactNameSuffix" Type="Edm.String" MaxLength="10"/>
+        <Property Name="OrganizationContactPhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="OrganizationContactPhoneExt" Type="Edm.String" MaxLength="10"/>
+        <Property Name="OrganizationCountry" Type="Edm.String" MaxLength="2">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="Country"/>
+        </Property>
+        <Property Name="OrganizationCountyOrParish" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="CountyOrParish"/>
+        </Property>
+        <Property Name="OrganizationMemberCount" Type="Edm.Int64"/>
+        <Property Name="OrganizationMlsCode" Type="Edm.String" MaxLength="25"/>
+        <Property Name="OrganizationMlsVendorName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="OrganizationMlsVendorOuid" Type="Edm.String" MaxLength="25"/>
+        <Property Name="OrganizationName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="OrganizationNationalAssociationId" Type="Edm.String" MaxLength="25"/>
+        <Property Name="OrganizationPostalCode" Type="Edm.String" MaxLength="10"/>
+        <Property Name="OrganizationPostalCodePlus4" Type="Edm.String" MaxLength="4"/>
+        <Property Name="OrganizationSocialMediaType" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="SocialMediaType"/>
+        </Property>
+        <Property Name="OrganizationStateLicense" Type="Edm.String" MaxLength="50"/>
+        <Property Name="OrganizationStateLicenseState" Type="Edm.String" MaxLength="2">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="StateOrProvince"/>
+        </Property>
+        <Property Name="OrganizationStateOrProvince" Type="Edm.String" MaxLength="2">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="StateOrProvince"/>
+        </Property>
+        <Property Name="OrganizationStatus" Type="Edm.Boolean"/>
+        <Property Name="OrganizationStatusChangeTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="OrganizationType" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="OrganizationType"/>
+        </Property>
+        <Property Name="OrganizationUniqueId" Type="Edm.String" MaxLength="25"/>
+        <Property Name="OrganizationUniqueIdKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="OriginalEntryTimestamp" Type="Edm.DateTimeOffset"/>
+        <NavigationProperty Name="ChangedByMember" Type="org.reso.metadata.Member"/>
+        <NavigationProperty Name="HistoryTransactional" Type="Collection(org.reso.metadata.HistoryTransactional)"/>
+        <NavigationProperty Name="Media" Type="Collection(org.reso.metadata.Media)"/>
+        <NavigationProperty Name="OrganizationSocialMedia" Type="Collection(org.reso.metadata.SocialMedia)"/>
+      </EntityType>
+      <EntityType Name="Office">
+        <Key>
+          <PropertyRef Name="OfficeKey"/>
+        </Key>
+        <Property Name="FranchiseAffiliation" Type="Edm.String" MaxLength="50"/>
+        <Property Name="IDXOfficeParticipationYN" Type="Edm.Boolean"/>
+        <Property Name="MainOfficeKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="MainOfficeMlsId" Type="Edm.String" MaxLength="25"/>
+        <Property Name="ModificationTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="OfficeAddress1" Type="Edm.String" MaxLength="50"/>
+        <Property Name="OfficeAddress2" Type="Edm.String" MaxLength="50"/>
+        <Property Name="OfficeAOR" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="AOR"/>
+        </Property>
+        <Property Name="OfficeAORkey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="OfficeAORMlsId" Type="Edm.String" MaxLength="25"/>
+        <Property Name="OfficeAssociationComments" Type="Edm.String" MaxLength="500"/>
+        <Property Name="OfficeBranchType" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="OfficeBranchType"/>
+        </Property>
+        <Property Name="OfficeBrokerKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="OfficeBrokerMlsId" Type="Edm.String" MaxLength="25"/>
+        <Property Name="OfficeCity" Type="Edm.String" MaxLength="50"/>
+        <Property Name="OfficeCorporateLicense" Type="Edm.String" MaxLength="50"/>
+        <Property Name="OfficeCountyOrParish" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="CountyOrParish"/>
+        </Property>
+        <Property Name="OfficeEmail" Type="Edm.String" MaxLength="80"/>
+        <Property Name="OfficeFax" Type="Edm.String" MaxLength="16"/>
+        <Property Name="OfficeKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="OfficeManagerKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="OfficeManagerMlsId" Type="Edm.String" MaxLength="25"/>
+        <Property Name="OfficeMlsId" Type="Edm.String" MaxLength="25"/>
+        <Property Name="OfficeName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="OfficeNationalAssociationId" Type="Edm.String" MaxLength="25"/>
+        <Property Name="OfficePhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="OfficePhoneExt" Type="Edm.String" MaxLength="10"/>
+        <Property Name="OfficePostalCode" Type="Edm.String" MaxLength="10"/>
+        <Property Name="OfficePostalCodePlus4" Type="Edm.String" MaxLength="4"/>
+        <Property Name="OfficeStateOrProvince" Type="Edm.String" MaxLength="2">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="StateOrProvince"/>
+        </Property>
+        <Property Name="OfficeStatus" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="OfficeStatus"/>
+        </Property>
+        <Property Name="OfficeType" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="OfficeType"/>
+        </Property>
+        <Property Name="OriginalEntryTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="OriginatingSystemID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="OriginatingSystemName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="OriginatingSystemOfficeKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="SocialMediaType" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="SocialMediaType"/>
+        </Property>
+        <Property Name="SourceSystemID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="SourceSystemName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="SourceSystemOfficeKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="SyndicateAgentOption" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="SyndicateAgentOption"/>
+        </Property>
+        <Property Name="SyndicateTo" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="SyndicateTo"/>
+        </Property>
+        <NavigationProperty Name="HistoryTransactional" Type="Collection(org.reso.metadata.HistoryTransactional)"/>
+        <NavigationProperty Name="MainOffice" Type="org.reso.metadata.Office"/>
+        <NavigationProperty Name="Media" Type="Collection(org.reso.metadata.Media)"/>
+        <NavigationProperty Name="OfficeBroker" Type="org.reso.metadata.Member"/>
+        <NavigationProperty Name="OfficeManager" Type="org.reso.metadata.Member"/>
+        <NavigationProperty Name="OfficeSocialMedia" Type="Collection(org.reso.metadata.SocialMedia)"/>
+        <NavigationProperty Name="OriginatingSystem" Type="org.reso.metadata.OUID"/>
+        <NavigationProperty Name="SourceSystem" Type="org.reso.metadata.OUID"/>
+      </EntityType>
+      <EntityType Name="OpenHouse">
+        <Key>
+          <PropertyRef Name="OpenHouseKey"/>
+        </Key>
+        <Property Name="AppointmentRequiredYN" Type="Edm.Boolean"/>
+        <Property Name="ListingId" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ListingKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ModificationTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="OpenHouseAttendedBy" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="Attended"/>
+        </Property>
+        <Property Name="OpenHouseDate" Type="Edm.Date"/>
+        <Property Name="OpenHouseEndTime" Type="Edm.DateTimeOffset"/>
+        <Property Name="OpenHouseId" Type="Edm.String" MaxLength="255"/>
+        <Property Name="OpenHouseKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="OpenHouseRemarks" Type="Edm.String" MaxLength="500"/>
+        <Property Name="OpenHouseStartTime" Type="Edm.DateTimeOffset"/>
+        <Property Name="OpenHouseStatus" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="OpenHouseStatus"/>
+        </Property>
+        <Property Name="OpenHouseType" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="OpenHouseType"/>
+        </Property>
+        <Property Name="OriginalEntryTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="OriginatingSystemID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="OriginatingSystemKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="OriginatingSystemName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="Refreshments" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ShowingAgentFirstName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="ShowingAgentKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ShowingAgentLastName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="ShowingAgentMlsID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="SourceSystemID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="SourceSystemKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="SourceSystemName" Type="Edm.String" MaxLength="255"/>
+        <NavigationProperty Name="HistoryTransactional" Type="Collection(org.reso.metadata.HistoryTransactional)"/>
+        <NavigationProperty Name="Listing" Type="org.reso.metadata.Property"/>
+        <NavigationProperty Name="Media" Type="Collection(org.reso.metadata.Media)"/>
+        <NavigationProperty Name="OriginatingSystem" Type="org.reso.metadata.OUID"/>
+        <NavigationProperty Name="ShowingAgent" Type="org.reso.metadata.Member"/>
+        <NavigationProperty Name="SocialMedia" Type="Collection(org.reso.metadata.SocialMedia)"/>
+        <NavigationProperty Name="SourceSystem" Type="org.reso.metadata.OUID"/>
+      </EntityType>
+      <EntityType Name="OtherPhone">
+        <Key>
+          <PropertyRef Name="OtherPhoneKey"/>
+        </Key>
+        <Property Name="ClassName" Type="Edm.String" MaxLength="255">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ClassName"/>
+        </Property>
+        <Property Name="ModificationTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="OtherPhoneExt" Type="Edm.String" MaxLength="10"/>
+        <Property Name="OtherPhoneKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="OtherPhoneNumber" Type="Edm.String" MaxLength="16"/>
+        <Property Name="OtherPhoneType" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="OtherPhoneType"/>
+        </Property>
+        <Property Name="ResourceName" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ResourceName"/>
+        </Property>
+        <Property Name="ResourceRecordID" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ResourceRecordKey" Type="Edm.String" MaxLength="255"/>
+      </EntityType>
+      <EntityType Name="Property">
+        <Key>
+          <PropertyRef Name="ListingKey"/>
+        </Key>
+        <Property Name="AboveGradeFinishedArea" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="AboveGradeFinishedAreaSource" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="AreaSource"/>
+        </Property>
+        <Property Name="AboveGradeFinishedAreaUnits" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="AreaUnits"/>
+        </Property>
+        <Property Name="AccessCode" Type="Edm.String" MaxLength="25"/>
+        <Property Name="AccessibilityFeatures" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="AccessibilityFeatures"/>
+        </Property>
+        <Property Name="AdditionalParcelsDescription" Type="Edm.String" MaxLength="255"/>
+        <Property Name="AdditionalParcelsYN" Type="Edm.Boolean"/>
+        <Property Name="AnchorsCoTenants" Type="Edm.String" MaxLength="1024"/>
+        <Property Name="Appliances" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="Appliances"/>
+        </Property>
+        <Property Name="ArchitecturalStyle" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ArchitecturalStyle"/>
+        </Property>
+        <Property Name="AssociationAmenities" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="AssociationAmenities"/>
+        </Property>
+        <Property Name="AssociationFee" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="AssociationFee2" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="AssociationFee2Frequency" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="FeeFrequency"/>
+        </Property>
+        <Property Name="AssociationFeeFrequency" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="FeeFrequency"/>
+        </Property>
+        <Property Name="AssociationFeeIncludes" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="AssociationFeeIncludes"/>
+        </Property>
+        <Property Name="AssociationName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="AssociationName2" Type="Edm.String" MaxLength="50"/>
+        <Property Name="AssociationPhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="AssociationPhone2" Type="Edm.String" MaxLength="16"/>
+        <Property Name="AssociationYN" Type="Edm.Boolean"/>
+        <Property Name="AttachedGarageYN" Type="Edm.Boolean"/>
+        <Property Name="AvailabilityDate" Type="Edm.Date"/>
+        <Property Name="Basement" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="Basement"/>
+        </Property>
+        <Property Name="BasementYN" Type="Edm.Boolean"/>
+        <Property Name="BathroomsFull" Type="Edm.Int64"/>
+        <Property Name="BathroomsHalf" Type="Edm.Int64"/>
+        <Property Name="BathroomsOneQuarter" Type="Edm.Int64"/>
+        <Property Name="BathroomsPartial" Type="Edm.Int64"/>
+        <Property Name="BathroomsThreeQuarter" Type="Edm.Int64"/>
+        <Property Name="BathroomsTotalInteger" Type="Edm.Int64"/>
+        <Property Name="BedroomsPossible" Type="Edm.Int64"/>
+        <Property Name="BedroomsTotal" Type="Edm.Int64"/>
+        <Property Name="BelowGradeFinishedArea" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="BelowGradeFinishedAreaSource" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="AreaSource"/>
+        </Property>
+        <Property Name="BelowGradeFinishedAreaUnits" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="AreaUnits"/>
+        </Property>
+        <Property Name="BodyType" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="BodyType"/>
+        </Property>
+        <Property Name="BuilderModel" Type="Edm.String" MaxLength="50"/>
+        <Property Name="BuilderName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="BuildingAreaSource" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="AreaSource"/>
+        </Property>
+        <Property Name="BuildingAreaTotal" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="BuildingAreaUnits" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="AreaUnits"/>
+        </Property>
+        <Property Name="BuildingFeatures" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="BuildingFeatures"/>
+        </Property>
+        <Property Name="BuildingName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="BusinessName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="BusinessType" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="BusinessType"/>
+        </Property>
+        <Property Name="BuyerAgencyCompensation" Type="Edm.String" MaxLength="25"/>
+        <Property Name="BuyerAgencyCompensationType" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="CompensationType"/>
+        </Property>
+        <Property Name="BuyerAgentAOR" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="AOR"/>
+        </Property>
+        <Property Name="BuyerAgentDesignation" Type="Collection(Edm.String)" Nullable="false" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="BuyerAgentDesignation"/>
+        </Property>
+        <Property Name="BuyerAgentDirectPhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="BuyerAgentEmail" Type="Edm.String" MaxLength="80"/>
+        <Property Name="BuyerAgentFax" Type="Edm.String" MaxLength="16"/>
+        <Property Name="BuyerAgentFirstName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="BuyerAgentFullName" Type="Edm.String" MaxLength="150"/>
+        <Property Name="BuyerAgentHomePhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="BuyerAgentKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="BuyerAgentLastName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="BuyerAgentMiddleName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="BuyerAgentMlsId" Type="Edm.String" MaxLength="25"/>
+        <Property Name="BuyerAgentMobilePhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="BuyerAgentNamePrefix" Type="Edm.String" MaxLength="10"/>
+        <Property Name="BuyerAgentNameSuffix" Type="Edm.String" MaxLength="10"/>
+        <Property Name="BuyerAgentOfficePhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="BuyerAgentOfficePhoneExt" Type="Edm.String" MaxLength="10"/>
+        <Property Name="BuyerAgentPager" Type="Edm.String" MaxLength="16"/>
+        <Property Name="BuyerAgentPreferredPhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="BuyerAgentPreferredPhoneExt" Type="Edm.String" MaxLength="10"/>
+        <Property Name="BuyerAgentStateLicense" Type="Edm.String" MaxLength="50"/>
+        <Property Name="BuyerAgentTollFreePhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="BuyerAgentURL" Type="Edm.String" MaxLength="8000"/>
+        <Property Name="BuyerAgentVoiceMail" Type="Edm.String" MaxLength="16"/>
+        <Property Name="BuyerAgentVoiceMailExt" Type="Edm.String" MaxLength="10"/>
+        <Property Name="BuyerFinancing" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="BuyerFinancing"/>
+        </Property>
+        <Property Name="BuyerOfficeAOR" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="AOR"/>
+        </Property>
+        <Property Name="BuyerOfficeEmail" Type="Edm.String" MaxLength="80"/>
+        <Property Name="BuyerOfficeFax" Type="Edm.String" MaxLength="16"/>
+        <Property Name="BuyerOfficeKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="BuyerOfficeMlsId" Type="Edm.String" MaxLength="25"/>
+        <Property Name="BuyerOfficeName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="BuyerOfficePhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="BuyerOfficePhoneExt" Type="Edm.String" MaxLength="10"/>
+        <Property Name="BuyerOfficeURL" Type="Edm.String" MaxLength="8000"/>
+        <Property Name="BuyerTeamKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="BuyerTeamName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="CableTvExpense" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="CancellationDate" Type="Edm.Date"/>
+        <Property Name="CapRate" Type="Edm.Decimal" Precision="5" Scale="2"/>
+        <Property Name="CarportSpaces" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="CarportYN" Type="Edm.Boolean"/>
+        <Property Name="CarrierRoute" Type="Edm.String" MaxLength="9"/>
+        <Property Name="City" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="City"/>
+        </Property>
+        <Property Name="CityRegion" Type="Edm.String" MaxLength="150"/>
+        <Property Name="CloseDate" Type="Edm.Date"/>
+        <Property Name="ClosePrice" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="CoBuyerAgentAOR" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="AOR"/>
+        </Property>
+        <Property Name="CoBuyerAgentDesignation" Type="Collection(Edm.String)" Nullable="false" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="CoBuyerAgentDesignation"/>
+        </Property>
+        <Property Name="CoBuyerAgentDirectPhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="CoBuyerAgentEmail" Type="Edm.String" MaxLength="80"/>
+        <Property Name="CoBuyerAgentFax" Type="Edm.String" MaxLength="16"/>
+        <Property Name="CoBuyerAgentFirstName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="CoBuyerAgentFullName" Type="Edm.String" MaxLength="150"/>
+        <Property Name="CoBuyerAgentHomePhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="CoBuyerAgentKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="CoBuyerAgentLastName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="CoBuyerAgentMiddleName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="CoBuyerAgentMlsId" Type="Edm.String" MaxLength="25"/>
+        <Property Name="CoBuyerAgentMobilePhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="CoBuyerAgentNamePrefix" Type="Edm.String" MaxLength="10"/>
+        <Property Name="CoBuyerAgentNameSuffix" Type="Edm.String" MaxLength="10"/>
+        <Property Name="CoBuyerAgentOfficePhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="CoBuyerAgentOfficePhoneExt" Type="Edm.String" MaxLength="10"/>
+        <Property Name="CoBuyerAgentPager" Type="Edm.String" MaxLength="16"/>
+        <Property Name="CoBuyerAgentPreferredPhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="CoBuyerAgentPreferredPhoneExt" Type="Edm.String" MaxLength="10"/>
+        <Property Name="CoBuyerAgentStateLicense" Type="Edm.String" MaxLength="50"/>
+        <Property Name="CoBuyerAgentTollFreePhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="CoBuyerAgentURL" Type="Edm.String" MaxLength="8000"/>
+        <Property Name="CoBuyerAgentVoiceMail" Type="Edm.String" MaxLength="16"/>
+        <Property Name="CoBuyerAgentVoiceMailExt" Type="Edm.String" MaxLength="10"/>
+        <Property Name="CoBuyerOfficeAOR" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="AOR"/>
+        </Property>
+        <Property Name="CoBuyerOfficeEmail" Type="Edm.String" MaxLength="80"/>
+        <Property Name="CoBuyerOfficeFax" Type="Edm.String" MaxLength="16"/>
+        <Property Name="CoBuyerOfficeKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="CoBuyerOfficeMlsId" Type="Edm.String" MaxLength="25"/>
+        <Property Name="CoBuyerOfficeName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="CoBuyerOfficePhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="CoBuyerOfficePhoneExt" Type="Edm.String" MaxLength="10"/>
+        <Property Name="CoBuyerOfficeURL" Type="Edm.String" MaxLength="8000"/>
+        <Property Name="CoListAgentAOR" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="AOR"/>
+        </Property>
+        <Property Name="CoListAgentDesignation" Type="Collection(Edm.String)" Nullable="false" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="CoListAgentDesignation"/>
+        </Property>
+        <Property Name="CoListAgentDirectPhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="CoListAgentEmail" Type="Edm.String" MaxLength="80"/>
+        <Property Name="CoListAgentFax" Type="Edm.String" MaxLength="16"/>
+        <Property Name="CoListAgentFirstName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="CoListAgentFullName" Type="Edm.String" MaxLength="150"/>
+        <Property Name="CoListAgentHomePhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="CoListAgentKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="CoListAgentLastName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="CoListAgentMiddleName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="CoListAgentMlsId" Type="Edm.String" MaxLength="25"/>
+        <Property Name="CoListAgentMobilePhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="CoListAgentNamePrefix" Type="Edm.String" MaxLength="10"/>
+        <Property Name="CoListAgentNameSuffix" Type="Edm.String" MaxLength="10"/>
+        <Property Name="CoListAgentOfficePhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="CoListAgentOfficePhoneExt" Type="Edm.String" MaxLength="10"/>
+        <Property Name="CoListAgentPager" Type="Edm.String" MaxLength="16"/>
+        <Property Name="CoListAgentPreferredPhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="CoListAgentPreferredPhoneExt" Type="Edm.String" MaxLength="10"/>
+        <Property Name="CoListAgentStateLicense" Type="Edm.String" MaxLength="50"/>
+        <Property Name="CoListAgentTollFreePhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="CoListAgentURL" Type="Edm.String" MaxLength="8000"/>
+        <Property Name="CoListAgentVoiceMail" Type="Edm.String" MaxLength="16"/>
+        <Property Name="CoListAgentVoiceMailExt" Type="Edm.String" MaxLength="10"/>
+        <Property Name="CoListOfficeAOR" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="AOR"/>
+        </Property>
+        <Property Name="CoListOfficeEmail" Type="Edm.String" MaxLength="80"/>
+        <Property Name="CoListOfficeFax" Type="Edm.String" MaxLength="16"/>
+        <Property Name="CoListOfficeKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="CoListOfficeMlsId" Type="Edm.String" MaxLength="25"/>
+        <Property Name="CoListOfficeName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="CoListOfficePhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="CoListOfficePhoneExt" Type="Edm.String" MaxLength="10"/>
+        <Property Name="CoListOfficeURL" Type="Edm.String" MaxLength="8000"/>
+        <Property Name="CommonInterest" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="CommonInterest"/>
+        </Property>
+        <Property Name="CommonWalls" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="CommonWalls"/>
+        </Property>
+        <Property Name="CommunityFeatures" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="CommunityFeatures"/>
+        </Property>
+        <Property Name="Concessions" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="Concessions"/>
+        </Property>
+        <Property Name="ConcessionsAmount" Type="Edm.Int64"/>
+        <Property Name="ConcessionsComments" Type="Edm.String" MaxLength="200"/>
+        <Property Name="ConstructionMaterials" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ConstructionMaterials"/>
+        </Property>
+        <Property Name="ContinentRegion" Type="Edm.String" MaxLength="150"/>
+        <Property Name="Contingency" Type="Edm.String" MaxLength="1024"/>
+        <Property Name="ContingentDate" Type="Edm.Date"/>
+        <Property Name="ContractStatusChangeDate" Type="Edm.Date"/>
+        <Property Name="Cooling" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="Cooling"/>
+        </Property>
+        <Property Name="CoolingYN" Type="Edm.Boolean"/>
+        <Property Name="CopyrightNotice" Type="Edm.String" MaxLength="500"/>
+        <Property Name="Country" Type="Edm.String" MaxLength="2">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="Country"/>
+        </Property>
+        <Property Name="CountryRegion" Type="Edm.String" MaxLength="150"/>
+        <Property Name="CountyOrParish" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="CountyOrParish"/>
+        </Property>
+        <Property Name="CoveredSpaces" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="CropsIncludedYN" Type="Edm.Boolean"/>
+        <Property Name="CrossStreet" Type="Edm.String" MaxLength="50"/>
+        <Property Name="CultivatedArea" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="CumulativeDaysOnMarket" Type="Edm.Int64"/>
+        <Property Name="CurrentFinancing" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="CurrentFinancing"/>
+        </Property>
+        <Property Name="CurrentUse" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="CurrentUse"/>
+        </Property>
+        <Property Name="DOH1" Type="Edm.String" MaxLength="25"/>
+        <Property Name="DOH2" Type="Edm.String" MaxLength="25"/>
+        <Property Name="DOH3" Type="Edm.String" MaxLength="25"/>
+        <Property Name="DaysOnMarket" Type="Edm.Int64"/>
+        <Property Name="DevelopmentStatus" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="DevelopmentStatus"/>
+        </Property>
+        <Property Name="DirectionFaces" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="DirectionFaces"/>
+        </Property>
+        <Property Name="Directions" Type="Edm.String" MaxLength="1024"/>
+        <Property Name="Disclaimer" Type="Edm.String" MaxLength="500"/>
+        <Property Name="Disclosures" Type="Collection(Edm.String)" Nullable="false" MaxLength="4000">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="Disclosures"/>
+        </Property>
+        <Property Name="DistanceToBusComments" Type="Edm.String" MaxLength="255"/>
+        <Property Name="DistanceToBusNumeric" Type="Edm.Int64"/>
+        <Property Name="DistanceToBusUnits" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="LinearUnits"/>
+        </Property>
+        <Property Name="DistanceToElectricComments" Type="Edm.String" MaxLength="255"/>
+        <Property Name="DistanceToElectricNumeric" Type="Edm.Int64"/>
+        <Property Name="DistanceToElectricUnits" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="LinearUnits"/>
+        </Property>
+        <Property Name="DistanceToFreewayComments" Type="Edm.String" MaxLength="255"/>
+        <Property Name="DistanceToFreewayNumeric" Type="Edm.Int64"/>
+        <Property Name="DistanceToFreewayUnits" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="LinearUnits"/>
+        </Property>
+        <Property Name="DistanceToGasComments" Type="Edm.String" MaxLength="255"/>
+        <Property Name="DistanceToGasNumeric" Type="Edm.Int64"/>
+        <Property Name="DistanceToGasUnits" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="LinearUnits"/>
+        </Property>
+        <Property Name="DistanceToPhoneServiceComments" Type="Edm.String" MaxLength="255"/>
+        <Property Name="DistanceToPhoneServiceNumeric" Type="Edm.Int64"/>
+        <Property Name="DistanceToPhoneServiceUnits" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="LinearUnits"/>
+        </Property>
+        <Property Name="DistanceToPlaceofWorshipComments" Type="Edm.String" MaxLength="255"/>
+        <Property Name="DistanceToPlaceofWorshipNumeric" Type="Edm.Int64"/>
+        <Property Name="DistanceToPlaceofWorshipUnits" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="LinearUnits"/>
+        </Property>
+        <Property Name="DistanceToSchoolBusComments" Type="Edm.String" MaxLength="255"/>
+        <Property Name="DistanceToSchoolBusNumeric" Type="Edm.Int64"/>
+        <Property Name="DistanceToSchoolBusUnits" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="LinearUnits"/>
+        </Property>
+        <Property Name="DistanceToSchoolsComments" Type="Edm.String" MaxLength="255"/>
+        <Property Name="DistanceToSchoolsNumeric" Type="Edm.Int64"/>
+        <Property Name="DistanceToSchoolsUnits" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="LinearUnits"/>
+        </Property>
+        <Property Name="DistanceToSewerComments" Type="Edm.String" MaxLength="255"/>
+        <Property Name="DistanceToSewerNumeric" Type="Edm.Int64"/>
+        <Property Name="DistanceToSewerUnits" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="LinearUnits"/>
+        </Property>
+        <Property Name="DistanceToShoppingComments" Type="Edm.String" MaxLength="255"/>
+        <Property Name="DistanceToShoppingNumeric" Type="Edm.Int64"/>
+        <Property Name="DistanceToShoppingUnits" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="LinearUnits"/>
+        </Property>
+        <Property Name="DistanceToStreetComments" Type="Edm.String" MaxLength="255"/>
+        <Property Name="DistanceToStreetNumeric" Type="Edm.Int64"/>
+        <Property Name="DistanceToStreetUnits" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="LinearUnits"/>
+        </Property>
+        <Property Name="DistanceToWaterComments" Type="Edm.String" MaxLength="255"/>
+        <Property Name="DistanceToWaterNumeric" Type="Edm.Int64"/>
+        <Property Name="DistanceToWaterUnits" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="LinearUnits"/>
+        </Property>
+        <Property Name="DocumentsAvailable" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="DocumentsAvailable"/>
+        </Property>
+        <Property Name="DocumentsChangeTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="DocumentsCount" Type="Edm.Int64"/>
+        <Property Name="DoorFeatures" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="DoorFeatures"/>
+        </Property>
+        <Property Name="DualVariableCompensationYN" Type="Edm.Boolean"/>
+        <Property Name="Electric" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="Electric"/>
+        </Property>
+        <Property Name="ElectricExpense" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="ElectricOnPropertyYN" Type="Edm.Boolean"/>
+        <Property Name="ElementarySchool" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ElementarySchool"/>
+        </Property>
+        <Property Name="ElementarySchoolDistrict" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ElementarySchoolDistrict"/>
+        </Property>
+        <Property Name="Elevation" Type="Edm.Int64"/>
+        <Property Name="ElevationUnits" Type="Edm.String" MaxLength="10">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="LinearUnits"/>
+        </Property>
+        <Property Name="EntryLevel" Type="Edm.Int64"/>
+        <Property Name="EntryLocation" Type="Edm.String" MaxLength="50"/>
+        <Property Name="Exclusions" Type="Edm.String" MaxLength="1024"/>
+        <Property Name="ExistingLeaseType" Type="Collection(Edm.String)" Nullable="false" MaxLength="75">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ExistingLeaseType"/>
+        </Property>
+        <Property Name="ExpirationDate" Type="Edm.Date"/>
+        <Property Name="ExteriorFeatures" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ExteriorFeatures"/>
+        </Property>
+        <Property Name="FarmCreditServiceInclYN" Type="Edm.Boolean"/>
+        <Property Name="FarmLandAreaSource" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="AreaSource"/>
+        </Property>
+        <Property Name="FarmLandAreaUnits" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="AreaUnits"/>
+        </Property>
+        <Property Name="Fencing" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="Fencing"/>
+        </Property>
+        <Property Name="FinancialDataSource" Type="Collection(Edm.String)" Nullable="false" MaxLength="75">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="FinancialDataSource"/>
+        </Property>
+        <Property Name="FireplaceFeatures" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="FireplaceFeatures"/>
+        </Property>
+        <Property Name="FireplaceYN" Type="Edm.Boolean"/>
+        <Property Name="FireplacesTotal" Type="Edm.Int64"/>
+        <Property Name="Flooring" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="Flooring"/>
+        </Property>
+        <Property Name="FoundationArea" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="FoundationDetails" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="FoundationDetails"/>
+        </Property>
+        <Property Name="FrontageLength" Type="Edm.String" MaxLength="255"/>
+        <Property Name="FrontageType" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="FrontageType"/>
+        </Property>
+        <Property Name="FuelExpense" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="Furnished" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="Furnished"/>
+        </Property>
+        <Property Name="FurnitureReplacementExpense" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="GarageSpaces" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="GarageYN" Type="Edm.Boolean"/>
+        <Property Name="GardenerExpense" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="GrazingPermitsBlmYN" Type="Edm.Boolean"/>
+        <Property Name="GrazingPermitsForestServiceYN" Type="Edm.Boolean"/>
+        <Property Name="GrazingPermitsPrivateYN" Type="Edm.Boolean"/>
+        <Property Name="GreenBuildingVerificationType" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="GreenBuildingVerificationType"/>
+        </Property>
+        <Property Name="GreenEnergyEfficient" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="GreenEnergyEfficient"/>
+        </Property>
+        <Property Name="GreenEnergyGeneration" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="GreenEnergyGeneration"/>
+        </Property>
+        <Property Name="GreenIndoorAirQuality" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="GreenIndoorAirQuality"/>
+        </Property>
+        <Property Name="GreenLocation" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="GreenLocation"/>
+        </Property>
+        <Property Name="GreenSustainability" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="GreenSustainability"/>
+        </Property>
+        <Property Name="GreenWaterConservation" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="GreenWaterConservation"/>
+        </Property>
+        <Property Name="GrossIncome" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="GrossScheduledIncome" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="HabitableResidenceYN" Type="Edm.Boolean"/>
+        <Property Name="Heating" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="Heating"/>
+        </Property>
+        <Property Name="HeatingYN" Type="Edm.Boolean"/>
+        <Property Name="HighSchool" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="HighSchool"/>
+        </Property>
+        <Property Name="HighSchoolDistrict" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="HighSchoolDistrict"/>
+        </Property>
+        <Property Name="HomeWarrantyYN" Type="Edm.Boolean"/>
+        <Property Name="HorseAmenities" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="HorseAmenities"/>
+        </Property>
+        <Property Name="HorseYN" Type="Edm.Boolean"/>
+        <Property Name="HoursDaysOfOperation" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="HoursDaysOfOperation"/>
+        </Property>
+        <Property Name="HoursDaysOfOperationDescription" Type="Edm.String" MaxLength="255"/>
+        <Property Name="Inclusions" Type="Edm.String" MaxLength="1024"/>
+        <Property Name="IncomeIncludes" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="IncomeIncludes"/>
+        </Property>
+        <Property Name="InsuranceExpense" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="InteriorFeatures" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="InteriorOrRoomFeatures"/>
+        </Property>
+        <Property Name="InternetAddressDisplayYN" Type="Edm.Boolean"/>
+        <Property Name="InternetAutomatedValuationDisplayYN" Type="Edm.Boolean"/>
+        <Property Name="InternetConsumerCommentYN" Type="Edm.Boolean"/>
+        <Property Name="InternetEntireListingDisplayYN" Type="Edm.Boolean"/>
+        <Property Name="IrrigationSource" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="IrrigationSource"/>
+        </Property>
+        <Property Name="IrrigationWaterRightsAcres" Type="Edm.Decimal" Precision="16" Scale="4"/>
+        <Property Name="IrrigationWaterRightsYN" Type="Edm.Boolean"/>
+        <Property Name="LaborInformation" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="LaborInformation"/>
+        </Property>
+        <Property Name="LandLeaseAmount" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="LandLeaseAmountFrequency" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="FeeFrequency"/>
+        </Property>
+        <Property Name="LandLeaseExpirationDate" Type="Edm.Date"/>
+        <Property Name="LandLeaseYN" Type="Edm.Boolean"/>
+        <Property Name="Latitude" Type="Edm.Decimal" Precision="12" Scale="8"/>
+        <Property Name="LaundryFeatures" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="LaundryFeatures"/>
+        </Property>
+        <Property Name="LeasableArea" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="LeasableAreaUnits" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="AreaUnits"/>
+        </Property>
+        <Property Name="LeaseAmount" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="LeaseAmountFrequency" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="FeeFrequency"/>
+        </Property>
+        <Property Name="LeaseAssignableYN" Type="Edm.Boolean"/>
+        <Property Name="LeaseConsideredYN" Type="Edm.Boolean"/>
+        <Property Name="LeaseExpiration" Type="Edm.Date"/>
+        <Property Name="LeaseRenewalCompensation" Type="Collection(Edm.String)" Nullable="false" MaxLength="255">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="LeaseRenewalCompensation"/>
+        </Property>
+        <Property Name="LeaseRenewalOptionYN" Type="Edm.Boolean"/>
+        <Property Name="LeaseTerm" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="LeaseTerm"/>
+        </Property>
+        <Property Name="Levels" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="Levels"/>
+        </Property>
+        <Property Name="License1" Type="Edm.String" MaxLength="25"/>
+        <Property Name="License2" Type="Edm.String" MaxLength="25"/>
+        <Property Name="License3" Type="Edm.String" MaxLength="25"/>
+        <Property Name="LicensesExpense" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="ListAOR" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="AOR"/>
+        </Property>
+        <Property Name="ListAgentAOR" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="AOR"/>
+        </Property>
+        <Property Name="ListAgentDesignation" Type="Collection(Edm.String)" Nullable="false" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ListAgentDesignation"/>
+        </Property>
+        <Property Name="ListAgentDirectPhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="ListAgentEmail" Type="Edm.String" MaxLength="80"/>
+        <Property Name="ListAgentFax" Type="Edm.String" MaxLength="16"/>
+        <Property Name="ListAgentFirstName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="ListAgentFullName" Type="Edm.String" MaxLength="150"/>
+        <Property Name="ListAgentHomePhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="ListAgentKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ListAgentLastName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="ListAgentMiddleName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="ListAgentMlsId" Type="Edm.String" MaxLength="25"/>
+        <Property Name="ListAgentMobilePhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="ListAgentNamePrefix" Type="Edm.String" MaxLength="10"/>
+        <Property Name="ListAgentNameSuffix" Type="Edm.String" MaxLength="10"/>
+        <Property Name="ListAgentOfficePhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="ListAgentOfficePhoneExt" Type="Edm.String" MaxLength="10"/>
+        <Property Name="ListAgentPager" Type="Edm.String" MaxLength="16"/>
+        <Property Name="ListAgentPreferredPhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="ListAgentPreferredPhoneExt" Type="Edm.String" MaxLength="10"/>
+        <Property Name="ListAgentStateLicense" Type="Edm.String" MaxLength="50"/>
+        <Property Name="ListAgentTollFreePhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="ListAgentURL" Type="Edm.String" MaxLength="8000"/>
+        <Property Name="ListAgentVoiceMail" Type="Edm.String" MaxLength="16"/>
+        <Property Name="ListAgentVoiceMailExt" Type="Edm.String" MaxLength="10"/>
+        <Property Name="ListOfficeAOR" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="AOR"/>
+        </Property>
+        <Property Name="ListOfficeEmail" Type="Edm.String" MaxLength="80"/>
+        <Property Name="ListOfficeFax" Type="Edm.String" MaxLength="16"/>
+        <Property Name="ListOfficeKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ListOfficeMlsId" Type="Edm.String" MaxLength="25"/>
+        <Property Name="ListOfficeName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ListOfficePhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="ListOfficePhoneExt" Type="Edm.String" MaxLength="10"/>
+        <Property Name="ListOfficeURL" Type="Edm.String" MaxLength="8000"/>
+        <Property Name="ListPrice" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="ListPriceLow" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="ListTeamKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ListTeamName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="ListingAgreement" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ListingAgreement"/>
+        </Property>
+        <Property Name="ListingContractDate" Type="Edm.Date"/>
+        <Property Name="ListingId" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ListingKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ListingService" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ListingService"/>
+        </Property>
+        <Property Name="ListingTerms" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ListingTerms"/>
+        </Property>
+        <Property Name="LivingArea" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="LivingAreaSource" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="AreaSource"/>
+        </Property>
+        <Property Name="LivingAreaUnits" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="AreaUnits"/>
+        </Property>
+        <Property Name="LockBoxLocation" Type="Edm.String" MaxLength="255"/>
+        <Property Name="LockBoxSerialNumber" Type="Edm.String" MaxLength="25"/>
+        <Property Name="LockBoxType" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="LockBoxType"/>
+        </Property>
+        <Property Name="Longitude" Type="Edm.Decimal" Precision="12" Scale="8"/>
+        <Property Name="LotDimensionsSource" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="LotDimensionsSource"/>
+        </Property>
+        <Property Name="LotFeatures" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="LotFeatures"/>
+        </Property>
+        <Property Name="LotSizeAcres" Type="Edm.Decimal" Precision="16" Scale="4"/>
+        <Property Name="LotSizeArea" Type="Edm.Decimal" Precision="16" Scale="4"/>
+        <Property Name="LotSizeDimensions" Type="Edm.String" MaxLength="150"/>
+        <Property Name="LotSizeSource" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="LotSizeSource"/>
+        </Property>
+        <Property Name="LotSizeSquareFeet" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="LotSizeUnits" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="LotSizeUnits"/>
+        </Property>
+        <Property Name="MLSAreaMajor" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="MLSAreaMajor"/>
+        </Property>
+        <Property Name="MLSAreaMinor" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="MLSAreaMinor"/>
+        </Property>
+        <Property Name="MainLevelBathrooms" Type="Edm.Int64"/>
+        <Property Name="MainLevelBedrooms" Type="Edm.Int64"/>
+        <Property Name="MaintenanceExpense" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="MajorChangeTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="MajorChangeType" Type="Edm.String" MaxLength="255">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ChangeType"/>
+        </Property>
+        <Property Name="Make" Type="Edm.String" MaxLength="50"/>
+        <Property Name="ManagerExpense" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="MapCoordinate" Type="Edm.String" MaxLength="25"/>
+        <Property Name="MapCoordinateSource" Type="Edm.String" MaxLength="25"/>
+        <Property Name="MapURL" Type="Edm.String" MaxLength="8000"/>
+        <Property Name="MiddleOrJuniorSchool" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="MiddleOrJuniorSchool"/>
+        </Property>
+        <Property Name="MiddleOrJuniorSchoolDistrict" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="MiddleOrJuniorSchoolDistrict"/>
+        </Property>
+        <Property Name="MlsStatus" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="MlsStatus"/>
+        </Property>
+        <Property Name="MobileDimUnits" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="LinearUnits"/>
+        </Property>
+        <Property Name="MobileHomeRemainsYN" Type="Edm.Boolean"/>
+        <Property Name="MobileLength" Type="Edm.Int64"/>
+        <Property Name="MobileWidth" Type="Edm.Int64"/>
+        <Property Name="Model" Type="Edm.String" MaxLength="50"/>
+        <Property Name="ModificationTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="NetOperatingIncome" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="NewConstructionYN" Type="Edm.Boolean"/>
+        <Property Name="NewTaxesExpense" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="NumberOfBuildings" Type="Edm.Int64"/>
+        <Property Name="NumberOfFullTimeEmployees" Type="Edm.Int64"/>
+        <Property Name="NumberOfLots" Type="Edm.Int64"/>
+        <Property Name="NumberOfPads" Type="Edm.Int64"/>
+        <Property Name="NumberOfPartTimeEmployees" Type="Edm.Int64"/>
+        <Property Name="NumberOfSeparateElectricMeters" Type="Edm.Int64"/>
+        <Property Name="NumberOfSeparateGasMeters" Type="Edm.Int64"/>
+        <Property Name="NumberOfSeparateWaterMeters" Type="Edm.Int64"/>
+        <Property Name="NumberOfUnitsInCommunity" Type="Edm.Int64"/>
+        <Property Name="NumberOfUnitsLeased" Type="Edm.Int64"/>
+        <Property Name="NumberOfUnitsMoMo" Type="Edm.Int64"/>
+        <Property Name="NumberOfUnitsTotal" Type="Edm.Int64"/>
+        <Property Name="NumberOfUnitsVacant" Type="Edm.Int64"/>
+        <Property Name="OccupantName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="OccupantPhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="OccupantType" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="OccupantType"/>
+        </Property>
+        <Property Name="OffMarketDate" Type="Edm.Date"/>
+        <Property Name="OffMarketTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="OnMarketDate" Type="Edm.Date"/>
+        <Property Name="OnMarketTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="OpenParkingSpaces" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="OpenParkingYN" Type="Edm.Boolean"/>
+        <Property Name="OperatingExpense" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="OperatingExpenseIncludes" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="OperatingExpenseIncludes"/>
+        </Property>
+        <Property Name="OriginalEntryTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="OriginalListPrice" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="OriginatingSystemID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="OriginatingSystemKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="OriginatingSystemName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="OtherEquipment" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="OtherEquipment"/>
+        </Property>
+        <Property Name="OtherExpense" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="OtherParking" Type="Edm.String" MaxLength="1024"/>
+        <Property Name="OtherStructures" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="OtherStructures"/>
+        </Property>
+        <Property Name="OwnerName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="OwnerPays" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="OwnerPays"/>
+        </Property>
+        <Property Name="OwnerPhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="Ownership" Type="Edm.String" MaxLength="1024"/>
+        <Property Name="OwnershipType" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="OwnershipType"/>
+        </Property>
+        <Property Name="ParcelNumber" Type="Edm.String" MaxLength="50"/>
+        <Property Name="ParkManagerName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="ParkManagerPhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="ParkName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="ParkingFeatures" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ParkingFeatures"/>
+        </Property>
+        <Property Name="ParkingTotal" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="PastureArea" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="PatioAndPorchFeatures" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="PatioAndPorchFeatures"/>
+        </Property>
+        <Property Name="PendingTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="PestControlExpense" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="PetsAllowed" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="PetsAllowed"/>
+        </Property>
+        <Property Name="PhotosChangeTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="PhotosCount" Type="Edm.Int64"/>
+        <Property Name="PoolExpense" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="PoolFeatures" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="PoolFeatures"/>
+        </Property>
+        <Property Name="PoolPrivateYN" Type="Edm.Boolean"/>
+        <Property Name="Possession" Type="Collection(Edm.String)" Nullable="false" MaxLength="255">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="Possession"/>
+        </Property>
+        <Property Name="PossibleUse" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="PossibleUse"/>
+        </Property>
+        <Property Name="PostalCity" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="PostalCity"/>
+        </Property>
+        <Property Name="PostalCode" Type="Edm.String" MaxLength="10"/>
+        <Property Name="PostalCodePlus4" Type="Edm.String" MaxLength="4"/>
+        <Property Name="PowerProductionType" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="PowerProductionType"/>
+        </Property>
+        <Property Name="PreviousListPrice" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="PriceChangeTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="PrivateOfficeRemarks" Type="Edm.String" MaxLength="4000"/>
+        <Property Name="PrivateRemarks" Type="Edm.String" MaxLength="4000"/>
+        <Property Name="ProfessionalManagementExpense" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="PropertyAttachedYN" Type="Edm.Boolean"/>
+        <Property Name="PropertyCondition" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="PropertyCondition"/>
+        </Property>
+        <Property Name="PropertySubType" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="PropertySubType"/>
+        </Property>
+        <Property Name="PropertyType" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="PropertyType"/>
+        </Property>
+        <Property Name="PublicRemarks" Type="Edm.String" MaxLength="4000"/>
+        <Property Name="PublicSurveyRange" Type="Edm.String" MaxLength="20"/>
+        <Property Name="PublicSurveySection" Type="Edm.String" MaxLength="20"/>
+        <Property Name="PublicSurveyTownship" Type="Edm.String" MaxLength="20"/>
+        <Property Name="PurchaseContractDate" Type="Edm.Date"/>
+        <Property Name="RVParkingDimensions" Type="Edm.String" MaxLength="50"/>
+        <Property Name="RangeArea" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="RentControlYN" Type="Edm.Boolean"/>
+        <Property Name="RentIncludes" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="RentIncludes"/>
+        </Property>
+        <Property Name="RoadFrontageType" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="RoadFrontageType"/>
+        </Property>
+        <Property Name="RoadResponsibility" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="RoadResponsibility"/>
+        </Property>
+        <Property Name="RoadSurfaceType" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="RoadSurfaceType"/>
+        </Property>
+        <Property Name="Roof" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="Roof"/>
+        </Property>
+        <Property Name="RoomType" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="RoomType"/>
+        </Property>
+        <Property Name="RoomsTotal" Type="Edm.Int64"/>
+        <Property Name="SeatingCapacity" Type="Edm.Int64"/>
+        <Property Name="SecurityFeatures" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="SecurityFeatures"/>
+        </Property>
+        <Property Name="SeniorCommunityYN" Type="Edm.Boolean"/>
+        <Property Name="SerialU" Type="Edm.String" MaxLength="25"/>
+        <Property Name="SerialX" Type="Edm.String" MaxLength="25"/>
+        <Property Name="SerialXX" Type="Edm.String" MaxLength="25"/>
+        <Property Name="Sewer" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="Sewer"/>
+        </Property>
+        <Property Name="ShowingAdvanceNotice" Type="Edm.Int64"/>
+        <Property Name="ShowingAttendedYN" Type="Edm.Boolean"/>
+        <Property Name="ShowingContactName" Type="Edm.String" MaxLength="40"/>
+        <Property Name="ShowingContactPhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="ShowingContactPhoneExt" Type="Edm.String" MaxLength="10"/>
+        <Property Name="ShowingContactType" Type="Collection(Edm.String)" Nullable="false" MaxLength="75">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ShowingContactType"/>
+        </Property>
+        <Property Name="ShowingDays" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ShowingDays"/>
+        </Property>
+        <Property Name="ShowingEndTime" Type="Edm.DateTimeOffset"/>
+        <Property Name="ShowingInstructions" Type="Edm.String" MaxLength="4000"/>
+        <Property Name="ShowingRequirements" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ShowingRequirements"/>
+        </Property>
+        <Property Name="ShowingStartTime" Type="Edm.DateTimeOffset"/>
+        <Property Name="SignOnPropertyYN" Type="Edm.Boolean"/>
+        <Property Name="Skirt" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="Skirt"/>
+        </Property>
+        <Property Name="SourceSystemID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="SourceSystemKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="SourceSystemName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="SpaFeatures" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="SpaFeatures"/>
+        </Property>
+        <Property Name="SpaYN" Type="Edm.Boolean"/>
+        <Property Name="SpecialLicenses" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="SpecialLicenses"/>
+        </Property>
+        <Property Name="SpecialListingConditions" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="SpecialListingConditions"/>
+        </Property>
+        <Property Name="StandardStatus" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="StandardStatus"/>
+        </Property>
+        <Property Name="StateOrProvince" Type="Edm.String" MaxLength="2">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="StateOrProvince"/>
+        </Property>
+        <Property Name="StateRegion" Type="Edm.String" MaxLength="150"/>
+        <Property Name="StatusChangeTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="Stories" Type="Edm.Int64"/>
+        <Property Name="StoriesTotal" Type="Edm.Int64"/>
+        <Property Name="StreetAdditionalInfo" Type="Edm.String" MaxLength="50"/>
+        <Property Name="StreetDirPrefix" Type="Edm.String" MaxLength="15">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="StreetDirection"/>
+        </Property>
+        <Property Name="StreetDirSuffix" Type="Edm.String" MaxLength="15">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="StreetDirection"/>
+        </Property>
+        <Property Name="StreetName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="StreetNumber" Type="Edm.String" MaxLength="25"/>
+        <Property Name="StreetNumberNumeric" Type="Edm.Int64"/>
+        <Property Name="StreetSuffix" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="StreetSuffix"/>
+        </Property>
+        <Property Name="StreetSuffixModifier" Type="Edm.String" MaxLength="25"/>
+        <Property Name="StructureType" Type="Collection(Edm.String)" Nullable="false" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="StructureType"/>
+        </Property>
+        <Property Name="SubAgencyCompensation" Type="Edm.String" MaxLength="25"/>
+        <Property Name="SubAgencyCompensationType" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="CompensationType"/>
+        </Property>
+        <Property Name="SubdivisionName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="SuppliesExpense" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="SyndicateTo" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="SyndicateTo"/>
+        </Property>
+        <Property Name="SyndicationRemarks" Type="Edm.String" MaxLength="4000"/>
+        <Property Name="TaxAnnualAmount" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="TaxAssessedValue" Type="Edm.Int64"/>
+        <Property Name="TaxBlock" Type="Edm.String" MaxLength="25"/>
+        <Property Name="TaxBookNumber" Type="Edm.String" MaxLength="25"/>
+        <Property Name="TaxLegalDescription" Type="Edm.String" MaxLength="6000"/>
+        <Property Name="TaxLot" Type="Edm.String" MaxLength="25"/>
+        <Property Name="TaxMapNumber" Type="Edm.String" MaxLength="25"/>
+        <Property Name="TaxOtherAnnualAssessmentAmount" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="TaxParcelLetter" Type="Edm.String" MaxLength="25"/>
+        <Property Name="TaxStatusCurrent" Type="Collection(Edm.String)" Nullable="false" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="TaxStatusCurrent"/>
+        </Property>
+        <Property Name="TaxTract" Type="Edm.String" MaxLength="25"/>
+        <Property Name="TaxYear" Type="Edm.Int64"/>
+        <Property Name="TenantPays" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="TenantPays"/>
+        </Property>
+        <Property Name="Topography" Type="Edm.String" MaxLength="255"/>
+        <Property Name="TotalActualRent" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="Township" Type="Edm.String" MaxLength="50"/>
+        <Property Name="TransactionBrokerCompensation" Type="Edm.String" MaxLength="25"/>
+        <Property Name="TransactionBrokerCompensationType" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="CompensationType"/>
+        </Property>
+        <Property Name="TrashExpense" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="UnitNumber" Type="Edm.String" MaxLength="25"/>
+        <Property Name="UnitTypeType" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="UnitTypeType"/>
+        </Property>
+        <Property Name="UnitsFurnished" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="UnitsFurnished"/>
+        </Property>
+        <Property Name="UniversalPropertyId" Type="Edm.String" MaxLength="128"/>
+        <Property Name="UniversalPropertySubId" Type="Edm.String" MaxLength="128"/>
+        <Property Name="UnparsedAddress" Type="Edm.String" MaxLength="255"/>
+        <Property Name="Utilities" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="Utilities"/>
+        </Property>
+        <Property Name="VacancyAllowance" Type="Edm.Int64"/>
+        <Property Name="VacancyAllowanceRate" Type="Edm.Decimal" Precision="5" Scale="2"/>
+        <Property Name="Vegetation" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="Vegetation"/>
+        </Property>
+        <Property Name="VideosChangeTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="VideosCount" Type="Edm.Int64"/>
+        <Property Name="View" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="View"/>
+        </Property>
+        <Property Name="ViewYN" Type="Edm.Boolean"/>
+        <Property Name="VirtualTourURLBranded" Type="Edm.String" MaxLength="8000"/>
+        <Property Name="VirtualTourURLUnbranded" Type="Edm.String" MaxLength="8000"/>
+        <Property Name="WalkScore" Type="Edm.Int64"/>
+        <Property Name="WaterBodyName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="WaterSewerExpense" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="WaterSource" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="WaterSource"/>
+        </Property>
+        <Property Name="WaterfrontFeatures" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="WaterfrontFeatures"/>
+        </Property>
+        <Property Name="WaterfrontYN" Type="Edm.Boolean"/>
+        <Property Name="WindowFeatures" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="WindowFeatures"/>
+        </Property>
+        <Property Name="WithdrawnDate" Type="Edm.Date"/>
+        <Property Name="WoodedArea" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="WorkmansCompensationExpense" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="YearBuilt" Type="Edm.Int64"/>
+        <Property Name="YearBuiltDetails" Type="Edm.String" MaxLength="1024"/>
+        <Property Name="YearBuiltEffective" Type="Edm.Int64"/>
+        <Property Name="YearBuiltSource" Type="Edm.String" MaxLength="60">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="YearBuiltSource"/>
+        </Property>
+        <Property Name="YearEstablished" Type="Edm.Int64"/>
+        <Property Name="YearsCurrentOwner" Type="Edm.Int64"/>
+        <Property Name="Zoning" Type="Edm.String" MaxLength="25"/>
+        <Property Name="ZoningDescription" Type="Edm.String" MaxLength="255"/>
+        <NavigationProperty Name="OriginatingSystem" Type="org.reso.metadata.OUID"/>
+        <NavigationProperty Name="BuyerAgent" Type="org.reso.metadata.Member"/>
+        <NavigationProperty Name="BuyerOffice" Type="org.reso.metadata.Office"/>
+        <NavigationProperty Name="CoBuyerAgent" Type="org.reso.metadata.Member"/>
+        <NavigationProperty Name="CoBuyerOffice" Type="org.reso.metadata.Office"/>
+        <NavigationProperty Name="CoListAgent" Type="org.reso.metadata.Member"/>
+        <NavigationProperty Name="CoListOffice" Type="org.reso.metadata.Office"/>
+        <NavigationProperty Name="ListAgent" Type="org.reso.metadata.Member"/>
+        <NavigationProperty Name="ListOffice" Type="org.reso.metadata.Office"/>
+        <NavigationProperty Name="BuyerTeam" Type="org.reso.metadata.Teams"/>
+        <NavigationProperty Name="ListTeam" Type="org.reso.metadata.Teams"/>
+        <NavigationProperty Name="SourceSystem" Type="org.reso.metadata.OUID"/>
+        <NavigationProperty Name="GreenBuildingVerifications" Type="Collection(org.reso.metadata.PropertyGreenVerification)"/>
+        <NavigationProperty Name="PowerProduction" Type="Collection(org.reso.metadata.PropertyPowerProduction)"/>
+        <NavigationProperty Name="Rooms" Type="Collection(org.reso.metadata.PropertyRooms)"/>
+        <NavigationProperty Name="UnitTypes" Type="Collection(org.reso.metadata.PropertyUnitTypes)"/>
+        <NavigationProperty Name="HistoryTransactional" Type="Collection(org.reso.metadata.HistoryTransactional)"/>
+        <NavigationProperty Name="Media" Type="Collection(org.reso.metadata.Media)"/>
+        <NavigationProperty Name="SocialMedia" Type="Collection(org.reso.metadata.SocialMedia)"/>
+        <NavigationProperty Name="OpenHouses" Type="Collection(org.reso.metadata.OpenHouse)"/>
+      </EntityType>
+      <EntityType Name="PropertyGreenVerification">
+        <Key>
+          <PropertyRef Name="GreenBuildingVerificationKey"/>
+        </Key>
+        <Property Name="GreenBuildingVerificationKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="GreenBuildingVerificationType" Type="Edm.String" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="GreenBuildingVerificationType"/>
+        </Property>
+        <Property Name="GreenVerificationBody" Type="Edm.String" MaxLength="50"/>
+        <Property Name="GreenVerificationMetric" Type="Edm.Int64"/>
+        <Property Name="GreenVerificationRating" Type="Edm.String" MaxLength="50"/>
+        <Property Name="GreenVerificationSource" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="GreenVerificationSource"/>
+        </Property>
+        <Property Name="GreenVerificationStatus" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="GreenVerificationStatus"/>
+        </Property>
+        <Property Name="GreenVerificationURL" Type="Edm.String" MaxLength="8000"/>
+        <Property Name="GreenVerificationVersion" Type="Edm.String" MaxLength="25"/>
+        <Property Name="GreenVerificationYear" Type="Edm.Int64"/>
+        <Property Name="ListingId" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ListingKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ModificationTimestamp" Type="Edm.DateTimeOffset"/>
+        <NavigationProperty Name="HistoryTransactional" Type="Collection(org.reso.metadata.HistoryTransactional)"/>
+        <NavigationProperty Name="Listing" Type="org.reso.metadata.Property"/>
+      </EntityType>
+      <EntityType Name="PropertyPowerProduction">
+        <Key>
+          <PropertyRef Name="PowerProductionKey"/>
+        </Key>
+        <Property Name="ListingId" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ListingKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ModificationTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="PowerProductionAnnual" Type="Edm.Int64"/>
+        <Property Name="PowerProductionAnnualStatus" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="PowerProductionAnnualStatus"/>
+        </Property>
+        <Property Name="PowerProductionKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="PowerProductionSize" Type="Edm.Decimal" Precision="5" Scale="2"/>
+        <Property Name="PowerProductionType" Type="Edm.String" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="PowerProductionType"/>
+        </Property>
+        <Property Name="PowerProductionYearInstall" Type="Edm.Int64"/>
+        <NavigationProperty Name="HistoryTransactional" Type="Collection(org.reso.metadata.HistoryTransactional)"/>
+        <NavigationProperty Name="Listing" Type="org.reso.metadata.Property"/>
+      </EntityType>
+      <EntityType Name="PropertyRooms">
+        <Key>
+          <PropertyRef Name="RoomKey"/>
+        </Key>
+        <Property Name="ListingId" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ListingKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ModificationTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="RoomArea" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="RoomAreaSource" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="AreaSource"/>
+        </Property>
+        <Property Name="RoomAreaUnits" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="AreaUnits"/>
+        </Property>
+        <Property Name="RoomDescription" Type="Edm.String" MaxLength="1024"/>
+        <Property Name="RoomDimensions" Type="Edm.String" MaxLength="50"/>
+        <Property Name="RoomFeatures" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="InteriorOrRoomFeatures"/>
+        </Property>
+        <Property Name="RoomKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="RoomLength" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="RoomLengthWidthUnits" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="LinearUnits"/>
+        </Property>
+        <Property Name="RoomType" Type="Edm.String" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="RoomType"/>
+        </Property>
+        <Property Name="RoomWidth" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <NavigationProperty Name="HistoryTransactional" Type="Collection(org.reso.metadata.HistoryTransactional)"/>
+        <NavigationProperty Name="Listing" Type="org.reso.metadata.Property"/>
+      </EntityType>
+      <EntityType Name="PropertyUnitTypes">
+        <Key>
+          <PropertyRef Name="UnitTypeKey"/>
+        </Key>
+        <Property Name="ListingId" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ListingKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ModificationTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="UnitTypeActualRent" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="UnitTypeBathsTotal" Type="Edm.Int64"/>
+        <Property Name="UnitTypeBedsTotal" Type="Edm.Int64"/>
+        <Property Name="UnitTypeDescription" Type="Edm.String" MaxLength="1024"/>
+        <Property Name="UnitTypeFurnished" Type="Edm.String" MaxLength="20">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="Furnished"/>
+        </Property>
+        <Property Name="UnitTypeGarageAttachedYN" Type="Edm.Boolean"/>
+        <Property Name="UnitTypeGarageSpaces" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="UnitTypeKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="UnitTypeProForma" Type="Edm.Int64"/>
+        <Property Name="UnitTypeTotalRent" Type="Edm.Decimal" Precision="14" Scale="2"/>
+        <Property Name="UnitTypeType" Type="Edm.String" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="UnitTypeType"/>
+        </Property>
+        <Property Name="UnitTypeUnitsTotal" Type="Edm.Int64"/>
+        <NavigationProperty Name="HistoryTransactional" Type="Collection(org.reso.metadata.HistoryTransactional)"/>
+        <NavigationProperty Name="Listing" Type="org.reso.metadata.Property"/>
+      </EntityType>
+      <EntityType Name="Prospecting">
+        <Key>
+          <PropertyRef Name="ProspectingKey"/>
+        </Key>
+        <Property Name="ActiveYN" Type="Edm.Boolean"/>
+        <Property Name="BccEmailList" Type="Edm.String" MaxLength="1024"/>
+        <Property Name="BccMeYN" Type="Edm.Boolean"/>
+        <Property Name="CcEmailList" Type="Edm.String" MaxLength="1024"/>
+        <Property Name="ClientActivatedYN" Type="Edm.Boolean"/>
+        <Property Name="ConciergeNotificationsYN" Type="Edm.Boolean"/>
+        <Property Name="ConciergeYN" Type="Edm.Boolean"/>
+        <Property Name="ContactKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="DailySchedule" Type="Collection(Edm.String)" Nullable="false" MaxLength="1024">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="DailySchedule"/>
+        </Property>
+        <Property Name="DisplayTemplateID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="Language" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="Languages"/>
+        </Property>
+        <Property Name="LastNewChangedTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="LastViewedTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="MessageNew" Type="Edm.String" MaxLength="4000"/>
+        <Property Name="MessageRevise" Type="Edm.String" MaxLength="4000"/>
+        <Property Name="MessageUpdate" Type="Edm.String" MaxLength="4000"/>
+        <Property Name="ModificationTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="NextSendTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="OwnerMemberID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="OwnerMemberKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ProspectingKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ReasonActiveOrDisabled" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ReasonActiveOrDisabled"/>
+        </Property>
+        <Property Name="SavedSearchKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ScheduleType" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ScheduleType"/>
+        </Property>
+        <Property Name="Subject" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ToEmailList" Type="Edm.String" MaxLength="1024"/>
+        <NavigationProperty Name="Contact" Type="org.reso.metadata.Contacts"/>
+        <NavigationProperty Name="HistoryTransactional" Type="Collection(org.reso.metadata.HistoryTransactional)"/>
+        <NavigationProperty Name="Media" Type="Collection(org.reso.metadata.Media)"/>
+        <NavigationProperty Name="OwnerMember" Type="org.reso.metadata.Member"/>
+        <NavigationProperty Name="SavedSearch" Type="org.reso.metadata.SavedSearch"/>
+      </EntityType>
+      <EntityType Name="Queue">
+        <Key>
+          <PropertyRef Name="QueueTransactionKey"/>
+        </Key>
+        <Property Name="ClassName" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ClassName"/>
+        </Property>
+        <Property Name="ModificationTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="OriginatingSystemID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="OriginatingSystemName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="OriginatingSystemQueueKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="QueueTransactionKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="QueueTransactionType" Type="Edm.String" MaxLength="255">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="QueueTransactionType"/>
+        </Property>
+        <Property Name="ResourceName" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ResourceName"/>
+        </Property>
+        <Property Name="ResourceRecordID" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ResourceRecordKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="SourceSystemID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="SourceSystemName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="SourceSystemQueueKey" Type="Edm.String" MaxLength="255"/>
+        <NavigationProperty Name="OriginatingSystem" Type="org.reso.metadata.OUID"/>
+        <NavigationProperty Name="SourceSystem" Type="org.reso.metadata.OUID"/>
+      </EntityType>
+      <EntityType Name="Rules">
+        <Key>
+          <PropertyRef Name="RuleKey"/>
+        </Key>
+        <Property Name="ClassName" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ClassName"/>
+        </Property>
+        <Property Name="FieldKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="FieldName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ModificationTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="OriginalEntryTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="OriginatingSystemID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="OriginatingSystemName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="OriginatingSystemRuleKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ResourceName" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ResourceName"/>
+        </Property>
+        <Property Name="RuleAction" Type="Edm.String" MaxLength="8000"/>
+        <Property Name="RuleDescription" Type="Edm.String" MaxLength="8000"/>
+        <Property Name="RuleEnabledYN" Type="Edm.Boolean"/>
+        <Property Name="RuleErrorText" Type="Edm.String" MaxLength="8000"/>
+        <Property Name="RuleExpression" Type="Edm.String" MaxLength="8000"/>
+        <Property Name="RuleFormat" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="RuleFormat"/>
+        </Property>
+        <Property Name="RuleHelpText" Type="Edm.String" MaxLength="8000"/>
+        <Property Name="RuleKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="RuleName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="RuleOrder" Type="Edm.Int64"/>
+        <Property Name="RuleType" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="RuleType"/>
+        </Property>
+        <Property Name="RuleVersion" Type="Edm.String" MaxLength="255"/>
+        <Property Name="RuleWarningText" Type="Edm.String" MaxLength="8000"/>
+        <Property Name="SourceSystemHistoryKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="SourceSystemID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="SourceSystemName" Type="Edm.String" MaxLength="255"/>
+        <NavigationProperty Name="HistoryTransactional" Type="Collection(org.reso.metadata.HistoryTransactional)"/>
+        <NavigationProperty Name="OriginatingSystem" Type="org.reso.metadata.OUID"/>
+        <NavigationProperty Name="SourceSystem" Type="org.reso.metadata.OUID"/>
+      </EntityType>
+      <EntityType Name="SavedSearch">
+        <Key>
+          <PropertyRef Name="SavedSearchKey"/>
+        </Key>
+        <Property Name="ClassName" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ClassName"/>
+        </Property>
+        <Property Name="MemberKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="MemberMlsId" Type="Edm.String" MaxLength="25"/>
+        <Property Name="ModificationTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="OriginalEntryTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="OriginatingSystemID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="OriginatingSystemKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="OriginatingSystemMemberKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="OriginatingSystemMemberName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="OriginatingSystemName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ResourceName" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ResourceName"/>
+        </Property>
+        <Property Name="SavedSearchDescription" Type="Edm.String" MaxLength="4000"/>
+        <Property Name="SavedSearchKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="SavedSearchName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="SavedSearchType" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="SavedSearchType"/>
+        </Property>
+        <Property Name="SearchQuery" Type="Edm.String" MaxLength="8000"/>
+        <Property Name="SearchQueryExceptionDetails" Type="Edm.String" MaxLength="255"/>
+        <Property Name="SearchQueryExceptions" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="SearchQueryExceptions"/>
+        </Property>
+        <Property Name="SearchQueryHumanReadable" Type="Edm.String" MaxLength="255"/>
+        <Property Name="SearchQueryType" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="SearchQueryType"/>
+        </Property>
+        <Property Name="SourceSystemID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="SourceSystemKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="SourceSystemName" Type="Edm.String" MaxLength="255"/>
+        <NavigationProperty Name="Member" Type="org.reso.metadata.Member"/>
+        <NavigationProperty Name="OriginatingSystem" Type="org.reso.metadata.OUID"/>
+        <NavigationProperty Name="SourceSystem" Type="org.reso.metadata.OUID"/>
+      </EntityType>
+      <EntityType Name="Showing">
+        <Key>
+          <PropertyRef Name="ShowingKey"/>
+        </Key>
+        <Property Name="AgentOriginatingSystemID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="AgentOriginatingSystemName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="AgentSourceSystemID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="AgentSourceSystemName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ListingId" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ListingKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ListingOriginatingSystemID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="ListingOriginatingSystemName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ListingSourceSystemID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="ListingSourceSystemName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ModificationTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="OriginalEntryTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="OriginatingSystemAgentKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="OriginatingSystemListingKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="OriginatingSystemShowingKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ShowingAgentKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ShowingAgentMlsID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="ShowingEndTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="ShowingId" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ShowingKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ShowingOriginatingSystemID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="ShowingOriginatingSystemName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ShowingRequestedTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="ShowingSourceSystemID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="ShowingSourceSystemName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ShowingStartTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="SourceSystemAgentKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="SourceSystemListingKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="SourceSystemShowingKey" Type="Edm.String" MaxLength="255"/>
+        <NavigationProperty Name="AgentOriginatingSystem" Type="org.reso.metadata.OUID"/>
+        <NavigationProperty Name="AgentSourceSystem" Type="org.reso.metadata.OUID"/>
+        <NavigationProperty Name="HistoryTransactional" Type="Collection(org.reso.metadata.HistoryTransactional)"/>
+        <NavigationProperty Name="Listing" Type="org.reso.metadata.Property"/>
+        <NavigationProperty Name="ListingOriginatingSystem" Type="org.reso.metadata.OUID"/>
+        <NavigationProperty Name="ListingSourceSystem" Type="org.reso.metadata.OUID"/>
+        <NavigationProperty Name="Media" Type="Collection(org.reso.metadata.Media)"/>
+        <NavigationProperty Name="ShowingAgent" Type="org.reso.metadata.Member"/>
+        <NavigationProperty Name="ShowingOriginatingSystem" Type="org.reso.metadata.OUID"/>
+        <NavigationProperty Name="ShowingSourceSystem" Type="org.reso.metadata.OUID"/>
+        <NavigationProperty Name="SocialMedia" Type="Collection(org.reso.metadata.SocialMedia)"/>
+      </EntityType>
+      <EntityType Name="SocialMedia">
+        <Key>
+          <PropertyRef Name="SocialMediaKey"/>
+        </Key>
+        <Property Name="ClassName" Type="Edm.String" MaxLength="255">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ClassName"/>
+        </Property>
+        <Property Name="ModificationTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="ResourceName" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="ResourceName"/>
+        </Property>
+        <Property Name="ResourceRecordID" Type="Edm.String" MaxLength="255"/>
+        <Property Name="ResourceRecordKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="SocialMediaKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="SocialMediaType" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="SocialMediaType"/>
+        </Property>
+        <Property Name="SocialMediaUrlOrId" Type="Edm.String" MaxLength="8000"/>
+      </EntityType>
+      <EntityType Name="TeamMembers">
+        <Key>
+          <PropertyRef Name="TeamMemberKey"/>
+        </Key>
+        <Property Name="MemberKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="MemberLoginId" Type="Edm.String" MaxLength="25"/>
+        <Property Name="MemberMlsId" Type="Edm.String" MaxLength="25"/>
+        <Property Name="ModificationTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="OriginalEntryTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="OriginatingSystemID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="OriginatingSystemKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="OriginatingSystemName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="SourceSystemID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="SourceSystemKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="SourceSystemName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="TeamImpersonationLevel" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="TeamImpersonationLevel"/>
+        </Property>
+        <Property Name="TeamKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="TeamMemberKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="TeamMemberNationalAssociationId" Type="Edm.String" MaxLength="25"/>
+        <Property Name="TeamMemberStateLicense" Type="Edm.String" MaxLength="50"/>
+        <Property Name="TeamMemberType" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="TeamMemberType"/>
+        </Property>
+        <NavigationProperty Name="HistoryTransactional" Type="Collection(org.reso.metadata.HistoryTransactional)"/>
+        <NavigationProperty Name="Member" Type="org.reso.metadata.Member"/>
+        <NavigationProperty Name="OriginatingSystem" Type="org.reso.metadata.OUID"/>
+        <NavigationProperty Name="SourceSystem" Type="org.reso.metadata.OUID"/>
+      </EntityType>
+      <EntityType Name="Teams">
+        <Key>
+          <PropertyRef Name="TeamKey"/>
+        </Key>
+        <Property Name="ModificationTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="OriginalEntryTimestamp" Type="Edm.DateTimeOffset"/>
+        <Property Name="OriginatingSystemID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="OriginatingSystemKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="OriginatingSystemName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="SocialMediaType" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="SocialMediaType"/>
+        </Property>
+        <Property Name="SourceSystemID" Type="Edm.String" MaxLength="25"/>
+        <Property Name="SourceSystemKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="SourceSystemName" Type="Edm.String" MaxLength="255"/>
+        <Property Name="TeamAddress1" Type="Edm.String" MaxLength="50"/>
+        <Property Name="TeamAddress2" Type="Edm.String" MaxLength="50"/>
+        <Property Name="TeamCarrierRoute" Type="Edm.String" MaxLength="9"/>
+        <Property Name="TeamCity" Type="Edm.String" MaxLength="50"/>
+        <Property Name="TeamCountry" Type="Edm.String" MaxLength="2">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="Country"/>
+        </Property>
+        <Property Name="TeamCountyOrParish" Type="Edm.String" MaxLength="50">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="CountyOrParish"/>
+        </Property>
+        <Property Name="TeamDescription" Type="Edm.String" MaxLength="1024"/>
+        <Property Name="TeamDirectPhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="TeamEmail" Type="Edm.String" MaxLength="80"/>
+        <Property Name="TeamFax" Type="Edm.String" MaxLength="16"/>
+        <Property Name="TeamKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="TeamLeadKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="TeamLeadLoginId" Type="Edm.String" MaxLength="25"/>
+        <Property Name="TeamLeadMlsId" Type="Edm.String" MaxLength="25"/>
+        <Property Name="TeamLeadNationalAssociationId" Type="Edm.String" MaxLength="25"/>
+        <Property Name="TeamLeadStateLicense" Type="Edm.String" MaxLength="50"/>
+        <Property Name="TeamLeadStateLicenseState" Type="Edm.String" MaxLength="2">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="StateOrProvince"/>
+        </Property>
+        <Property Name="TeamMobilePhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="TeamName" Type="Edm.String" MaxLength="50"/>
+        <Property Name="TeamOfficePhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="TeamOfficePhoneExt" Type="Edm.String" MaxLength="10"/>
+        <Property Name="TeamPostalCode" Type="Edm.String" MaxLength="10"/>
+        <Property Name="TeamPostalCodePlus4" Type="Edm.String" MaxLength="4"/>
+        <Property Name="TeamPreferredPhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="TeamPreferredPhoneExt" Type="Edm.String" MaxLength="10"/>
+        <Property Name="TeamStateOrProvince" Type="Edm.String" MaxLength="2">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="StateOrProvince"/>
+        </Property>
+        <Property Name="TeamStatus" Type="Edm.String" MaxLength="25">
+          <Annotation Term="RESO.OData.Metadata.LookupName" String="TeamStatus"/>
+        </Property>
+        <Property Name="TeamTollFreePhone" Type="Edm.String" MaxLength="16"/>
+        <Property Name="TeamVoiceMail" Type="Edm.String" MaxLength="16"/>
+        <Property Name="TeamVoiceMailExt" Type="Edm.String" MaxLength="10"/>
+        <NavigationProperty Name="HistoryTransactional" Type="Collection(org.reso.metadata.HistoryTransactional)"/>
+        <NavigationProperty Name="Media" Type="Collection(org.reso.metadata.Media)"/>
+        <NavigationProperty Name="OriginatingSystem" Type="org.reso.metadata.OUID"/>
+        <NavigationProperty Name="SourceSystem" Type="org.reso.metadata.OUID"/>
+        <NavigationProperty Name="TeamLead" Type="org.reso.metadata.Member"/>
+        <NavigationProperty Name="TeamsSocialMedia" Type="Collection(org.reso.metadata.SocialMedia)"/>
+      </EntityType>
+      <EntityContainer Name="Default">
+        <EntitySet Name="ContactListingNotes" EntityType="org.reso.metadata.ContactListingNotes">
+          <NavigationPropertyBinding Path="Contact" Target="Contacts"/>
+        </EntitySet>
+        <EntitySet Name="ContactListings" EntityType="org.reso.metadata.ContactListings">
+          <NavigationPropertyBinding Path="Contact" Target="Contacts"/>
+          <NavigationPropertyBinding Path="Listing" Target="Property"/>
+          <NavigationPropertyBinding Path="ListingNotes" Target="ContactListingNotes"/>
+        </EntitySet>
+        <EntitySet Name="Contacts" EntityType="org.reso.metadata.Contacts">
+          <NavigationPropertyBinding Path="ContactsOtherPhones" Target="OtherPhone"/>
+          <NavigationPropertyBinding Path="ContactsSocialMedia" Target="SocialMedia"/>
+          <NavigationPropertyBinding Path="HistoryTransactional" Target="HistoryTransactional"/>
+          <NavigationPropertyBinding Path="Media" Target="Media"/>
+          <NavigationPropertyBinding Path="OriginatingSystem" Target="OUID"/>
+          <NavigationPropertyBinding Path="OwnerMember" Target="Member"/>
+          <NavigationPropertyBinding Path="SourceSystem" Target="OUID"/>
+        </EntitySet>
+        <EntitySet Name="Field" EntityType="org.reso.metadata.Field"/>
+        <EntitySet Name="HistoryTransactional" EntityType="org.reso.metadata.HistoryTransactional">
+          <NavigationPropertyBinding Path="ChangedByMember" Target="Member"/>
+          <NavigationPropertyBinding Path="OriginatingSystem" Target="OUID"/>
+          <NavigationPropertyBinding Path="SourceSystem" Target="OUID"/>
+        </EntitySet>
+        <EntitySet Name="InternetTracking" EntityType="org.reso.metadata.InternetTracking">
+          <NavigationPropertyBinding Path="ActorOriginatingSystem" Target="OUID"/>
+          <NavigationPropertyBinding Path="ActorSourceSystem" Target="OUID"/>
+          <NavigationPropertyBinding Path="EventOriginatingSystem" Target="OUID"/>
+          <NavigationPropertyBinding Path="EventSourceSystem" Target="OUID"/>
+          <NavigationPropertyBinding Path="ObjectOriginatingSystem" Target="OUID"/>
+          <NavigationPropertyBinding Path="ObjectSourceSystem" Target="OUID"/>
+        </EntitySet>
+        <EntitySet Name="Lookup" EntityType="org.reso.metadata.Lookup"/>
+        <EntitySet Name="Media" EntityType="org.reso.metadata.Media"/>
+        <EntitySet Name="Member" EntityType="org.reso.metadata.Member">
+          <NavigationPropertyBinding Path="HistoryTransactional" Target="HistoryTransactional"/>
+          <NavigationPropertyBinding Path="Media" Target="Media"/>
+          <NavigationPropertyBinding Path="MemberOtherPhones" Target="OtherPhone"/>
+          <NavigationPropertyBinding Path="MemberSocialMedia" Target="SocialMedia"/>
+          <NavigationPropertyBinding Path="Office" Target="Office"/>
+          <NavigationPropertyBinding Path="OriginatingSystem" Target="OUID"/>
+          <NavigationPropertyBinding Path="SourceSystem" Target="OUID"/>
+        </EntitySet>
+        <EntitySet Name="OUID" EntityType="org.reso.metadata.OUID">
+          <NavigationPropertyBinding Path="ChangedByMember" Target="Member"/>
+          <NavigationPropertyBinding Path="HistoryTransactional" Target="HistoryTransactional"/>
+          <NavigationPropertyBinding Path="Media" Target="Media"/>
+          <NavigationPropertyBinding Path="OrganizationSocialMedia" Target="SocialMedia"/>
+        </EntitySet>
+        <EntitySet Name="Office" EntityType="org.reso.metadata.Office">
+          <NavigationPropertyBinding Path="HistoryTransactional" Target="HistoryTransactional"/>
+          <NavigationPropertyBinding Path="MainOffice" Target="Office"/>
+          <NavigationPropertyBinding Path="Media" Target="Media"/>
+          <NavigationPropertyBinding Path="OfficeBroker" Target="Member"/>
+          <NavigationPropertyBinding Path="OfficeManager" Target="Member"/>
+          <NavigationPropertyBinding Path="OfficeSocialMedia" Target="SocialMedia"/>
+          <NavigationPropertyBinding Path="OriginatingSystem" Target="OUID"/>
+          <NavigationPropertyBinding Path="SourceSystem" Target="OUID"/>
+        </EntitySet>
+        <EntitySet Name="OpenHouse" EntityType="org.reso.metadata.OpenHouse">
+          <NavigationPropertyBinding Path="HistoryTransactional" Target="HistoryTransactional"/>
+          <NavigationPropertyBinding Path="Listing" Target="Property"/>
+          <NavigationPropertyBinding Path="Media" Target="Media"/>
+          <NavigationPropertyBinding Path="OriginatingSystem" Target="OUID"/>
+          <NavigationPropertyBinding Path="ShowingAgent" Target="Member"/>
+          <NavigationPropertyBinding Path="SocialMedia" Target="SocialMedia"/>
+          <NavigationPropertyBinding Path="SourceSystem" Target="OUID"/>
+        </EntitySet>
+        <EntitySet Name="OtherPhone" EntityType="org.reso.metadata.OtherPhone"/>
+        <EntitySet Name="Property" EntityType="org.reso.metadata.Property">
+          <NavigationPropertyBinding Path="OriginatingSystem" Target="OUID"/>
+          <NavigationPropertyBinding Path="BuyerAgent" Target="Member"/>
+          <NavigationPropertyBinding Path="BuyerOffice" Target="Office"/>
+          <NavigationPropertyBinding Path="CoBuyerAgent" Target="Member"/>
+          <NavigationPropertyBinding Path="CoBuyerOffice" Target="Office"/>
+          <NavigationPropertyBinding Path="CoListAgent" Target="Member"/>
+          <NavigationPropertyBinding Path="CoListOffice" Target="Office"/>
+          <NavigationPropertyBinding Path="ListAgent" Target="Member"/>
+          <NavigationPropertyBinding Path="ListOffice" Target="Office"/>
+          <NavigationPropertyBinding Path="BuyerTeam" Target="Teams"/>
+          <NavigationPropertyBinding Path="ListTeam" Target="Teams"/>
+          <NavigationPropertyBinding Path="SourceSystem" Target="OUID"/>
+          <NavigationPropertyBinding Path="GreenBuildingVerifications" Target="PropertyGreenVerification"/>
+          <NavigationPropertyBinding Path="PowerProduction" Target="PropertyPowerProduction"/>
+          <NavigationPropertyBinding Path="Rooms" Target="PropertyRooms"/>
+          <NavigationPropertyBinding Path="UnitTypes" Target="PropertyUnitTypes"/>
+          <NavigationPropertyBinding Path="HistoryTransactional" Target="HistoryTransactional"/>
+          <NavigationPropertyBinding Path="Media" Target="Media"/>
+          <NavigationPropertyBinding Path="SocialMedia" Target="SocialMedia"/>
+          <NavigationPropertyBinding Path="OpenHouses" Target="OpenHouse"/>
+        </EntitySet>
+        <EntitySet Name="PropertyGreenVerification" EntityType="org.reso.metadata.PropertyGreenVerification">
+          <NavigationPropertyBinding Path="HistoryTransactional" Target="HistoryTransactional"/>
+          <NavigationPropertyBinding Path="Listing" Target="Property"/>
+        </EntitySet>
+        <EntitySet Name="PropertyPowerProduction" EntityType="org.reso.metadata.PropertyPowerProduction">
+          <NavigationPropertyBinding Path="HistoryTransactional" Target="HistoryTransactional"/>
+          <NavigationPropertyBinding Path="Listing" Target="Property"/>
+        </EntitySet>
+        <EntitySet Name="PropertyRooms" EntityType="org.reso.metadata.PropertyRooms">
+          <NavigationPropertyBinding Path="HistoryTransactional" Target="HistoryTransactional"/>
+          <NavigationPropertyBinding Path="Listing" Target="Property"/>
+        </EntitySet>
+        <EntitySet Name="PropertyUnitTypes" EntityType="org.reso.metadata.PropertyUnitTypes">
+          <NavigationPropertyBinding Path="HistoryTransactional" Target="HistoryTransactional"/>
+          <NavigationPropertyBinding Path="Listing" Target="Property"/>
+        </EntitySet>
+        <EntitySet Name="Prospecting" EntityType="org.reso.metadata.Prospecting">
+          <NavigationPropertyBinding Path="Contact" Target="Contacts"/>
+          <NavigationPropertyBinding Path="HistoryTransactional" Target="HistoryTransactional"/>
+          <NavigationPropertyBinding Path="Media" Target="Media"/>
+          <NavigationPropertyBinding Path="OwnerMember" Target="Member"/>
+          <NavigationPropertyBinding Path="SavedSearch" Target="SavedSearch"/>
+        </EntitySet>
+        <EntitySet Name="Queue" EntityType="org.reso.metadata.Queue">
+          <NavigationPropertyBinding Path="OriginatingSystem" Target="OUID"/>
+          <NavigationPropertyBinding Path="SourceSystem" Target="OUID"/>
+        </EntitySet>
+        <EntitySet Name="Rules" EntityType="org.reso.metadata.Rules">
+          <NavigationPropertyBinding Path="HistoryTransactional" Target="HistoryTransactional"/>
+          <NavigationPropertyBinding Path="OriginatingSystem" Target="OUID"/>
+          <NavigationPropertyBinding Path="SourceSystem" Target="OUID"/>
+        </EntitySet>
+        <EntitySet Name="SavedSearch" EntityType="org.reso.metadata.SavedSearch">
+          <NavigationPropertyBinding Path="Member" Target="Member"/>
+          <NavigationPropertyBinding Path="OriginatingSystem" Target="OUID"/>
+          <NavigationPropertyBinding Path="SourceSystem" Target="OUID"/>
+        </EntitySet>
+        <EntitySet Name="Showing" EntityType="org.reso.metadata.Showing">
+          <NavigationPropertyBinding Path="AgentOriginatingSystem" Target="OUID"/>
+          <NavigationPropertyBinding Path="AgentSourceSystem" Target="OUID"/>
+          <NavigationPropertyBinding Path="HistoryTransactional" Target="HistoryTransactional"/>
+          <NavigationPropertyBinding Path="Listing" Target="Property"/>
+          <NavigationPropertyBinding Path="ListingOriginatingSystem" Target="OUID"/>
+          <NavigationPropertyBinding Path="ListingSourceSystem" Target="OUID"/>
+          <NavigationPropertyBinding Path="Media" Target="Media"/>
+          <NavigationPropertyBinding Path="ShowingAgent" Target="Member"/>
+          <NavigationPropertyBinding Path="ShowingOriginatingSystem" Target="OUID"/>
+          <NavigationPropertyBinding Path="ShowingSourceSystem" Target="OUID"/>
+          <NavigationPropertyBinding Path="SocialMedia" Target="SocialMedia"/>
+        </EntitySet>
+        <EntitySet Name="SocialMedia" EntityType="org.reso.metadata.SocialMedia"/>
+        <EntitySet Name="TeamMembers" EntityType="org.reso.metadata.TeamMembers">
+          <NavigationPropertyBinding Path="HistoryTransactional" Target="HistoryTransactional"/>
+          <NavigationPropertyBinding Path="Member" Target="Member"/>
+          <NavigationPropertyBinding Path="OriginatingSystem" Target="OUID"/>
+          <NavigationPropertyBinding Path="SourceSystem" Target="OUID"/>
+        </EntitySet>
+        <EntitySet Name="Teams" EntityType="org.reso.metadata.Teams">
+          <NavigationPropertyBinding Path="HistoryTransactional" Target="HistoryTransactional"/>
+          <NavigationPropertyBinding Path="Media" Target="Media"/>
+          <NavigationPropertyBinding Path="OriginatingSystem" Target="OUID"/>
+          <NavigationPropertyBinding Path="SourceSystem" Target="OUID"/>
+          <NavigationPropertyBinding Path="TeamLead" Target="Member"/>
+          <NavigationPropertyBinding Path="TeamsSocialMedia" Target="SocialMedia"/>
+        </EntitySet>
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

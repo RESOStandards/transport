@@ -40,6 +40,16 @@ jobs:
       - name: Install DD tooling dependencies
         run: pip install -r .reso/tools/dd/requirements.txt
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: .reso/tools/dd/package-lock.json
+
+      - name: Install EDMX generator dependencies (reso-common)
+        run: npm ci --prefix .reso/tools/dd
+
       - name: Detect DD versions present
         id: versions
         run: |
@@ -70,6 +80,14 @@ jobs:
             echo "Generating ${out} from ${xlsx}"
             python .reso/tools/dd/generate-reference-metadata.py "${xlsx}" "${v}" "${out}"
           done
+
+      - name: Generate reference EDMX per version (both representations)
+        # Renders the OData EDMX (lookup-resource + enum reps) from each dd-{ver}.json via
+        # reso-common's generateEdmx — transport owns + publishes the reference artifacts (#219).
+        run: |
+          set -euo pipefail
+          mkdir -p references/dd/edmx
+          node .reso/tools/dd/generate-reference-edmx.mjs ${{ steps.versions.outputs.list }}
 
       - name: Lint DD sheets
         # Read-only validation of each XLSX (structure, PascalCase, duplicates, Unicode cleanliness,
@@ -188,11 +206,11 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add references/dd/json/dd-*.json
+          git add references/dd/json/dd-*.json references/dd/edmx/
           if git diff --cached --quiet; then
-            echo "JSON already up to date — nothing to commit."
+            echo "JSON/EDMX already up to date — nothing to commit."
             exit 0
           fi
           versions="${{ steps.versions.outputs.list }}"
-          git commit -m "Regenerate DD reference JSON (${versions}) [skip ci]"
+          git commit -m "Regenerate DD reference JSON + EDMX (${versions}) [skip ci]"
           git push origin "HEAD:${{ github.head_ref }}"
