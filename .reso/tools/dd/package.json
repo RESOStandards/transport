@@ -1,0 +1,10 @@
+{
+  "name": "@reso/dd-tools",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "DD reference tooling: reference EDMX generation via reso-common. Run by the generate-dd-json workflow.",
+  "dependencies": {
+    "@reso-standards/reso-common": "0.1.2"
+  }
+}

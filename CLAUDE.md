@@ -15,10 +15,10 @@ The DD sheets are the **upstream source of truth** for the entire RESO cert refe
 
 When mutating any `references/dd/RESODataDictionary-*.xlsx`:
 
-- **openpyxl only.** Never use SheetJS (or any JavaScript XLSX library) to write a DD sheet back to disk. SheetJS write-back strips cell formatting, comments, and merged-cell layout and roughly doubles file size. openpyxl preserves all of that and trims unused metadata. Linter script: [`references/dd/tools/lint-dd-sheet.py`](references/dd/tools/lint-dd-sheet.py).
+- **openpyxl only.** Never use SheetJS (or any JavaScript XLSX library) to write a DD sheet back to disk. SheetJS write-back strips cell formatting, comments, and merged-cell layout and roughly doubles file size. openpyxl preserves all of that and trims unused metadata. Linter script: [`.reso/tools/dd/lint-dd-sheet.py`](.reso/tools/dd/lint-dd-sheet.py).
 - **Lint after every edit.** The linter rewrites the canonical `dd.reso.org` hyperlinks deterministically. Post-lint file size is typically 0.81–0.84× the publisher's original; meaningfully larger sizes indicate non-openpyxl rewriting and should be investigated.
 - **Generate diffs at the end of the cycle.** After the lint pass, the JSON regeneration, and the adversarial review checks have all passed cleanly, generate the row-level diffs as the *final* artifact of the cycle:
-  - XLSX diff via [`references/dd/tools/diff-dd-sheet.py`](references/dd/tools/diff-dd-sheet.py) — emits markdown suitable for the PR comment AND for the `CHANGELOG.md` entry (`--changelog` flag).
+  - XLSX diff via [`.reso/tools/dd/diff-dd-sheet.py`](.reso/tools/dd/diff-dd-sheet.py) — emits markdown suitable for the PR comment AND for the `CHANGELOG.md` entry (`--changelog` flag).
   - JSON diff between the regenerated JSON and the prior published JSON — the projection delta. Useful as a sanity check that the JSON matches the XLSX edits faithfully (the JSON delta should be a clean projection of the XLSX delta).
 
   The ordering is load-bearing: diffs come *after* adversarial review passes, not before. A diff produced from a state that fails review is misleading — it captures content that may not survive the cycle. The diff is the artifact of a *clean* cycle, not a working-state preview. Generating it last makes the diff itself an audit trail that the review steps before it passed.
@@ -27,15 +27,16 @@ When mutating any `references/dd/RESODataDictionary-*.xlsx`:
 
 - **CHANGELOG.md entry on every revision.** Each XLSX change gets a row-level breakdown in `references/dd/CHANGELOG.md`, linked to the originating transport ticket. The CHANGELOG entry is generated from the same diff tool's `--changelog` output during the end-of-cycle diff step. Silent edits without a changelog entry mislead downstream consumers about coverage.
 
-The full set of fitness principles the downstream JSON projection must satisfy lives at [`references/dd/tools/dd-reference-fitness-principles.md`](references/dd/tools/dd-reference-fitness-principles.md). Read it before authoring an XLSX edit that touches structural columns (`SourceResource`, `LookupName`, `SimpleDataType`, `LookupStatus`).
+The full set of fitness principles the downstream JSON projection must satisfy lives at [`.reso/tools/dd/dd-reference-fitness-principles.md`](.reso/tools/dd/dd-reference-fitness-principles.md). Read it before authoring an XLSX edit that touches structural columns (`SourceResource`, `LookupName`, `SimpleDataType`, `LookupStatus`).
 
 ## DD reference tooling and JSON generation
 
-All DD reference tooling lives in [`references/dd/tools/`](references/dd/tools/) and is **single-runtime Python** (openpyxl, no npm). It previously lived in reso-tools and was sparse-checked-out by CI; it now lives here so the build owns the source it operates on and carries no cross-repo dependency. Python because openpyxl is the only XLSX library that preserves cell formatting, comments, and merged cells on write (SheetJS strips them) — and once the writer must be Python, keeping every tool Python means one runtime and one pinned dependency (`requirements.txt`).
+All DD reference tooling lives in [`.reso/tools/dd/`](.reso/tools/dd/). The XLSX side is **Python** (openpyxl); the **reference EDMX generator** ([`generate-reference-edmx.mjs`](.reso/tools/dd/generate-reference-edmx.mjs)) is **Node**, calling reso-common's `generateEdmx`. It previously lived in reso-tools and was sparse-checked-out by CI; it now lives here so the build owns the source it operates on. Python for the XLSX side because openpyxl is the only library that preserves cell formatting, comments, and merged cells on write (SheetJS strips them); Node for the EDMX side because `generateEdmx` is the shared JS generator (`@reso-standards/reso-common`, pinned in `package.json`) the reference server uses too. Heterogeneous runtime is fine — correct ownership matters more: transport owns the reference artifacts (#219).
 
 **Automated — the [`generate-dd-json`](.github/workflows/generate-dd-json.yml) workflow** runs on any change to `references/dd/RESODataDictionary-*.xlsx`:
 
 - Regenerates `references/dd/json/dd-{ver}.json` from each XLSX via `generate-reference-metadata.py` (one shared `generatedOn` per build).
+- Renders the reference EDMX (`references/dd/edmx/dd-{ver}-{rep}.xml`, rep ∈ {lookup-resource, enum}) from each JSON via `generate-reference-edmx.mjs` (reso-common's `generateEdmx`).
 - Validates each sheet with `dd-sheet-linter.py` (gates on errors) and runs `check-dd-reference-fitness.py` over the generated JSON (gates on failures).
 - **On a pull request:** commits the regenerated JSON back to the **PR branch** — so it lands on `main` through the PR, never a direct push to protected `main` — and posts the per-version counts and the lint report as comments, so issues are fixable in-branch before merge.
 - **On merge to `main`:** re-runs generate + lint + fitness as a post-merge check, committing nothing.
@@ -55,20 +56,20 @@ Validation (read-only) and normalization (write) are deliberately separate tools
 **Setup and manual runs** (one-time venv, git-ignored; then from the repo root):
 
 ```bash
-python3 -m venv references/dd/tools/.venv-dd-lint
-references/dd/tools/.venv-dd-lint/bin/pip install -r references/dd/tools/requirements.txt pytest
-PY=references/dd/tools/.venv-dd-lint/bin/python
+python3 -m venv .reso/tools/dd/.venv-dd-lint
+.reso/tools/dd/.venv-dd-lint/bin/pip install -r .reso/tools/dd/requirements.txt pytest
+PY=.reso/tools/dd/.venv-dd-lint/bin/python
 
 # Generate + fitness (what the workflow runs)
-$PY references/dd/tools/generate-reference-metadata.py references/dd/RESODataDictionary-2.1.xlsx 2.1 references/dd/json/dd-2.1.json
-$PY references/dd/tools/check-dd-reference-fitness.py references/dd/json/dd-*.json
+$PY .reso/tools/dd/generate-reference-metadata.py references/dd/RESODataDictionary-2.1.xlsx 2.1 references/dd/json/dd-2.1.json
+$PY .reso/tools/dd/check-dd-reference-fitness.py references/dd/json/dd-*.json
 
 # Validate a sheet (read-only), then normalize it (write)
-$PY references/dd/tools/dd-sheet-linter.py references/dd/RESODataDictionary-2.1.xlsx
-$PY references/dd/tools/lint-dd-sheet.py references/dd/RESODataDictionary-2.1.xlsx 2.1
+$PY .reso/tools/dd/dd-sheet-linter.py references/dd/RESODataDictionary-2.1.xlsx
+$PY .reso/tools/dd/lint-dd-sheet.py references/dd/RESODataDictionary-2.1.xlsx 2.1
 
 # Tests
-$PY -m pytest references/dd/tools/
+$PY -m pytest .reso/tools/dd/
 ```
 
 ## Pre-publish review
@@ -93,5 +94,5 @@ A PR body in that shape lets the pre-publish review focus its attention precisel
 
 ## Related
 
-- [`reso-tools`](https://github.com/RESOStandards/reso-tools) — consumes the generated `dd-{ver}.json` as cert-runner reference metadata. The DD generation, lint, and fitness tooling lives here in [`references/dd/tools/`](references/dd/tools/).
+- [`reso-tools`](https://github.com/RESOStandards/reso-tools) — consumes the generated `dd-{ver}.json` as cert-runner reference metadata. The DD generation, lint, and fitness tooling lives here in [`.reso/tools/dd/`](.reso/tools/dd/).
 - [`dd.reso.org`](https://dd.reso.org) — authoritative published DD content, derived from these sheets.
