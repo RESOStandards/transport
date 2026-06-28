@@ -8,11 +8,11 @@ title: RESO Transport Specifications
   <p>Modular specifications and change proposals that define how real estate data is exchanged across the industry.</p>
   <div class="hero-stats">
     <div class="hero-stat">
-      <div class="number">9</div>
+      <div class="number" data-count=".section-ratified .proposal-item">7</div>
       <div class="label">Ratified Standards</div>
     </div>
     <div class="hero-stat">
-      <div class="number">12</div>
+      <div class="number" data-count=".section-progress .proposal-item">14</div>
       <div class="label">In Progress</div>
     </div>
     <div class="hero-stat">
@@ -389,3 +389,18 @@ title: RESO Transport Specifications
     </div>
   </div>
 </div>
+
+<script>
+  // Hero stat counts are derived from the proposal lists below, so they stay
+  // correct as proposals are added or change status. Any count stat that
+  // resolves to zero is hidden — the empty statuses (Approved, Draft) simply
+  // don't print until they have items. Add a status by giving its hero-stat a
+  // data-count selector pointing at that status section's .proposal-item set.
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.hero-stat .number[data-count]').forEach(function (el) {
+      var n = document.querySelectorAll(el.getAttribute('data-count')).length;
+      el.textContent = n;
+      if (n === 0) { el.closest('.hero-stat').hidden = true; }
+    });
+  });
+</script>
