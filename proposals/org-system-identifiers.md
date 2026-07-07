@@ -40,9 +40,11 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 
 # Introduction
 
-Real estate records routinely pass through more than one organization and system before reaching an end user. To use a record, a consumer needs to know which organization and which system it came from. Today that information is carried in fields such as `OriginatingSystemName` and `SourceSystemName`, but the values are not standardized — and `OriginatingSystemName` is, in practice, a local vendor short-code for an *organization*, not a system. Because every provider spells these codes differently, each consumer maintains its own set of mappings for every provider it works with, even when two providers are naming the same organization.
+Real estate records routinely pass through more than one organization and system before reaching an end user. To use a record, a consumer needs to know which organization and which system it came from. Today that information is carried in fields such as `OriginatingSystemName` and `SourceSystemName`, but the values are not standardized – and `OriginatingSystemName` is, in practice, a local vendor short-code for an *organization*, not a system. Because every provider spells these codes differently, each consumer maintains its own set of mappings for every provider it works with, even when two providers are naming the same organization.
 
-This endorsement standardizes the identifiers themselves. It defines a RESO **Unique Organization Identifier (UOI)** and a RESO **Unique System Identifier (USI)**, each backed by a resource, so an organization or system is named the same way everywhere. It is one of a family of RESO universal identifiers — alongside the Universal Listing Identifier (ULI, RCP-54), which identifies listings — and it supplies the organization and system identifiers that the Data Provenance endorsement (RCP-50) and the Data Dictionary rely on.
+This endorsement standardizes the identifiers themselves. It defines a RESO **Unique Organization Identifier (UOI)** and a RESO **Unique System Identifier (USI)**, each backed by a resource, so an organization or system is named the same way everywhere. It extends RESO's family of identifiers – the **Unique Licensee Identifier** (ULI, RCP-54) for licensed professionals and the **Universal Parcel Identifier** ([UPI](https://upi.reso.org/)) for parcels – to the organizations and systems behind the data.
+
+RESO already issues and relies on UOIs and USIs at scale in Certification and RESO Analytics, where they have worked well. This endorsement formalizes that established practice so the same identifiers can be used consistently across the Data Dictionary and the Data Provenance endorsement (RCP-50).
 
 <br />
 
@@ -51,7 +53,7 @@ This endorsement standardizes the identifiers themselves. It defines a RESO **Un
 The RESO Data Dictionary carries `OriginatingSystem` and `SourceSystem` `Name`, `ID`, and `Key` fields in each resource to describe where a record originated and where it was obtained. Two problems recur with this approach:
 
 * The names, IDs, and keys used to describe organizations and systems are not standardized, which forces custom mapping and programming work for every provider.
-* The identity being carried is ambiguous — `OriginatingSystemName` typically names an *organization*, not a system — so a consumer cannot reliably separate an organization from the system that served it.
+* The identity being carried is ambiguous – `OriginatingSystemName` typically names an *organization*, not a system – so a consumer cannot reliably separate an organization from the system that served it.
 
 This endorsement addresses both by defining standard, resolvable identifiers for organizations (UOI) and systems (USI), a resource for each, the rules for issuing them authoritatively or hosting them locally, and standard top-level fields that replace the `OriginatingSystem`/`SourceSystem` values.
 
@@ -67,11 +69,11 @@ Once ratified, current implementations MAY continue to expose the OUID Resource,
 
 The Organization Resource defines at least the following:
 
-* **OrganizationKey** — String, non-nullable. The unique local key of the organization.
-* **OrganizationId** — String, non-nullable. The Unique Organization Identifier (UOI).
-* **OrganizationName** — String, nullable. The organization name.
-* **ActiveYN** — Boolean, nullable. `true` if the organization is active, `false` or `null` otherwise.
-* **ModificationTimestamp** — Timestamp, non-nullable. When the organization record was last updated.
+* **OrganizationKey** – String, non-nullable. The unique local key of the organization.
+* **OrganizationId** – String, non-nullable. The Unique Organization Identifier (UOI).
+* **OrganizationName** – String, nullable. The organization name.
+* **ActiveYN** – Boolean, nullable. `true` if the organization is active, `false` or `null` otherwise.
+* **ModificationTimestamp** – Timestamp, non-nullable. When the organization record was last updated.
 * Any relevant OUID Resource attributes.
 
 `OrganizationKey` is the local key of the record; `OrganizationId` is the well-known RESO identifier, when applicable.
@@ -80,21 +82,22 @@ The Organization Resource defines at least the following:
 
 This endorsement defines a new **System Resource** to model the systems that produce and carry records, and standardizes the **Unique System Identifier (USI)** it carries. RESO already maintains a list of system identifiers (with `UniqueSystemId`, `SystemName`, and `IsActive`); the fields below align that list to current Data Dictionary conventions.
 
-A System Resource MAY model any relevant system properties, but MUST define at least an identifier. The identifier is **not** the primary key: the primary key (`SystemKey`) is internal to a single system, whereas the identifier (`SystemId`, the USI) is well-known and spans systems.
+A System Resource MAY model any relevant system properties, but MUST define at least an identifier. The identifier is **not** the primary key: the primary key (`SystemKey`) is internal to a single system, whereas the identifier (`SystemId`, the USI) is well-known and spans systems. Each system belongs to an organization – its provider – identified by that organization's UOI.
 
 The System Resource defines at least the following:
 
-* **SystemKey** — String, non-nullable. The unique local key of the system.
-* **SystemId** — String, non-nullable. The Unique System Identifier (USI).
-* **SystemName** — String, nullable. The system name.
-* **ActiveYN** — Boolean, nullable. `true` if the system is active, `false` or `null` otherwise.
-* **ModificationTimestamp** — Timestamp, non-nullable. When the system record was last updated.
+* **SystemKey** – String, non-nullable. The unique local key of the system.
+* **SystemId** – String, non-nullable. The Unique System Identifier (USI).
+* **ProviderUoi** – String, non-nullable. The UOI of the organization the system belongs to.
+* **SystemName** – String, nullable. The system name. Optional.
+* **ActiveYN** – Boolean, nullable. `true` if the system is active, `false` or `null` otherwise.
+* **ModificationTimestamp** – Timestamp, non-nullable. When the system record was last updated.
 
 Other attributes MAY be added through separate proposals.
 
 ## Section 2.3: Authoritative and Local Identifiers
 
-RESO maintains authoritative Unique Organization and System Identifiers — primarily MLSs and their technology providers — in both spreadsheet and JSON formats, which are kept current and used in Certification and RESO Analytics. Records can be created, updated, or deactivated, but not removed. New authoritative identifiers can be created by [contacting RESO](mailto:support@reso.org).
+RESO maintains authoritative Unique Organization and System Identifiers – primarily MLSs and their technology providers – in both spreadsheet and JSON formats, which are kept current and used in Certification and RESO Analytics. Records can be created, updated, or deactivated, but not removed. New authoritative identifiers can be created by [contacting RESO](mailto:support@reso.org).
 
 Where a RESO organization or system identifier cannot be used, a provider MAY define its own local identifier. In that case the provider MUST host instances of the Organization and System resources exposing `OrganizationId` / `SystemId` (the identifier MAY equal the key) along with `ModificationTimestamp`; `OrganizationName` and `SystemName` MAY be null.
 
@@ -148,8 +151,8 @@ End users may not have access to a provider's local Organization and System reso
 
 The Data Dictionary's `OriginatingSystem` and `SourceSystem` fields carry the organization and system a record came from and was obtained from. This endorsement standardizes those as UOI/USI pairs at the top level of each resource that supports them:
 
-* **OriginatingUoi** / **OriginatingUsi** — the organization and system where the record originated.
-* **SourceUoi** / **SourceUsi** — the organization and system the current provider obtained the record from.
+* **OriginatingUoi** / **OriginatingUsi** – the organization and system where the record originated.
+* **SourceUoi** / **SourceUsi** – the organization and system the current provider obtained the record from.
 
 These fields are usable on their own and do **not** require the Data Provenance endorsement (RCP-50); they carry the same originating- and source-identification that `OriginatingSystemName`/`ID` and `SourceSystemName`/`ID` carry today, using standard identifiers.
 
@@ -163,7 +166,7 @@ These fields are usable on their own and do **not** require the Data Provenance 
 
 RESO will validate the following during certification:
 
-* When an Organization or System resource is hosted, it MUST be defined with the required identifier fields — `OrganizationKey`/`OrganizationId` or `SystemKey`/`SystemId` — along with `ModificationTimestamp`.
+* When an Organization or System resource is hosted, it MUST be defined with the required identifier fields – `OrganizationKey`/`OrganizationId` or `SystemKey`/`SystemId` – along with `ModificationTimestamp`.
 * `OriginatingUoi`/`OriginatingUsi` and `SourceUoi`/`SourceUsi`, when present, MUST resolve to authoritative RESO identifiers, or to the provider's locally-hosted Organization and System resources when local identifiers are used.
 * A `SystemId` (USI) MUST NOT be assumed to be the resource's primary key; the primary key is `SystemKey`.
 * A deprecated `OriginatingSystem*` or `SourceSystem*` field MUST NOT be present unless its UOI/USI analogue is also present.
@@ -189,9 +192,9 @@ Please see the following references for more information regarding topics covere
 
 ## Design rationale
 
-**Sub-organization granularity is handled by Originating at grain, not a dedicated field.** Some data sets bundle many sub-organizations under a single originating organization, and a provider may need to scope to one of them. This endorsement handles that case with `OriginatingUoi` at the appropriate grain — the identifier points at the actual creating organization, however specific — rather than adding a per-record sub-organization field. Two finer-grained mechanisms were considered and are held for a future revision if a confirmed need emerges: organization parentage carried in the Organization Resource as a self-referential parent link, which keeps the hierarchy in one place and resolvable; and a denormalized `OriginatingSubUoi`/`SourceSubUoi` field pair alongside the top-level identifiers, which matches how some providers filter today but adds a column to every record. Neither is adopted now; `OriginatingSubUoi` is reserved as the name should the field pair be needed.
+**Sub-organization granularity is handled by Originating at grain, not a dedicated field.** Some data sets bundle many sub-organizations under a single originating organization, and a provider may need to scope to one of them. This endorsement handles that case with `OriginatingUoi` at the appropriate grain – the identifier points at the actual creating organization, however specific – rather than adding a per-record sub-organization field. Two finer-grained mechanisms were considered and are held for a future revision if a confirmed need emerges: organization parentage carried in the Organization Resource as a self-referential parent link, which keeps the hierarchy in one place and resolvable; and a denormalized `OriginatingSubUoi`/`SourceSubUoi` field pair alongside the top-level identifiers, which matches how some providers filter today but adds a column to every record. Neither is adopted now; `OriginatingSubUoi` is reserved as the name should the field pair be needed.
 
-**Top-level identifiers, not Tenant/Subtenant.** An earlier approach modeled multi-tenant filtering with `TenantUoi`/`SubtenantUoi`. Both uses that motivated it — de-multiplexing a combined feed by origin, and scoping to one organization within a grant — are served today by `OriginatingSystemName`, so they are served here by `OriginatingUoi`/`OriginatingUsi`. Originating is the more intuitive, 1:1 migration from the existing fields, is usable before Provenance is adopted, and avoids introducing tenancy vocabulary into the Data Dictionary. Tenancy as an access-and-partitioning concern is left to the layer that governs access.
+**Top-level identifiers, not Tenant/Subtenant.** An earlier approach modeled multi-tenant filtering with `TenantUoi`/`SubtenantUoi`. Both uses that motivated it – de-multiplexing a combined feed by origin, and scoping to one organization within a grant – are served today by `OriginatingSystemName`, so they are served here by `OriginatingUoi`/`OriginatingUsi`. Originating is the more intuitive, 1:1 migration from the existing fields, is usable before Provenance is adopted, and avoids introducing tenancy vocabulary into the Data Dictionary. Tenancy as an access-and-partitioning concern is left to the layer that governs access.
 
 ## Worked example
 
@@ -202,4 +205,4 @@ Please see the following references for more information regarding topics covere
 # Section 7: License
 This document is covered by the [RESO EULA](https://www.reso.org/eula/).
 
-Please [contact RESO Transport](mailto:transport@reso.org) if you have any questions.
+Please [contact RESO Transport](mailto:transport@reso.org) with questions about this proposal, or [RESO developer support](mailto:dev@reso.org) with specific development questions.
