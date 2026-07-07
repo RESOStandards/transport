@@ -54,8 +54,8 @@ jobs:
             fi
           done
 
-          # Top-level docs (RCP process, versioning, certification)
-          for doc in reso-rcp-process versioning certification-reso-analytics; do
+          # Top-level docs (RCP process, versioning, certification, identifiers)
+          for doc in reso-rcp-process versioning certification-reso-analytics identifiers; do
             if [ -f "$doc.md" ]; then
               title=$(head -1 "$doc.md" | sed 's/^#* //')
               cat > ".github/pages/_proposals/$doc.md" <<FRONT
