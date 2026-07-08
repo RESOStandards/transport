@@ -6,9 +6,9 @@ RESO issues a family of identifiers for the core entities in real estate data: t
 
 | Identifier | Full Name | Identifies | Form | Home |
 |---|---|---|---|---|
-| **ULI** | Unique Licensee Identifier | Licensed real estate professionals | Resolved identifier, carried as a URN | [RCP-54](./proposals/uli-resolution-protocol.md) |
-| **UOI** | Unique Organization Identifier | Organizations: MLSs, brokerages, associations, technology providers | Nine-digit ID, organization-type letter prefix (for example, `T00000012`) | [RCP-55](./proposals/org-system-identifiers.md) |
-| **USI** | Unique System Identifier | Systems that produce and carry records | Assigned identifier, distinct from a system's primary key | [RCP-55](./proposals/org-system-identifiers.md) |
+| **ULI** | Unique Licensee Identifier | Licensed real estate professionals | Resolved identifier, carried as a URN | [RCP-54](https://github.com/RESOStandards/transport/blob/294c02dad6b5aa448694b68e6fbf4b63126f1d1e/proposals/uli-resolution-protocol.md) |
+| **UOI** | Unique Organization Identifier | Organizations: MLSs, brokerages, associations, technology providers | Nine-character ID with an organization-type letter prefix (for example, `T00000012`) | [RCP-55](https://github.com/RESOStandards/transport/blob/46619fdd2d383938ef86c6efff0f01e82c19d6c0/proposals/org-system-identifiers.md) |
+| **USI** | Unique System Identifier | Systems that produce and carry records | Assigned identifier, distinct from a system's primary key | [RCP-55](https://github.com/RESOStandards/transport/blob/46619fdd2d383938ef86c6efff0f01e82c19d6c0/proposals/org-system-identifiers.md) |
 | **UPI** | Universal Parcel Identifier | Property parcels and their subcomponents | URN coordinate: country, jurisdiction and parcel number | [upi.reso.org](https://upi.reso.org/) |
 
 ## Universal vs. Unique
@@ -24,18 +24,18 @@ The ULI gives a licensed real estate professional a single identifier that links
 
 **Reference materials**
 
-- Specification: [RCP-54, ULI Resolution Protocol](./proposals/uli-resolution-protocol.md)
+- Specification: [RCP-54, ULI Resolution Protocol](https://github.com/RESOStandards/transport/blob/294c02dad6b5aa448694b68e6fbf4b63126f1d1e/proposals/uli-resolution-protocol.md)
 - Overview: [reso.org/reso-unique-identifiers](https://www.reso.org/reso-unique-identifiers/)
 
 ## Unique Organization Identifier (UOI)
 
-The UOI gives each organization in the real estate industry a single identifier. RESO maintains an authoritative set, primarily MLSs and their technology providers, and tracks organization types including Broker, MLS, Local Association, State or Provincial Association, National Association, Technology Company, Commercial and Pooled Platform. Identifiers are currently nine digits and usually begin with a letter for the organization type (for example, `T00000012`); a proposal to move to a six-digit numeric form is under review. RCP-55 introduces the Organization Resource that carries the UOI, deprecating the older OUID Resource, and lets providers host local organization identifiers where RESO has not issued one.
+The UOI gives each organization in the real estate industry a single identifier. RESO maintains an authoritative set, primarily MLSs and their technology providers, and tracks organization types including Broker, MLS, Local Association, State or Provincial Association, National Association, Technology Company, Commercial and Pooled Platform. Identifiers are currently nine characters, usually beginning with an organization-type letter (for example, `T00000012`); a proposal to move to a six-digit numeric form is under review. RCP-55 introduces the Organization Resource that carries the UOI, deprecating the older OUID Resource, and lets providers host local organization identifiers where RESO has not issued one.
 
 **Reference materials**
 
-- Specification: [RCP-55, Organization and System Identifiers](./proposals/org-system-identifiers.md)
+- Specification: [RCP-55, Organization and System Identifiers](https://github.com/RESOStandards/transport/blob/46619fdd2d383938ef86c6efff0f01e82c19d6c0/proposals/org-system-identifiers.md)
 - Authoritative data: the RESO Certification UOI registry, maintained in spreadsheet and JSON – see [reso.org/certification](https://www.reso.org/certification)
-- Naming conventions: the [RESO Style Guide](https://github.com/RESOStandards/reso-ai-registry/blob/main/policies/style-guide.md) covers organization names, base vs. enhanced names and addresses
+- Naming conventions: the RESO Style Guide covers organization names, base vs. enhanced names and addresses
 - Overview: [reso.org/reso-unique-identifiers](https://www.reso.org/reso-unique-identifiers/)
 - Requests: new identifiers via support@reso.org
 
@@ -45,7 +45,7 @@ The USI identifies the systems that produce and carry records. A system belongs 
 
 **Reference materials**
 
-- Specification: [RCP-55, Organization and System Identifiers](./proposals/org-system-identifiers.md)
+- Specification: [RCP-55, Organization and System Identifiers](https://github.com/RESOStandards/transport/blob/46619fdd2d383938ef86c6efff0f01e82c19d6c0/proposals/org-system-identifiers.md)
 - Requests: new identifiers via support@reso.org
 
 ## Universal Parcel Identifier (UPI)
@@ -61,7 +61,7 @@ urn:reso:upi:<Version>:<Country>:<CountrySubdivision>:<ParcelNumber>[:sub:<Parce
 - **ParcelNumber** – the parcel identifier assigned by that authority.
 - **ParcelSubcomponent** (optional) – an element attached to a parcel, such as air rights or a boat slip.
 
-For example, `urn:reso:upi:2.0:US:48201:R000022230` identifies a parcel in Harrison County, Texas. The current version is 2.0.
+For example, `urn:reso:upi:2.0:US:48201:R000022230` identifies a parcel in Harris County, Texas. The current version is 2.0.
 
 **Reference materials**
 
@@ -72,7 +72,7 @@ For example, `urn:reso:upi:2.0:US:48201:R000022230` identifies a parcel in Harri
 
 ## How the Identifiers Relate
 
-A single record often carries several of these at once. A listing is served by a system (USI) that belongs to an organization (UOI); it references the licensees involved (ULI) and the parcel it sits on (UPI). Data Provenance ([RCP-50](./proposals/data-provenance.md)) uses the UOI and USI to record where a record originated and where it was obtained, and RCP-55 standardizes those as the top-level `OriginatingUoi` / `OriginatingUsi` and `SourceUoi` / `SourceUsi` fields.
+A single record often carries several of these at once. A listing is served by a system (USI) that belongs to an organization (UOI); it references the licensees involved (ULI) and the parcel it sits on (UPI). Data Provenance ([RCP-50](https://github.com/RESOStandards/transport/blob/3cf737522b513e4e3591c73f3c0abdf5d0f31170/proposals/data-provenance.md)) uses the UOI and USI to record where a record originated and where it was obtained, and RCP-55 standardizes those as the top-level `OriginatingUoi` / `OriginatingUsi` and `SourceUoi` / `SourceUsi` fields.
 
 ## Existing Names and the Migration
 
@@ -89,8 +89,8 @@ RESO issues authoritative identifiers and keeps them current for Certification a
 
 ## All Reference Materials
 
-- **Specifications:** [RCP-54 ULI Resolution Protocol](./proposals/uli-resolution-protocol.md), [RCP-55 Organization and System Identifiers](./proposals/org-system-identifiers.md), [RCP-50 Data Provenance](./proposals/data-provenance.md)
+- **Specifications:** [RCP-54 ULI Resolution Protocol](https://github.com/RESOStandards/transport/blob/294c02dad6b5aa448694b68e6fbf4b63126f1d1e/proposals/uli-resolution-protocol.md), [RCP-55 Organization and System Identifiers](https://github.com/RESOStandards/transport/blob/46619fdd2d383938ef86c6efff0f01e82c19d6c0/proposals/org-system-identifiers.md), [RCP-50 Data Provenance](https://github.com/RESOStandards/transport/blob/3cf737522b513e4e3591c73f3c0abdf5d0f31170/proposals/data-provenance.md)
 - **Public overviews:** [reso.org/reso-unique-identifiers](https://www.reso.org/reso-unique-identifiers/), [upi.reso.org](https://upi.reso.org/)
 - **Tooling:** the [UPI Builder](https://upi.reso.org/builder); RESO Certification tooling that validates and works with these identifiers lives in [reso-tools](https://github.com/RESOStandards/reso-tools)
 - **Authoritative data:** the RESO Certification UOI and USI registry, maintained in spreadsheet and JSON
-- **Conventions:** the [RESO Style Guide](https://github.com/RESOStandards/reso-ai-registry/blob/main/policies/style-guide.md), including its Unique Organization Identifier section
+- **Conventions:** the RESO Style Guide, including its Unique Organization Identifier section
