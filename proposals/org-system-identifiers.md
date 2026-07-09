@@ -82,7 +82,13 @@ The Organization Resource defines at least the following:
 
 `OrganizationKey` is the local key of the record; `OrganizationId` is the well-known RESO identifier, when applicable.
 
-**Related organizations.** An Organization MAY reference other organizations through a **`RelatedOrganization`** self-expansion, retrieved with `$expand=RelatedOrganization`. Each entry carries **`RelatedUoi`** – the referenced organization in the UOI registry – and **`RelationshipType`** – the kind of relationship, for example `ParticipatesIn`, `ServedBy`, or `AffiliatedWith`. These relationships are directed graph edges among peer organizations: they describe how organizations relate, not ownership or control. An edge is read from the hosting organization outward, so an edge whose `RelationshipType` is `ServedBy` and whose `RelatedUoi` is another organization states that this organization is served by that one. This replaces the single-purpose association-to-MLS reference carried in the current OUID data, and follows the same pattern as the RelatedLookup Resource (RCP-47).
+**Related organizations.** An Organization MAY reference other organizations through a **`RelatedOrganization`** self-expansion, retrieved with `$expand=RelatedOrganization`. These relationships are directed graph edges among peer organizations: they describe how organizations relate, not ownership or control. An edge is read from the hosting organization outward, so an edge whose `RelationshipType` is `ServedBy` and whose `RelatedUoi` is another organization states that this organization is served by that one. This replaces the single-purpose association-to-MLS reference carried in the current OUID data, and follows the same pattern as the RelatedLookup Resource (RCP-47).
+
+The `RelatedOrganization` expansion and its entries define at least the following:
+
+* **RelatedOrganization** – Expansion, nullable. A self-expansion on the Organization Resource, retrieved with `$expand=RelatedOrganization`. Each entry is a directed, typed edge from this organization to another. Null or absent when the organization references no other organizations.
+* **RelatedUoi** – String, non-nullable. On a `RelatedOrganization` entry, the UOI of the referenced organization.
+* **RelationshipType** – String, non-nullable. On a `RelatedOrganization` entry, the type of the relationship, for example `ParticipatesIn`, `ServedBy`, or `AffiliatedWith`. The edge is read from the hosting organization outward.
 
 ## Section 2.2: System Resource (USI)
 
@@ -196,7 +202,8 @@ RESO will validate the following during certification:
 * When an Organization or System resource is hosted, it MUST be defined with the required identifier fields – `OrganizationKey`/`OrganizationId` or `SystemKey`/`SystemId` – along with `ModificationTimestamp`.
 * The System Resource MUST define `SystemKey` (the primary key) and `SystemId` (the USI) as distinct fields.
 * Identifier resolution follows one of two paths. An authoritative identifier MUST appear in the RESO authoritative registry artifact described in Section 2.4. A provider's own local identifier MUST resolve against that provider's hosted Organization or System resource. An identifier that names a third party is validated against the RESO authoritative registry only, since the endpoint under test is not obligated to host another party's resources.
-* `OriginatingUoi`/`OriginatingUsi`, `SourceUoi`/`SourceUsi`, and any `SupersededByUoi`/`SupersededByUsi`, when present, MUST resolve as above.
+* `OriginatingUoi`/`OriginatingUsi`, `SourceUoi`/`SourceUsi`, any `SupersededByUoi`/`SupersededByUsi`, and any `RelatedUoi`, when present, MUST resolve as above.
+* A `RelatedOrganization` entry, when present, MUST carry both `RelatedUoi` and `RelationshipType`.
 * When `OrganizationStatus` or `SystemStatus` is `Superseded`, the corresponding `SupersededByUoi` or `SupersededByUsi` MUST be present; when the status is `Active` or `Inactive`, it MUST be null.
 * On any record where a deprecated `OriginatingSystem*` field is populated, `OriginatingUoi` MUST be populated; likewise a populated `SourceSystem*` field requires `SourceUoi`.
 * When Provenance is present, the top-level `OriginatingUoi`/`OriginatingUsi` and `SourceUoi`/`SourceUsi` MUST match the ends of the provenance chain (the ends-match rule of Section 2.5).
@@ -231,7 +238,7 @@ Please see the following references for more information regarding topics covere
 
 The following shows an Organization Resource response, a System Resource response, and a record whose top-level identifiers reconcile against a Provenance chain. Identifier values are illustrative.
 
-**Organization Resource** – the technology provider that served the record.
+**Organization Resource** – the technology provider that served the record, expanded (`$expand=RelatedOrganization`) to show an `AffiliatedWith` edge to its parent organization.
 
 **RESPONSE**
 ```json
@@ -241,7 +248,13 @@ The following shows an Organization Resource response, a System Resource respons
   "OrganizationName": "Example Technology Provider",
   "OrganizationStatus": "Active",
   "OrganizationStatusChangeTimestamp": "2019-03-11T00:00:00Z",
-  "ModificationTimestamp": "2024-11-02T18:22:10Z"
+  "ModificationTimestamp": "2024-11-02T18:22:10Z",
+  "RelatedOrganization": [
+    {
+      "RelatedUoi": "T00000009",
+      "RelationshipType": "AffiliatedWith"
+    }
+  ]
 }
 ```
 
