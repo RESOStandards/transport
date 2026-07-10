@@ -36,6 +36,7 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 * Defines **authoritative** (RESO-maintained) identifiers and a mechanism for providers to host **local** Organization and System resources when they use identifiers not yet issued by RESO.
 * Standardizes **`OriginatingUoi`/`OriginatingUsi`** and **`SourceUoi`/`SourceUsi`** as top-level identifiers. The existing `OriginatingSystem*` and `SourceSystem*` fields are deprecated in Data Dictionary v3.0; providers MAY continue to use them only if the UOI/USI analogues are also present.
 * Models organization and system **lifecycle status** as an enumeration (`Active`, `Inactive`, `Superseded`) with a `SupersededBy` reference for merges and reclassifications, and adds a typed **`RelatedOrganization`** expansion for relationships between organizations.
+* Standardizes UOIs and USIs as **URNs** – `urn:reso:uoi:1.0:<issuer>:<unique-identifier>` and the USI analogue – issued by RESO or by providers certified on this endorsement, so an organization's existing local identifiers are preserved and can be promoted to RESO-issued identifiers over time.
 
 <br />
 
@@ -110,9 +111,23 @@ Other attributes MAY be added through separate proposals.
 
 ## Section 2.3: Identifier Format and Lifecycle
 
-**Format.** UOIs and USIs are opaque identifiers. Consumers SHOULD treat them as opaque and SHOULD NOT infer meaning from their structure. For reference, the current forms are a nine-character UOI carrying a legacy organization-type letter prefix, for example `T00000012`, and a numeric USI, for example `50001`. RESO maintains the authoritative current format in the identifier registry.
+**Format.** Each Unique Organization Identifier and Unique System Identifier is a URN. A UOI has the form
 
-> **Open item (Workgroup decision).** The final identifier format – retiring the organization-type prefix in favor of an opaque fixed-width identifier, with prior identifiers linked through a legacy mapping – is pending a Workgroup decision.
+```
+urn:reso:uoi:1.0:<issuer>:<unique-identifier>
+```
+
+and a USI the parallel form `urn:reso:usi:1.0:<issuer>:<unique-identifier>`, where:
+
+* **`1.0`** is the version of the identifier scheme.
+* **`<issuer>`** is a RESO-assigned identifier for the organization that issued this identifier. The issuer MUST be an organization in RESO's UOI service; a consumer confirms an identifier by confirming its issuer is a known RESO organization. RESO is the root issuer, so an organization's own UOI is one that RESO issues.
+* **`<unique-identifier>`** is the value the issuing organization assigns, in any format it chooses, percent-encoded per the URN rules so that reserved characters – notably the `:` segment delimiter – are carried safely.
+
+Consumers SHOULD treat the identifier as opaque past its scheme: the `urn:reso:uoi` or `urn:reso:usi` prefix types it, and the `<unique-identifier>` carries no consumer-parseable meaning. The scheme aligns with the `urn:reso:` identifiers RESO already uses in the [RESO Common Format](https://transport.reso.org/proposals/reso-common-format/) (RCP-25).
+
+**Local identifiers and migration.** Because `<unique-identifier>` is issuer-defined, an organization keeps its own identifiers until they enter RESO's registry. An existing local identifier is preserved unchanged as the tail of a URN issued under a RESO organization, so adopting the scheme changes how identifiers are formed at the transport layer without requiring the systems underneath to renumber. When an entity identified this way later receives its own RESO-issued UOI, the URN carrying the local identifier is superseded by that new UOI through the lifecycle below.
+
+> **Open item (Workgroup decision).** The internal format of the RESO-assigned token in the `<issuer>` and RESO-issued `<unique-identifier>` segments – whether to keep the current organization-type letter prefix (for example `T00000012`) or move to an opaque fixed-width token with a legacy mapping – is pending a Workgroup decision. The URN scheme accommodates either.
 
 **Lifecycle.** A UOI or USI is created, updated, deactivated, or superseded, and is never removed. `OrganizationStatus` and `SystemStatus` each take one of three values:
 
@@ -126,25 +141,27 @@ When the status is `Superseded`, `SupersededByUoi` or `SupersededByUsi` MUST be 
 
 ## Section 2.4: Authoritative and Local Identifiers
 
-RESO maintains authoritative Unique Organization and System Identifiers – primarily real estate associations, MLSs, and their technology providers – in both spreadsheet and JSON formats, which are kept current and used in Certification and RESO Analytics. Records can be created, updated, deactivated, or superseded, but not removed. New authoritative identifiers can be created by [contacting RESO](mailto:support@reso.org).
+RESO maintains authoritative Unique Organization and System Identifiers – primarily real estate associations, MLSs, and their technology providers – in both spreadsheet and JSON formats, which are kept current and used in Certification and RESO Analytics. Records can be created, updated, deactivated, or superseded, but not removed. New authoritative identifiers can be created by [contacting RESO](mailto:support@reso.org?subject=UOI%20%2F%20USI%20Request&body=Organization%20or%20system%20name%3A%0D%0AWebsite%3A%0D%0AContact%20name%20and%20email%3A%0D%0AIdentifier%20requested%20%28UOI%2C%20USI%2C%20or%20both%29%3A%0D%0AExisting%20local%20identifier%2C%20if%20any%3A).
 
-Where a RESO organization or system identifier cannot be used, a provider MAY define its own local identifier. In that case the provider MUST host instances of the Organization and System resources exposing `OrganizationId` / `SystemId` (the identifier MAY equal the key) along with `ModificationTimestamp`; `OrganizationName` and `SystemName` MAY be null.
+**Trusted issuers.** A provider becomes a trusted issuer by passing the Organization and System endorsement. On certification it is recorded as holding the UOI and USI endorsements in RESO's [Organizations and Endorsements feed](https://www.reso.org/certification/), which is the authoritative allow-list of issuers. A consumer validates an identifier's `<issuer>` by confirming the issuer holds the corresponding endorsement in that feed. RESO is the root issuer and issues without the endorsement, since it is the body that grants it.
+
+A trusted issuer MAY issue its own identifiers – the `<unique-identifier>` tail under its issuer segment – for organizations and systems not carrying a RESO-issued identifier. In that case the issuer MUST host instances of the Organization and System resources exposing `OrganizationId` / `SystemId` (the identifier MAY equal the key) along with `ModificationTimestamp`; `OrganizationName` and `SystemName` MAY be null.
 
 **Organization Resource**
 
 **REQUEST**
 ```
-GET https://example.api.com/Organization?$select=OrganizationId,OrganizationName,ModificationTimestamp&$filter=OrganizationId eq '{LocalUoi}'
+GET https://api.example.com/Organization?$select=OrganizationId,OrganizationName,ModificationTimestamp&$filter=OrganizationId eq 'urn:reso:uoi:1.0:T00000045:local-org-1'
 HTTP/2
 ```
 
 **RESPONSE**
 ```json
 {
-  "@odata.context": "https://example.api.com/Organization?$select=OrganizationId,OrganizationName,ModificationTimestamp&$filter=OrganizationId eq '{LocalUoi}'",
+  "@odata.context": "https://api.example.com/Organization?$select=OrganizationId,OrganizationName,ModificationTimestamp&$filter=OrganizationId eq 'urn:reso:uoi:1.0:T00000045:local-org-1'",
   "value": [
     {
-      "OrganizationId": "{LocalUoi}",
+      "OrganizationId": "urn:reso:uoi:1.0:T00000045:local-org-1",
       "OrganizationName": "Name of local organization",
       "ModificationTimestamp": "2024-12-16T20:34:47Z"
     }
@@ -156,17 +173,17 @@ HTTP/2
 
 **REQUEST**
 ```
-GET https://example.api.com/System?$select=SystemId,SystemName,ModificationTimestamp&$filter=SystemId eq '{LocalUsi}'
+GET https://api.example.com/System?$select=SystemId,SystemName,ModificationTimestamp&$filter=SystemId eq 'urn:reso:usi:1.0:T00000045:local-system-1'
 HTTP/2
 ```
 
 **RESPONSE**
 ```json
 {
-  "@odata.context": "https://example.api.com/System?$select=SystemId,SystemName,ModificationTimestamp&$filter=SystemId eq '{LocalUsi}'",
+  "@odata.context": "https://api.example.com/System?$select=SystemId,SystemName,ModificationTimestamp&$filter=SystemId eq 'urn:reso:usi:1.0:T00000045:local-system-1'",
   "value": [
     {
-      "SystemId": "{LocalUsi}",
+      "SystemId": "urn:reso:usi:1.0:T00000045:local-system-1",
       "SystemName": "Name of local system",
       "ModificationTimestamp": "2024-12-16T20:34:47Z"
     }
@@ -201,7 +218,9 @@ RESO will validate the following during certification:
 
 * When an Organization or System resource is hosted, it MUST be defined with the required identifier fields – `OrganizationKey`/`OrganizationId` or `SystemKey`/`SystemId` – along with `ModificationTimestamp`.
 * The System Resource MUST define `SystemKey` (the primary key) and `SystemId` (the USI) as distinct fields.
-* Identifier resolution follows one of two paths. An authoritative identifier MUST appear in the RESO authoritative registry artifact described in Section 2.4. A provider's own local identifier MUST resolve against that provider's hosted Organization or System resource. An identifier that names a third party is validated against the RESO authoritative registry only, since the endpoint under test is not obligated to host another party's resources.
+* Identifier resolution keys off the `<issuer>` segment. A RESO-issued identifier resolves against the RESO authoritative registry described in Section 2.4. A provider-issued identifier resolves against that issuer's hosted Organization or System resource. When the issuer is a third party – neither RESO nor the endpoint under test – the identifier is validated against the RESO authoritative registry only, since the endpoint is not obligated to host another party's resources.
+* The `<issuer>` segment of any UOI or USI MUST identify RESO or an organization holding the UOI or USI endorsement in RESO's Organizations and Endorsements feed.
+* A provider that issues its own UOIs or USIs MUST host correctly implemented Organization and System resources for the identifiers it issues; RESO samples those resources during certification to confirm the issued identifiers resolve and the resources conform.
 * `OriginatingUoi`/`OriginatingUsi`, `SourceUoi`/`SourceUsi`, any `SupersededByUoi`/`SupersededByUsi`, and any `RelatedUoi`, when present, MUST resolve as above.
 * A `RelatedOrganization` entry, when present, MUST carry both `RelatedUoi` and `RelationshipType`.
 * When `OrganizationStatus` or `SystemStatus` is `Superseded`, the corresponding `SupersededByUoi` or `SupersededByUsi` MUST be present; when the status is `Active` or `Inactive`, it MUST be null.
@@ -219,6 +238,8 @@ This document was written by [Joshua Darnell](mailto:josh@reso.org).
 
 Please see the following references for more information regarding topics covered in this document:
 * [RESO Unique Organization Identifier (UOI)](https://www.reso.org/reso-unique-identifiers/)
+* [RESO Certification and the Organizations and Endorsements feed](https://www.reso.org/certification/)
+* [RESO Common Format (RCP-25)](https://transport.reso.org/proposals/reso-common-format/)
 * [RESO Data Provenance Endorsement (RCP-50)](./data-provenance.md)
 * [RESO Unique Licensee Identifier (ULI, RCP-54)](./uli-resolution-protocol.md)
 
@@ -236,7 +257,7 @@ Please see the following references for more information regarding topics covere
 
 ## Worked example
 
-The following shows an Organization Resource response, a System Resource response, and a record whose top-level identifiers reconcile against a Provenance chain. Identifier values are illustrative.
+The following shows an Organization Resource response, a System Resource response, a record whose top-level identifiers reconcile against a Provenance chain, and an organization mid-promotion from a locally issued identifier to a RESO-issued one. Identifiers are shown in their URN form; values are illustrative.
 
 **Organization Resource** – the technology provider that served the record, expanded (`$expand=RelatedOrganization`) to show an `AffiliatedWith` edge to its parent organization.
 
@@ -244,14 +265,14 @@ The following shows an Organization Resource response, a System Resource respons
 ```json
 {
   "OrganizationKey": "T00000045",
-  "OrganizationId": "T00000045",
+  "OrganizationId": "urn:reso:uoi:1.0:T00000012:T00000045",
   "OrganizationName": "Example Technology Provider",
   "OrganizationStatus": "Active",
   "OrganizationStatusChangeTimestamp": "2019-03-11T00:00:00Z",
   "ModificationTimestamp": "2024-11-02T18:22:10Z",
   "RelatedOrganization": [
     {
-      "RelatedUoi": "T00000009",
+      "RelatedUoi": "urn:reso:uoi:1.0:T00000012:T00000009",
       "RelationshipType": "AffiliatedWith"
     }
   ]
@@ -264,8 +285,8 @@ The following shows an Organization Resource response, a System Resource respons
 ```json
 {
   "SystemKey": "example-web-api",
-  "SystemId": "50011",
-  "ProviderUoi": "T00000045",
+  "SystemId": "urn:reso:usi:1.0:T00000012:50011",
+  "ProviderUoi": "urn:reso:uoi:1.0:T00000012:T00000045",
   "SystemName": "Example Web API",
   "SystemStatus": "Active",
   "ModificationTimestamp": "2024-11-02T18:22:10Z"
@@ -278,14 +299,29 @@ The following shows an Organization Resource response, a System Resource respons
 ```json
 {
   "ListingKey": "EXA123456",
-  "OriginatingUoi": "M00000123",
-  "OriginatingUsi": "50010",
-  "SourceUoi": "T00000045",
-  "SourceUsi": "50011",
+  "OriginatingUoi": "urn:reso:uoi:1.0:T00000012:M00000123",
+  "OriginatingUsi": "urn:reso:usi:1.0:T00000012:50010",
+  "SourceUoi": "urn:reso:uoi:1.0:T00000012:T00000045",
+  "SourceUsi": "urn:reso:usi:1.0:T00000012:50011",
   "Provenance": [
-    { "SequenceNumber": 0, "ProviderUoi": "M00000123", "ProviderUsi": "50010" },
-    { "SequenceNumber": 1, "ProviderUoi": "T00000045", "ProviderUsi": "50011" }
+    { "SequenceNumber": 0, "ProviderUoi": "urn:reso:uoi:1.0:T00000012:M00000123", "ProviderUsi": "urn:reso:usi:1.0:T00000012:50010" },
+    { "SequenceNumber": 1, "ProviderUoi": "urn:reso:uoi:1.0:T00000012:T00000045", "ProviderUsi": "urn:reso:usi:1.0:T00000012:50011" }
   ]
+}
+```
+
+**Organization mid-promotion** – a brokerage the technology provider first identified with a locally issued UOI, now superseded by a RESO-issued UOI after the brokerage entered the registry. A system promotes the same way, with a `SupersededByUsi` on the issuer's local System Resource.
+
+**RESPONSE**
+```json
+{
+  "OrganizationKey": "brokerage-7",
+  "OrganizationId": "urn:reso:uoi:1.0:T00000045:brokerage-7",
+  "OrganizationName": "Example Brokerage",
+  "OrganizationStatus": "Superseded",
+  "SupersededByUoi": "urn:reso:uoi:1.0:T00000012:B00000078",
+  "OrganizationStatusChangeTimestamp": "2024-06-01T00:00:00Z",
+  "ModificationTimestamp": "2024-06-01T00:00:00Z"
 }
 ```
 
