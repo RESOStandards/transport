@@ -15,9 +15,9 @@ Checks:
   3. No duplicate (Resource, FieldName) pairs
   4. No duplicate (LookupName, StandardLookupValue) pairs
   5. Unicode cleanliness (no BOM, NBSP, ZWSP, ZWNJ, ZWJ)
-  6. Referential integrity (LookupName -> field with lookup type)
+  6. Enumerated lookups define values (a non-Open LookupStatus requires at least one value)
   7. Deprecation tracking vs. previous version (warnings, not errors)
-  8. Synonym not equal to any StandardName
+  8. Synonym collides with a StandardName on the same resource (synonyms are enforced per-resource)
   9. Version Info sheet has valid version
  10. No empty StandardName / StandardLookupValue cells in data rows
  11. SimpleDataType and LookupStatus agree (a field is an enumeration IFF its type is a String List)
@@ -89,6 +89,67 @@ def type_status_warnings(fields_data, field_name_col="StandardName", resource_co
                 f"{label}: SimpleDataType={data_type!r} is an enumeration data type "
                 f"but carries no LookupStatus"
             )
+    return out
+
+
+def empty_enumeration_errors(
+    fields_data,
+    lookups_data,
+    lookup_name_col="LookupName",
+    lookup_value_col="StandardLookupValue",
+    status_col="LookupStatus",
+) -> list[str]:
+    """A field binds to a LookupName; that name need not match the field's own name, and RESO reuses
+    (or a vendor re-scopes) a value set across fields, so a LookupName matching a field name is not an
+    invariant. The real rule: a lookup whose LookupStatus is anything other than 'Open' must define at
+    least one value. 'Open' lookups are provider-defined and legitimately carry no RESO values.
+    Returns one message per offending LookupName (deduplicated); the caller decides severity."""
+    with_values = {
+        row.get(lookup_name_col)
+        for row in lookups_data
+        if row.get(lookup_name_col) and row.get(lookup_value_col)
+    }
+    seen: set = set()
+    out: list[str] = []
+    for row in fields_data:
+        name = row.get(lookup_name_col)
+        status = row.get(status_col)
+        if not name or not status or str(status).strip() == "Open":
+            continue
+        if name in seen:
+            continue
+        seen.add(name)
+        if name not in with_values:
+            out.append(f'Lookup "{name}" is declared "{status}" but defines no values')
+    return out
+
+
+def synonym_collisions(
+    fields_data, field_name_col="StandardName", resource_col="ResourceName", synonym_col="Synonyms"
+) -> list[str]:
+    """Field synonyms are enforced PER RESOURCE (Commander DataDictionary.java:
+    container.getFieldMap(resourceName).containsKey(synonym)), so a synonym conflicts only when it is
+    also a StandardName on the SAME resource. A cross-resource match is not a conflict and must not be
+    flagged: e.g. Member.SourceSystemMemberKey lists SourceSystemAgentKey as a synonym, and
+    Showing.SourceSystemAgentKey is a legitimate standard field on a different resource. Returns one
+    message per same-resource collision; the caller decides severity."""
+    names_by_resource: dict = {}
+    for row in fields_data:
+        resource = row.get(resource_col)
+        name = row.get(field_name_col)
+        if resource and name:
+            names_by_resource.setdefault(resource, set()).add(name)
+    out: list[str] = []
+    for row in fields_data:
+        synonyms = row.get(synonym_col)
+        if not isinstance(synonyms, str):
+            continue
+        resource = row.get(resource_col)
+        field = row.get(field_name_col)
+        same_resource = names_by_resource.get(resource, set())
+        for syn in (s.strip() for s in synonyms.split(",")):
+            if syn and syn != field and syn in same_resource:
+                out.append(f'Synonym "{syn}" for {resource}.{field} is also a StandardName on {resource}')
     return out
 
 
@@ -198,12 +259,12 @@ def main() -> None:
     check_unicode(wb["Fields"], "Fields")
     check_unicode(wb["Lookups"], "Lookups")
 
-    # ── 6. Referential integrity (LookupName -> field) ──
-    lookup_field_names = {row.get(lookup_name_col) for row in lookups_data if row.get(lookup_name_col)}
-    for lookup_name in lookup_field_names:
-        name = str(lookup_name)
-        if name not in all_field_names and "Type" not in name and "Status" not in name:
-            add_info("referential", f'LookupName "{name}" has no exact field match (may be shared)')
+    # ── 6. Enumerated lookups must define values ──
+    # There is no rule that a LookupName matches a field name (RESO shares sets across fields, and a
+    # vendor may re-scope them), so name matching would be a false signal. The real invariant: a
+    # non-"Open" LookupStatus must carry at least one value.
+    for msg in empty_enumeration_errors(fields_data, lookups_data, lookup_name_col, lookup_value_col):
+        add_error("empty-enumeration", msg)
 
     # ── 7. Deprecation tracking vs. previous version ──
     if prev_wb is not None and "Fields" in prev_wb.sheetnames:
@@ -239,18 +300,12 @@ def main() -> None:
                 shown = ", ".join(added_l[:5]) + ("..." if len(added_l) > 5 else "")
                 add_info("additions", f"{len(added_l)} lookup(s) added: {shown}")
 
-    # ── 8. Synonym not equal to any StandardName ──
+    # ── 8. Synonym collides with a StandardName on the same resource ──
+    # Synonyms are enforced per-resource, so a synonym is only a conflict when it is also a
+    # StandardName on the SAME resource. A cross-resource match is not a conflict (see synonym_collisions).
     if synonym_col:
-        for row in fields_data:
-            synonyms = row.get(synonym_col)
-            if not isinstance(synonyms, str):
-                continue
-            for syn in (s.strip() for s in synonyms.split(",")):
-                if syn and syn in all_field_names:
-                    add_warning(
-                        "synonym-collision",
-                        f'Synonym "{syn}" for field "{row.get(field_name_col)}" is also a StandardName',
-                    )
+        for msg in synonym_collisions(fields_data, field_name_col, resource_col, synonym_col):
+            add_warning("synonym-collision", msg)
 
     # ── 9. Version Info ──
     if "Version Info" in wb.sheetnames:
