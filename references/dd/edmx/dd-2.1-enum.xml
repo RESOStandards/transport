@@ -562,7 +562,7 @@
         <Property Name="ResourceName" Type="Edm.String" MaxLength="255"/>
         <Property Name="Scale" Type="Edm.Int64"/>
         <Property Name="SearchableYN" Type="Edm.Boolean"/>
-        <Property Name="Type" Type="Collection(org.reso.metadata.enums.FieldDataTypes)" Nullable="false"/>
+        <Property Name="Type" Type="org.reso.metadata.enums.FieldDataTypes"/>
         <Property Name="UpdatableYN" Type="Edm.Boolean"/>
       </EntityType>
       <EntityType Name="HistoryTransactional">

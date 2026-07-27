@@ -836,7 +836,7 @@
         <Property Name="ResourceName" Type="Edm.String" MaxLength="255"/>
         <Property Name="Scale" Type="Edm.Int64"/>
         <Property Name="SearchableYN" Type="Edm.Boolean"/>
-        <Property Name="Type" Type="Collection(Edm.String)" Nullable="false" MaxLength="100">
+        <Property Name="Type" Type="Edm.String" MaxLength="100">
           <Annotation Term="RESO.OData.Metadata.LookupName" String="FieldDataTypes"/>
         </Property>
         <Property Name="UpdatableYN" Type="Edm.Boolean"/>
