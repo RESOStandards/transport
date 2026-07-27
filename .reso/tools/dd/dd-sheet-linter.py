@@ -15,7 +15,7 @@ Checks:
   3. No duplicate (Resource, FieldName) pairs
   4. No duplicate (LookupName, StandardLookupValue) pairs
   5. Unicode cleanliness (no BOM, NBSP, ZWSP, ZWNJ, ZWJ)
-  6. Referential integrity (LookupName -> field with lookup type)
+  6. Enumerated lookups define values (a non-Open LookupStatus requires at least one value)
   7. Deprecation tracking vs. previous version (warnings, not errors)
   8. Synonym not equal to any StandardName
   9. Version Info sheet has valid version
@@ -89,6 +89,38 @@ def type_status_warnings(fields_data, field_name_col="StandardName", resource_co
                 f"{label}: SimpleDataType={data_type!r} is an enumeration data type "
                 f"but carries no LookupStatus"
             )
+    return out
+
+
+def empty_enumeration_errors(
+    fields_data,
+    lookups_data,
+    lookup_name_col="LookupName",
+    lookup_value_col="StandardLookupValue",
+    status_col="LookupStatus",
+) -> list[str]:
+    """A field binds to a LookupName; that name need not match the field's own name, and RESO reuses
+    (or a vendor re-scopes) a value set across fields, so a LookupName matching a field name is not an
+    invariant. The real rule: a lookup whose LookupStatus is anything other than 'Open' must define at
+    least one value. 'Open' lookups are provider-defined and legitimately carry no RESO values.
+    Returns one message per offending LookupName (deduplicated); the caller decides severity."""
+    with_values = {
+        row.get(lookup_name_col)
+        for row in lookups_data
+        if row.get(lookup_name_col) and row.get(lookup_value_col)
+    }
+    seen: set = set()
+    out: list[str] = []
+    for row in fields_data:
+        name = row.get(lookup_name_col)
+        status = row.get(status_col)
+        if not name or not status or str(status).strip() == "Open":
+            continue
+        if name in seen:
+            continue
+        seen.add(name)
+        if name not in with_values:
+            out.append(f'Lookup "{name}" is declared "{status}" but defines no values')
     return out
 
 
@@ -198,12 +230,12 @@ def main() -> None:
     check_unicode(wb["Fields"], "Fields")
     check_unicode(wb["Lookups"], "Lookups")
 
-    # ── 6. Referential integrity (LookupName -> field) ──
-    lookup_field_names = {row.get(lookup_name_col) for row in lookups_data if row.get(lookup_name_col)}
-    for lookup_name in lookup_field_names:
-        name = str(lookup_name)
-        if name not in all_field_names and "Type" not in name and "Status" not in name:
-            add_info("referential", f'LookupName "{name}" has no exact field match (may be shared)')
+    # ── 6. Enumerated lookups must define values ──
+    # There is no rule that a LookupName matches a field name (RESO shares sets across fields, and a
+    # vendor may re-scope them), so name matching would be a false signal. The real invariant: a
+    # non-"Open" LookupStatus must carry at least one value.
+    for msg in empty_enumeration_errors(fields_data, lookups_data, lookup_name_col, lookup_value_col):
+        add_error("empty-enumeration", msg)
 
     # ── 7. Deprecation tracking vs. previous version ──
     if prev_wb is not None and "Fields" in prev_wb.sheetnames:

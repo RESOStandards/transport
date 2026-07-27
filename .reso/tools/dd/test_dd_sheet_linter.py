@@ -102,6 +102,63 @@ def test_agreement_skips_rows_without_field_name():
     assert linter.type_status_warnings(rows) == []
 
 
+# --- empty_enumeration_errors (a non-Open LookupStatus must define values) -----------------------
+
+
+def _enum_fields(*rows) -> list[dict]:
+    """(ResourceName, StandardName, LookupName, LookupStatus) -> sheet_to_dicts shape."""
+    cols = ["ResourceName", "StandardName", "LookupName", "LookupStatus"]
+    return [{c: v for c, v in zip(cols, r) if v is not None} for r in rows]
+
+
+def _lookups(*rows) -> list[dict]:
+    """(LookupName, StandardLookupValue) -> sheet_to_dicts shape."""
+    cols = ["LookupName", "StandardLookupValue"]
+    return [{c: v for c, v in zip(cols, r) if v is not None} for r in rows]
+
+
+def test_empty_enumeration_flags_non_open_without_values():
+    fields = _enum_fields(
+        ("Property", "MlsStatus", "MlsStatus", "Locked with Enumerations"),        # has values -> ok
+        ("Property", "ExtraFeatures", "ExtraFeatures", "Open with Enumerations"),   # no values -> error
+    )
+    lookups = _lookups(("MlsStatus", "Active"), ("MlsStatus", "Closed"))
+    errs = linter.empty_enumeration_errors(fields, lookups)
+    assert len(errs) == 1
+    assert "ExtraFeatures" in errs[0] and "Open with Enumerations" in errs[0]
+
+
+def test_empty_enumeration_ignores_open_lookups():
+    # Open lookups are provider-defined and legitimately carry no RESO values.
+    fields = _enum_fields(("Property", "City", "City", "Open"))
+    assert linter.empty_enumeration_errors(fields, []) == []
+
+
+def test_empty_enumeration_passes_when_values_present():
+    fields = _enum_fields(("Field", "Type", "FieldDataTypes", "Open with Enumerations"))
+    lookups = _lookups(("FieldDataTypes", "Edm.String"), ("FieldDataTypes", "Edm.Int64"))
+    assert linter.empty_enumeration_errors(fields, lookups) == []
+
+
+def test_empty_enumeration_dedupes_shared_lookup():
+    # A shared LookupName bound by several non-Open fields is reported once, not per field.
+    fields = _enum_fields(
+        ("Property", "A", "SharedEnum", "Open with Enumerations"),
+        ("Member", "B", "SharedEnum", "Locked with Enumerations"),
+    )
+    errs = linter.empty_enumeration_errors(fields, [])  # SharedEnum defines no values
+    assert len(errs) == 1
+    assert "SharedEnum" in errs[0]
+
+
+def test_empty_enumeration_skips_open_and_unbound_fields():
+    fields = _enum_fields(
+        ("Property", "ListPrice", None, None),        # no lookup binding -> skipped
+        ("Property", "SomeEnum", "SomeEnum", None),   # no LookupStatus -> skipped (caught by §11 instead)
+    )
+    assert linter.empty_enumeration_errors(fields, []) == []
+
+
 # --- end-to-end (full validator over a fixture workbook) -----------------------------------------
 
 
@@ -129,3 +186,29 @@ def test_end_to_end_flags_and_exits_nonzero():
     assert "badName" in result.stdout
     assert "type-status-agreement" in result.stdout
     assert "HistoryTransactional.ClassName" in result.stdout
+
+
+def test_end_to_end_flags_empty_enumeration():
+    wb = Workbook()
+    fields = wb.active
+    fields.title = "Fields"
+    fields.append(["ResourceName", "StandardName", "SimpleDataType", "LookupName", "LookupStatus"])
+    fields.append(["Property", "GoodEnum", "String List, Single", "GoodEnum", "Open with Enumerations"])   # has value -> ok
+    fields.append(["Property", "BadEnum", "String List, Single", "BadEnum", "Locked with Enumerations"])   # no value -> error
+    fields.append(["Property", "OpenEnum", "String List, Single", "OpenEnum", "Open"])                     # open -> ok
+    lookups = wb.create_sheet("Lookups")
+    lookups.append(["LookupName", "StandardLookupValue"])
+    lookups.append(["GoodEnum", "Yes"])
+
+    with tempfile.TemporaryDirectory() as d:
+        path = os.path.join(d, "fixture.xlsx")
+        wb.save(path)
+        result = subprocess.run(
+            [sys.executable, str(_LINTER_PATH), path], capture_output=True, text=True
+        )
+
+    assert result.returncode == 1  # the empty enumeration is an error
+    assert "empty-enumeration" in result.stdout
+    assert "BadEnum" in result.stdout
+    assert result.stdout.count("defines no values") == 1  # only BadEnum; GoodEnum + OpenEnum are clean
+    assert "referential" not in result.stdout  # the removed name-match note must not resurface
