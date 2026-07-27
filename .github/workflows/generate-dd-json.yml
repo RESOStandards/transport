@@ -90,9 +90,11 @@ jobs:
           node .reso/tools/dd/generate-reference-edmx.mjs ${{ steps.versions.outputs.list }}
 
       - name: Lint DD sheets
+        id: lint
         # Read-only validation of each XLSX (structure, PascalCase, duplicates, Unicode cleanliness,
-        # SimpleDataType/LookupStatus agreement). Writes a markdown report (posted to the PR by the
-        # next step) and exits non-zero on errors — so a structurally broken sheet fails the build.
+        # SimpleDataType/LookupStatus agreement). Writes a full markdown report to the run log and
+        # exits non-zero on errors — so a structurally broken sheet fails the build. The public PR
+        # comment (a later step) posts a summary + a link to this log, not the raw report.
         # Warnings do not fail; they surface in the report for in-branch fixing before merge.
         run: |
           set -uo pipefail
@@ -172,25 +174,36 @@ jobs:
             });
 
       - name: Post lint comment
-        # success() || failure() => runs even when the lint gate above failed, so the report (errors
-        # included) reaches the PR for in-branch fixing. Reads the report file directly (no template
-        # interpolation); skips quietly if the lint step never produced one.
+        # Post a simplified, reader-authored status of the DD sheet validation — NOT the raw linter
+        # report. The full per-version report (errors and warnings) stays in the run log (the "Lint DD
+        # sheets" step above cats it and fails the build on errors); the public PR comment gets a clean
+        # summary plus a link, so an internal linter note never reads as a DD defect to an outside
+        # reader. success() || failure() => runs even when the lint gate failed, so the status posts
+        # either way.
         if: github.event_name == 'pull_request' && (success() || failure())
         uses: actions/github-script@v7
+        env:
+          LINT_OUTCOME: ${{ steps.lint.outcome }}
         with:
           script: |
-            const fs = require('fs');
-            let report;
-            try {
-              report = fs.readFileSync('/tmp/lint-report.md', 'utf8');
-            } catch {
-              return;
-            }
+            const outcome = process.env.LINT_OUTCOME;
+            if (outcome !== 'success' && outcome !== 'failure') return;
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const status = outcome === 'failure'
+              ? '❌ **Errors found.** The DD sheet gate is red — see the full report in the run log and fix before merge.'
+              : '✅ **No errors.** Any warnings are advisory and do not block merge.';
+            const body = [
+              '## DD sheet validation',
+              '',
+              status,
+              '',
+              `Full per-version report (errors and warnings) is in the [workflow run log](${runUrl}).`,
+            ].join('\n');
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              body: '## DD sheet validation\n\n' + report,
+              body,
             });
 
       - name: Commit regenerated JSON to the PR branch (pull_request only)
