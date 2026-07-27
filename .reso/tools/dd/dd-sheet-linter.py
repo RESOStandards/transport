@@ -17,7 +17,7 @@ Checks:
   5. Unicode cleanliness (no BOM, NBSP, ZWSP, ZWNJ, ZWJ)
   6. Enumerated lookups define values (a non-Open LookupStatus requires at least one value)
   7. Deprecation tracking vs. previous version (warnings, not errors)
-  8. Synonym not equal to any StandardName
+  8. Synonym collides with a StandardName on the same resource (synonyms are enforced per-resource)
   9. Version Info sheet has valid version
  10. No empty StandardName / StandardLookupValue cells in data rows
  11. SimpleDataType and LookupStatus agree (a field is an enumeration IFF its type is a String List)
@@ -121,6 +121,35 @@ def empty_enumeration_errors(
         seen.add(name)
         if name not in with_values:
             out.append(f'Lookup "{name}" is declared "{status}" but defines no values')
+    return out
+
+
+def synonym_collisions(
+    fields_data, field_name_col="StandardName", resource_col="ResourceName", synonym_col="Synonyms"
+) -> list[str]:
+    """Field synonyms are enforced PER RESOURCE (Commander DataDictionary.java:
+    container.getFieldMap(resourceName).containsKey(synonym)), so a synonym conflicts only when it is
+    also a StandardName on the SAME resource. A cross-resource match is not a conflict and must not be
+    flagged: e.g. Member.SourceSystemMemberKey lists SourceSystemAgentKey as a synonym, and
+    Showing.SourceSystemAgentKey is a legitimate standard field on a different resource. Returns one
+    message per same-resource collision; the caller decides severity."""
+    names_by_resource: dict = {}
+    for row in fields_data:
+        resource = row.get(resource_col)
+        name = row.get(field_name_col)
+        if resource and name:
+            names_by_resource.setdefault(resource, set()).add(name)
+    out: list[str] = []
+    for row in fields_data:
+        synonyms = row.get(synonym_col)
+        if not isinstance(synonyms, str):
+            continue
+        resource = row.get(resource_col)
+        field = row.get(field_name_col)
+        same_resource = names_by_resource.get(resource, set())
+        for syn in (s.strip() for s in synonyms.split(",")):
+            if syn and syn != field and syn in same_resource:
+                out.append(f'Synonym "{syn}" for {resource}.{field} is also a StandardName on {resource}')
     return out
 
 
@@ -271,18 +300,12 @@ def main() -> None:
                 shown = ", ".join(added_l[:5]) + ("..." if len(added_l) > 5 else "")
                 add_info("additions", f"{len(added_l)} lookup(s) added: {shown}")
 
-    # ── 8. Synonym not equal to any StandardName ──
+    # ── 8. Synonym collides with a StandardName on the same resource ──
+    # Synonyms are enforced per-resource, so a synonym is only a conflict when it is also a
+    # StandardName on the SAME resource. A cross-resource match is not a conflict (see synonym_collisions).
     if synonym_col:
-        for row in fields_data:
-            synonyms = row.get(synonym_col)
-            if not isinstance(synonyms, str):
-                continue
-            for syn in (s.strip() for s in synonyms.split(",")):
-                if syn and syn in all_field_names:
-                    add_warning(
-                        "synonym-collision",
-                        f'Synonym "{syn}" for field "{row.get(field_name_col)}" is also a StandardName',
-                    )
+        for msg in synonym_collisions(fields_data, field_name_col, resource_col, synonym_col):
+            add_warning("synonym-collision", msg)
 
     # ── 9. Version Info ──
     if "Version Info" in wb.sheetnames:

@@ -159,6 +159,46 @@ def test_empty_enumeration_skips_open_and_unbound_fields():
     assert linter.empty_enumeration_errors(fields, []) == []
 
 
+# --- synonym_collisions (per-resource, matching Commander enforcement) ---------------------------
+
+
+def _syn_fields(*rows) -> list[dict]:
+    """(ResourceName, StandardName, Synonyms) -> sheet_to_dicts shape."""
+    cols = ["ResourceName", "StandardName", "Synonyms"]
+    return [{c: v for c, v in zip(cols, r) if v is not None} for r in rows]
+
+
+def test_synonym_collision_flags_same_resource():
+    # A synonym that is also a StandardName on the SAME resource is a real contradiction.
+    fields = _syn_fields(
+        ("Property", "StructureType", "OtherName"),
+        ("Property", "OtherName", None),  # OtherName is a StandardName on Property
+    )
+    errs = linter.synonym_collisions(fields)
+    assert len(errs) == 1
+    assert "OtherName" in errs[0] and "Property" in errs[0]
+
+
+def test_synonym_collision_ignores_cross_resource():
+    # The real DD shape: Member.SourceSystemMemberKey lists SourceSystemAgentKey as a synonym, and
+    # SourceSystemAgentKey is a legitimate standard field on Showing -> NOT a conflict.
+    fields = _syn_fields(
+        ("Member", "SourceSystemMemberKey", "SourceSystemAgentKey"),
+        ("Showing", "SourceSystemAgentKey", None),
+    )
+    assert linter.synonym_collisions(fields) == []
+
+
+def test_synonym_collision_ignores_self_reference():
+    fields = _syn_fields(("Property", "Foo", "Foo"))  # a field listing its own name is not a collision
+    assert linter.synonym_collisions(fields) == []
+
+
+def test_synonym_collision_handles_missing_synonyms():
+    fields = _syn_fields(("Property", "Foo", None), ("Property", "Bar", ""))
+    assert linter.synonym_collisions(fields) == []
+
+
 # --- end-to-end (full validator over a fixture workbook) -----------------------------------------
 
 
