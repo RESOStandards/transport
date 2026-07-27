@@ -101,8 +101,19 @@ def empty_enumeration_errors(
 ) -> list[str]:
     """A field binds to a LookupName; that name need not match the field's own name, and RESO reuses
     (or a vendor re-scopes) a value set across fields, so a LookupName matching a field name is not an
-    invariant. The real rule: a lookup whose LookupStatus is anything other than 'Open' must define at
-    least one value. 'Open' lookups are provider-defined and legitimately carry no RESO values.
+    invariant. The real rule: a status that NAMES enumerations must define at least one. Any status
+    other than a bare 'Open' -- 'Open with Enumerations', 'Locked with Enumerations' -- requires a
+    value; an "Open with Enumerations" enum with no enumerations is self-contradictory (it is not, in
+    fact, open WITH enumerations). Bare 'Open' is skipped: those enums are fully provider-defined and
+    legitimately carry no RESO values.
+
+    Deliberately stricter than the runtime cert gate, and not in conflict with it. reso-tools'
+    dd-metadata-checks.ts intentionally does NOT implement a runtime "MUST contain at least one standard
+    lookup" rule (see its module header) because that rule is "incompatible with open enums that carry
+    no standard values" -- i.e. bare 'Open', which this check also exempts. The runtime leaves unchecked
+    a PROVIDER shipping no values; this check guards the DD SHEET declaring an enumerated status with an
+    empty value set before it ever ships. Different layer, different subject.
+
     Returns one message per offending LookupName (deduplicated); the caller decides severity."""
     with_values = {
         row.get(lookup_name_col)
