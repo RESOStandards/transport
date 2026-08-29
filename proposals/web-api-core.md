@@ -13,11 +13,6 @@
 
 The Web API Core 2.1.0 endorsement defines the primary functionality RESO Web API servers are expected to have in order to provide both replication and live query support.
 
-**New in version 2.1.0**
-* Support for OData `$expand`
-* Server-Driven Paging (`@odata.nextLink`) required for Certification
-* Support for the Lookup Resource, including string comparison tests for enumerations
-
 <br />
 
 # RESO End User License Agreement (EULA)
@@ -54,7 +49,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 # Approved Testing Rules
 
-See [GitHub Issue](https://github.com/RESOStandards/transport/blob/22-web-api-core-210-specification/web-api-core.md).
+See [GitHub Issue](https://github.com/RESOStandards/transport/issues/22).
 
 The RESO Certification Subgroup has requested a new Web API Core specification be created to include certain features like support for OData Expand and Server-Driven paging.
 
