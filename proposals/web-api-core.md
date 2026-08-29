@@ -1,17 +1,22 @@
 # RESO Web API Core Specification
 
-| **RCP** | 37 |
+| **RCP** | 39 |
 | :--- | :--- |
-| **Version** | **2.0.0** |
-| **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org))  |
+| **Version** | **2.1.0** |
+| **Authors** | [Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org)) |
 | **Status** | **RATIFIED** |
-| **Date Submitted** | August 2020 |
-| **Date Ratified** | January 2021 |
+| **Date Proposed** | April 2022 |
+| **Date Ratified** | December 2023 |
 | **Protocol** | HTTP |
 | **Dependencies** | OData 4.0 or 4.01<br />TLS 1.2+<br />OAuth 2 (Auth Token or Client Credentials) |
 | **Related Links** | [OASIS OData TC](https://www.oasis-open.org/committees/tc_home.php?wg_abbrev=odata) <br /> |
 
-The Web API Core endorsement defines the primary functionality RESO Web API servers are expected to support in order to provide both replication and live query support.
+The Web API Core 2.1.0 endorsement defines the primary functionality RESO Web API servers are expected to have in order to provide both replication and live query support.
+
+**New in version 2.1.0**
+* Support for OData `$expand`
+* Server-Driven Paging (`@odata.nextLink`) required for Certification
+* Support for the Lookup Resource, including string comparison tests for enumerations
 
 <br />
 
@@ -23,6 +28,7 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 
 # Table of Contents
 - [Summary of Changes](#summary-of-changes)
+- [Approved Testing Rules](#approved-testing-rules)
 - [Introduction](#introduction)
 - [Section 1: Purpose](#section-1-purpose)
 - [Section 2: Specification](#section-2-specification)
@@ -34,12 +40,82 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 
 <br />
 
+# Requirement Levels
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC 2119](https://www.ietf.org/rfc/rfc2119.txt).
+
+<br />
+
 # Summary of Changes
-* Providers MUST use either OAuth2 Bearer tokens or Client Credentials for authentication (RCP-026).
-* Strict Validation of OASIS XML Metadata.
-* Added support for `Collection(Edm.EnumType)` for String List, Multi Data Dictionary data types. (RCP-031)
-* Removed `DataSystem` endpoint in favor of OData Service Document.
-* Removed metallic certification levels in favor of modular Endorsements to provide additional functionality.
+* **Expanded Data Elements** - Support for expanded data elements using OData `$expand` has been added. The Property, Member, Office, Field, and Lookup Resources MUST be available at the top level. All other resources MAY be expanded. Data consumers should be prepared to support either. 
+* **Server-Driven Paging** - In order to improve the ease and ability for data consumers to retrieve data from RESO Web API servers, providers MUST support server-driven paging using `@odata.nextLink`. 
+* **String Comparison Operators** - Support for the Lookup Resource was added in Data Dictionary 1.7, meaning that single- and multi-enumerations may be `Edm.String` or `Collection(Edm.String)`, respectively. In order to provide parity with existing enumeration tests, string comparison operators have been added to Web API Core 2.1.0 in order to test those cases. 
+
+<br />
+
+# Approved Testing Rules
+
+See [GitHub Issue](https://github.com/RESOStandards/transport/blob/22-web-api-core-210-specification/web-api-core.md).
+
+The RESO Certification Subgroup has requested a new Web API Core specification be created to include certain features like support for OData Expand and Server-Driven paging.
+
+---
+
+## Support for Expanded Data Elements
+
+* An authoritative list of top-level items will be created for Data Dictionary 1.7, and each subsequent version, starting with Property, Member, Office, Field, and Lookup Resources. 
+* These items MAY be expanded into other resources, expanding Member into Property as ListAgent for example, but MUST be available at the top level.
+* Other items, such as Media or HistoryTransactional MAY be available at the top level but also MAY be available as expansions (or both).
+* Web API Core testing only requires one resource to be tested, though providers may test more than one. 
+* Providers who support expand should specify at least one navigation property to test for a given resource.
+* Additional queries on expanded resources WILL NOT be tested at this time. Providers MAY support them as they see fit.
+* Assume the resource being tested is Property, with a navigation property of Media:
+  * A GET request will be made to `/Property?$expand=Media` and the Property payload will be checked for a collection-based property called Media, and each result in the collection will be validated against the OData EntityType advertised in the metadata for Media. 
+  * Keys will be collected from the first request to Property, and a GET request will be made to `/Property('XXXXX')/Media` where `XXXXX` is the key.
+* As of Data Dictionary 1.7, standard names have been added for related RESO standard data elements. For example, here are [those in the Property Resource](https://docs.google.com/spreadsheets/d/1_59Iqr7AQ51rEFa7p0ND-YhJjEru8gY-D_HM1yy5c6w/edit#gid=799978943&range=595:614). Providers MUST use standard names for standard expansions, when present, but MAY create their own local expansions outside of this as long as they are OData compliant.
+* Expanded properties MUST use the definitions in the RESO Data Dictionary, when applicable. These items have been added to the Data Dictionary Wiki (e.g. [Media](https://ddwiki.reso.org/display/DDW17/Media+Field)) and [DD reference sheets](https://docs.google.com/spreadsheets/d/1_59Iqr7AQ51rEFa7p0ND-YhJjEru8gY-D_HM1yy5c6w/edit#gid=799978943&range=595:606), as well as generated in the [reference metadata](https://raw.githubusercontent.com/RESOStandards/web-api-commander/main/src/main/resources/RESODataDictionary-1.7.xml).  Providers MAY add their own local expansions as well.
+
+---
+
+## Providers MUST Support Server-Driven Paging
+
+Providers MUST support server-driven paging using `@odata.nextLink`.
+
+This functionality is needed so that data consumers may reliably consume data when only a partial result is returned and it’s classified as a MUST within [OData Minimal Conformance Requirements](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_OData40MinimalConformanceLevel) (item 3) for version 4.0 and above.
+
+Basic tests will be added in the Web API Core 2.1.0 tests, but the majority of nextLink testing will be done in the Payloads 2.0 Specification, which could result in a failure of nextLink-based operations even if the provider passed Web API Core 2.1.0 testing. 
+
+* A count will be made on the given resource being tested to ensure there are records. 
+* A request will be made using `$top=1`. This should NOT contain `@odata.nextLink`, since one record should be available, and we’ve reached the end of the set.
+* Several pages (10+) of records will be fetched using `@odata.nextLink` without any additional `$filter` parameters to ensure that the data returned with each response doesn't match any of the previous responses. 
+* Next links with `$filter` will also be tested. Since ModificationTimestamp is the only required field at this point, it will be used. 
+  * A `$filter` request will be made for records greater than one year back using the timestamp field being tested in the Web API Core tests, and several pages (10+), will be fetched to ensure that each page has an `@odata.nextLink`, when applicable. If the total number of records are fetched during this process, the last page will be checked to ensure there is no nextLink. This testing will be done using the greater than (`gt`) operator. 
+  * The same test will be performed using the less than (`lt`) operator for records prior to the current timestamp. 
+  * Each page of data fetched will be validated to ensure that the timestamp field value is greater or less than what was requested. 
+
+---
+
+## String Comparison Operators for Single- and Multi-Valued Enumerations
+
+With the current Web API Core tests, both single- and multi-valued enumerations are tested for those using OData `Edm.EnumType` enumerations and either `Collection(Edm.EnumType)` or `Edm.EnumType` with `IsFlags=true`. 
+
+String-based enumerations were added to Data Dictionary 1.7+ using the Lookup resource. There is currently no way to test this case in Web API Core 2.0.0. 
+
+The following tests will be added to support this case: 
+* Providers will supply a LookupName to test for single- and multi-valued enumerations, as well as sample values for each case. For single-valued enumerations, there will be one sample value, and for multi-valued enumerations there will be two. 
+* Data will be consumed from the Lookup Resource and validated. The provided LookupName will be checked to ensure it’s present in the Lookup Resource data, as will the lookup values.
+* For single-valued enumeration tests, assume that the LookupName provided is “StandardStatus” with a sample value of “Active” - the following requests will be made, and resulting data validated to ensure it matches the given queries:
+  * `GET /Property?$filter=StandardStatus eq 'Active'`
+  * `GET /Property?$filter=StandardStatus ne 'Active'`
+* For multi-valued enumeration tests, assume that the LookupName provided is "AccessibilityFeatures” and the values are “Accessible Entrance” and “Visitable” - the following tests will be made and resulting data validated to ensure it matches the given queries: 
+  * `GET /Property?$filter=AccessibilityFeatures/any(enum:enum eq 'Accessible Entrance' OR enum eq 'Visitable')`
+  * `GET /Property?$filter=AccessibilityFeatures/all(enum:enum eq 'Accessible Entrance' OR enum eq 'Visitable')`
+* As of OData “4.01” the `in` operator was introduced to determine whether a given value is in a set of values. This is more convenient that writing `Field1 eq 'value1' OR Field1 eq 'value2' OR...`. IF the response header indicates that the OData version is "4.01", then the `in` operator will be tested using a query similar to the following:
+  * `GET /Property?$filter=StandardStatus in ('Active', 'Pending', 'Sold')`
+  * TBD if we want to support `in` for multi-valued enumerations (using `any` and `all`)
+
+<br />
+
+---
 
 <br />
 
@@ -90,7 +166,7 @@ The OData specification is divided into three main sections:
 While there is no official RESO reference server at this time, [reference servers have been provided](https://www.reso.org/web-api-developer-reference-server/) and have been certified with RESO’s new testing tools.
 
 There is also reference material that should be helpful for developers implementing the Web API Core specification:
-* [Data Dictionary 1.7 Reference XML Metadata](https://github.com/RESOStandards/web-api-commander/blob/master/src/main/resources/RESODataDictionary-1.7.xml)
+* [Data Dictionary 1.7 Reference XML Metadata](https://github.com/RESOStandards/web-api-commander/blob/main/src/main/resources/RESODataDictionary-1.7.xml)
 * [Data Dictionary 1.7 Common Schema Open API Reference](https://app.swaggerhub.com/apis/darnjo/RESO-Web-API-Common-Schema/1.7)
 * [Web API 2.0.0 Core Testing Specification](https://docs.google.com/document/d/1btCduOpWWzeadeMcSviA8M9dclIz23P-bPUGKwcD0NY/edit?usp=sharing)
 
@@ -129,7 +205,7 @@ The HTTP version MUST be [HTTP/1.1](https://datatracker.ietf.org/doc/html/rfc261
 
 While OData supports HTTP/1.0, there are many limitations in the HTTP/1.0 specification that we want to avoid. Therefore, we are limiting compatible implementations to HTTP/1.1 or above. For specific HTTP references, please see the references section.
 
-Since the RESO Web API requires that [HTTPS](https://en.wikipedia.org/wiki/HTTPS) and the [OAuth2](https://oauth.net/2/) protocols are used, all server implementations MUST implement [Transport Layer Security (TLS)](https://en.wikipedia.org/wiki/Transport_Layer_Security).
+Since the RESO Web API requires that [HTTPS](https://en.wikipedia.org/wiki/HTTPS) and the [OAuth2](https://oauth.net/2/) protocols are used, all server implementations MUST implement [Transport Layer Security (TLS)](https://en.wikipedia.org/wiki/Transport_Layer_Security). Providers MUST use TLS 1.2 or above.
 
 <br />
 
@@ -178,7 +254,7 @@ The following optional headers are defined in the specification:
 
 | **Header** | **Functionality** |
 | --- | --- |
-| `omit=nulls` | It is recommended that that servers fully support this functionality in order to reduce the outbound payload size. |
+| `omit=nulls` | It is recommended that servers fully support this functionality in order to reduce the outbound payload size. |
 | `omit=defaults` | It is recommended that servers do not support this functionality in order to ensure that clients get important default values that are integral to the service. |
 
 <br />
@@ -205,8 +281,9 @@ The OData transport protocol defines the following URI conventions:
 | **Metadata Path** | `https://api.reso.org/reso/$metadata` |
 | **Resource Path** | `https://api.reso.org/reso/Resource` |
 | **Service Root** | `https://api.reso.org/reso/` |
-| **Singleton Resource Path (String Key)** | `https://api.reso.org/reso/Resource('ID')` |
-| **Singleton Resource Path (Numeric Key)** | `https://api.reso.org/reso/Resource(123)`
+| **'Singleton' Resource Path** | `https://api.reso.org/reso/Resource('Id')` |
+| **Navigation Property Path** | `https://api.reso.org/Resource('Id')/Media` |
+| **Expanded Data Set** | `https://api.reso.org/Resource?$expand=Media` |
 
 RESO uses **TitleCase** for Resources, Fields, OData Lookup Values, and Navigation Properties.
 
@@ -254,7 +331,7 @@ In the language of OData, resource definitions use the `EntityType` tag.
 Assume a given server defines a Property resource as follows, using the XML Metadata example from [section 2.3.3](#233-metadata-uri-conventions):
 
 ```
-GET https://api.reso.org/$metadata&$format=application/xml
+GET https://api.reso.org/$metadata?$format=application/xml
 HTTP/2 200 OK
 ```
 
@@ -293,12 +370,12 @@ This metadata defines the following items:
 | **ListingKey Field** | Property | `Edm.String` | MaxLength of 255 | MaxLength is an optional attribute. |
 | **ListPrice Field** | Property | `Edm.Decimal` | Precision is 14, Scale is 2 | Precision and Scale are optional attributes. |
 | **StandardStatus Field** | Property | `org.reso.metadata.enums.StandardStatus` | N/A | The type in an `Edm.EnumType` definition is defined by the namespace and references the StandardStatus EnumType defined on line 16. |
-| **ModificationTimestamp Field** | Property | `Edm.DateTimeOffset` | Precision of 27 to support the ISO 8601 format | Supported timestamps in this case would be: `2021-05-21T06:28:34+00:00` OR `2021-05-21T06:28:34Z` either of which MAY have a trailing millisecond component, for example: `2021-05-21T06:28:34+00:00.108` OR `2021-05-21T06:28:34.007Z` |
+| **ModificationTimestamp Field** | Property | `Edm.DateTimeOffset` | Precision of 27 to support the ISO 8601 format | Supported timestamps in this case would be: `2021-05-21T06:28:34+00:00` OR `2021-05-21T06:28:34Z` either of which MAY have a trailing millisecond component, for example: `2021-05-21T06:28:34.108+00:00` OR `2021-05-21T06:28:34.007Z` |
 | **StandardStatus Enumeration** | EnumType | `Edm.EnumType` | N/A | Defines enumerations for: Active, Closed, ComingSoon, and Pending using the SimpleIdentifier format. |
 
 <br />
 
-**Request Data from the Property Resource without an OData `$filter` Expression**
+#### Request Data from the Property Resource without an OData `$filter` Expression
 
 ```
 GET https://api.reso.org/Property
@@ -326,7 +403,7 @@ HTTP/2 200 OK
 
 <br />
 
-**Request Data from the Property Resource using an OData `$filter` Expression**
+#### Request Data from the Property Resource using an OData `$filter` Expression
 ```
 GET https://api.reso.org/Property?$filter=ListPrice gt 100000.00
 200 OK
@@ -349,22 +426,22 @@ GET https://api.reso.org/Property?$filter=ListPrice gt 100000.00
 
 ## 2.4 Data Types
 
-This section outlines the standard data types supported by the  Web API Core specification.
+This section outlines the standard data types supported by the Web API Core specification.
 
-**Data Type Mappings**
+### Data Type Mappings
 
 The following mappings exist between the RESO Data Dictionary and OData data types, as outlined in RCP-031:
 
-| **Data Dictionary <img width=200px /> 1.6+** | **Web API 2.0.0+** | **Notes** <img width=1000px /> |
+| **Data Dictionary <img width=200px /> 1.7+** | **Web API 2.0.0+** | **Notes** <img width=1000px /> |
 | --- | --- | --- |
-| Boolean | [Edm.Bool](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Boolean) | MUST be one of the litera`true` or `false` (case-sensitive). |
-| Collection | [Edm.Collection](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752651) | In Web API Core, collections are only suppported when used with `Collection(Edm.EnumType)` or `Collection(Edm.String)` to represent lookups. <br /><br />Providers MAY use collection data types for their own expansions. <br /><br />RESO also has defined standard [NavigationProperty](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Element_edm:NavigationProperty) definitions, which allow expansion between related resources. See [RESO’s reference metadata](https://raw.githubusercontent.com/RESOStandards/web-api-commander/main/src/main/resources/RESODataDictionary-1.7.xml) and search for "NavigationProperty" for normative XML Metadata references. |
-| Date | [Edm.Date](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752636) | MUST be in YYYY-MM-DD formaccording to the [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date format. |
+| Boolean | [Edm.Boolean](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Boolean) | MUST be one of the literals `true` or `false` (case-sensitive). |
+| Collection | [Edm.Collection](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752651) | In Web API Core, collections are only supported when used with `Collection(Edm.EnumType)` or `Collection(Edm.String)` to represent lookups. <br /><br />Providers MAY use collection data types for their own expansions. <br /><br />RESO also has defined standard [NavigationProperty](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Element_edm:NavigationProperty) definitions, which allow expansion between related resources. See [RESO’s reference metadata](https://raw.githubusercontent.com/RESOStandards/web-api-commander/main/src/main/resources/RESODataDictionary-1.7.xml) and search for "NavigationProperty" for normative XML Metadata references. |
+| Date | [Edm.Date](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752636) | MUST be in YYYY-MM-DD format according to the [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date format. |
 | Number | [Edm.Decimal](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752638) OR [Edm.Double](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part3-csdl.html#_Toc453752517) for decimal values; [Edm.Int64](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part3-csdl.html#_Toc453752517) OR [Edm.Int32](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part3-csdl.html#_Toc453752517) OR [Edm.Int16](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part3-csdl.html#_Toc453752517) for integers. | Numbers that require decimal precision MUST use Edm.Decimal or Edm.Double, whose query and payload semantics are the same. Integers MAY be sized accordingly to support the data in a given field. |
-| String | [Edm.String](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752644) | MUST be case-sensitiby the OData specification. Field names are also case sensitive when used in the `$select`, `$filter`, and `$orderby` query operators and clients MUST respect case sensitivity defined in the resource metadata. |
-| String List, Single | [Edm.EnumType](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_8.1_The_edm:EnumType) OR [Edm.String](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752644) with the [Lookup Resource (RCP-032)](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275152879/RCP+-+WEBAPI-032+Lookup+and+RelatedLookup+Resources+for+Lookup+Metadata) | RESO supports either `Edm.EnumType` OR `EString` lookups. The former MUST conform to OData SimpleIdentifier conventions, which essentially means they begin with a letter or underscore, followed by at most 127 letters, underscores or digits. Deprecation Notice applies. See Notes. |
-| Sting List, Multi | [Edm.EnumType](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_8.1_The_edm:EnumType) with `IsFlags=true` OR [Collection(Edm.EnumType)]((http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_8.1_The_edm:EnumType)) OR [Collection(Edm.String)](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752644) with the [Lookup Resource (RCP-032)](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275152879/RCP+-+WEBAPI-032+Lookup+and+RelatedLookup+Resources+for+Lookup+Metadata) | REsupports three kinds of multi-valued enumerations at the moment. Deprecation Notice applies. See Notes. |
-| Timestamp | [Edm.DateTimeOffset](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/csprd02/odata-csdl-xml-v4.01-csprd02.html#sec_DateTimeOffset) | Timestamps also use the [ISO 86format](https://en.wikipedia.org/wiki/ISO_8601). Examples: `2021-05-21T16:43:43+00:00` and `2021-05-21T16:43:43Z`. Millisecond precision: `2021-05-21T16:43:43.108+00:00` and `2021-05-21T16:43:43.007Z` |
+| String | [Edm.String](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752644) | String comparison MUST be case-sensitive, in accordance with the OData specification. Field names are also case-sensitive when used in the `$select`, `$filter`, and `$orderby` query options, and clients MUST respect the case defined in the resource metadata. |
+| String List, Single | [Edm.EnumType](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_8.1_The_edm:EnumType) OR [Edm.String](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752644) with the [Lookup Resource (RCP-032)](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275152879/RCP+-+WEBAPI-032+Lookup+and+RelatedLookup+Resources+for+Lookup+Metadata) | RESO supports either `Edm.EnumType` OR `Edm.String` lookups. The former MUST conform to OData SimpleIdentifier conventions, which essentially means they begin with a letter or underscore, followed by at most 127 letters, underscores or digits. Deprecation Notice applies. See Notes. |
+| String List, Multi | [Edm.EnumType](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_8.1_The_edm:EnumType) with `IsFlags=true` OR [Collection(Edm.EnumType)](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_8.1_The_edm:EnumType) OR [Collection(Edm.String)](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752644) with the [Lookup Resource (RCP-032)](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275152879/RCP+-+WEBAPI-032+Lookup+and+RelatedLookup+Resources+for+Lookup+Metadata) | RESO supports three kinds of multi-valued enumerations at the moment. Deprecation Notice applies. See Notes. |
+| Timestamp | [Edm.DateTimeOffset](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/csprd02/odata-csdl-xml-v4.01-csprd02.html#sec_DateTimeOffset) | Timestamps also use the [ISO 8601 format](https://en.wikipedia.org/wiki/ISO_8601). Examples: `2021-05-21T16:43:43+00:00` and `2021-05-21T16:43:43Z`. Millisecond precision: `2021-05-21T16:43:43.108+00:00` and `2021-05-21T16:43:43.007Z` |
 
 **Notes**
 * _A server MAY return HTTP 413 - Request Entity Too Large if the `$filter` or `$orderby` expressions are too large or complex for the server to process._
@@ -445,7 +522,7 @@ Servers MUST support a service document request, according to the OData Minimal 
 >
 > The service document enables simple hypermedia-driven clients to enumerate and explore the resources published by the OData service.
 
-RESO validates that the service document request can be made and that it produces a valid JSON response, but does not have any additional requirements about what the document must contain. Data providers may choose which entities they want advertise in their service document according to their business needs.
+RESO validates that the service document request can be made and that it produces a valid JSON response, but does not have any additional requirements about what the document must contain. Data providers may choose which entities they want to advertise in their service document according to their business needs.
 
 **Example**
 
@@ -520,27 +597,6 @@ HTTP/2 200 OK
 {
   "@odata.context": "https://api.reso.org/Property('a1')",
   "ListingKey": "a1",
-  "BedroomsTotal": 5,
-  "ListPrice": 100000.00,
-  "StreetName": "Main",
-  "ModificationTimestamp": "2020-04-02T02:02:02.02Z",
-  "ListingContractDate": "2020-04-02",
-  "StandardStatus": "ActiveUnderContract",
-  "AccessibilityFeatures": ["AccessibleApproachWithRamp", "AccessibleEntrance", "Visitable"]
-}
-```
-
-**Numeric Keys**
-
-Numeric keys do not use any special characters:
-```
-GET https://api.reso.org/Property(123)
-HTTP/2 200 OK
-```
-```json
-{
-  "@odata.context": "https://api.reso.org/Property(123)",
-  "ListingKeyNumeric": 123,
   "BedroomsTotal": 5,
   "ListPrice": 100000.00,
   "StreetName": "Main",
@@ -679,8 +735,8 @@ HTTP/2 200 OK
     {
       "ListingKey": "b2",
       "ModificationTimestamp": "2020-04-02T02:02:02.007Z"
-    }
-     {
+    },
+    {
       "ListingKey": "a1",
       "ModificationTimestamp": "2020-04-02T02:02:02.02Z"
     }
@@ -897,7 +953,7 @@ HTTP/2 200 OK
       "BedroomsTotal": 4,
       "ListPrice": 100000.01,
       "StreetName": "1st",
-      "ModificationTimestamp": "2021-05-22T00:01:01.01.123Z",
+      "ModificationTimestamp": "2021-05-22T00:01:01.123Z",
       "ListingContractDate": "2021-05-01",
       "StandardStatus": "Active",
       "AccessibilityFeatures": ["Visitable"]
@@ -936,7 +992,7 @@ HTTP/2 200 OK
       "BedroomsTotal": 4,
       "ListPrice": 100000.01,
       "StreetName": "1st",
-      "ModificationTimestamp": "2020-12-31T00:01:01.01.007Z",
+      "ModificationTimestamp": "2020-12-31T00:01:01.007Z",
       "ListingContractDate": "2020-12-31",
       "StandardStatus": "Closed",
       "AccessibilityFeatures": []
@@ -971,7 +1027,7 @@ HTTP/2 200 OK
       "BedroomsTotal": 4,
       "ListPrice": 100000.01,
       "StreetName": "1st",
-      "ModificationTimestamp": "2020-12-31T00:01:01.01.007Z",
+      "ModificationTimestamp": "2020-12-31T00:01:01.007Z",
       "ListingContractDate": "2020-12-31",
       "StandardStatus": "Closed",
       "AccessibilityFeatures": []
@@ -1148,9 +1204,9 @@ This resource is still in DRAFT status. Please [contact RESO](mailto:dev@reso.or
 #### 2.5.9.9 Multiple Enumerations
 
 The Web API Core specification currently offers three ways to express multiple enumerations:
-* [`Edm.EnumType`, with or without `IsFlags=true`](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#25991-odata-isflagstrue)
-* [`Collection(Edm.EnumType)`](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#25992-collection-of-edmenumtype)
-* [`Collection(Edm.String)`](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#25993-collection-of-edmstring)
+* [`Edm.EnumType`, with or without `IsFlags=true`](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#25991-odata-isflagstrue)
+* [`Collection(Edm.EnumType)`](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#25992-collection-of-edmenumtype)
+* [`Collection(Edm.String)`](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#25993-collection-of-edmstring)
 
 The `IsFlags=true` method is not recommended for current implementations due to size limitations of the underlying data type and will be deprecated in future versions of the Web API.
 
@@ -1193,7 +1249,7 @@ Notice how Red has a value of 1 (2<sup>0</sup>), Blue has a value of 2 (2<sup>1<
 
 The underlying value in the payload from the example above would be 19, the `Edm.Int64` representation of the value defined in the lookup. This MUST match what’s defined in the server metadata.
 
-RESO does not explicitly validate bitmapped values to ensure that lookup choices do not overlap.
+RESO does not explicitly validate bit-mapped values to ensure that lookup choices do not overlap.
 
 <br />
 
@@ -1227,7 +1283,7 @@ HTTP/2 200 OK
       "ModificationTimestamp": "2020-06-02T02:02:02.02Z",
       "ListingContractDate": "2020-06-02",
       "StandardStatus": "Active",
-      "AccessibilityFeatures": "AccessibleBedroom,AccessibleDoors"
+      "AccessibilityFeatures": "AccessibleEntrance,AccessibleBedroom,AccessibleDoors"
     }
   ]
 }
@@ -1239,7 +1295,7 @@ HTTP/2 200 OK
 
 The RESO Web API Core specification allows for multiple enumerations to be defined in terms of collections of OData `Edm.EnumType` definitions.
 
-While this approach is not well documented in OData reference material, it is nonetheless valid and was previously offered in order to overcome the [64-value limitation of IsFlags enumerations](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#25991-odata-isflagstrue).
+While this approach is not well documented in OData reference material, it is nonetheless valid and was previously offered in order to overcome the [64-value limitation of IsFlags enumerations](https://github.com/RESOStandards/reso-transport-specifications/blob/main/WEB-API-CORE.md#25991-odata-isflagstrue).
 
 Let’s consider the [AccessibilityFeatures](https://ddwiki.reso.org/display/DDW17/AccessibilityFeatures+Field) field, which is defined as follows in the [RESO reference XML metadata](https://raw.githubusercontent.com/RESOStandards/web-api-commander/main/src/main/resources/RESODataDictionary-1.7.xml):
 
@@ -1353,6 +1409,172 @@ This resource is still in DRAFT status. Please [contact RESO](mailto:dev@reso.or
 
 <br />
 
+### 2.5.10 Expanded Data Elements
+Web API Core 2.1.0 also supports the use of OData `$expand`, which results in a nested data set from another defined resource. 
+
+**Example**
+Assume a given server defines a Property resource as follows, using the XML Metadata example from [section 2.3.3](#233-metadata-uri-conventions):
+
+```
+GET https://api.reso.org/$metadata?$format=application/xml
+HTTP/2 200 OK
+```
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="org.reso.metadata" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="Property">
+        <Key>
+          <PropertyRef Name="ListingKey" />
+        </Key>
+        <Property MaxLength="255" Name="ListingKey" Type="Edm.String" />
+        <Property Name="ListPrice" Precision="14" Scale="2" Type="Edm.Decimal" />
+        <Property Name="StandardStatus" Type="org.reso.metadata.enums.StandardStatus" />
+        <Property Name="ModificationTimestamp" Precision="27" Type="Edm.DateTimeOffset" />
+        <NavigationProperty Name="Media" Type="Collection(org.reso.metadata.Media)" />
+      </EntityType>
+      <EntityType Name="Media">
+        <Key>
+          <PropertyRef Name="MediaKey" />
+        </Key>
+        <Property MaxLength="255" Name="ChangedByMemberKey" Type="Edm.String" />
+        <Property MaxLength="255" Name="MediaKey" Type="Edm.String" />
+        <Property Name="MediaModificationTimestamp" Precision="27" Type="Edm.DateTimeOffset" />
+        <Property MaxLength="8000" Name="MediaURL" Type="Edm.String" />
+        <Property Name="ModificationTimestamp" Precision="27" Type="Edm.DateTimeOffset" />
+        <Property Name="Order" Type="Edm.Int64" />
+        <Property Name="ResourceName" Type="org.reso.metadata.enums.ResourceName" />
+        <Property MaxLength="255" Name="ResourceRecordKey" Type="Edm.String" />
+      </EntityType>
+      <EntityContainer Name="RESO">
+        <EntitySet Name="Property" EntityType="org.reso.metadata.Property">
+          <NavigationPropertyBinding Path="Media" Target="Media" />
+        </EntitySet>
+        <EntitySet Name="Media" EntityType="org.reso.metadata.Media" />
+      </EntityContainer>
+    </Schema>
+    <Schema Namespace="org.reso.metadata.enums" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EnumType Name="StandardStatus">
+        <Member Name="Active" />
+        <Member Name="Closed" />
+        <Member Name="ComingSoon" />
+        <Member Name="Pending" />
+      </EnumType>
+      <EnumType Name="ResourceName">
+        <Member Name="Property" />
+      </EnumType>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
+```
+
+This metadata defines the following items:
+
+| **Item** | **XML Schema** | **Data Type** | **Attributes** | **Comments** |
+| --- | --- | --- | --- | --- |
+| **Property Resource** | EntityType | N/A | Key field of ListingKey | Each entity MUST define a Key property. |
+| **ListingKey Field** | Property | `Edm.String` | MaxLength of 255 | MaxLength is an optional attribute. |
+| **ListPrice Field** | Property | `Edm.Decimal` | Precision is 14, Scale is 2 | Precision and Scale are optional attributes. |
+| **StandardStatus Field** | Property | `org.reso.metadata.enums.StandardStatus` | N/A | The type in an `Edm.EnumType` definition is defined by the namespace and references the StandardStatus EnumType defined on line 16. |
+| **ModificationTimestamp Field** | Property | `Edm.DateTimeOffset` | Precision of 27 to support the ISO 8601 format | Supported timestamps in this case would be: `2021-05-21T06:28:34+00:00` OR `2021-05-21T06:28:34Z` either of which MAY have a trailing millisecond component, for example: `2021-05-21T06:28:34.108+00:00` OR `2021-05-21T06:28:34.007Z` |
+| **Media Navigation Property** | Media | `org.reso.metadata.Media` | `Collection` | Navigation properties provide `$expand` support. | 
+| **StandardStatus Enumeration** | EnumType | `Edm.EnumType` | N/A | Defines enumerations for: Active, Closed, ComingSoon, and Pending using the SimpleIdentifier format. |
+| **ResourceName Enumeration** | EnumType | `Edm.EnumType` | N/A | Defines possible resources for the `ResourceName` field in the Media Resource.  |
+
+<br />
+
+#### 2.5.10.1 Request Data from the Property Resource with a Media Expansion
+
+```
+GET https://api.reso.org/Property?$expand=Media&$top=2
+HTTP/2 200 OK
+```
+```json
+{
+  "@odata.context": "https://api.reso.org/$metadata#Property(Media())",
+  "value": [
+    {
+      "ListingKey": "a1",
+      "ListPrice": 100000.0,
+      "ModificationTimestamp": "2022-04-02T02:02:02.02Z",
+      "StandardStatus": "Active",
+      "Media": [
+        {
+          "ChangedByMemberKey": "ABC123",
+          "MediaKey": "AT23852983",
+          "MediaModificationTimestamp": "2022-04-02T03:02:02.02Z",
+          "MediaURL": "https://cdn.reso.org/media/AT23852983",
+          "ModificationTimestamp": "2022-04-02T02:02:02.03Z",
+          "Order": 1,
+          "ResourceName": "Property",
+          "ResourceRecordKey": "a1"
+        }
+      ]
+    },
+    {
+      "ListingKey": "b2",
+      "ListPrice": 100001.0,
+      "ModificationTimestamp": "2022-04-03T02:02:02.02Z",
+      "StandardStatus": "Pending",
+      "Media": [
+        {
+          "ChangedByMemberKey": "ABC123",
+          "MediaKey": "AT23852983",
+          "MediaModificationTimestamp": "2022-04-02T03:02:02.02Z",
+          "MediaURL": "https://cdn.reso.org/media/AT23852983",
+          "ModificationTimestamp": "2022-04-02T02:02:02.03Z",
+          "Order": 1,
+          "ResourceName": "Property",
+          "ResourceRecordKey": "b2"
+        },
+        {
+          "ChangedByMemberKey": "ABC123",
+          "MediaKey": "BU23852983",
+          "MediaModificationTimestamp": "2022-04-02T03:02:02.02Z",
+          "MediaURL": "https://cdn.reso.org/media/BU23852983",
+          "ModificationTimestamp": "2022-04-02T02:02:02.03Z",
+          "Order": 2,
+          "ResourceName": "Property",
+          "ResourceRecordKey": "b2"
+        }
+      ]
+    }
+  ]
+}
+```
+
+**Note**: Since `$top=2` was requested, there is no `@odata.nextLink`. 
+
+<br />
+
+#### 2.5.10.2 Request Media for a Specific Listing in the Property Resource using Navigation Property Paths
+```
+GET https://api.reso.org/Property('a1')/Media
+200 OK
+```
+```json
+{
+  "@odata.context": "https://api.reso.org/$metadata#Media",
+  "value": [
+    {
+      "ChangedByMemberKey": "ABC123",
+      "MediaKey": "AT23852983",
+      "MediaModificationTimestamp": "2022-04-02T03:02:02.02Z",
+      "MediaURL": "https://cdn.reso.org/media/AT23852983",
+      "ModificationTimestamp": "2022-04-02T02:02:02.03Z",
+      "Order": 1,
+      "ResourceName": "Property",
+      "ResourceRecordKey": "a1"
+    }
+  ]
+}
+```
+
+<br />
+
+
 ## 2.6 Response Codes and Error Message Bodies
 This section describes expected response codes and error message bodies.
 
@@ -1372,7 +1594,7 @@ If the response was not successful the server MAY include an [error message](htt
 | 404 | Not Found | Returned when a GET cannot find a resource or collection. |
 | 413 | Request Entity Too Large | Returned at the discretion of the server. Used to indicate when the server cannot handle the complexity of the specific request. |
 | 415 | Unsupported Media | Returned when a media format requested is not supported by the system. |
-| 429 | Too Many Requests | Returned at the discretion of the server. Used to indicate that the user / licensee has met or exceeded their allowed usage (transactions per second, per day, per month, etc. |
+| 429 | Too Many Requests | Returned at the discretion of the server. Used to indicate that the user / licensee has met or exceeded their allowed usage (transactions per second, per day, per month, etc.). |
 | 500 | Internal Server Error | Returned when an unexpected error is encountered and more detail may be provided in the response body. |
 | 501 | Not Implemented | Returned when the requested method is not available. |
 
@@ -1387,7 +1609,7 @@ The following example includes a client request and a compliant server error res
 
 ```
 GET https://api.reso.org/reso/odata/Member?$orderby=ModificationTimestamp&$top=5&$skip=5
-HTTP/2 200 OK
+HTTP/2 501 Not Implemented
 ```
 ```json
 {
@@ -1436,7 +1658,7 @@ The following examples show how Core queries can be used to query data on a give
 
 <br />
 
-**Get Properties Listed in December of 2020**
+### Get Properties Listed in December of 2020
 ```
 GET https://api.reso.org/Property?$filter=ListingContractDate ge 2020-12-01 and ListingContractDate lt 2021-01-01
 HTTP/2 200 OK
@@ -1448,7 +1670,7 @@ HTTP/2 200 OK
     {
       "ListingKey": "a1",
       "BedroomsTotal": 5,
-      "ListPrice": 100000.00,
+      "ListPrice": 100000.0,
       "StreetName": "Main",
       "ModificationTimestamp": "2020-04-02T02:02:02.02Z",
       "ListingContractDate": "2020-04-02",
@@ -1461,7 +1683,7 @@ HTTP/2 200 OK
 
 <br />
 
-**Get Properties Listed in a Given Year**
+### Get Properties Listed in a Given Year
 ```
 GET https://api.reso.org/Property?$filter=ListingContractDate ge 2020-01-01 and ListingContractDate lt 2021-01-01
 HTTP/2 200 OK
@@ -1473,9 +1695,9 @@ HTTP/2 200 OK
     {
       "ListingKey": "b2",
       "BedroomsTotal": 3,
-      "ListPrice": 200000.00,
+      "ListPrice": 200000.0,
       "StreetName": "2nd",
-      "ModificationTimestamp": "2020-12-31T00:01:01.01.007Z",
+      "ModificationTimestamp": "2020-12-31T00:01:01.007Z",
       "ListingContractDate": "2020-05-25",
       "StandardStatus": "Closed",
       "AccessibilityFeatures": []
@@ -1486,7 +1708,7 @@ HTTP/2 200 OK
 
 <br />
 
-**Get Active Members with First Name 'James' or 'Adam'**
+### Get Active Members with First Name 'James' or 'Adam'
 ```
 GET https://api.reso.org/Member?$filter=MemberStatus eq 'Active' and (MemberFirstName eq 'James' or MemberFirstName eq 'Adam')
 HTTP/2 200 OK
@@ -1500,14 +1722,14 @@ HTTP/2 200 OK
       "MemberStatus": "Active",
       "MemberFirstName": "James",
       "MemberLastName": "Smith",
-      "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
-    }
-     {
+      "ModificationTimestamp": "2021-08-21T00:01:01.007Z"
+    },
+    {
       "MemberKey": "b2",
       "MemberStatus": "Active",
       "MemberFirstName": "Adam",
       "MemberLastName": "Smith",
-      "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
+      "ModificationTimestamp": "2021-08-21T00:01:01.007Z"
     }
   ]
 }
@@ -1515,7 +1737,7 @@ HTTP/2 200 OK
 
 <br />
 
-**Query on Boolean Field to Find Short Sales**
+### Query on Boolean Field to Find Short Sales
 ```
 GET https://api.reso.org/Property?$filter=ShortSale eq true
 HTTP/2 200 OK
@@ -1527,7 +1749,7 @@ HTTP/2 200 OK
     {
       "ListingKey": "a1",
       "BedroomsTotal": 5,
-      "ListPrice": 100000.00,
+      "ListPrice": 100000.0,
       "StreetName": "Main",
       "ModificationTimestamp": "2020-04-02T02:02:02.02Z",
       "ListingContractDate": "2020-04-02",
@@ -1541,7 +1763,7 @@ HTTP/2 200 OK
 
 <br />
 
-**Combine Multiple Criteria in a Listing Search**
+### Combine Multiple Criteria in a Listing Search
 ```
 GET https://api.reso.org/Property?$filter=ListPrice gt 250000 and ListPrice lt 500000
 HTTP/2 200 OK
@@ -1553,7 +1775,7 @@ HTTP/2 200 OK
     {
       "ListingKey": "c3",
       "BedroomsTotal": 5,
-      "ListPrice": 400000.00,
+      "ListPrice": 400000.0,
       "StreetName": "Main",
       "ModificationTimestamp": "2020-04-02T02:02:02.02Z",
       "ListingContractDate": "2020-04-02",
@@ -1566,7 +1788,7 @@ HTTP/2 200 OK
 
 <br />
 
-**Get Properties with a Listing Price Greater Than $300K**
+### Get Properties with a Listing Price Greater Than $300K
 ```
 GET https://api.reso.org/Property?$filter=ListPrice gt 300000
 HTTP/2 200 OK
@@ -1578,7 +1800,7 @@ HTTP/2 200 OK
     {
       "ListingKey": "c3",
       "BedroomsTotal": 5,
-      "ListPrice": 400000.00,
+      "ListPrice": 400000.0,
       "StreetName": "Main",
       "ModificationTimestamp": "2020-04-02T02:02:02.02Z",
       "ListingContractDate": "2020-04-02",
@@ -1591,7 +1813,7 @@ HTTP/2 200 OK
 
 <br />
 
-**Get Properties with a Listing Price of $300K**
+### Get Properties with a Listing Price of $300K
 ```
 GET https://api.reso.org/Property?$filter=ListPrice eq 300000
 HTTP/2 200 OK
@@ -1603,9 +1825,9 @@ HTTP/2 200 OK
     {
       "ListingKey": "d4",
       "BedroomsTotal": 4,
-      "ListPrice": 300000.00,
+      "ListPrice": 300000.0,
       "StreetName": "Oak",
-      "ModificationTimestamp": "2021-08-15T00:01:01.01.007Z",
+      "ModificationTimestamp": "2021-08-15T00:01:01.007Z",
       "StandardStatus": "Active",
       "AccessibilityFeatures": []
     }
@@ -1615,7 +1837,7 @@ HTTP/2 200 OK
 
 <br />
 
-**Retrieve Records in a Specific Order**
+### Retrieve Records in a Specific Order
 
 ```
 GET https://api.reso.org/Property?$filter=ListPrice lt 500000&$orderby=ListPrice desc
@@ -1630,16 +1852,16 @@ HTTP/2 200 OK
       "BedroomsTotal": 5,
       "ListPrice": 499999,
       "StreetName": "7th",
-      "ModificationTimestamp": "2021-06-25T00:01:01.01.007Z",
+      "ModificationTimestamp": "2021-06-25T00:01:01.007Z",
       "StandardStatus": "Active",
       "AccessibilityFeatures": []
-    }
+    },
     {
       "ListingKey": "f6",
       "BedroomsTotal": 5,
       "ListPrice": 489000,
       "StreetName": "Maple",
-      "ModificationTimestamp": "2021-06-25T00:01:01.01.007Z",
+      "ModificationTimestamp": "2021-06-25T00:01:01.007Z",
       "StandardStatus": "Active",
       "AccessibilityFeatures": []
     }
@@ -1649,7 +1871,7 @@ HTTP/2 200 OK
 
 <br />
 
-**Get a Count of Property Records**
+### Get a Count of Property Records
 ```
 GET https://api.reso.org/Property?$select=ListingKey,ModificationTimestamp&$top=1&$count=true
 HTTP/2 200 OK
@@ -1661,7 +1883,7 @@ HTTP/2 200 OK
   "value": [
     {
       "ListingKey": "a1",
-      "ModificationTimestamp": "2020-04-02T02:02:02.02Z" 
+      "ModificationTimestamp": "2020-04-02T02:02:02.02Z"
     }
   ]
 }
@@ -1670,7 +1892,7 @@ HTTP/2 200 OK
 <br />
 
 
-**Get Top Five Residential Properties**
+### Get Top Five Residential Properties
 ```
 GET https://api.reso.org/Property?$filter=PropertyType eq 'Residential'&$top=5
 HTTP/2 200 OK
@@ -1682,58 +1904,57 @@ HTTP/2 200 OK
     {
       "ListingKey": "a1",
       "BedroomsTotal": 5,
-      "ListPrice": 100000.00,
+      "ListPrice": 100000.0,
       "StreetName": "Main",
       "ModificationTimestamp": "2020-04-02T02:02:02.02Z",
       "ListingContractDate": "2020-04-02",
       "StandardStatus": "ActiveUnderContract",
       "AccessibilityFeatures": ["AccessibleApproachWithRamp", "AccessibleEntrance", "Visitable"]
-    }
+    },
     {
-    "ListingKey": "b2",
-    "BedroomsTotal": 5,
-    "ListPrice": 400000.00,
-    "StreetName": "Main",
-    "ModificationTimestamp": "2020-04-02T02:02:02.02Z",
-    "ListingContractDate": "2020-04-02",
-    "StandardStatus": "Active",
-    "AccessibilityFeatures": ["Visitable"]
-    }
+      "ListingKey": "b2",
+      "BedroomsTotal": 5,
+      "ListPrice": 400000.0,
+      "StreetName": "Main",
+      "ModificationTimestamp": "2020-04-02T02:02:02.02Z",
+      "ListingContractDate": "2020-04-02",
+      "StandardStatus": "Active",
+      "AccessibilityFeatures": ["Visitable"]
+    },
     {
-    "ListingKey": "c3",
-    "BedroomsTotal": 4,
-    "ListPrice": 300000.00,
-    "StreetName": "Oak",
-    "ModificationTimestamp": "2021-08-15T00:01:01.01.007Z",
-    "StandardStatus": "Active",
-    "AccessibilityFeatures": []
-    }
+      "ListingKey": "c3",
+      "BedroomsTotal": 4,
+      "ListPrice": 300000.0,
+      "StreetName": "Oak",
+      "ModificationTimestamp": "2021-08-15T00:01:01.007Z",
+      "StandardStatus": "Active",
+      "AccessibilityFeatures": []
+    },
     {
-    "ListingKey": "d4",
-    "BedroomsTotal": 5,
-    "ListPrice": 499999,
-    "StreetName": "7th",
-    "ModificationTimestamp": "2021-06-25T00:01:01.01.007Z",
-    "StandardStatus": "Active",
-    "AccessibilityFeatures": []
-    }
+      "ListingKey": "d4",
+      "BedroomsTotal": 5,
+      "ListPrice": 499999,
+      "StreetName": "7th",
+      "ModificationTimestamp": "2021-06-25T00:01:01.007Z",
+      "StandardStatus": "Active",
+      "AccessibilityFeatures": []
+    },
     {
-    "ListingKey": "e5",
-    "BedroomsTotal": 5,
-    "ListPrice": 489000,
-    "StreetName": "Maple",
-    "ModificationTimestamp": "2021-06-25T00:01:01.01.007Z",
-    "StandardStatus": "Active",
-    "AccessibilityFeatures": []
+      "ListingKey": "e5",
+      "BedroomsTotal": 5,
+      "ListPrice": 489000,
+      "StreetName": "Maple",
+      "ModificationTimestamp": "2021-06-25T00:01:01.007Z",
+      "StandardStatus": "Active",
+      "AccessibilityFeatures": []
     }
   ]
 }
-  
 ```
 
 <br />
 
-**Get the First Five Members**
+### Get the First Five Members
 ```
 GET https://api.reso.org/Member?$top=5&$skip=0
 HTTP/2 200 OK
@@ -1742,40 +1963,40 @@ HTTP/2 200 OK
 {
   "@odata.context": "https://api.reso.org/Member?$top=5&$skip=0",
   "value": [
-       {
+    {
       "MemberKey": "a1",
       "MemberStatus": "Active",
       "MemberFirstName": "Angela",
       "MemberLastName": "Adams",
-      "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
-    }
-     {
+      "ModificationTimestamp": "2021-08-21T00:01:01.007Z"
+    },
+    {
       "MemberKey": "b2",
       "MemberStatus": "Active",
       "MemberFirstName": "Betty",
       "MemberLastName": "Adams",
-      "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
-    }
+      "ModificationTimestamp": "2021-08-21T00:01:01.007Z"
+    },
     {
       "MemberKey": "c3",
       "MemberStatus": "Active",
       "MemberFirstName": "Henry",
       "MemberLastName": "Adams",
-      "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
-    }
+      "ModificationTimestamp": "2021-08-21T00:01:01.007Z"
+    },
     {
       "MemberKey": "d4",
       "MemberStatus": "Active",
       "MemberFirstName": "Kevin",
       "MemberLastName": "Adams",
-      "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
-    }
+      "ModificationTimestamp": "2021-08-21T00:01:01.007Z"
+    },
     {
       "MemberKey": "e5",
       "MemberStatus": "Active",
       "MemberFirstName": "Timothy",
       "MemberLastName": "Adams",
-      "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
+      "ModificationTimestamp": "2021-08-21T00:01:01.007Z"
     }
   ]
 }
@@ -1783,58 +2004,58 @@ HTTP/2 200 OK
 
 <br />
 
-**Get the Next Five Members**
+### Get the Next Five Members
 ```
-GET https://api.reso.org//Member?$top=5&$skip=5
+GET https://api.reso.org/Member?$top=5&$skip=5
 HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "GET https://api.reso.org//Member?$top=5&$skip=5",
+  "@odata.context": "https://api.reso.org/Member?$top=5&$skip=5",
   "value": [
-       {
+    {
       "MemberKey": "f6",
       "MemberStatus": "Active",
       "MemberFirstName": "James",
       "MemberLastName": "Smith",
-      "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
-    }
-     {
+      "ModificationTimestamp": "2021-08-21T00:01:01.007Z"
+    },
+    {
       "MemberKey": "g7",
       "MemberStatus": "Active",
       "MemberFirstName": "Adam",
       "MemberLastName": "Smith",
-      "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
-    }
+      "ModificationTimestamp": "2021-08-21T00:01:01.007Z"
+    },
     {
       "MemberKey": "h8",
       "MemberStatus": "Active",
       "MemberFirstName": "Jennifer",
       "MemberLastName": "Smith",
-      "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
-    }
+      "ModificationTimestamp": "2021-08-21T00:01:01.007Z"
+    },
     {
       "MemberKey": "i9",
       "MemberStatus": "Active",
       "MemberFirstName": "Kevin",
       "MemberLastName": "Smith",
-      "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
-    }
+      "ModificationTimestamp": "2021-08-21T00:01:01.007Z"
+    },
     {
       "MemberKey": "j10",
       "MemberStatus": "Active",
       "MemberFirstName": "Theresa",
       "MemberLastName": "Smith",
-      "ModificationTimestamp": "2021-08-21T00:01:01.01.007Z"
+      "ModificationTimestamp": "2021-08-21T00:01:01.007Z"
     }
   ]
 }
 ```
-_**Note:** The implementation of $top and $orderby is defined by the server and may restrict what values may be used in either option. A compliant client SHOULD use the $orderby query to sustain consistency between requests, however a compliant server is not required to guarantee consistent results between requests._
+_**Note:** The implementation of `$top` and `$orderby` is defined by the server and may restrict what values may be used in either option. A compliant client SHOULD use the `$orderby` query to maintain consistency between requests, however a compliant server is not required to guarantee consistent results between requests._
 
 <br />
 
-**Get Properties with a Listing Price of Less than $300K**
+### Get Properties with a Listing Price of Less than $300K
 ```
 GET https://api.reso.org/Property?$filter=ListPrice lt 300000
 HTTP/2 200 OK
@@ -1846,7 +2067,7 @@ HTTP/2 200 OK
     {
       "ListingKey": "a1",
       "BedroomsTotal": 5,
-      "ListPrice": 100000.00,
+      "ListPrice": 100000.0,
       "StreetName": "Main",
       "ModificationTimestamp": "2020-04-02T02:02:02.02Z",
       "ListingContractDate": "2020-04-02",
@@ -1859,7 +2080,7 @@ HTTP/2 200 OK
 
 <br />
 
-**Get Properties with a Price Range of $250k to $500k**
+### Get Properties with a Price Range of $250k to $500k
 ```
 GET https://api.reso.org/Property?$filter=ListPrice gt 250000 and ListPrice lt 500000
 HTTP/2 200 OK
@@ -1871,9 +2092,9 @@ HTTP/2 200 OK
     {
       "ListingKey": "b2",
       "BedroomsTotal": 4,
-      "ListPrice": 300000.00,
+      "ListPrice": 300000.0,
       "StreetName": "Oak",
-      "ModificationTimestamp": "2021-08-15T00:01:01.01.007Z",
+      "ModificationTimestamp": "2021-08-15T00:01:01.007Z",
       "StandardStatus": "Active",
       "AccessibilityFeatures": []
     }
@@ -1883,7 +2104,7 @@ HTTP/2 200 OK
 
 <br />
 
-**Select Specific Field Values**
+### Select Specific Field Values
 ```
 GET https://api.reso.org/Member?$select=MemberLastName,MemberFirstName,MemberMlsId
 HTTP/2 200 OK
@@ -1904,7 +2125,7 @@ _Note: All names in the `$select` option are case-sensitive to match the names o
 
 <br />
 
-**Get Most Recent ListingKey and ModificationTimestamp in Descending Order**
+### Get Most Recent ListingKey and ModificationTimestamp in Descending Order
 ```
 GET https://api.reso.org/Property?$select=ListingKey,ModificationTimestamp&$orderby=ModificationTimestamp desc
 HTTP/2 200 OK
@@ -1915,8 +2136,8 @@ HTTP/2 200 OK
   "value": [
     {
       "ListingKey": "b2",
-      "ModificationTimestamp": "2021-08-15T00:01:01.01.007Z"
-    }
+      "ModificationTimestamp": "2021-08-15T00:01:01.007Z"
+    },
     {
       "ListingKey": "a1",
       "ModificationTimestamp": "2020-04-02T02:02:02.02Z"
@@ -1927,7 +2148,7 @@ HTTP/2 200 OK
 
 <br />
 
-**Get a Single Property Record**
+### Get a Single Property Record
 ```
 GET https://api.reso.org/Property('a3')
 HTTP/2 200 OK
@@ -1939,17 +2160,17 @@ HTTP/2 200 OK
   "BedroomsTotal": 3,
   "ListPrice": 200000,
   "StreetName": "3rd",
-  "ModificationTimestamp": "2021-09-12T00:01:01.01.007Z",
+  "ModificationTimestamp": "2021-09-12T00:01:01.007Z",
   "StandardStatus": "Active",
   "AccessibilityFeatures": []
 }
 ```
-_**Note**: this is referred to as a ["Singleton Property"](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#_Toc38530395) in the OData specification. Notice how the return value of the item is located at the top level rathre than in a `value` array._
+_**Note**: this is referred to as a ["Singleton Property"](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#_Toc38530395) in the OData specification. Notice how the return value of the item is located at the top level rather than in a `value` array._
 
 
 <br />
 
-**Filter by Multiple Field Values**
+### Filter by Multiple Field Values
 ```
 GET https://api.reso.org/Member?$filter=MemberFirstName eq 'Joe' and MemberLastName eq 'Smith'
 HTTP/2 200 OK
@@ -1963,7 +2184,7 @@ HTTP/2 200 OK
       "MemberStatus": "Active",
       "MemberFirstName": "Joe",
       "MemberLastName": "Smith",
-      "ModificationTimestamp": "2020-02-21T00:01:01.01.007Z"
+      "ModificationTimestamp": "2020-02-21T00:01:01.007Z"
     }
   ]
 }
@@ -1986,7 +2207,7 @@ Servers MUST implement one of the following [OAuth2](https://oauth.net/2/) authe
 # Section 3: Certification
 
 ## 3.1 Purpose 
-The goal of the Web API 2.0.0 Core specification is to provide a common, stable set of authentication protocols and API functionality to meet the needs of the real estate industry, with the intent that the Core specification will rarely change going forward.
+The goal of the Web API 2.1.0 Core specification is to provide a common, stable set of authentication protocols and API functionality to meet the needs of the real estate industry, with the intent that the Core specification will rarely change going forward.
 
 Endorsements will be used to provide additional functionality to the Core specification in a modular manner and treated as separate specifications with their own dependencies, one of which may or may not be a dependency on Web API Core.
 
@@ -1996,9 +2217,9 @@ This section will focus exclusively on the Web API Core specification.
 The RESO Web API provides an open standard for a RESTful, JSON-based API that's centered around the RESO Data Dictionary, with the ability to support local extension. At its core, the RESO Web API standard is based on a subset of the OData specification from OASIS.
 
 The OData specification consists of the following:
-* Metadata format.
-* Query format and URL structure to support it.
-* Response format and type system. 
+* Metadata format
+* Query format and URL structure to support it
+* Response format and type system
 
 Each of these items MUST be valid with respect to OData for a Web API server to be considered compliant.
 
@@ -2023,9 +2244,9 @@ A graphical user interface is also available through popular and free Integrated
 ### Configuring the Test Client
 Configuration of the RESO Commander for Web API Certification involves providing a service endpoint, authentication, resource, and field information in a template that will be used during the automated testing process.
 
-A blank [Web API Core template](https://github.com/RESOStandards/web-api-commander/blob/main/sample-web-api-server.core.1.0.2.resoscript) may be found in the root of the RESO Commander project. 
+A blank [Web API Core template](https://github.com/RESOStandards/web-api-commander/blob/main/sample-web-api-server.core.2.0.0.resoscript) may be found in the root of the RESO Commander project. 
 
-There is also a [sample template](https://github.com/RESOStandards/web-api-commander/blob/main/src/test/resources/mock.web-api-server.core.1.0.2.resoscript) used internally for acceptance testing of the Web API testing tool. The sample template provides a useful reference when filling out RESOScript files. 
+There is also a [sample template](https://github.com/RESOStandards/web-api-commander/blob/main/src/test/resources/mock.web-api-server.core.2.0.0.resoscript) used internally for acceptance testing of the Web API testing tool. The sample template provides a useful reference when filling out RESOScript files. 
 
 Items marked as REQUIRED in the configuration file MUST be completed, but things like sample field values have already been provided and should be sufficient for testing. If not, they also may be changed.
 
@@ -2050,7 +2271,7 @@ For example, if a given server declares they support the RESO Property resource,
 Another aspect of semantic checking is ensuring that all models have keys so they can be indexed, meaning that a data request can be made to the server by key. This is a basic requirement for fetching data from a server.
 
 ### RESO Certification
-Certification of Web API servers consists mainly of ensuring that a core set of required query operations are supported in a manner adhering to the RESO and OData specifications, and that servers send the appropriate response for each query. These fields are preconfigured in a file, as mentioned in the [section on Configuration](#configuring-the-test-client), rather than sampled from the RESO Data Dictionary. 
+Certification of Web API servers consists mainly of ensuring that a core set of required query operations are supported in a manner adhering to the RESO and OData specifications, and that servers send the appropriate response for each query. These fields are pre-configured in a file, as mentioned in the [section on Configuration](#configuring-the-test-client), rather than sampled from the RESO Data Dictionary. 
 
 Data Dictionary resources, fields, and enumerations MUST be used in the configuration of the testing tool for RESO Certification.
 
@@ -2071,7 +2292,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id**| metadata-validation |
 | **Description** | Request and Validate Server Metadata |
 | **Sample Query** | ```GET https://api.reso.org/$metadata?$format=application/xml``` |
-| **Section** | [2.5.1](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#251-metadata-request) |
+| **Section** | [2.5.1](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#251-metadata-request) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L11-L23) |
 | **Notes** <img width=200px /> | See: [Metadata Validation](#metadata-validation) <img width=1000px /> |
 
@@ -2083,7 +2304,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | service-document |
 | **Description** | Request and validate OData service document |
 | **Sample Query** | ```GET https://api.reso.org/``` |
-| **Section** | [2.5.2](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#252-service-document-request) |
+| **Section** | [2.5.2](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#252-service-document-request) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L25-L31) |
 | **Notes** <img width=200px /> | See: [OData service document request](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Toc453752280) <img width=1000px /> |
 
@@ -2095,7 +2316,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | fetch-by-key |
 | **Description** | Allows Records to be retrieved by primary key. |
 | **Sample Query** | ```GET https://api.reso.org/Property('12345')?$select=ListingKey``` |
-| **Section** | [2.5.3](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#253-fetch-by-key) |
+| **Section** | [2.5.3](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#253-fetch-by-key) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L33-L41) |
 | **Notes** <img width=200px /> | Data Indexability by Key Requirement. <img width=1000px /> |
 
@@ -2107,7 +2328,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | select |
 | **Description** | `$select` allows fields to be requested on an individual basis as part of a query. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$select=ListingKey,BedroomsTotal``` |
-| **Section** | [2.5.4](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#254-select-operator) |
+| **Section** | [2.5.4](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#254-select-operator) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L43-L52) |
 | **Notes** <img width=200px /> | The `$select` list determines the "data shape" of the response for a given query. <img width=1000px /> |
 
@@ -2119,7 +2340,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | top |
 | **Description** | `$top` allows the client to request a specific number of records in a query. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5``` |
-| **Section** | [2.5.5](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#255-top-operator) |
+| **Section** | [2.5.5](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#255-top-operator) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L54-L64) |
 | **Notes** <img width=200px /> | _None_ <img width=1000px /> |
 
@@ -2128,10 +2349,10 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 ### `$count` Query Option
 | Item | Details |
 | -- | -- |
-| **Id** | top |
-| **Description** | The `$count` system query option with a value of `true` specifies that the total  |count of items within a collection matching the request be returned along with the result. |
+| **Id** | count |
+| **Description** | The `$count` system query option with a value of `true` specifies that the total count of items within a collection matching the request be returned along with the result. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=0&$count=true``` |
-| **Section** | [2.5.6](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#256-count-operator) |
+| **Section** | [2.5.6](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#256-count-operator) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L85-L93) |
 | **Notes** <img width=200px /> | _None_ <img width=1000px /> |
 
@@ -2140,10 +2361,10 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 ### `$skip` Query Option
 | Item | Details |
 | -- | -- |
-| **Id** | top |
-| **Description** | `$top` allows the client to request a specific number of records in a query. |
+| **Id** | skip |
+| **Description** | `$skip` requests the number of items in the collection to be skipped and not included in the result. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$skip=5``` |
-| **Section** | [2.5.7](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#257-skip-operator) |
+| **Section** | [2.5.7](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#257-skip-operator) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L66-L83) |
 | **Notes** <img width=200px /> | Use `$top` and `$skip` in conjunction to page. <img width=1000px /> |
 
@@ -2155,7 +2376,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | orderby-timestamp-asc |
 | **Description** | `$orderby` allows results to be returned in a specified order. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=20&$select=ListingKey,BedroomsTotal,ModificationTimestamp&$orderby=ModificationTimestamp asc``` |
-| **Section** | [2.5.8](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#258-orderby-operator) |
+| **Section** | [2.5.8](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#258-orderby-operator) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L419-L429) |
 | **Notes** <img width=200px /> | [More information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752361) <img width=1000px /> |
 
@@ -2167,7 +2388,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | orderby-timestamp-desc |
 | **Description** | `$orderby` allows results to be returned in a specified order. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=20&$select=ListingKey,BedroomsTotal,ModificationTimestamp&$orderby=ModificationTimestamp desc``` |
-| **Section** | [2.5.8](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#258-orderby-operator) |
+| **Section** | [2.5.8](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#258-orderby-operator) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L431-L441) |
 | **Notes** <img width=200px /> | [More information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752361) <img width=1000px /> |
 
@@ -2179,7 +2400,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | orderby-timestamp-asc-filter-int-gt |
 | **Description** | `$orderby` allows results to be returned in a specified order. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=20&$select=ListingKey,BedroomsTotal,ModificationTimestamp&$orderby=ModificationTimestamp asc&$filter=BedroomsTotal gt 3``` |
-| **Section** | [2.5.8](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#258-orderby-operator) |
+| **Section** | [2.5.8](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#258-orderby-operator) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L448-L458)  |
 | **Notes** <img width=200px /> | [More information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752361) <img width=1000px /> |
 
@@ -2191,7 +2412,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | orderby-timestamp-desc-filter-int-gt |
 | **Description** | `$orderby` allows results to be returned in a specified order. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=20&$select=ListingKey,BedroomsTotal,ModificationTimestamp&$orderby=ModificationTimestamp desc&$filter=BedroomsTotal gt 3``` |
-| **Section** | [2.5.8](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#258-orderby-operator) |
+| **Section** | [2.5.8](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#258-orderby-operator) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L460-L470) |
 | **Notes** <img width=200px /> | [More information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752361) <img width=1000px /> |
 
@@ -2203,7 +2424,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | filter-int-and |
 | **Description** | `$filter` with `and` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,BedroomsTotal&$filter=BedroomsTotal gt 3 and BedroomsTotal lt 10``` |
-| **Section** | [2.5.9.1](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#2591-odata-primitive-types) |
+| **Section** | [2.5.9.1](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2591-odata-primitive-types) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L99-L109) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.1.7](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
@@ -2215,7 +2436,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | filter-int-or |
 | **Description** | `$filter` with `or` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,BedroomsTotal&$filter=BedroomsTotal lt 10 or BedroomsTotal gt 3``` |
-| **Section** | [2.5.9.1](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#2591-odata-primitive-types) |
+| **Section** | [2.5.9.1](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2591-odata-primitive-types) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L111-L121) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.1.8](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
@@ -2227,7 +2448,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | filter-int-not |
 | **Description** | `$filter` with `not` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,BedroomsTotal&$filter=not (BedroomsTotal le -1)``` |
-| **Section** | [2.5.9.1](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#2591-odata-primitive-types) |
+| **Section** | [2.5.9.1](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2591-odata-primitive-types) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L123-L133) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.1.9](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
@@ -2239,7 +2460,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | filter-int-eq |
 | **Description** | `$filter` with `eq` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,BedroomsTotal&$filter=BedroomsTotal eq 3``` |
-| **Section** | [2.5.9.2](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#2592-equals) |
+| **Section** | [2.5.9.2](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2592-equals) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L135-L145) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.1.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
@@ -2251,7 +2472,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | filter-int-ne |
 | **Description** | `$filter` with `ne` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,BedroomsTotal&$filter=BedroomsTotal ne 3``` |
-| **Section** | [2.5.9.3](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#2593-not-equals) |
+| **Section** | [2.5.9.3](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2593-not-equals) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L147-L157) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.1.2](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
@@ -2263,7 +2484,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | filter-int-gt |
 | **Description** | `$filter` with `gt` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,BedroomsTotal&$filter=BedroomsTotal gt 3``` |
-| **Section** | [2.5.9.4](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#2594-greater-than) |
+| **Section** | [2.5.9.4](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2594-greater-than) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L159-L169) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.1.3](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
@@ -2275,7 +2496,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | filter-int-ge |
 | **Description** | `$filter` with `ge` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,BedroomsTotal&$filter=BedroomsTotal ge 3``` |
-| **Section** | [2.5.9.5](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#2595-greater-than-or-equal) |
+| **Section** | [2.5.9.5](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2595-greater-than-or-equal) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L171-L181) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.1.4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
@@ -2287,7 +2508,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | filter-int-lt |
 | **Description** | `$filter` with `lt` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,BedroomsTotal&$filter=BedroomsTotal lt 3``` |
-| **Section** | [2.5.9.6](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#2596-less-than) |
+| **Section** | [2.5.9.6](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2596-less-than) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L183-L193) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.1.5](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
@@ -2299,7 +2520,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | filter-int-le |
 | **Description** | `$filter` with `le` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,BedroomsTotal&$filter=BedroomsTotal le 3``` |
-| **Section** | [2.5.9.7](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#2597-less-than-or-equal) |
+| **Section** | [2.5.9.7](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2597-less-than-or-equal) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L195-L205) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.1.6](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
@@ -2311,7 +2532,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | filter-decimal-ne |
 | **Description** | `$filter` with `ne` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListPrice&$filter=ListPrice ne 0.00``` |
-| **Section** | [2.5.9.3](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#2593-not-equals) |
+| **Section** | [2.5.9.3](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2593-not-equals) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L212-L222) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.1.2](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
@@ -2323,7 +2544,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | filter-decimal-gt |
 | **Description** | `$filter` with `gt` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListPrice&$filter=ListPrice gt 0.00``` |
-| **Section** | [2.5.9.4](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#2594-greater-than) |
+| **Section** | [2.5.9.4](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2594-greater-than) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L224-L234) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.1.4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
@@ -2335,7 +2556,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | filter-decimal-ge |
 | **Description** | `$filter` with `ge` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListPrice&$filter=ListPrice ge 0.00``` |
-| **Section** | [2.5.9.5](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#2595-greater-than-or-equal) |
+| **Section** | [2.5.9.5](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2595-greater-than-or-equal) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L236-L246) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.1.5](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
@@ -2347,7 +2568,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | filter-decimal-lt |
 | **Description** | `$filter` with `lt` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListPrice&$filter=ListPrice lt 1234567.89``` |
-| **Section** | [2.5.9.6](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#2596-less-than) |
+| **Section** | [2.5.9.6](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2596-less-than) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L248-L258) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.1.3](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
@@ -2359,7 +2580,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | filter-decimal-le |
 | **Description** | `$filter` with `le` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListPrice&$filter=ListPrice le 1234567.89``` |
-| **Section** | [2.5.9.7](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#2597-less-than-or-equal) |
+| **Section** | [2.5.9.7](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2597-less-than-or-equal) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L260-L270) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.1.4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
@@ -2371,7 +2592,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | filter-date-eq |
 | **Description** | `$filter` [ISO 8601 date](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `eq` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListingContractDate&$filter=ListingContractDate eq 2019-12-31``` |
-| **Section** | [2.5.9.2](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#2592-equals) |
+| **Section** | [2.5.9.2](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2592-equals) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L277-L287) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.6.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
@@ -2383,7 +2604,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | filter-date-ne |
 | **Description** | `$filter` [ISO 8601 date](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `ne` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListingContractDate&$filter=ListingContractDate ne 2019-12-31``` |
-| **Section** | [2.5.9.3](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#2593-not-equals) |
+| **Section** | [2.5.9.3](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2593-not-equals) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L289-L299) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.6.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
@@ -2395,7 +2616,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | filter-date-gt |
 | **Description** | `$filter` [ISO 8601 date](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `gt` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListingContractDate&$filter=ListingContractDate gt 2019-12-31``` |
-| **Section** | [2.5.9.4](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#2594-greater-than) |
+| **Section** | [2.5.9.4](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2594-greater-than) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L301-L311) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.6.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
@@ -2407,7 +2628,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | filter-date-ge |
 | **Description** | `$filter` [ISO 8601 date](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD  format with `ge` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListingContractDate&$filter=ListingContractDate ge 2019-12-31``` |
-| **Section** | [2.5.9.5](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#2595-greater-than-or-equal) |
+| **Section** | [2.5.9.5](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2595-greater-than-or-equal) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L313-L323) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.6.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
@@ -2419,7 +2640,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | filter-date-lt |
 | **Description** | `$filter` [ISO 8601 date](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD  format with `lt` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListingContractDate&$filter=ListingContractDate lt 2019-12-31``` |
-| **Section** | [2.5.9.6](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#2596-less-than) |
+| **Section** | [2.5.9.6](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2596-less-than) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L325-L335) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.6.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
@@ -2431,7 +2652,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | filter-date-le |
 | **Description** | `$filter` [ISO 8601 date](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `le` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListingContractDate&$filter=ListingContractDate le 2019-12-31``` |
-| **Section** | [2.5.9.7](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#2597-less-than-or-equal) |
+| **Section** | [2.5.9.7](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2597-less-than-or-equal) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L337-L347) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.6.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
@@ -2443,7 +2664,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | filter-datetime-ne |
 | **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `ne` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ModificationTimestamp&$filter=ModificationTimestamp ne 2019-12-31T23:55:55-09:00``` |
-| **Section** | [2.5.9.3](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#2593-not-equals) |
+| **Section** | [2.5.9.3](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2593-not-equals) |
 | **Acceptance Test** | [Source]()  |
 | **Notes** <img width=200px /> | [See OData 5.1.1.6.11](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
@@ -2455,7 +2676,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | filter-datetime-gt |
 | **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `gt` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ModificationTimestamp&$filter=ModificationTimestamp gt 2019-12-31T23:55:55-09:00``` |
-| **Section** | [2.5.9.4](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#2594-greater-than) |
+| **Section** | [2.5.9.4](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2594-greater-than) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L354-L364) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.6.11](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
@@ -2467,7 +2688,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | filter-datetime-ge |
 | **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `ge` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ModificationTimestamp&$filter=ModificationTimestamp ge 2019-12-31T23:55:55-09:00``` |
-| **Section** | [2.5.9.5](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#2595-greater-than-or-equal) |
+| **Section** | [2.5.9.5](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2595-greater-than-or-equal) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L366-L376) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.6.11](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
@@ -2479,7 +2700,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | filter-datetime-lt |
 | **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `lt` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ModificationTimestamp&$filter=ModificationTimestamp lt 2020-12-31T23:55:55-09:00``` |
-| **Section** | [2.5.9.6](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#2596-less-than) |
+| **Section** | [2.5.9.6](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2596-less-than) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L378-L388) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.6.11](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
@@ -2491,7 +2712,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | filter-datetime-le |
 | **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `le` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ModificationTimestamp&$filter=ModificationTimestamp le 2020-12-31T23:55:55-09:00``` |
-| **Section** | [2.5.9.7](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#2597-less-than-or-equal) |
+| **Section** | [2.5.9.7](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2597-less-than-or-equal) |
 | **Acceptance Test** | [Source]() |
 | **Notes** <img width=200px /> | [See OData 5.1.1.6.11](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
@@ -2503,7 +2724,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | filter-datetime-ne-now |
 | **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `ne` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ModificationTimestamp&$filter=ModificationTimestamp ne 2019-12-31T23:55:55-09:00``` |
-| **Section** | [2.5.9.3](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#2593-not-equals) |
+| **Section** | [2.5.9.3](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2593-not-equals) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L402-L412) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.6.11](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
@@ -2516,7 +2737,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | filter-datetime-lt-now |
 | **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `le` logical operator and the OData `now()` function. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ModificationTimestamp&$filter=ModificationTimestamp lt now()``` |
-| **Section** | [2.5.9.6](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#2596-less-than) |
+| **Section** | [2.5.9.6](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2596-less-than) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L378-L388) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.8.9](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_now) <img width=1000px /> |
 
@@ -2528,7 +2749,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | filter-datetime-le-now |
 | **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `le` logical operator and the OData `now()` function. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ModificationTimestamp&$filter=ModificationTimestamp lt now()``` |
-| **Section** | [2.5.9.7](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#2597-less-than-or-equal) |
+| **Section** | [2.5.9.7](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2597-less-than-or-equal) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L390-L400) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.8.9](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_now) <img width=1000px /> |
 
@@ -2538,9 +2759,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | Item | Details |
 | -- | -- |
 | **Id** | filter-enum-single-has |
-| **Description**  | has` operator for `Edm.EnumType`. |
+| **Description**  | `has` operator for `Edm.EnumType`. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,PropertyType&$filter=PropertyType has PropertyEnums.PropertyType'Residential'``` |
-| **Section** | [2.5.9.8.1](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#25981-edmenumtype-enumerations) |
+| **Section** | [2.5.9.8.1](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#25981-edmenumtype-enumerations) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L477-L487) |
 | **Notes** <img width=200px /> | [More Information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752566) <img width=1000px /> |
 
@@ -2552,7 +2773,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | filter-enum-single-eq |
 | **Description**  | eq` operator for `Edm.EnumType`. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,PropertyType&$filter=PropertyType eq PropertyEnums.PropertyType'Residential'``` |
-| **Section** | [2.5.9.8.1](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#25981-edmenumtype-enumerations) |
+| **Section** | [2.5.9.8.1](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#25981-edmenumtype-enumerations) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L489-L497) |
 | **Notes** <img width=200px /> | [More Information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752566) <img width=1000px /> |
 
@@ -2564,7 +2785,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | filter-enum-single-ne |
 | **Description**  | `ne` operator for `Edm.EnumType`. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,PropertyType&$filter=PropertyType ne PropertyEnums.PropertyType'Residential'``` |
-| **Section** | [2.5.9.8.1](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#25981-edmenumtype-enumerations) |
+| **Section** | [2.5.9.8.1](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#25981-edmenumtype-enumerations) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L499-L506) |
 | **Notes** <img width=200px /> | [More Information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752566) <img width=1000px /> |
 
@@ -2576,7 +2797,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | filter-enum-multi-has |
 | **Description**  | `has` operator for `Edm.EnumType` and `IsFlags=true`. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,Appliances&$filter=Appliances has PropertyEnums.Appliances'Refrigerator'``` |
-| **Section** | [2.5.9.9.1](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#25991-odata-isflagstrue) |
+| **Section** | [2.5.9.9.1](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#25991-odata-isflagstrue) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L513-L523) |
 | **Notes** <img width=200px /> | [More Information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752566) <img width=1000px /> |
 
@@ -2586,9 +2807,9 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | Item | Details |
 | -- | -- |
 | **Id** | filter-enum-multi-has-and |
-| **Description**  | has` operator for `Edm.EnumType` and `IsFlags=true` with `and` logical operator. |
-| **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,Appliances&$filter=Appliances has PropertyEnums.Appliances'Refrigerator' and Appliances has PropertyEnums.Appliances'Stacked'``` 
-| **Section** | [2.5.9.9.1](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#25991-odata-isflagstrue) |
+| **Description**  | `has` operator for `Edm.EnumType` and `IsFlags=true` with `and` logical operator. |
+| **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,Appliances&$filter=Appliances has PropertyEnums.Appliances'Refrigerator' and Appliances has PropertyEnums.Appliances'Stacked'``` |
+| **Section** | [2.5.9.9.1](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#25991-odata-isflagstrue) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L525-L536) |
 | **Notes** <img width=200px /> | [More Information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752566) <img width=1000px /> |
 
@@ -2600,7 +2821,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | filter-coll-enum-any |
 | **Description**  | `any` lambda for `Collection(Edm.EnumType)`. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,Appliances&$filter=Appliances/any(enum:enum eq PropertyEnums.Appliances'Refrigerator')``` |
-| **Section** | [2.5.9.9.2](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#25992-collection-of-edmenumtype) |
+| **Section** | [2.5.9.9.2](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#25992-collection-of-edmenumtype) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L543-L554) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.10.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
@@ -2609,10 +2830,10 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 ### Filter Multiple Enumeration Using `all` Lambda Operator and OData `Collection(Edm.EnumType)`
 | Item | Details |
 | -- | -- |
-| **Id** | filter-coll-enum-any |
-| **Description**  | `any` lambda for `Collection(Edm.EnumType)`. |
-| **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,Appliances&$filter=Appliances/all(enum:enum eq PropertyEnums.Appliances'Refrigerator')` ``| 
-| **Section** | [2.5.9.9.2](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#25992-collection-of-edmenumtype) |
+| **Id** | filter-coll-enum-all |
+| **Description**  | `all` lambda for `Collection(Edm.EnumType)`. |
+| **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,Appliances&$filter=Appliances/all(enum:enum eq PropertyEnums.Appliances'Refrigerator')``` |
+| **Section** | [2.5.9.9.2](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#25992-collection-of-edmenumtype) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L556-L567) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.10.2](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
@@ -2624,7 +2845,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | response-code-400 |
 | **Description** | Issues query to trigger HTTP 400 response code. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$filter=BadField eq 'SoBad'``` |
-| **Section** | [2.6.1](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#261-http-response-codes) |
+| **Section** | [2.6.1](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#261-http-response-codes) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L575-L581) |
 | **Notes** <img width=200px /> | _None_ <img width=1000px /> |
 
@@ -2636,11 +2857,14 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Id** | response-code-404 |
 | **Description** | Issues query to trigger HTTP 404 response code. |
 | **Sample Query** | ```GET https://api.reso.org/ResourceNotFound``` |
-| **Section** | [2.6.1](https://github.com/RESOStandards/reso-transport-specifications/blob/rcp-037-web-api-core-endorsement-2.0.0-major/WEB-API-CORE.md#261-http-response-codes) |
+| **Section** | [2.6.1](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#261-http-response-codes) |
 | **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L583-L589) |
 | **Notes** <img width=200px /> | _None_ <img width=1000px /> |
 
 <br />
+
+### TODO: Add Items from Web API Core 2.1.0 GitHub Issue
+See: https://github.com/RESOStandards/reso-transport-specifications/issues/22
 
 # Section 4: Contributors
 
@@ -2652,22 +2876,24 @@ Thanks to the following contributors for their help with this project:
 | --- | --- |
 | Paul Stusiak | Falcon Technologies Corp. |
 | Sergio Del Rio | Templates for Business, Inc. |
-| Joshua Darnell | kurotek, LLC |
+| Joshua Darnell | RESO |
 | Cody Gustafson | FBS Data Systems |
 | Chris Lambrou | MetroMLS |
 | Scott Petronis | Onboard Informatics |
 | Matthew McGuire | CoreLogic |
-| Fred Larsen | UtahRealEstate.com
+| Fred Larsen | UtahRealEstate.com |
 | James McDaniel | UtahRealEstate.com |
 | Robert Gottesman | RESO |
 | Rob Larson | Larson Consulting, LLC |
-| Paul Hethmon | Corelogic |
+| Paul Hethmon | AMP Systems |
 | Rick Trevino | MetroList |
 | Pace Davis | Zillow Group |
 | Michael Watt | Zillow Group |
 | Geoff Rispin | Templates 4 Business, Inc. |
 | Maria Dalarcao | MLSListings, Inc. |
 | Jeremy Crawford | RESO |
+| Eric Finlay | Bridge Interactive |
+| Ryan Yates | Rapattoni |
 
 Many thanks to those who contributed to the Web API Core specification, including volunteers from the Transport workgroup. 
 
@@ -2687,21 +2913,14 @@ Please see the following references for more information regarding topics covere
 | Geospatial Support in OData | [Geospatial data support in OData · OData - the Best Way to REST](http://www.odata.org/blog/geospatial-data-support-in-odata/) |
 | HTTP/1.1 Protocol | [Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing](https://tools.ietf.org/html/rfc7230) <br /> [Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content](https://tools.ietf.org/html/rfc7231) <br /> [Hypertext Transfer Protocol (HTTP/1.1): Conditional Requests](https://tools.ietf.org/html/rfc7232) <br /> [Hypertext Transfer Protocol (HTTP/1.1): Range Requests](https://tools.ietf.org/html/rfc7233) <br /> [Hypertext Transfer Protocol (HTTP/1.1): Caching](https://tools.ietf.org/html/rfc7234) <br /> [Hypertext Transfer Protocol (HTTP/1.1): Authentication](https://tools.ietf.org/html/rfc7235) |
 | HTTP/2.0 Protocol | [Hypertext Transfer Protocol Version 2 (HTTP/2)](https://tools.ietf.org/html/rfc7540) <br /> [HPACK: Header Compression for HTTP/2](https://tools.ietf.org/html/rfc7541)  |
-| Transport Layer Security (TLS) (Encryption for HTTP support) | [The Transport Layer Security (TLS) Protocol Version 1.2](https://www.ietf.org/rfc/rfc5246.txt) <br /> [Recommendations fSecure Use of Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS)](https://tools.ietf.org/html/rfc7525) <br /> [OWASP TLS implementation guide](https://www.owasp.org/index.php/Transport_Layer_Protection_Cheat_Sheet) <br /> [SSL Labs TLS Deployment Best Practices](https://www.ssllabs.com/downloads/SSL_TLS_Deployment_Best_Practices.pdf) |
+| Transport Layer Security (TLS) (Encryption for HTTP support) | [The Transport Layer Security (TLS) Protocol Version 1.2](https://www.ietf.org/rfc/rfc5246.txt) <br /> [Recommendations for Secure Use of Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS)](https://tools.ietf.org/html/rfc7525) <br /> [OWASP TLS implementation guide](https://www.owasp.org/index.php/Transport_Layer_Protection_Cheat_Sheet) <br /> [SSL Labs TLS Deployment Best Practices](https://www.ssllabs.com/downloads/SSL_TLS_Deployment_Best_Practices.pdf) |
 
 <br />
 
 # Section 6: Appendices
 
-## Approved RCPs
-The following RCPs are included in Web API Core 2.0.0:
-* [RCP - WEBAPI-010 Add Update Functionality to Web API Specification](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2239399511)
-* [RCP - WEBAPI-011 Child Order Action](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2239401081)
-* [RCP - WEBAPI-013 Add Certification Rule Impact/Changes to Process](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2239399520)
-* [RCP - WEBAPI-016 Depreciate Bit Map Enumerations and Utilize Collections for Enumerations](https://reso.atlassian.net/wiki/display/RESOWebAPIRCP/RCP+-+WEBAPI-016+Depreciate+Bit+Map+Enumerations+and+Utilize+Collections+for+Enumerations)
-* [RCP - WEBAPI-017 Add The Internet Tracking Resource to RESO Web API v1.1 Specification](https://reso.atlassian.net/wiki/display/RESOWebAPIRCP/RCP+-+WEBAPI-017+Add+The+Internet+Tracking+Resource+to+RESO+Web+API+v1.1+Specification)
-* [RCP - WEBAPI-018 User Federation Best Practices](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2250178745/RCP+-+WEBAPI-018+User+Federation+Best+Practices)
-* [RCP - WebAPI-019 - Validation Expression in the WebAPI](https://reso.atlassian.net/wiki/display/RESOWebAPIRCP/RCP+WebAPI-019+-+Validation+Expression+in+the+WebAPI)
+## Related RCPs
+The following RCPs are included in Web API Core 2.1.0:
 * [RCP - WEBAPI-026 Change Default Certification Testing to Bearer Token](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2259388362/RCP+-++WEBAPI-026+Change+Default+Certification+Testing+to+Bearer+Token)
 * [RCP - WEBAPI-029 Revise Web API Certification Procedures](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275148134/RCP+-++WEBAPI-029+Revise+Web+API+Certification+Procedures)
 * [RCP - WEBAPI-031 Data Dictionary Representation in the Web API](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275149854/RCP+-+WEBAPI-031+Data+Dictionary+Representation+in+the+Web+API)
@@ -2709,6 +2928,8 @@ The following RCPs are included in Web API Core 2.0.0:
 <br />
 
 # Section 7: License
-This document is covered by the [RESO EULA](https://www.reso.org/eula/).
+This document is covered by the [RESO End User License Agreement (EULA)](https://www.reso.org/eula/).
+
+This End User License Agreement (the "EULA") is entered into by and between the Real Estate Standards Organization ("RESO") and the person or entity ("End User") that is downloading or otherwise obtaining the product associated with this EULA ("RESO Product"). This EULA governs End Users use of the RESO Product and End User agrees to the terms of this EULA by downloading or otherwise obtaining or using the RESO Product.
 
 Please [contact RESO](mailto:info@reso.org) if you have any questions.
