@@ -116,3 +116,38 @@ def test_lint_lookups_encodes_value_segment():
     assert ws.cell(row=2, column=1).hyperlink.target == f"{BASE}/lookups/Sewer/"
     assert ws.cell(row=2, column=2).hyperlink.target == f"{BASE}/lookups/Sewer/Public%20Sewer/"
     assert ws.cell(row=2, column=3).value == f"{BASE}/lookups/Sewer/Public%20Sewer/"
+
+
+# --- hyperlink font styling ----------------------------------------------------------------------
+
+
+def test_lint_fields_applies_blue_underline_font():
+    # Every linked cell (ResourceName, StandardName, WikiPageUrl) must carry the blue-underline
+    # hyperlink font so viewers render it as a visible link, not just a bare relationship.
+    ws = _make_sheet(
+        [["Property", "ListPrice", "stale"]],
+        title="Fields",
+        header=["ResourceName", "StandardName", "WikiPageUrl"],
+    )
+    stats = {k: 0 for k in ("rows", "resource_link", "field_link", "wiki_value", "wiki_link", "skipped")}
+    lint.lint_fields(ws, BASE, stats)
+    for col in (1, 2, 3):
+        cell = ws.cell(row=2, column=col)
+        assert cell.hyperlink is not None
+        assert cell.font.underline == "single"
+        assert cell.font.color is not None and cell.font.color.rgb == lint.HYPERLINK_COLOR
+
+
+def test_apply_hyperlink_font_preserves_other_attributes():
+    # Only color + underline change; name/size/bold are preserved (reconstruct-from-current).
+    from openpyxl.styles import Font
+
+    ws = _make_sheet([["x"]], header=["col"])
+    cell = ws.cell(row=2, column=1)
+    cell.font = Font(name="Calibri", size=13, bold=True, color="FF000000")
+    lint.apply_hyperlink_font(cell)
+    assert cell.font.name == "Calibri"
+    assert cell.font.size == 13
+    assert cell.font.bold is True
+    assert cell.font.underline == "single"
+    assert cell.font.color.rgb == lint.HYPERLINK_COLOR

@@ -38,6 +38,7 @@ from pathlib import Path
 from urllib.parse import quote
 
 from openpyxl import load_workbook
+from openpyxl.styles import Font
 from openpyxl.worksheet.hyperlink import Hyperlink
 
 
@@ -55,13 +56,34 @@ def header_indexes(ws) -> dict[str, int]:
     }
 
 
+# The canonical hyperlink font: blue + single underline, matching the sheet's existing linked cells.
+# Setting the hyperlink relationship alone leaves originally-plain cells clickable but rendered as
+# plain black text in Numbers / Google Sheets / Excel — they key the *visible* link styling off the
+# font, not the relationship — so the sheet looked partially unlinked. Styling every linked cell
+# makes them all render as visible links.
+HYPERLINK_COLOR = "FF0000FF"  # ARGB, opaque blue
+
+
+def apply_hyperlink_font(cell) -> None:
+    """Give a linked cell the blue-underline hyperlink font, preserving its other font attributes.
+    openpyxl Fonts are immutable, so reconstruct from the current one. Idempotent."""
+    f = cell.font
+    cell.font = Font(
+        name=f.name, size=f.size, bold=f.bold, italic=f.italic,
+        vertAlign=f.vertAlign, strike=f.strike, family=f.family, scheme=f.scheme,
+        color=HYPERLINK_COLOR, underline="single",
+    )
+
+
 def set_hyperlink(cell, target: str) -> None:
     cell.hyperlink = Hyperlink(ref=cell.coordinate, target=target)
+    apply_hyperlink_font(cell)
 
 
 def set_value_and_hyperlink(cell, value: str, target: str) -> None:
     cell.value = value
     cell.hyperlink = Hyperlink(ref=cell.coordinate, target=target)
+    apply_hyperlink_font(cell)
 
 
 def trim_whitespace(ws, stats: dict) -> None:
