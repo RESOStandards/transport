@@ -8,7 +8,7 @@
 | **Date Proposed** | April 2022 |
 | **Date Ratified** | December 2023 |
 | **Protocol** | HTTP |
-| **Dependencies** | OData 4.0 or 4.01<br />TLS 1.2+<br />OAuth 2 (Auth Token or Client Credentials) |
+| **Dependencies** | OData 4.0 or 4.01<br />TLS 1.2+<br />OAuth 2 (Bearer Token or Client Credentials) |
 | **Related Links** | [OASIS OData TC](https://www.oasis-open.org/committees/tc_home.php?wg_abbrev=odata) <br /> |
 
 The Web API Core 2.1.0 endorsement defines the primary functionality RESO Web API servers are expected to have in order to provide both replication and live query support.
@@ -147,7 +147,7 @@ All references to the OData specification contained within this document assume 
 
 Compatible server and client applications MUST support [OData XML Metadata](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html) for schema representation and MUST use the JSON response format for data requests.
 
-RESO Web API servers MUST conform to OData conventions with respect to metadata, query, and response formats as well as HTTP, TLS, and OAuth2 for application layer protocol, transport security, and authentication requirements.
+RESO Web API servers MUST conform to OData conventions with respect to metadata, query, and response formats as well as HTTP, TLS, and OAuth2 for application layer protocol, transport security, and authorization requirements.
 
 <br />
 
@@ -159,11 +159,11 @@ The OData specification is divided into three main sections:
 * [URL Conventions](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part2-url-conventions.html)
 * [Common Schema Definition Language (CSDL)](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part3-csdl.html)
 
-RESO provides an open source reference server in the [reso-tools](https://github.com/RESOStandards/reso-tools) repository, and additional [reference servers have been provided](https://www.reso.org/web-api-developer-reference-server/) by the community, certified with the RESO certification runner.
+RESO provides an open source reference server in the [reso-tools](https://github.com/RESOStandards/reso-tools) repository, and additional [reference servers have been provided](https://www.reso.org/web-api-developer-reference-server/) by the community, certified with RESO's open source testing tools.
 
 There is also reference material that should be helpful for developers implementing the Web API Core specification:
 * [Data Dictionary 1.7 Reference XML Metadata](https://github.com/RESOStandards/transport/blob/main/references/dd/edmx/dd-1.7-enum.xml)
-* [RESO Certification Runner](https://github.com/RESOStandards/reso-tools) – the open source tool that runs the Web API Core certification tests
+* [RESO Testing Tools](https://github.com/RESOStandards/reso-tools) – open source tools for Web API Core certification
 
 Please [contact RESO](mailto:dev@reso.org) if you have questions about the Web API Core specification or testing rules.
 
@@ -183,7 +183,7 @@ The following terminology is used within this specification:
 | **Payload** | The term "payload" generally refers to the JSON response returned by the server for a given request. The term is also used when creating or updating data, in which case the payload would be the data provided for create or update. |
 | **Schema** | A way of logically defining, grouping, organizing and structuring information about data so it may be understood by different systems. The schema defines the payload a given server is expected to support. |
 | **Authorization** | Authorization defines a set of protocols and processes for verifying that a given user has server access to one or more server resources. At the time of writing, the RESO Web API uses the OAuth2 Bearer Token and Client Credentials standards for authorization. |
-| **Bearer Token** | A type of authorization that provides simple token-based authentication. More information. |
+| **Bearer Token** | A type of authorization that provides simple token-based access. More information. |
 | **Client Credentials** | A type of authorization grant that uses a client_id and client_secret (essentially username and password) as an additional layer of security in order to provide a Bearer Token upon request. This method is more resilient against man-in-the-middle attacks than Bearer Tokens since there is an additional token request step involved, and tokens may be expired and refreshed programmatically using this approach. More information. |
 | **MUST** | The given item is an absolute requirement of the specification. A feature that the specification states MUST be implemented is required in an implementation in order to be considered compliant. If the data is available in the system AND the data is presented for search then it MUST be implemented in the manner described in the specification. See Notes (1), below. |
 | **SHOULD** | A feature that the specification states SHOULD be implemented is treated for compliance purposes as a feature that may be implemented. There may exist valid reasons in particular circumstances to ignore an item classified as SHOULD, but the full implications should be understood and the case carefully weighed before choosing not to implement the given feature.  See Notes (1), below. |
@@ -1585,7 +1585,7 @@ If the response was not successful the server MAY include an [error message](htt
 | 200 | OK | Returned by GET method when retrieving a record or records. If no records are found an empty result set is returned. |
 | 202 | Accepted | Returned by GET method to indicate that the server received the request but that it may take time to fulfill a response. |
 | 400 | Bad Request | Returned by GET method calls when the data fails validation and more detail on the error may be found in the body of the response. |
-| 403 | Forbidden | Returned when the selected Authentication mechanism is not successful. |
+| 403 | Forbidden | Returned when the selected authorization mechanism is not successful. |
 | 404 | Not Found | Returned when a GET cannot find a resource or collection. |
 | 413 | Request Entity Too Large | Returned at the discretion of the server. Used to indicate when the server cannot handle the complexity of the specific request. |
 | 415 | Unsupported Media | Returned when a media format requested is not supported by the system. |
@@ -2190,7 +2190,7 @@ _**Note**: Query strings MUST be URL encoded where appropriate by a compliant cl
 
 ## 2.9 Security
 
-Servers MUST implement one of the following [OAuth2](https://oauth.net/2/) authentication methods to be compliant with the RESO Web API specification:
+Servers MUST implement one of the following [OAuth2](https://oauth.net/2/) authorization methods to be compliant with the RESO Web API specification:
 
 * [Bearer Tokens](https://oauth.net/2/bearer-tokens/)
 * [Client Credentials](https://oauth.net/2/grant-types/client-credentials/)
@@ -2202,7 +2202,7 @@ Servers MUST implement one of the following [OAuth2](https://oauth.net/2/) authe
 # Section 3: Certification
 
 ## 3.1 Purpose 
-The goal of the Web API 2.1.0 Core specification is to provide a common, stable set of authentication protocols and API functionality to meet the needs of the real estate industry, with the intent that the Core specification will rarely change going forward.
+The goal of the Web API 2.1.0 Core specification is to provide a common, stable set of authorization protocols and API functionality to meet the needs of the real estate industry, with the intent that the Core specification will rarely change going forward.
 
 Endorsements will be used to provide additional functionality to the Core specification in a modular manner and treated as separate specifications with their own dependencies, one of which may or may not be a dependency on Web API Core.
 
@@ -2220,29 +2220,22 @@ Each of these items MUST be valid with respect to OData for a Web API server to 
 
 Additionally, there are RESO requirements beyond those of OData. For instance, Web API Servers MUST expose at least one Property, Member, Office, Media, or InternetTracking Data Dictionary resource in order to be certified. 
 
-There are also authentication requirements which, at the time of writing, are servers that MUST support OAuth2 Auth Tokens or Client Credentials.
+There are also authorization requirements which, at the time of writing, are servers that MUST support OAuth2 Bearer Tokens or Client Credentials.
 
 The Web API Core testing rules ensure that server metadata are compliant, the data types provided by the RESO Data Dictionary support a minimum set of query operations valid for their types, that the query and response format are correct, and that the results logically match the query that was being used.
 
 ## 3.3 Testing Framework
-RESO Web API Core certification is provided by the RESO certification runner, an open source testing tool maintained by RESO in the [reso-tools](https://github.com/RESOStandards/reso-tools) repository (the `reso-certification` package).
+RESO provides open source testing tools for Web API Core certification in the [reso-tools](https://github.com/RESOStandards/reso-tools) repository.
 
-The runner is a cross-platform application built on Node.js. It uses an OData client for requests, validates server metadata against the OASIS Entity Data Model (EDM) and EDMX schemas, and validates response payloads against JSON Schema generated from the server's own metadata.
+Certification validates a server against the OData standard on two levels: its metadata against the OASIS Entity Data Model (EDM) and EDMX schemas, and its response payloads against JSON Schema derived from the server's own declared metadata.
 
-Web API Core tests are defined declaratively, as data. Each test is a scenario definition executed by a single generic runner, and the full set of scenarios is published as the [Web API Core Scenario Catalog](#web-api-core-scenario-catalog) in Section 6, generated directly from those definitions so that the specification and the runner cannot drift.
-
-A command-line interface is the entry point for certification, self-assessment or a continuous integration server, such as GitHub Actions, Jenkins or CircleCI, to help prevent regressions in a RESO-certified codebase.
+The Web API Core tests are a fixed set of scenarios, published as the [Web API Core Scenario Catalog](#web-api-core-scenario-catalog) in Section 6. The catalog is the canonical list of what is tested, so the requirements and the tests remain in lockstep.
 
 ## 3.4 Testing Methodology
-### Configuring the Test Client
-The certification runner is configured with the service root URL of the server under test and OAuth2 credentials, and is invoked from the command line against that endpoint.
-
-Unlike earlier tooling, the resources, fields, and enumeration values used in the tests are not authored by hand in a template. The runner discovers them from the server's own metadata and sampled data at run time, as described under RESO Certification below, so configuration is limited to the endpoint, the credentials and the resource or resources to test.
-
-### Metadata Request Using RESO Standard Authentication
+### Metadata Request Using RESO Standard Authorization
 When testing begins, an HTTP request is made to an applicant's given service location with either OAuth2 [Bearer Tokens](https://oauth.net/2/bearer-tokens/) or [Client Credentials](https://oauth.net/2/grant-types/client-credentials/). 
 
-Both of these authentication strategies allow data consumption to be machine automated, so that no additional interaction from a user is necessary during the authentication process. The certification runner can therefore be used for automated testing. 
+Both of these authorization strategies allow data consumption to be machine automated, so that no additional interaction from a user is necessary during the authorization process. 
 
 The metadata request is expected to function according to the OData specification in terms of [request](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#_Toc31358863) and [response](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#_Toc31358882) headers and response formats. 
 
@@ -2255,21 +2248,21 @@ Metadata returned from a RESO Web API server are checked for XML validity as wel
 #### Semantic Checking
 After metadata syntax has been validated, declared data models are checked for correctness. 
 
-For example, if a given server declares they support the RESO Property resource, then the runner will look for an OData EntityType definition for Property. If the underlying data model is not found, metadata validation will fail with a diagnostic message to help users understand why a given error occurred. Once the model is found, its field and enumeration definitions will be checked for correctness as well.
+For example, if a given server declares they support the RESO Property resource, the metadata is checked for an OData EntityType definition for Property. If the underlying data model is not found, metadata validation fails with a diagnostic message to help users understand why a given error occurred. Once the model is found, its field and enumeration definitions are checked for correctness as well.
 
 Another aspect of semantic checking is ensuring that all models have keys so they can be indexed, meaning that a data request can be made to the server by key. This is a basic requirement for fetching data from a server.
 
 ### RESO Certification
 Certification of Web API servers consists mainly of ensuring that a core set of required query operations are supported in a manner adhering to the RESO and OData specifications, and that servers send the appropriate response for each query.
 
-Rather than being configured by hand, the fields, enumerations and values used in the tests are sampled from the server's own metadata and data at run time. For each data type, the runner selects a field to exercise, preferring RESO Data Dictionary standard fields over local extensions and ranking candidates by how densely they are populated so that the tests run against representative data. It then samples real values from the chosen field to build each query, retrying across candidate fields until it can form a query whose result is known in advance, so that an empty result is a genuine defect rather than an artifact of sparse data. When a prerequisite yields no usable sample, the scenarios that depend on it are skipped with a clear reason rather than failing. A total run-time budget bounds the whole run; if it is reached, the run stops and the remaining scenarios are reported as not tested rather than failed. Each run produces a machine-readable report and a detailed report recording the outcome of every scenario.
+Rather than being configured by hand, the fields, enumerations and values used in the tests are discovered from the server's own metadata and sampled from its data. For each data type, a field is selected to exercise, preferring RESO Data Dictionary standard fields over local extensions and ranking candidates by how densely they are populated so that the tests run against representative data. Real values are then sampled from the chosen field to build each query, so that the result is known in advance and an empty result is a genuine defect rather than an artifact of sparse data. When a prerequisite yields no usable sample, the scenarios that depend on it are reported as not tested rather than failed.
 
 In addition to comparison operators, such as greater than and less than for types like Integers and Timestamps, the tests exercise OData query operators such as `$select`, which allows the consumer to specify the list of fields returned in the payload, and `$top`, which allows the consumer to specify the size of the result set. These are outlined in the next section.
 
 ## 3.5 Web API Core Testing Queries
 The following queries are used during Web API Core testing. 
 
-Each item links to its entry in the [Web API Core Scenario Catalog](#web-api-core-scenario-catalog) in Section 6, generated from the certification runner's scenario definitions.
+Each item links to its entry in the [Web API Core Scenario Catalog](#web-api-core-scenario-catalog) in Section 6, generated from the certification scenario definitions.
 
 Sample queries assume that `https://api.reso.org/` is being used as the OData service root.
 
@@ -3000,7 +2993,7 @@ Please see the following references for more information regarding topics covere
 | HTTP/2.0 Protocol | [Hypertext Transfer Protocol Version 2 (HTTP/2)](https://tools.ietf.org/html/rfc7540) <br /> [HPACK: Header Compression for HTTP/2](https://tools.ietf.org/html/rfc7541)  |
 | Transport Layer Security (TLS) (Encryption for HTTP support) | [The Transport Layer Security (TLS) Protocol Version 1.2](https://www.ietf.org/rfc/rfc5246.txt) <br /> [Recommendations for Secure Use of Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS)](https://tools.ietf.org/html/rfc7525) <br /> [OWASP TLS implementation guide](https://www.owasp.org/index.php/Transport_Layer_Protection_Cheat_Sheet) <br /> [SSL Labs TLS Deployment Best Practices](https://www.ssllabs.com/downloads/SSL_TLS_Deployment_Best_Practices.pdf) |
 | RESO Data Dictionary | [RESO Data Dictionary reference](https://dd.reso.org/) |
-| RESO Certification Runner and Reference Server | [reso-tools](https://github.com/RESOStandards/reso-tools) |
+| RESO Testing Tools and Reference Server | [reso-tools](https://github.com/RESOStandards/reso-tools) |
 
 <br />
 
@@ -3016,7 +3009,7 @@ The following RCPs are included in Web API Core 2.1.0:
 
 ## Web API Core Scenario Catalog
 
-This catalog is generated from the RESO certification tool's scenario definitions and is the canonical list of Web API Core test scenarios. Each Testing Query in Section 3.5 links to its entry here by a stable `scenario-<id>` anchor. It is generated – do not edit by hand; regenerate when the scenario set changes.
+This catalog is the canonical list of Web API Core test scenarios. Each Testing Query in Section 3.5 links to its entry here by a stable `scenario-<id>` anchor.
 
 ### Structural
 
