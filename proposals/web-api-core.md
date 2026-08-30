@@ -264,7 +264,9 @@ The hostname of the URL is arbitrary and no naming convention is required.
 
 The following example protocol and hostname are used in the examples in this document. HTTPS is required.
 
-```https://api.reso.org```
+```
+https://api.reso.org
+```
 
 <br />
 
@@ -709,9 +711,9 @@ HTTP/2 200 OK
 
  RESO Web API Core servers MUST support the `$skip` operator but providers are allowed to decide for themselves how many records they want to allow skipping over.
 
- <br />
+<br />
 
- ### 2.5.8 `$orderby` Operator
+### 2.5.8 `$orderby` Operator
 
  The [`$orderby` system query option](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_SystemQueryOptionorderby) allows clients to request resources in a particular order.
 
