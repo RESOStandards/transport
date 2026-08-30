@@ -2288,7 +2288,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | Request and Validate Server Metadata |
 | **Sample Query** | ```GET https://api.reso.org/$metadata?$format=application/xml``` |
 | **Section** | [2.5.1](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#251-metadata-request) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L11-L23) |
+| **Acceptance Test** | [Source](#scenario-metadata-validation) |
 | **Notes** <img width=200px /> | See: [Metadata Validation](#metadata-validation) <img width=1000px /> |
 
 <br />
@@ -2300,7 +2300,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | Request and validate OData service document |
 | **Sample Query** | ```GET https://api.reso.org/``` |
 | **Section** | [2.5.2](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#252-service-document-request) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L25-L31) |
+| **Acceptance Test** | [Source](#scenario-service-document) |
 | **Notes** <img width=200px /> | See: [OData service document request](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Toc453752280) <img width=1000px /> |
 
 <br />
@@ -2312,7 +2312,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | Allows Records to be retrieved by primary key. |
 | **Sample Query** | ```GET https://api.reso.org/Property('12345')?$select=ListingKey``` |
 | **Section** | [2.5.3](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#253-fetch-by-key) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L33-L41) |
+| **Acceptance Test** | [Source](#scenario-fetch-by-key) |
 | **Notes** <img width=200px /> | Data Indexability by Key Requirement. <img width=1000px /> |
 
 <br />
@@ -2324,7 +2324,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | `$select` allows fields to be requested on an individual basis as part of a query. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$select=ListingKey,BedroomsTotal``` |
 | **Section** | [2.5.4](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#254-select-operator) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L43-L52) |
+| **Acceptance Test** | [Source](#scenario-select) |
 | **Notes** <img width=200px /> | The `$select` list determines the "data shape" of the response for a given query. <img width=1000px /> |
 
 <br />
@@ -2336,7 +2336,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | `$top` allows the client to request a specific number of records in a query. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5``` |
 | **Section** | [2.5.5](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#255-top-operator) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L54-L64) |
+| **Acceptance Test** | [Source](#scenario-top) |
 | **Notes** <img width=200px /> | _None_ <img width=1000px /> |
 
 <br />
@@ -2348,7 +2348,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | The `$count` system query option with a value of `true` specifies that the total count of items within a collection matching the request be returned along with the result. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=0&$count=true``` |
 | **Section** | [2.5.6](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#256-count-operator) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L85-L93) |
+| **Acceptance Test** | [Source](#scenario-count) |
 | **Notes** <img width=200px /> | _None_ <img width=1000px /> |
 
 <br />
@@ -2360,7 +2360,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | `$skip` requests the number of items in the collection to be skipped and not included in the result. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$skip=5``` |
 | **Section** | [2.5.7](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#257-skip-operator) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L66-L83) |
+| **Acceptance Test** | [Source](#scenario-skip) |
 | **Notes** <img width=200px /> | Use `$top` and `$skip` in conjunction to page. <img width=1000px /> |
 
 <br />
@@ -2372,7 +2372,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | `$orderby` allows results to be returned in a specified order. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=20&$select=ListingKey,BedroomsTotal,ModificationTimestamp&$orderby=ModificationTimestamp asc``` |
 | **Section** | [2.5.8](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#258-orderby-operator) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L419-L429) |
+| **Acceptance Test** | [Source](#scenario-orderby-timestamp-asc) |
 | **Notes** <img width=200px /> | [More information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752361) <img width=1000px /> |
 
 <br />
@@ -2384,7 +2384,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | `$orderby` allows results to be returned in a specified order. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=20&$select=ListingKey,BedroomsTotal,ModificationTimestamp&$orderby=ModificationTimestamp desc``` |
 | **Section** | [2.5.8](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#258-orderby-operator) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L431-L441) |
+| **Acceptance Test** | [Source](#scenario-orderby-timestamp-desc) |
 | **Notes** <img width=200px /> | [More information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752361) <img width=1000px /> |
 
 <br />
@@ -2396,7 +2396,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | `$orderby` allows results to be returned in a specified order. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=20&$select=ListingKey,BedroomsTotal,ModificationTimestamp&$orderby=ModificationTimestamp asc&$filter=BedroomsTotal gt 3``` |
 | **Section** | [2.5.8](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#258-orderby-operator) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L448-L458)  |
+| **Acceptance Test** | [Source](#scenario-orderby-timestamp-asc-filter-int-gt)  |
 | **Notes** <img width=200px /> | [More information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752361) <img width=1000px /> |
 
 <br />
@@ -2408,7 +2408,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | `$orderby` allows results to be returned in a specified order. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=20&$select=ListingKey,BedroomsTotal,ModificationTimestamp&$orderby=ModificationTimestamp desc&$filter=BedroomsTotal gt 3``` |
 | **Section** | [2.5.8](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#258-orderby-operator) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L460-L470) |
+| **Acceptance Test** | [Source](#scenario-orderby-timestamp-desc-filter-int-gt) |
 | **Notes** <img width=200px /> | [More information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752361) <img width=1000px /> |
 
 <br />
@@ -2420,7 +2420,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | `$filter` with `and` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,BedroomsTotal&$filter=BedroomsTotal gt 3 and BedroomsTotal lt 10``` |
 | **Section** | [2.5.9.1](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2591-odata-primitive-types) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L99-L109) |
+| **Acceptance Test** | [Source](#scenario-filter-int-and) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.1.7](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
 <br />
@@ -2432,7 +2432,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | `$filter` with `or` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,BedroomsTotal&$filter=BedroomsTotal lt 10 or BedroomsTotal gt 3``` |
 | **Section** | [2.5.9.1](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2591-odata-primitive-types) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L111-L121) |
+| **Acceptance Test** | [Source](#scenario-filter-int-or) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.1.8](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
 <br />
@@ -2444,7 +2444,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | `$filter` with `not` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,BedroomsTotal&$filter=not (BedroomsTotal le -1)``` |
 | **Section** | [2.5.9.1](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2591-odata-primitive-types) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L123-L133) |
+| **Acceptance Test** | [Source](#scenario-filter-int-not) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.1.9](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
 <br />
@@ -2456,7 +2456,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | `$filter` with `eq` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,BedroomsTotal&$filter=BedroomsTotal eq 3``` |
 | **Section** | [2.5.9.2](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2592-equals) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L135-L145) |
+| **Acceptance Test** | [Source](#scenario-filter-int-eq) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.1.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
 <br />
@@ -2468,7 +2468,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | `$filter` with `ne` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,BedroomsTotal&$filter=BedroomsTotal ne 3``` |
 | **Section** | [2.5.9.3](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2593-not-equals) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L147-L157) |
+| **Acceptance Test** | [Source](#scenario-filter-int-ne) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.1.2](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
 <br />
@@ -2480,7 +2480,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | `$filter` with `gt` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,BedroomsTotal&$filter=BedroomsTotal gt 3``` |
 | **Section** | [2.5.9.4](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2594-greater-than) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L159-L169) |
+| **Acceptance Test** | [Source](#scenario-filter-int-gt) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.1.3](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
 <br />
@@ -2492,7 +2492,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | `$filter` with `ge` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,BedroomsTotal&$filter=BedroomsTotal ge 3``` |
 | **Section** | [2.5.9.5](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2595-greater-than-or-equal) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L171-L181) |
+| **Acceptance Test** | [Source](#scenario-filter-int-ge) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.1.4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
 <br />
@@ -2504,7 +2504,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | `$filter` with `lt` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,BedroomsTotal&$filter=BedroomsTotal lt 3``` |
 | **Section** | [2.5.9.6](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2596-less-than) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L183-L193) |
+| **Acceptance Test** | [Source](#scenario-filter-int-lt) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.1.5](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
 <br />
@@ -2516,7 +2516,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | `$filter` with `le` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,BedroomsTotal&$filter=BedroomsTotal le 3``` |
 | **Section** | [2.5.9.7](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2597-less-than-or-equal) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L195-L205) |
+| **Acceptance Test** | [Source](#scenario-filter-int-le) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.1.6](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
 <br />
@@ -2528,7 +2528,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | `$filter` with `ne` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListPrice&$filter=ListPrice ne 0.00``` |
 | **Section** | [2.5.9.3](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2593-not-equals) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L212-L222) |
+| **Acceptance Test** | [Source](#scenario-filter-decimal-ne) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.1.2](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
 <br />
@@ -2540,7 +2540,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | `$filter` with `gt` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListPrice&$filter=ListPrice gt 0.00``` |
 | **Section** | [2.5.9.4](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2594-greater-than) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L224-L234) |
+| **Acceptance Test** | [Source](#scenario-filter-decimal-gt) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.1.4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
 <br />
@@ -2552,7 +2552,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | `$filter` with `ge` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListPrice&$filter=ListPrice ge 0.00``` |
 | **Section** | [2.5.9.5](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2595-greater-than-or-equal) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L236-L246) |
+| **Acceptance Test** | [Source](#scenario-filter-decimal-ge) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.1.5](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
 <br />
@@ -2564,7 +2564,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | `$filter` with `lt` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListPrice&$filter=ListPrice lt 1234567.89``` |
 | **Section** | [2.5.9.6](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2596-less-than) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L248-L258) |
+| **Acceptance Test** | [Source](#scenario-filter-decimal-lt) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.1.3](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
 <br />
@@ -2576,7 +2576,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | `$filter` with `le` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListPrice&$filter=ListPrice le 1234567.89``` |
 | **Section** | [2.5.9.7](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2597-less-than-or-equal) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L260-L270) |
+| **Acceptance Test** | [Source](#scenario-filter-decimal-le) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.1.4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
 <br />
@@ -2588,7 +2588,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | `$filter` [ISO 8601 date](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `eq` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListingContractDate&$filter=ListingContractDate eq 2019-12-31``` |
 | **Section** | [2.5.9.2](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2592-equals) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L277-L287) |
+| **Acceptance Test** | [Source](#scenario-filter-date-eq) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.6.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
 <br />
@@ -2600,7 +2600,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | `$filter` [ISO 8601 date](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `ne` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListingContractDate&$filter=ListingContractDate ne 2019-12-31``` |
 | **Section** | [2.5.9.3](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2593-not-equals) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L289-L299) |
+| **Acceptance Test** | [Source](#scenario-filter-date-ne) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.6.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
 <br />
@@ -2612,7 +2612,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | `$filter` [ISO 8601 date](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `gt` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListingContractDate&$filter=ListingContractDate gt 2019-12-31``` |
 | **Section** | [2.5.9.4](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2594-greater-than) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L301-L311) |
+| **Acceptance Test** | [Source](#scenario-filter-date-gt) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.6.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
 <br />
@@ -2624,7 +2624,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | `$filter` [ISO 8601 date](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD  format with `ge` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListingContractDate&$filter=ListingContractDate ge 2019-12-31``` |
 | **Section** | [2.5.9.5](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2595-greater-than-or-equal) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L313-L323) |
+| **Acceptance Test** | [Source](#scenario-filter-date-ge) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.6.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
 <br />
@@ -2636,7 +2636,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | `$filter` [ISO 8601 date](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD  format with `lt` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListingContractDate&$filter=ListingContractDate lt 2019-12-31``` |
 | **Section** | [2.5.9.6](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2596-less-than) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L325-L335) |
+| **Acceptance Test** | [Source](#scenario-filter-date-lt) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.6.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
 <br />
@@ -2648,7 +2648,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | `$filter` [ISO 8601 date](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `le` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListingContractDate&$filter=ListingContractDate le 2019-12-31``` |
 | **Section** | [2.5.9.7](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2597-less-than-or-equal) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L337-L347) |
+| **Acceptance Test** | [Source](#scenario-filter-date-le) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.6.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
 <br />
@@ -2660,7 +2660,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `ne` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ModificationTimestamp&$filter=ModificationTimestamp ne 2019-12-31T23:55:55-09:00``` |
 | **Section** | [2.5.9.3](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2593-not-equals) |
-| **Acceptance Test** | [Source]()  |
+| **Acceptance Test** | [Source](#scenario-filter-datetime-ne)  |
 | **Notes** <img width=200px /> | [See OData 5.1.1.6.11](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
 <br />
@@ -2672,7 +2672,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `gt` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ModificationTimestamp&$filter=ModificationTimestamp gt 2019-12-31T23:55:55-09:00``` |
 | **Section** | [2.5.9.4](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2594-greater-than) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L354-L364) |
+| **Acceptance Test** | [Source](#scenario-filter-datetime-gt) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.6.11](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
 <br />
@@ -2684,7 +2684,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `ge` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ModificationTimestamp&$filter=ModificationTimestamp ge 2019-12-31T23:55:55-09:00``` |
 | **Section** | [2.5.9.5](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2595-greater-than-or-equal) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L366-L376) |
+| **Acceptance Test** | [Source](#scenario-filter-datetime-ge) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.6.11](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
 <br />
@@ -2696,7 +2696,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `lt` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ModificationTimestamp&$filter=ModificationTimestamp lt 2020-12-31T23:55:55-09:00``` |
 | **Section** | [2.5.9.6](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2596-less-than) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L378-L388) |
+| **Acceptance Test** | [Source](#scenario-filter-datetime-lt) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.6.11](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
 <br />
@@ -2708,7 +2708,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `le` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ModificationTimestamp&$filter=ModificationTimestamp le 2020-12-31T23:55:55-09:00``` |
 | **Section** | [2.5.9.7](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2597-less-than-or-equal) |
-| **Acceptance Test** | [Source]() |
+| **Acceptance Test** | [Source](#scenario-filter-datetime-le) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.6.11](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
 <br />
@@ -2720,7 +2720,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `ne` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ModificationTimestamp&$filter=ModificationTimestamp ne 2019-12-31T23:55:55-09:00``` |
 | **Section** | [2.5.9.3](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2593-not-equals) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L402-L412) |
+| **Acceptance Test** | [Source](#scenario-filter-datetime-ne-now) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.6.11](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
 <br />
@@ -2733,7 +2733,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `le` logical operator and the OData `now()` function. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ModificationTimestamp&$filter=ModificationTimestamp lt now()``` |
 | **Section** | [2.5.9.6](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2596-less-than) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L378-L388) |
+| **Acceptance Test** | [Source](#scenario-filter-datetime-lt-now) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.8.9](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_now) <img width=1000px /> |
 
 <br />
@@ -2745,7 +2745,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `le` logical operator and the OData `now()` function. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ModificationTimestamp&$filter=ModificationTimestamp lt now()``` |
 | **Section** | [2.5.9.7](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#2597-less-than-or-equal) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L390-L400) |
+| **Acceptance Test** | [Source](#scenario-filter-datetime-le-now) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.8.9](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_now) <img width=1000px /> |
 
 <br />
@@ -2757,7 +2757,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description**  | `has` operator for `Edm.EnumType`. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,PropertyType&$filter=PropertyType has PropertyEnums.PropertyType'Residential'``` |
 | **Section** | [2.5.9.8.1](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#25981-edmenumtype-enumerations) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L477-L487) |
+| **Acceptance Test** | [Source](#scenario-filter-enum-single-has) |
 | **Notes** <img width=200px /> | [More Information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752566) <img width=1000px /> |
 
 <br />
@@ -2769,7 +2769,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description**  | eq` operator for `Edm.EnumType`. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,PropertyType&$filter=PropertyType eq PropertyEnums.PropertyType'Residential'``` |
 | **Section** | [2.5.9.8.1](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#25981-edmenumtype-enumerations) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L489-L497) |
+| **Acceptance Test** | [Source](#scenario-filter-enum-single-eq) |
 | **Notes** <img width=200px /> | [More Information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752566) <img width=1000px /> |
 
 <br />
@@ -2777,11 +2777,11 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 ### Filter Single Enumeration Using `ne` and OData `Edm.EnumType`
 | Item | Details |
 | -- | -- |
-| **Id** | filter-enum-single-ne |
+| **Id** | filter-enum-ne |
 | **Description**  | `ne` operator for `Edm.EnumType`. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,PropertyType&$filter=PropertyType ne PropertyEnums.PropertyType'Residential'``` |
 | **Section** | [2.5.9.8.1](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#25981-edmenumtype-enumerations) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L499-L506) |
+| **Acceptance Test** | [Source](#scenario-filter-enum-ne) |
 | **Notes** <img width=200px /> | [More Information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752566) <img width=1000px /> |
 
 <br />
@@ -2793,7 +2793,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description**  | `has` operator for `Edm.EnumType` and `IsFlags=true`. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,Appliances&$filter=Appliances has PropertyEnums.Appliances'Refrigerator'``` |
 | **Section** | [2.5.9.9.1](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#25991-odata-isflagstrue) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L513-L523) |
+| **Acceptance Test** | [Source](#scenario-filter-enum-multi-has) |
 | **Notes** <img width=200px /> | [More Information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752566) <img width=1000px /> |
 
 <br />
@@ -2805,7 +2805,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description**  | `has` operator for `Edm.EnumType` and `IsFlags=true` with `and` logical operator. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,Appliances&$filter=Appliances has PropertyEnums.Appliances'Refrigerator' and Appliances has PropertyEnums.Appliances'Stacked'``` |
 | **Section** | [2.5.9.9.1](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#25991-odata-isflagstrue) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L525-L536) |
+| **Acceptance Test** | [Source](#scenario-filter-enum-multi-has-and) |
 | **Notes** <img width=200px /> | [More Information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752566) <img width=1000px /> |
 
 <br />
@@ -2817,7 +2817,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description**  | `any` lambda for `Collection(Edm.EnumType)`. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,Appliances&$filter=Appliances/any(enum:enum eq PropertyEnums.Appliances'Refrigerator')``` |
 | **Section** | [2.5.9.9.2](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#25992-collection-of-edmenumtype) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L543-L554) |
+| **Acceptance Test** | [Source](#scenario-filter-coll-enum-any) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.10.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
 <br />
@@ -2829,7 +2829,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description**  | `all` lambda for `Collection(Edm.EnumType)`. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,Appliances&$filter=Appliances/all(enum:enum eq PropertyEnums.Appliances'Refrigerator')``` |
 | **Section** | [2.5.9.9.2](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#25992-collection-of-edmenumtype) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L556-L567) |
+| **Acceptance Test** | [Source](#scenario-filter-coll-enum-all) |
 | **Notes** <img width=200px /> | [See OData 5.1.1.10.2](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
 
 <br />
@@ -2841,7 +2841,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | Issues query to trigger HTTP 400 response code. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$filter=BadField eq 'SoBad'``` |
 | **Section** | [2.6.1](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#261-http-response-codes) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L575-L581) |
+| **Acceptance Test** | [Source](#scenario-response-code-400) |
 | **Notes** <img width=200px /> | _None_ <img width=1000px /> |
 
 <br />
@@ -2853,13 +2853,106 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Description** | Issues query to trigger HTTP 404 response code. |
 | **Sample Query** | ```GET https://api.reso.org/ResourceNotFound``` |
 | **Section** | [2.6.1](https://github.com/RESOStandards/reso-transport-specifications/blob/main/web-api-core.md#261-http-response-codes) |
-| **Acceptance Test** | [Source](https://github.com/RESOStandards/web-api-commander/blob/6ff35627926f6b25ce5a5ae737caa69967b3811d/src/main/java/org/reso/certification/features/web-api/web-api-server.core.feature#L583-L589) |
+| **Acceptance Test** | [Source](#scenario-response-code-404) |
 | **Notes** <img width=200px /> | _None_ <img width=1000px /> |
 
 <br />
 
-### TODO: Add Items from Web API Core 2.1.0 GitHub Issue
-See: https://github.com/RESOStandards/reso-transport-specifications/issues/22
+The following queries are new in Web API Core 2.1.0 (RCP-039).
+
+### `$expand` a Navigation Property
+| Item | Details |
+| -- | -- |
+| **Id** | expand |
+| **Description** | `$expand` a navigation property and validate the expanded data set against the EntityType advertised in the metadata. |
+| **Sample Query** | ```GET https://api.reso.org/Property?$expand=Media``` |
+| **Section** | [Support for Expanded Data Elements](#support-for-expanded-data-elements) |
+| **Acceptance Test** | [Source](#scenario-expand) |
+| **Notes** <img width=200px /> | The provider specifies at least one navigation property to test. Keys collected from the first request also drive a `GET /Property('XXXXX')/Media` request. New in 2.1.0. <img width=1000px /> |
+
+<br />
+
+### Lookup Resource Validation
+| Item | Details |
+| -- | -- |
+| **Id** | lookup-resource-validation |
+| **Description** | Fetch the Lookup Resource by `LookupName` and validate that the provider's declared LookupName and its sample values are present. Runs first among the string-enumeration tests. |
+| **Sample Query** | ```GET https://api.reso.org/Lookup?$filter=LookupName eq 'StandardStatus'``` |
+| **Section** | [String Comparison Operators for Single- and Multi-Valued Enumerations](#string-comparison-operators-for-single--and-multi-valued-enumerations) |
+| **Acceptance Test** | [Source](#scenario-lookup-resource-validation) |
+| **Notes** <img width=200px /> | If the LookupName or its sample values are absent from the Lookup Resource, the dependent string-enumeration and `in` tests are skipped. New in 2.1.0. <img width=1000px /> |
+
+<br />
+
+### Server-Driven Paging (`@odata.nextLink`)
+| Item | Details |
+| -- | -- |
+| **Id** | server-driven-paging |
+| **Description** | Providers MUST support server-driven paging using `@odata.nextLink`. A `$top=1` request MUST NOT return an `@odata.nextLink`, since the single record reaches the end of the set. |
+| **Sample Query** | ```GET https://api.reso.org/Property?$top=1``` |
+| **Section** | [Providers MUST Support Server-Driven Paging](#providers-must-support-server-driven-paging) |
+| **Acceptance Test** | [Source](#scenario-server-driven-paging) |
+| **Notes** <img width=200px /> | A `$count` confirms records exist first. The majority of `@odata.nextLink` testing is performed in the Payloads 2.0 Specification. New in 2.1.0. <img width=1000px /> |
+
+<br />
+
+### Filter String Enumeration Using `eq`
+| Item | Details |
+| -- | -- |
+| **Id** | filter-string-enum-single-eq |
+| **Description** | `$filter` `eq` on a string-backed single-valued enumeration (Lookup Resource). |
+| **Sample Query** | ```GET https://api.reso.org/Property?$filter=StandardStatus eq 'Active'``` |
+| **Section** | [String Comparison Operators for Single- and Multi-Valued Enumerations](#string-comparison-operators-for-single--and-multi-valued-enumerations) |
+| **Acceptance Test** | [Source](#scenario-filter-string-enum-single-eq) |
+| **Notes** <img width=200px /> | New in 2.1.0. <img width=1000px /> |
+
+<br />
+
+### Filter String Enumeration Using `ne`
+| Item | Details |
+| -- | -- |
+| **Id** | filter-string-enum-single-ne |
+| **Description** | `$filter` `ne` on a string-backed single-valued enumeration (Lookup Resource). |
+| **Sample Query** | ```GET https://api.reso.org/Property?$filter=StandardStatus ne 'Active'``` |
+| **Section** | [String Comparison Operators for Single- and Multi-Valued Enumerations](#string-comparison-operators-for-single--and-multi-valued-enumerations) |
+| **Acceptance Test** | [Source](#scenario-filter-string-enum-single-ne) |
+| **Notes** <img width=200px /> | New in 2.1.0. <img width=1000px /> |
+
+<br />
+
+### Filter String Enumeration Collection Using `any()`
+| Item | Details |
+| -- | -- |
+| **Id** | filter-string-enum-multi-any |
+| **Description** | `$filter` with the `any()` lambda over a string-backed multi-valued enumeration — returns records that contain at least one of the provided values. |
+| **Sample Query** | ```GET https://api.reso.org/Property?$filter=AccessibilityFeatures/any(enum:enum eq 'Accessible Entrance' or enum eq 'Visitable')``` |
+| **Section** | [String Comparison Operators for Single- and Multi-Valued Enumerations](#string-comparison-operators-for-single--and-multi-valued-enumerations) |
+| **Acceptance Test** | [Source](#scenario-filter-string-enum-multi-any) |
+| **Notes** <img width=200px /> | New in 2.1.0. <img width=1000px /> |
+
+<br />
+
+### Filter String Enumeration Collection Using `all()`
+| Item | Details |
+| -- | -- |
+| **Id** | filter-string-enum-multi-all |
+| **Description** | `$filter` with the `all()` lambda over a string-backed multi-valued enumeration — returns records whose values are only within the provided set (a subset); a record with an empty collection satisfies this vacuously. |
+| **Sample Query** | ```GET https://api.reso.org/Property?$filter=AccessibilityFeatures/all(enum:enum eq 'Accessible Entrance' or enum eq 'Visitable')``` |
+| **Section** | [String Comparison Operators for Single- and Multi-Valued Enumerations](#string-comparison-operators-for-single--and-multi-valued-enumerations) |
+| **Acceptance Test** | [Source](#scenario-filter-string-enum-multi-all) |
+| **Notes** <img width=200px /> | New in 2.1.0. <img width=1000px /> |
+
+<br />
+
+### Filter Single Enumeration Using the `in` Operator (OData 4.01)
+| Item | Details |
+| -- | -- |
+| **Id** | filter-string-enum-single-in |
+| **Description** | `$filter` with the OData 4.01 `in` operator on a single-valued enumeration — tests whether a field's value is within a set of values. |
+| **Sample Query** | ```GET https://api.reso.org/Property?$filter=StandardStatus in ('Active', 'Pending', 'Sold')``` |
+| **Section** | [String Comparison Operators for Single- and Multi-Valued Enumerations](#string-comparison-operators-for-single--and-multi-valued-enumerations) |
+| **Acceptance Test** | [Source](#scenario-filter-string-enum-single-in) |
+| **Notes** <img width=200px /> | Gated on the response advertising `OData-Version: 4.01`; skipped for OData 4.0-only servers. New in 2.1.0. <img width=1000px /> |
 
 # Section 4: Contributors
 
@@ -2919,6 +3012,133 @@ The following RCPs are included in Web API Core 2.1.0:
 * [RCP - WEBAPI-026 Change Default Certification Testing to Bearer Token](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2259388362/RCP+-++WEBAPI-026+Change+Default+Certification+Testing+to+Bearer+Token)
 * [RCP - WEBAPI-029 Revise Web API Certification Procedures](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275148134/RCP+-++WEBAPI-029+Revise+Web+API+Certification+Procedures)
 * [RCP - WEBAPI-031 Data Dictionary Representation in the Web API](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275149854/RCP+-+WEBAPI-031+Data+Dictionary+Representation+in+the+Web+API)
+
+<br />
+
+## Web API Core Scenario Catalog
+
+This catalog is generated from the RESO certification tool's scenario definitions and is the canonical list of Web API Core test scenarios. Each Testing Query in Section 3.5 links to its entry here by a stable `scenario-<id>` anchor. It is generated — do not edit by hand; regenerate when the scenario set changes.
+
+### Structural
+
+| Scenario | Version | What it checks |
+| --- | --- | --- |
+| <a id="scenario-metadata-validation"></a>**`metadata-validation`** — Validate server metadata | 2.0.0 · Required | Request and validate server `$metadata` (EDMX; XSD + semantic validation). |
+| <a id="scenario-service-document"></a>**`service-document`** — Service document request | 2.0.0 · Required | Request and validate the OData service document. |
+| <a id="scenario-fetch-by-key"></a>**`fetch-by-key`** — Fetch by key field | 2.0.0 · Required | Retrieve a single record by its key field. |
+| <a id="scenario-select"></a>**`select`** — $select query support | 2.0.0 · Required | `$select` returns only the requested fields. |
+| <a id="scenario-top"></a>**`top`** — $top query support | 2.0.0 · Required | `$top` limits the number of records returned. |
+| <a id="scenario-skip"></a>**`skip`** — $skip query support | 2.0.0 · Required | `$skip` offsets the result set. |
+| <a id="scenario-count"></a>**`count`** — $count query support | 2.0.0 · Required | `$count` returns the total record count. |
+
+### Filter (scalar comparisons)
+
+| Scenario | Version | What it checks |
+| --- | --- | --- |
+| <a id="scenario-filter-int-and"></a>**`filter-int-and`** — Integer: and | 2.0.0 · Required | `$filter` on an integer field: `gt`, compound `and` with `lt`. |
+| <a id="scenario-filter-int-or"></a>**`filter-int-or`** — Integer: or | 2.0.0 · Required | `$filter` on an integer field: `gt`, compound `or` with `lt`. |
+| <a id="scenario-filter-int-not"></a>**`filter-int-not`** — Integer: not() | 2.0.0 · Required | `$filter` on an integer field: `le`, wrapped in `not()`. |
+| <a id="scenario-filter-int-eq"></a>**`filter-int-eq`** — Integer: eq | 2.0.0 · Required | `$filter` on an integer field: `eq`. |
+| <a id="scenario-filter-int-ne"></a>**`filter-int-ne`** — Integer: ne | 2.0.0 · Required | `$filter` on an integer field: `ne`. |
+| <a id="scenario-filter-int-gt"></a>**`filter-int-gt`** — Integer: gt | 2.0.0 · Required | `$filter` on an integer field: `gt`. |
+| <a id="scenario-filter-int-ge"></a>**`filter-int-ge`** — Integer: ge | 2.0.0 · Required | `$filter` on an integer field: `ge`. |
+| <a id="scenario-filter-int-lt"></a>**`filter-int-lt`** — Integer: lt | 2.0.0 · Required | `$filter` on an integer field: `lt`. |
+| <a id="scenario-filter-int-le"></a>**`filter-int-le`** — Integer: le | 2.0.0 · Required | `$filter` on an integer field: `le`. |
+| <a id="scenario-filter-decimal-ne"></a>**`filter-decimal-ne`** — Decimal: ne | 2.0.0 · Required | `$filter` on a decimal field: `ne`. |
+| <a id="scenario-filter-decimal-gt"></a>**`filter-decimal-gt`** — Decimal: gt | 2.0.0 · Required | `$filter` on a decimal field: `gt`. |
+| <a id="scenario-filter-decimal-ge"></a>**`filter-decimal-ge`** — Decimal: ge | 2.0.0 · Required | `$filter` on a decimal field: `ge`. |
+| <a id="scenario-filter-decimal-lt"></a>**`filter-decimal-lt`** — Decimal: lt | 2.0.0 · Required | `$filter` on a decimal field: `lt`. |
+| <a id="scenario-filter-decimal-le"></a>**`filter-decimal-le`** — Decimal: le | 2.0.0 · Required | `$filter` on a decimal field: `le`. |
+| <a id="scenario-filter-date-eq"></a>**`filter-date-eq`** — Date: eq | 2.0.0 · Required | `$filter` on a date field: `eq`. |
+| <a id="scenario-filter-date-ne"></a>**`filter-date-ne`** — Date: ne | 2.0.0 · Required | `$filter` on a date field: `ne`. |
+| <a id="scenario-filter-date-gt"></a>**`filter-date-gt`** — Date: gt | 2.0.0 · Required | `$filter` on a date field: `gt`. |
+| <a id="scenario-filter-date-ge"></a>**`filter-date-ge`** — Date: ge | 2.0.0 · Required | `$filter` on a date field: `ge`. |
+| <a id="scenario-filter-date-lt"></a>**`filter-date-lt`** — Date: lt | 2.0.0 · Required | `$filter` on a date field: `lt`. |
+| <a id="scenario-filter-date-le"></a>**`filter-date-le`** — Date: le | 2.0.0 · Required | `$filter` on a date field: `le`. |
+| <a id="scenario-filter-datetime-gt"></a>**`filter-datetime-gt`** — Timestamp: gt | 2.0.0 · Required | `$filter` on a timestamp field: `gt`. |
+| <a id="scenario-filter-datetime-ge"></a>**`filter-datetime-ge`** — Timestamp: ge | 2.0.0 · Required | `$filter` on a timestamp field: `ge`. |
+| <a id="scenario-filter-datetime-ne"></a>**`filter-datetime-ne`** — Timestamp: ne | 2.0.0 · Required | `$filter` on a timestamp field: `ne`. |
+| <a id="scenario-filter-datetime-lt"></a>**`filter-datetime-lt`** — Timestamp: lt | 2.0.0 · Required | `$filter` on a timestamp field: `lt`. |
+| <a id="scenario-filter-datetime-le"></a>**`filter-datetime-le`** — Timestamp: le | 2.0.0 · Required | `$filter` on a timestamp field: `le`. |
+| <a id="scenario-filter-datetime-lt-now"></a>**`filter-datetime-lt-now`** — Timestamp: lt now() | 2.0.0 · Required | `$filter` on a timestamp field: `lt`. |
+| <a id="scenario-filter-datetime-le-now"></a>**`filter-datetime-le-now`** — Timestamp: le now() | 2.0.0 · Required | `$filter` on a timestamp field: `le`. |
+| <a id="scenario-filter-datetime-ne-now"></a>**`filter-datetime-ne-now`** — Timestamp: ne now() | 2.0.0 · Required | `$filter` on a timestamp field: `ne`. |
+
+### Order By
+
+| Scenario | Version | What it checks |
+| --- | --- | --- |
+| <a id="scenario-orderby-timestamp-asc"></a>**`orderby-timestamp-asc`** — OrderBy: asc | 2.0.0 · Required | `$orderby` asc. |
+| <a id="scenario-orderby-timestamp-desc"></a>**`orderby-timestamp-desc`** — OrderBy: desc | 2.0.0 · Required | `$orderby` desc. |
+| <a id="scenario-orderby-timestamp-asc-filter-int-gt"></a>**`orderby-timestamp-asc-filter-int-gt`** — OrderBy: asc + int filter | 2.0.0 · Required | `$orderby` asc with an integer filter. |
+| <a id="scenario-orderby-timestamp-desc-filter-int-gt"></a>**`orderby-timestamp-desc-filter-int-gt`** — OrderBy: desc + int filter | 2.0.0 · Required | `$orderby` desc with an integer filter. |
+
+### Enumerations
+
+| Scenario | Version | What it checks |
+| --- | --- | --- |
+| <a id="scenario-filter-enum-single-has"></a>**`filter-enum-single-has`** — Single enum: has | 2.0.0 · Required | `$filter` on a single-valued enumeration: `has`. |
+| <a id="scenario-filter-enum-single-eq"></a>**`filter-enum-single-eq`** — Single enum: eq | 2.0.0 · Required | `$filter` on a single-valued enumeration: `eq`. |
+| <a id="scenario-filter-enum-ne"></a>**`filter-enum-ne`** — Single enum: ne | 2.0.0 · Required | `$filter` on a single-valued enumeration: `ne`. |
+| <a id="scenario-filter-enum-multi-has"></a>**`filter-enum-multi-has`** — Multi enum: has | 2.0.0 · Required | `$filter` on a multi-valued enumeration: `has`. |
+| <a id="scenario-filter-enum-multi-has-and"></a>**`filter-enum-multi-has-and`** — Multi enum: has + and | 2.0.0 · Required | `$filter` on a multi-valued enumeration: `has`. |
+
+### Collections (lambda operators)
+
+| Scenario | Version | What it checks |
+| --- | --- | --- |
+| <a id="scenario-filter-coll-enum-any"></a>**`filter-coll-enum-any`** — Collection: any() | 2.0.0 · Required | `$filter` with the `any()` lambda over a multi-valued collection. |
+| <a id="scenario-filter-coll-enum-all"></a>**`filter-coll-enum-all`** — Collection: all() | 2.0.0 · Required | `$filter` with the `all()` lambda over a multi-valued collection. |
+
+### Error Responses
+
+| Scenario | Version | What it checks |
+| --- | --- | --- |
+| <a id="scenario-response-code-400"></a>**`response-code-400`** — 400 Bad Request | 2.0.0 · Required | A malformed query MUST return HTTP 400. |
+| <a id="scenario-response-code-404"></a>**`response-code-404`** — 404 Not Found | 2.0.0 · Required | A malformed query MUST return HTTP 404. |
+
+### Lookup Resource (2.1.0)
+
+| Scenario | Version | What it checks |
+| --- | --- | --- |
+| <a id="scenario-lookup-resource-validation"></a>**`lookup-resource-validation`** — Lookup Resource: LookupName and sample values present | 2.1.0 · Required | Fetch the Lookup Resource by `LookupName` and validate the declared name and sample values are present. |
+
+### String Enumerations (2.1.0)
+
+| Scenario | Version | What it checks |
+| --- | --- | --- |
+| <a id="scenario-filter-string-enum-single-eq"></a>**`filter-string-enum-single-eq`** — String enum: eq | 2.1.0 · Required | `$filter` on a string-backed single-valued enumeration: `eq`. |
+| <a id="scenario-filter-string-enum-single-ne"></a>**`filter-string-enum-single-ne`** — String enum: ne | 2.1.0 · Required | `$filter` on a string-backed single-valued enumeration: `ne`. |
+| <a id="scenario-filter-string-enum-multi-any"></a>**`filter-string-enum-multi-any`** — String enum collection: any() | 2.1.0 · Required | `$filter` on a string-backed multi-valued enumeration: `any`. |
+| <a id="scenario-filter-string-enum-multi-all"></a>**`filter-string-enum-multi-all`** — String enum collection: all() | 2.1.0 · Required | `$filter` on a string-backed multi-valued enumeration: `all`. |
+
+### `in` Operator (2.1.0)
+
+| Scenario | Version | What it checks |
+| --- | --- | --- |
+| <a id="scenario-filter-string-enum-single-in"></a>**`filter-string-enum-single-in`** — String enum: in (...) | 2.1.0 · Required | `$filter … in ('a','b','c')` on a single-valued enumeration — OData 4.01, gated on the server advertising `OData-Version: 4.01`. |
+
+### Server-Driven Paging (2.1.0)
+
+| Scenario | Version | What it checks |
+| --- | --- | --- |
+| <a id="scenario-server-driven-paging"></a>**`server-driven-paging`** — Server-driven paging (nextLink) | 2.1.0 · Required | Server-driven paging via `@odata.nextLink`; `$top=1` MUST NOT return a nextLink. |
+
+### Expand (2.1.0)
+
+| Scenario | Version | What it checks |
+| --- | --- | --- |
+| <a id="scenario-expand"></a>**`expand`** — $expand navigation property | 2.1.0 · Required | `$expand` a navigation property and validate the expanded data set. |
+
+### String Functions (Optional)
+
+These string comparison operators are **not required** for Web API Core certification. They are exercised as OData functions because some providers support them, and we want to recognize that support — a failure here is only ever reported as "Not Supported" and never affects the Core verdict.
+
+| Scenario | Version | What it checks |
+| --- | --- | --- |
+| <a id="scenario-filter-string-contains"></a>**`filter-string-contains`** — String: contains() | 2.1.0 · Optional | `$filter` string function `contains()` — Optional Test, not required for Core certification. |
+| <a id="scenario-filter-string-startswith"></a>**`filter-string-startswith`** — String: startswith() | 2.1.0 · Optional | `$filter` string function `startswith()` — Optional Test, not required for Core certification. |
+| <a id="scenario-filter-string-endswith"></a>**`filter-string-endswith`** — String: endswith() | 2.1.0 · Optional | `$filter` string function `endswith()` — Optional Test, not required for Core certification. |
 
 <br />
 
