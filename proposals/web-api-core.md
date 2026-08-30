@@ -2924,7 +2924,7 @@ The following queries are new in Web API Core 2.1.0 (RCP-039).
 | Item | Details |
 | -- | -- |
 | **Id** | filter-string-enum-multi-any |
-| **Description** | `$filter` with the `any()` lambda over a string-backed multi-valued enumeration — returns records that contain at least one of the provided values. |
+| **Description** | `$filter` with the `any()` lambda over a string-backed multi-valued enumeration – returns records that contain at least one of the provided values. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$filter=AccessibilityFeatures/any(enum:enum eq 'Accessible Entrance' or enum eq 'Visitable')``` |
 | **Section** | [String Comparison Operators for Single- and Multi-Valued Enumerations](#string-comparison-operators-for-single--and-multi-valued-enumerations) |
 | **Acceptance Test** | [Source](#scenario-filter-string-enum-multi-any) |
@@ -2936,7 +2936,7 @@ The following queries are new in Web API Core 2.1.0 (RCP-039).
 | Item | Details |
 | -- | -- |
 | **Id** | filter-string-enum-multi-all |
-| **Description** | `$filter` with the `all()` lambda over a string-backed multi-valued enumeration — returns records whose values are only within the provided set (a subset); a record with an empty collection satisfies this vacuously. |
+| **Description** | `$filter` with the `all()` lambda over a string-backed multi-valued enumeration – returns records whose values are only within the provided set (a subset); a record with an empty collection satisfies this vacuously. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$filter=AccessibilityFeatures/all(enum:enum eq 'Accessible Entrance' or enum eq 'Visitable')``` |
 | **Section** | [String Comparison Operators for Single- and Multi-Valued Enumerations](#string-comparison-operators-for-single--and-multi-valued-enumerations) |
 | **Acceptance Test** | [Source](#scenario-filter-string-enum-multi-all) |
@@ -2948,7 +2948,7 @@ The following queries are new in Web API Core 2.1.0 (RCP-039).
 | Item | Details |
 | -- | -- |
 | **Id** | filter-string-enum-single-in |
-| **Description** | `$filter` with the OData 4.01 `in` operator on a single-valued enumeration — tests whether a field's value is within a set of values. |
+| **Description** | `$filter` with the OData 4.01 `in` operator on a single-valued enumeration – tests whether a field's value is within a set of values. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$filter=StandardStatus in ('Active', 'Pending', 'Sold')``` |
 | **Section** | [String Comparison Operators for Single- and Multi-Valued Enumerations](#string-comparison-operators-for-single--and-multi-valued-enumerations) |
 | **Acceptance Test** | [Source](#scenario-filter-string-enum-single-in) |
@@ -3017,128 +3017,128 @@ The following RCPs are included in Web API Core 2.1.0:
 
 ## Web API Core Scenario Catalog
 
-This catalog is generated from the RESO certification tool's scenario definitions and is the canonical list of Web API Core test scenarios. Each Testing Query in Section 3.5 links to its entry here by a stable `scenario-<id>` anchor. It is generated — do not edit by hand; regenerate when the scenario set changes.
+This catalog is generated from the RESO certification tool's scenario definitions and is the canonical list of Web API Core test scenarios. Each Testing Query in Section 3.5 links to its entry here by a stable `scenario-<id>` anchor. It is generated – do not edit by hand; regenerate when the scenario set changes.
 
 ### Structural
 
 | Scenario | Version | What it checks |
 | --- | --- | --- |
-| <a id="scenario-metadata-validation"></a>**`metadata-validation`** — Validate server metadata | 2.0.0 · Required | Request and validate server `$metadata` (EDMX; XSD + semantic validation). |
-| <a id="scenario-service-document"></a>**`service-document`** — Service document request | 2.0.0 · Required | Request and validate the OData service document. |
-| <a id="scenario-fetch-by-key"></a>**`fetch-by-key`** — Fetch by key field | 2.0.0 · Required | Retrieve a single record by its key field. |
-| <a id="scenario-select"></a>**`select`** — $select query support | 2.0.0 · Required | `$select` returns only the requested fields. |
-| <a id="scenario-top"></a>**`top`** — $top query support | 2.0.0 · Required | `$top` limits the number of records returned. |
-| <a id="scenario-skip"></a>**`skip`** — $skip query support | 2.0.0 · Required | `$skip` offsets the result set. |
-| <a id="scenario-count"></a>**`count`** — $count query support | 2.0.0 · Required | `$count` returns the total record count. |
+| <a id="scenario-metadata-validation"></a>**`metadata-validation`** – Validate server metadata | 2.0.0 · Required | Request and validate server `$metadata` (EDMX; XSD + semantic validation). |
+| <a id="scenario-service-document"></a>**`service-document`** – Service document request | 2.0.0 · Required | Request and validate the OData service document. |
+| <a id="scenario-fetch-by-key"></a>**`fetch-by-key`** – Fetch by key field | 2.0.0 · Required | Retrieve a single record by its key field. |
+| <a id="scenario-select"></a>**`select`** – $select query support | 2.0.0 · Required | `$select` returns only the requested fields. |
+| <a id="scenario-top"></a>**`top`** – $top query support | 2.0.0 · Required | `$top` limits the number of records returned. |
+| <a id="scenario-skip"></a>**`skip`** – $skip query support | 2.0.0 · Required | `$skip` offsets the result set. |
+| <a id="scenario-count"></a>**`count`** – $count query support | 2.0.0 · Required | `$count` returns the total record count. |
 
 ### Filter (scalar comparisons)
 
 | Scenario | Version | What it checks |
 | --- | --- | --- |
-| <a id="scenario-filter-int-and"></a>**`filter-int-and`** — Integer: and | 2.0.0 · Required | `$filter` on an integer field: `gt`, compound `and` with `lt`. |
-| <a id="scenario-filter-int-or"></a>**`filter-int-or`** — Integer: or | 2.0.0 · Required | `$filter` on an integer field: `gt`, compound `or` with `lt`. |
-| <a id="scenario-filter-int-not"></a>**`filter-int-not`** — Integer: not() | 2.0.0 · Required | `$filter` on an integer field: `le`, wrapped in `not()`. |
-| <a id="scenario-filter-int-eq"></a>**`filter-int-eq`** — Integer: eq | 2.0.0 · Required | `$filter` on an integer field: `eq`. |
-| <a id="scenario-filter-int-ne"></a>**`filter-int-ne`** — Integer: ne | 2.0.0 · Required | `$filter` on an integer field: `ne`. |
-| <a id="scenario-filter-int-gt"></a>**`filter-int-gt`** — Integer: gt | 2.0.0 · Required | `$filter` on an integer field: `gt`. |
-| <a id="scenario-filter-int-ge"></a>**`filter-int-ge`** — Integer: ge | 2.0.0 · Required | `$filter` on an integer field: `ge`. |
-| <a id="scenario-filter-int-lt"></a>**`filter-int-lt`** — Integer: lt | 2.0.0 · Required | `$filter` on an integer field: `lt`. |
-| <a id="scenario-filter-int-le"></a>**`filter-int-le`** — Integer: le | 2.0.0 · Required | `$filter` on an integer field: `le`. |
-| <a id="scenario-filter-decimal-ne"></a>**`filter-decimal-ne`** — Decimal: ne | 2.0.0 · Required | `$filter` on a decimal field: `ne`. |
-| <a id="scenario-filter-decimal-gt"></a>**`filter-decimal-gt`** — Decimal: gt | 2.0.0 · Required | `$filter` on a decimal field: `gt`. |
-| <a id="scenario-filter-decimal-ge"></a>**`filter-decimal-ge`** — Decimal: ge | 2.0.0 · Required | `$filter` on a decimal field: `ge`. |
-| <a id="scenario-filter-decimal-lt"></a>**`filter-decimal-lt`** — Decimal: lt | 2.0.0 · Required | `$filter` on a decimal field: `lt`. |
-| <a id="scenario-filter-decimal-le"></a>**`filter-decimal-le`** — Decimal: le | 2.0.0 · Required | `$filter` on a decimal field: `le`. |
-| <a id="scenario-filter-date-eq"></a>**`filter-date-eq`** — Date: eq | 2.0.0 · Required | `$filter` on a date field: `eq`. |
-| <a id="scenario-filter-date-ne"></a>**`filter-date-ne`** — Date: ne | 2.0.0 · Required | `$filter` on a date field: `ne`. |
-| <a id="scenario-filter-date-gt"></a>**`filter-date-gt`** — Date: gt | 2.0.0 · Required | `$filter` on a date field: `gt`. |
-| <a id="scenario-filter-date-ge"></a>**`filter-date-ge`** — Date: ge | 2.0.0 · Required | `$filter` on a date field: `ge`. |
-| <a id="scenario-filter-date-lt"></a>**`filter-date-lt`** — Date: lt | 2.0.0 · Required | `$filter` on a date field: `lt`. |
-| <a id="scenario-filter-date-le"></a>**`filter-date-le`** — Date: le | 2.0.0 · Required | `$filter` on a date field: `le`. |
-| <a id="scenario-filter-datetime-gt"></a>**`filter-datetime-gt`** — Timestamp: gt | 2.0.0 · Required | `$filter` on a timestamp field: `gt`. |
-| <a id="scenario-filter-datetime-ge"></a>**`filter-datetime-ge`** — Timestamp: ge | 2.0.0 · Required | `$filter` on a timestamp field: `ge`. |
-| <a id="scenario-filter-datetime-ne"></a>**`filter-datetime-ne`** — Timestamp: ne | 2.0.0 · Required | `$filter` on a timestamp field: `ne`. |
-| <a id="scenario-filter-datetime-lt"></a>**`filter-datetime-lt`** — Timestamp: lt | 2.0.0 · Required | `$filter` on a timestamp field: `lt`. |
-| <a id="scenario-filter-datetime-le"></a>**`filter-datetime-le`** — Timestamp: le | 2.0.0 · Required | `$filter` on a timestamp field: `le`. |
-| <a id="scenario-filter-datetime-lt-now"></a>**`filter-datetime-lt-now`** — Timestamp: lt now() | 2.0.0 · Required | `$filter` on a timestamp field: `lt`. |
-| <a id="scenario-filter-datetime-le-now"></a>**`filter-datetime-le-now`** — Timestamp: le now() | 2.0.0 · Required | `$filter` on a timestamp field: `le`. |
-| <a id="scenario-filter-datetime-ne-now"></a>**`filter-datetime-ne-now`** — Timestamp: ne now() | 2.0.0 · Required | `$filter` on a timestamp field: `ne`. |
+| <a id="scenario-filter-int-and"></a>**`filter-int-and`** – Integer: and | 2.0.0 · Required | `$filter` on an integer field: `gt`, compound `and` with `lt`. |
+| <a id="scenario-filter-int-or"></a>**`filter-int-or`** – Integer: or | 2.0.0 · Required | `$filter` on an integer field: `gt`, compound `or` with `lt`. |
+| <a id="scenario-filter-int-not"></a>**`filter-int-not`** – Integer: not() | 2.0.0 · Required | `$filter` on an integer field: `le`, wrapped in `not()`. |
+| <a id="scenario-filter-int-eq"></a>**`filter-int-eq`** – Integer: eq | 2.0.0 · Required | `$filter` on an integer field: `eq`. |
+| <a id="scenario-filter-int-ne"></a>**`filter-int-ne`** – Integer: ne | 2.0.0 · Required | `$filter` on an integer field: `ne`. |
+| <a id="scenario-filter-int-gt"></a>**`filter-int-gt`** – Integer: gt | 2.0.0 · Required | `$filter` on an integer field: `gt`. |
+| <a id="scenario-filter-int-ge"></a>**`filter-int-ge`** – Integer: ge | 2.0.0 · Required | `$filter` on an integer field: `ge`. |
+| <a id="scenario-filter-int-lt"></a>**`filter-int-lt`** – Integer: lt | 2.0.0 · Required | `$filter` on an integer field: `lt`. |
+| <a id="scenario-filter-int-le"></a>**`filter-int-le`** – Integer: le | 2.0.0 · Required | `$filter` on an integer field: `le`. |
+| <a id="scenario-filter-decimal-ne"></a>**`filter-decimal-ne`** – Decimal: ne | 2.0.0 · Required | `$filter` on a decimal field: `ne`. |
+| <a id="scenario-filter-decimal-gt"></a>**`filter-decimal-gt`** – Decimal: gt | 2.0.0 · Required | `$filter` on a decimal field: `gt`. |
+| <a id="scenario-filter-decimal-ge"></a>**`filter-decimal-ge`** – Decimal: ge | 2.0.0 · Required | `$filter` on a decimal field: `ge`. |
+| <a id="scenario-filter-decimal-lt"></a>**`filter-decimal-lt`** – Decimal: lt | 2.0.0 · Required | `$filter` on a decimal field: `lt`. |
+| <a id="scenario-filter-decimal-le"></a>**`filter-decimal-le`** – Decimal: le | 2.0.0 · Required | `$filter` on a decimal field: `le`. |
+| <a id="scenario-filter-date-eq"></a>**`filter-date-eq`** – Date: eq | 2.0.0 · Required | `$filter` on a date field: `eq`. |
+| <a id="scenario-filter-date-ne"></a>**`filter-date-ne`** – Date: ne | 2.0.0 · Required | `$filter` on a date field: `ne`. |
+| <a id="scenario-filter-date-gt"></a>**`filter-date-gt`** – Date: gt | 2.0.0 · Required | `$filter` on a date field: `gt`. |
+| <a id="scenario-filter-date-ge"></a>**`filter-date-ge`** – Date: ge | 2.0.0 · Required | `$filter` on a date field: `ge`. |
+| <a id="scenario-filter-date-lt"></a>**`filter-date-lt`** – Date: lt | 2.0.0 · Required | `$filter` on a date field: `lt`. |
+| <a id="scenario-filter-date-le"></a>**`filter-date-le`** – Date: le | 2.0.0 · Required | `$filter` on a date field: `le`. |
+| <a id="scenario-filter-datetime-gt"></a>**`filter-datetime-gt`** – Timestamp: gt | 2.0.0 · Required | `$filter` on a timestamp field: `gt`. |
+| <a id="scenario-filter-datetime-ge"></a>**`filter-datetime-ge`** – Timestamp: ge | 2.0.0 · Required | `$filter` on a timestamp field: `ge`. |
+| <a id="scenario-filter-datetime-ne"></a>**`filter-datetime-ne`** – Timestamp: ne | 2.0.0 · Required | `$filter` on a timestamp field: `ne`. |
+| <a id="scenario-filter-datetime-lt"></a>**`filter-datetime-lt`** – Timestamp: lt | 2.0.0 · Required | `$filter` on a timestamp field: `lt`. |
+| <a id="scenario-filter-datetime-le"></a>**`filter-datetime-le`** – Timestamp: le | 2.0.0 · Required | `$filter` on a timestamp field: `le`. |
+| <a id="scenario-filter-datetime-lt-now"></a>**`filter-datetime-lt-now`** – Timestamp: lt now() | 2.0.0 · Required | `$filter` on a timestamp field: `lt`. |
+| <a id="scenario-filter-datetime-le-now"></a>**`filter-datetime-le-now`** – Timestamp: le now() | 2.0.0 · Required | `$filter` on a timestamp field: `le`. |
+| <a id="scenario-filter-datetime-ne-now"></a>**`filter-datetime-ne-now`** – Timestamp: ne now() | 2.0.0 · Required | `$filter` on a timestamp field: `ne`. |
 
 ### Order By
 
 | Scenario | Version | What it checks |
 | --- | --- | --- |
-| <a id="scenario-orderby-timestamp-asc"></a>**`orderby-timestamp-asc`** — OrderBy: asc | 2.0.0 · Required | `$orderby` asc. |
-| <a id="scenario-orderby-timestamp-desc"></a>**`orderby-timestamp-desc`** — OrderBy: desc | 2.0.0 · Required | `$orderby` desc. |
-| <a id="scenario-orderby-timestamp-asc-filter-int-gt"></a>**`orderby-timestamp-asc-filter-int-gt`** — OrderBy: asc + int filter | 2.0.0 · Required | `$orderby` asc with an integer filter. |
-| <a id="scenario-orderby-timestamp-desc-filter-int-gt"></a>**`orderby-timestamp-desc-filter-int-gt`** — OrderBy: desc + int filter | 2.0.0 · Required | `$orderby` desc with an integer filter. |
+| <a id="scenario-orderby-timestamp-asc"></a>**`orderby-timestamp-asc`** – OrderBy: asc | 2.0.0 · Required | `$orderby` asc. |
+| <a id="scenario-orderby-timestamp-desc"></a>**`orderby-timestamp-desc`** – OrderBy: desc | 2.0.0 · Required | `$orderby` desc. |
+| <a id="scenario-orderby-timestamp-asc-filter-int-gt"></a>**`orderby-timestamp-asc-filter-int-gt`** – OrderBy: asc + int filter | 2.0.0 · Required | `$orderby` asc with an integer filter. |
+| <a id="scenario-orderby-timestamp-desc-filter-int-gt"></a>**`orderby-timestamp-desc-filter-int-gt`** – OrderBy: desc + int filter | 2.0.0 · Required | `$orderby` desc with an integer filter. |
 
 ### Enumerations
 
 | Scenario | Version | What it checks |
 | --- | --- | --- |
-| <a id="scenario-filter-enum-single-has"></a>**`filter-enum-single-has`** — Single enum: has | 2.0.0 · Required | `$filter` on a single-valued enumeration: `has`. |
-| <a id="scenario-filter-enum-single-eq"></a>**`filter-enum-single-eq`** — Single enum: eq | 2.0.0 · Required | `$filter` on a single-valued enumeration: `eq`. |
-| <a id="scenario-filter-enum-ne"></a>**`filter-enum-ne`** — Single enum: ne | 2.0.0 · Required | `$filter` on a single-valued enumeration: `ne`. |
-| <a id="scenario-filter-enum-multi-has"></a>**`filter-enum-multi-has`** — Multi enum: has | 2.0.0 · Required | `$filter` on a multi-valued enumeration: `has`. |
-| <a id="scenario-filter-enum-multi-has-and"></a>**`filter-enum-multi-has-and`** — Multi enum: has + and | 2.0.0 · Required | `$filter` on a multi-valued enumeration: `has`. |
+| <a id="scenario-filter-enum-single-has"></a>**`filter-enum-single-has`** – Single enum: has | 2.0.0 · Required | `$filter` on a single-valued enumeration: `has`. |
+| <a id="scenario-filter-enum-single-eq"></a>**`filter-enum-single-eq`** – Single enum: eq | 2.0.0 · Required | `$filter` on a single-valued enumeration: `eq`. |
+| <a id="scenario-filter-enum-ne"></a>**`filter-enum-ne`** – Single enum: ne | 2.0.0 · Required | `$filter` on a single-valued enumeration: `ne`. |
+| <a id="scenario-filter-enum-multi-has"></a>**`filter-enum-multi-has`** – Multi enum: has | 2.0.0 · Required | `$filter` on a multi-valued enumeration: `has`. |
+| <a id="scenario-filter-enum-multi-has-and"></a>**`filter-enum-multi-has-and`** – Multi enum: has + and | 2.0.0 · Required | `$filter` on a multi-valued enumeration: `has`. |
 
 ### Collections (lambda operators)
 
 | Scenario | Version | What it checks |
 | --- | --- | --- |
-| <a id="scenario-filter-coll-enum-any"></a>**`filter-coll-enum-any`** — Collection: any() | 2.0.0 · Required | `$filter` with the `any()` lambda over a multi-valued collection. |
-| <a id="scenario-filter-coll-enum-all"></a>**`filter-coll-enum-all`** — Collection: all() | 2.0.0 · Required | `$filter` with the `all()` lambda over a multi-valued collection. |
+| <a id="scenario-filter-coll-enum-any"></a>**`filter-coll-enum-any`** – Collection: any() | 2.0.0 · Required | `$filter` with the `any()` lambda over a multi-valued collection. |
+| <a id="scenario-filter-coll-enum-all"></a>**`filter-coll-enum-all`** – Collection: all() | 2.0.0 · Required | `$filter` with the `all()` lambda over a multi-valued collection. |
 
 ### Error Responses
 
 | Scenario | Version | What it checks |
 | --- | --- | --- |
-| <a id="scenario-response-code-400"></a>**`response-code-400`** — 400 Bad Request | 2.0.0 · Required | A malformed query MUST return HTTP 400. |
-| <a id="scenario-response-code-404"></a>**`response-code-404`** — 404 Not Found | 2.0.0 · Required | A malformed query MUST return HTTP 404. |
+| <a id="scenario-response-code-400"></a>**`response-code-400`** – 400 Bad Request | 2.0.0 · Required | A malformed query MUST return HTTP 400. |
+| <a id="scenario-response-code-404"></a>**`response-code-404`** – 404 Not Found | 2.0.0 · Required | A malformed query MUST return HTTP 404. |
 
 ### Lookup Resource (2.1.0)
 
 | Scenario | Version | What it checks |
 | --- | --- | --- |
-| <a id="scenario-lookup-resource-validation"></a>**`lookup-resource-validation`** — Lookup Resource: LookupName and sample values present | 2.1.0 · Required | Fetch the Lookup Resource by `LookupName` and validate the declared name and sample values are present. |
+| <a id="scenario-lookup-resource-validation"></a>**`lookup-resource-validation`** – Lookup Resource: LookupName and sample values present | 2.1.0 · Required | Fetch the Lookup Resource by `LookupName` and validate the declared name and sample values are present. |
 
 ### String Enumerations (2.1.0)
 
 | Scenario | Version | What it checks |
 | --- | --- | --- |
-| <a id="scenario-filter-string-enum-single-eq"></a>**`filter-string-enum-single-eq`** — String enum: eq | 2.1.0 · Required | `$filter` on a string-backed single-valued enumeration: `eq`. |
-| <a id="scenario-filter-string-enum-single-ne"></a>**`filter-string-enum-single-ne`** — String enum: ne | 2.1.0 · Required | `$filter` on a string-backed single-valued enumeration: `ne`. |
-| <a id="scenario-filter-string-enum-multi-any"></a>**`filter-string-enum-multi-any`** — String enum collection: any() | 2.1.0 · Required | `$filter` on a string-backed multi-valued enumeration: `any`. |
-| <a id="scenario-filter-string-enum-multi-all"></a>**`filter-string-enum-multi-all`** — String enum collection: all() | 2.1.0 · Required | `$filter` on a string-backed multi-valued enumeration: `all`. |
+| <a id="scenario-filter-string-enum-single-eq"></a>**`filter-string-enum-single-eq`** – String enum: eq | 2.1.0 · Required | `$filter` on a string-backed single-valued enumeration: `eq`. |
+| <a id="scenario-filter-string-enum-single-ne"></a>**`filter-string-enum-single-ne`** – String enum: ne | 2.1.0 · Required | `$filter` on a string-backed single-valued enumeration: `ne`. |
+| <a id="scenario-filter-string-enum-multi-any"></a>**`filter-string-enum-multi-any`** – String enum collection: any() | 2.1.0 · Required | `$filter` on a string-backed multi-valued enumeration: `any`. |
+| <a id="scenario-filter-string-enum-multi-all"></a>**`filter-string-enum-multi-all`** – String enum collection: all() | 2.1.0 · Required | `$filter` on a string-backed multi-valued enumeration: `all`. |
 
 ### `in` Operator (2.1.0)
 
 | Scenario | Version | What it checks |
 | --- | --- | --- |
-| <a id="scenario-filter-string-enum-single-in"></a>**`filter-string-enum-single-in`** — String enum: in (...) | 2.1.0 · Required | `$filter … in ('a','b','c')` on a single-valued enumeration — OData 4.01, gated on the server advertising `OData-Version: 4.01`. |
+| <a id="scenario-filter-string-enum-single-in"></a>**`filter-string-enum-single-in`** – String enum: in (...) | 2.1.0 · Required | `$filter … in ('a','b','c')` on a single-valued enumeration – OData 4.01, gated on the server advertising `OData-Version: 4.01`. |
 
 ### Server-Driven Paging (2.1.0)
 
 | Scenario | Version | What it checks |
 | --- | --- | --- |
-| <a id="scenario-server-driven-paging"></a>**`server-driven-paging`** — Server-driven paging (nextLink) | 2.1.0 · Required | Server-driven paging via `@odata.nextLink`; `$top=1` MUST NOT return a nextLink. |
+| <a id="scenario-server-driven-paging"></a>**`server-driven-paging`** – Server-driven paging (nextLink) | 2.1.0 · Required | Server-driven paging via `@odata.nextLink`; `$top=1` MUST NOT return a nextLink. |
 
 ### Expand (2.1.0)
 
 | Scenario | Version | What it checks |
 | --- | --- | --- |
-| <a id="scenario-expand"></a>**`expand`** — $expand navigation property | 2.1.0 · Required | `$expand` a navigation property and validate the expanded data set. |
+| <a id="scenario-expand"></a>**`expand`** – $expand navigation property | 2.1.0 · Required | `$expand` a navigation property and validate the expanded data set. |
 
 ### String Functions (Optional)
 
-These string comparison operators are **not required** for Web API Core certification. They are exercised as OData functions because some providers support them, and we want to recognize that support — a failure here is only ever reported as "Not Supported" and never affects the Core verdict.
+These string comparison operators are **not required** for Web API Core certification. They are exercised as OData functions because some providers support them, and we want to recognize that support – a failure here is only ever reported as "Not Supported" and never affects the Core verdict.
 
 | Scenario | Version | What it checks |
 | --- | --- | --- |
-| <a id="scenario-filter-string-contains"></a>**`filter-string-contains`** — String: contains() | 2.1.0 · Optional | `$filter` string function `contains()` — Optional Test, not required for Core certification. |
-| <a id="scenario-filter-string-startswith"></a>**`filter-string-startswith`** — String: startswith() | 2.1.0 · Optional | `$filter` string function `startswith()` — Optional Test, not required for Core certification. |
-| <a id="scenario-filter-string-endswith"></a>**`filter-string-endswith`** — String: endswith() | 2.1.0 · Optional | `$filter` string function `endswith()` — Optional Test, not required for Core certification. |
+| <a id="scenario-filter-string-contains"></a>**`filter-string-contains`** – String: contains() | 2.1.0 · Optional | `$filter` string function `contains()` – Optional Test, not required for Core certification. |
+| <a id="scenario-filter-string-startswith"></a>**`filter-string-startswith`** – String: startswith() | 2.1.0 · Optional | `$filter` string function `startswith()` – Optional Test, not required for Core certification. |
+| <a id="scenario-filter-string-endswith"></a>**`filter-string-endswith`** – String: endswith() | 2.1.0 · Optional | `$filter` string function `endswith()` – Optional Test, not required for Core certification. |
 
 <br />
 
