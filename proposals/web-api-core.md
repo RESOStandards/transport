@@ -264,7 +264,9 @@ The hostname of the URL is arbitrary and no naming convention is required.
 
 The following example protocol and hostname are used in the examples in this document. HTTPS is required.
 
-```https://api.reso.org```
+```
+https://api.reso.org
+```
 
 <br />
 
@@ -427,7 +429,7 @@ This section outlines the standard data types supported by the Web API Core spec
 
 The following mappings exist between the RESO Data Dictionary and OData data types, as outlined in RCP-031:
 
-| **Data Dictionary <img width=200px /> 1.7+** | **Web API 2.0.0+** | **Notes** <img width=1000px /> |
+| **Data Dictionary 1.7+** | **Web API 2.0.0+** | **Notes** |
 | --- | --- | --- |
 | Boolean | [Edm.Boolean](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Boolean) | MUST be one of the literals `true` or `false` (case-sensitive). |
 | Collection | [Edm.Collection](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752651) | In Web API Core, collections are only supported when used with `Collection(Edm.EnumType)` or `Collection(Edm.String)` to represent lookups. <br /><br />Providers MAY use collection data types for their own expansions. <br /><br />RESO also has defined standard [NavigationProperty](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Element_edm:NavigationProperty) definitions, which allow expansion between related resources. See [RESO’s reference metadata](https://raw.githubusercontent.com/RESOStandards/transport/main/references/dd/edmx/dd-1.7-enum.xml) and search for "NavigationProperty" for normative XML Metadata references. |
@@ -709,9 +711,9 @@ HTTP/2 200 OK
 
  RESO Web API Core servers MUST support the `$skip` operator but providers are allowed to decide for themselves how many records they want to allow skipping over.
 
- <br />
+<br />
 
- ### 2.5.8 `$orderby` Operator
+### 2.5.8 `$orderby` Operator
 
  The [`$orderby` system query option](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_SystemQueryOptionorderby) allows clients to request resources in a particular order.
 
@@ -2277,7 +2279,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/$metadata?$format=application/xml``` |
 | **Section** | [2.5.1](#251-metadata-request) |
 | **Acceptance Test** | [Source](#scenario-metadata-validation) |
-| **Notes** <img width=200px /> | See: [Metadata Validation](#metadata-validation) <img width=1000px /> |
+| **Notes** | See: [Metadata Validation](#metadata-validation) |
 
 <br />
 
@@ -2289,7 +2291,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/``` |
 | **Section** | [2.5.2](#252-service-document-request) |
 | **Acceptance Test** | [Source](#scenario-service-document) |
-| **Notes** <img width=200px /> | See: [OData service document request](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Toc453752280) <img width=1000px /> |
+| **Notes** | See: [OData service document request](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Toc453752280) |
 
 <br />
 
@@ -2301,7 +2303,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property('12345')?$select=ListingKey``` |
 | **Section** | [2.5.3](#253-fetch-by-key) |
 | **Acceptance Test** | [Source](#scenario-fetch-by-key) |
-| **Notes** <img width=200px /> | Data Indexability by Key Requirement. <img width=1000px /> |
+| **Notes** | Data Indexability by Key Requirement. |
 
 <br />
 
@@ -2313,7 +2315,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$select=ListingKey,BedroomsTotal``` |
 | **Section** | [2.5.4](#254-select-operator) |
 | **Acceptance Test** | [Source](#scenario-select) |
-| **Notes** <img width=200px /> | The `$select` list determines the "data shape" of the response for a given query. <img width=1000px /> |
+| **Notes** | The `$select` list determines the "data shape" of the response for a given query. |
 
 <br />
 
@@ -2325,7 +2327,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5``` |
 | **Section** | [2.5.5](#255-top-operator) |
 | **Acceptance Test** | [Source](#scenario-top) |
-| **Notes** <img width=200px /> | _None_ <img width=1000px /> |
+| **Notes** | _None_ |
 
 <br />
 
@@ -2337,7 +2339,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=0&$count=true``` |
 | **Section** | [2.5.6](#256-count-operator) |
 | **Acceptance Test** | [Source](#scenario-count) |
-| **Notes** <img width=200px /> | _None_ <img width=1000px /> |
+| **Notes** | _None_ |
 
 <br />
 
@@ -2349,7 +2351,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$skip=5``` |
 | **Section** | [2.5.7](#257-skip-operator) |
 | **Acceptance Test** | [Source](#scenario-skip) |
-| **Notes** <img width=200px /> | Use `$top` and `$skip` in conjunction to page. <img width=1000px /> |
+| **Notes** | Use `$top` and `$skip` in conjunction to page. |
 
 <br />
 
@@ -2361,7 +2363,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=20&$select=ListingKey,BedroomsTotal,ModificationTimestamp&$orderby=ModificationTimestamp asc``` |
 | **Section** | [2.5.8](#258-orderby-operator) |
 | **Acceptance Test** | [Source](#scenario-orderby-timestamp-asc) |
-| **Notes** <img width=200px /> | [More information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752361) <img width=1000px /> |
+| **Notes** | [More information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752361) |
 
 <br />
 
@@ -2373,7 +2375,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=20&$select=ListingKey,BedroomsTotal,ModificationTimestamp&$orderby=ModificationTimestamp desc``` |
 | **Section** | [2.5.8](#258-orderby-operator) |
 | **Acceptance Test** | [Source](#scenario-orderby-timestamp-desc) |
-| **Notes** <img width=200px /> | [More information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752361) <img width=1000px /> |
+| **Notes** | [More information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752361) |
 
 <br />
 
@@ -2385,7 +2387,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=20&$select=ListingKey,BedroomsTotal,ModificationTimestamp&$orderby=ModificationTimestamp asc&$filter=BedroomsTotal gt 3``` |
 | **Section** | [2.5.8](#258-orderby-operator) |
 | **Acceptance Test** | [Source](#scenario-orderby-timestamp-asc-filter-int-gt)  |
-| **Notes** <img width=200px /> | [More information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752361) <img width=1000px /> |
+| **Notes** | [More information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752361) |
 
 <br />
 
@@ -2397,7 +2399,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=20&$select=ListingKey,BedroomsTotal,ModificationTimestamp&$orderby=ModificationTimestamp desc&$filter=BedroomsTotal gt 3``` |
 | **Section** | [2.5.8](#258-orderby-operator) |
 | **Acceptance Test** | [Source](#scenario-orderby-timestamp-desc-filter-int-gt) |
-| **Notes** <img width=200px /> | [More information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752361) <img width=1000px /> |
+| **Notes** | [More information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752361) |
 
 <br />
 
@@ -2409,7 +2411,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,BedroomsTotal&$filter=BedroomsTotal gt 3 and BedroomsTotal lt 10``` |
 | **Section** | [2.5.9.1](#2591-odata-primitive-types) |
 | **Acceptance Test** | [Source](#scenario-filter-int-and) |
-| **Notes** <img width=200px /> | [See OData 5.1.1.1.7](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
+| **Notes** | [See OData 5.1.1.1.7](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
 
 <br />
 
@@ -2421,7 +2423,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,BedroomsTotal&$filter=BedroomsTotal lt 10 or BedroomsTotal gt 3``` |
 | **Section** | [2.5.9.1](#2591-odata-primitive-types) |
 | **Acceptance Test** | [Source](#scenario-filter-int-or) |
-| **Notes** <img width=200px /> | [See OData 5.1.1.1.8](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
+| **Notes** | [See OData 5.1.1.1.8](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
 
 <br />
 
@@ -2433,7 +2435,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,BedroomsTotal&$filter=not (BedroomsTotal le -1)``` |
 | **Section** | [2.5.9.1](#2591-odata-primitive-types) |
 | **Acceptance Test** | [Source](#scenario-filter-int-not) |
-| **Notes** <img width=200px /> | [See OData 5.1.1.1.9](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
+| **Notes** | [See OData 5.1.1.1.9](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
 
 <br />
 
@@ -2445,7 +2447,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,BedroomsTotal&$filter=BedroomsTotal eq 3``` |
 | **Section** | [2.5.9.2](#2592-equals) |
 | **Acceptance Test** | [Source](#scenario-filter-int-eq) |
-| **Notes** <img width=200px /> | [See OData 5.1.1.1.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
+| **Notes** | [See OData 5.1.1.1.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
 
 <br />
 
@@ -2457,7 +2459,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,BedroomsTotal&$filter=BedroomsTotal ne 3``` |
 | **Section** | [2.5.9.3](#2593-not-equals) |
 | **Acceptance Test** | [Source](#scenario-filter-int-ne) |
-| **Notes** <img width=200px /> | [See OData 5.1.1.1.2](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
+| **Notes** | [See OData 5.1.1.1.2](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
 
 <br />
 
@@ -2469,7 +2471,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,BedroomsTotal&$filter=BedroomsTotal gt 3``` |
 | **Section** | [2.5.9.4](#2594-greater-than) |
 | **Acceptance Test** | [Source](#scenario-filter-int-gt) |
-| **Notes** <img width=200px /> | [See OData 5.1.1.1.3](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
+| **Notes** | [See OData 5.1.1.1.3](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
 
 <br />
 
@@ -2481,7 +2483,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,BedroomsTotal&$filter=BedroomsTotal ge 3``` |
 | **Section** | [2.5.9.5](#2595-greater-than-or-equal) |
 | **Acceptance Test** | [Source](#scenario-filter-int-ge) |
-| **Notes** <img width=200px /> | [See OData 5.1.1.1.4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
+| **Notes** | [See OData 5.1.1.1.4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
 
 <br />
 
@@ -2493,7 +2495,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,BedroomsTotal&$filter=BedroomsTotal lt 3``` |
 | **Section** | [2.5.9.6](#2596-less-than) |
 | **Acceptance Test** | [Source](#scenario-filter-int-lt) |
-| **Notes** <img width=200px /> | [See OData 5.1.1.1.5](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
+| **Notes** | [See OData 5.1.1.1.5](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
 
 <br />
 
@@ -2505,7 +2507,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,BedroomsTotal&$filter=BedroomsTotal le 3``` |
 | **Section** | [2.5.9.7](#2597-less-than-or-equal) |
 | **Acceptance Test** | [Source](#scenario-filter-int-le) |
-| **Notes** <img width=200px /> | [See OData 5.1.1.1.6](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
+| **Notes** | [See OData 5.1.1.1.6](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
 
 <br />
 
@@ -2517,7 +2519,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListPrice&$filter=ListPrice ne 0.00``` |
 | **Section** | [2.5.9.3](#2593-not-equals) |
 | **Acceptance Test** | [Source](#scenario-filter-decimal-ne) |
-| **Notes** <img width=200px /> | [See OData 5.1.1.1.2](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
+| **Notes** | [See OData 5.1.1.1.2](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
 
 <br />
 
@@ -2529,7 +2531,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListPrice&$filter=ListPrice gt 0.00``` |
 | **Section** | [2.5.9.4](#2594-greater-than) |
 | **Acceptance Test** | [Source](#scenario-filter-decimal-gt) |
-| **Notes** <img width=200px /> | [See OData 5.1.1.1.4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
+| **Notes** | [See OData 5.1.1.1.4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
 
 <br />
 
@@ -2541,7 +2543,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListPrice&$filter=ListPrice ge 0.00``` |
 | **Section** | [2.5.9.5](#2595-greater-than-or-equal) |
 | **Acceptance Test** | [Source](#scenario-filter-decimal-ge) |
-| **Notes** <img width=200px /> | [See OData 5.1.1.1.5](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
+| **Notes** | [See OData 5.1.1.1.5](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
 
 <br />
 
@@ -2553,7 +2555,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListPrice&$filter=ListPrice lt 1234567.89``` |
 | **Section** | [2.5.9.6](#2596-less-than) |
 | **Acceptance Test** | [Source](#scenario-filter-decimal-lt) |
-| **Notes** <img width=200px /> | [See OData 5.1.1.1.3](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
+| **Notes** | [See OData 5.1.1.1.3](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
 
 <br />
 
@@ -2565,7 +2567,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListPrice&$filter=ListPrice le 1234567.89``` |
 | **Section** | [2.5.9.7](#2597-less-than-or-equal) |
 | **Acceptance Test** | [Source](#scenario-filter-decimal-le) |
-| **Notes** <img width=200px /> | [See OData 5.1.1.1.4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
+| **Notes** | [See OData 5.1.1.1.4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
 
 <br />
 
@@ -2577,7 +2579,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListingContractDate&$filter=ListingContractDate eq 2019-12-31``` |
 | **Section** | [2.5.9.2](#2592-equals) |
 | **Acceptance Test** | [Source](#scenario-filter-date-eq) |
-| **Notes** <img width=200px /> | [See OData 5.1.1.6.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
+| **Notes** | [See OData 5.1.1.6.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
 
 <br />
 
@@ -2589,7 +2591,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListingContractDate&$filter=ListingContractDate ne 2019-12-31``` |
 | **Section** | [2.5.9.3](#2593-not-equals) |
 | **Acceptance Test** | [Source](#scenario-filter-date-ne) |
-| **Notes** <img width=200px /> | [See OData 5.1.1.6.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
+| **Notes** | [See OData 5.1.1.6.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
 
 <br />
 
@@ -2601,7 +2603,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListingContractDate&$filter=ListingContractDate gt 2019-12-31``` |
 | **Section** | [2.5.9.4](#2594-greater-than) |
 | **Acceptance Test** | [Source](#scenario-filter-date-gt) |
-| **Notes** <img width=200px /> | [See OData 5.1.1.6.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
+| **Notes** | [See OData 5.1.1.6.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
 
 <br />
 
@@ -2613,7 +2615,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListingContractDate&$filter=ListingContractDate ge 2019-12-31``` |
 | **Section** | [2.5.9.5](#2595-greater-than-or-equal) |
 | **Acceptance Test** | [Source](#scenario-filter-date-ge) |
-| **Notes** <img width=200px /> | [See OData 5.1.1.6.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
+| **Notes** | [See OData 5.1.1.6.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
 
 <br />
 
@@ -2625,7 +2627,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListingContractDate&$filter=ListingContractDate lt 2019-12-31``` |
 | **Section** | [2.5.9.6](#2596-less-than) |
 | **Acceptance Test** | [Source](#scenario-filter-date-lt) |
-| **Notes** <img width=200px /> | [See OData 5.1.1.6.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
+| **Notes** | [See OData 5.1.1.6.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
 
 <br />
 
@@ -2637,7 +2639,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListingContractDate&$filter=ListingContractDate le 2019-12-31``` |
 | **Section** | [2.5.9.7](#2597-less-than-or-equal) |
 | **Acceptance Test** | [Source](#scenario-filter-date-le) |
-| **Notes** <img width=200px /> | [See OData 5.1.1.6.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
+| **Notes** | [See OData 5.1.1.6.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
 
 <br />
 
@@ -2649,7 +2651,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ModificationTimestamp&$filter=ModificationTimestamp ne 2019-12-31T23:55:55-09:00``` |
 | **Section** | [2.5.9.3](#2593-not-equals) |
 | **Acceptance Test** | [Source](#scenario-filter-datetime-ne)  |
-| **Notes** <img width=200px /> | [See OData 5.1.1.6.11](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
+| **Notes** | [See OData 5.1.1.6.11](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
 
 <br />
 
@@ -2661,7 +2663,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ModificationTimestamp&$filter=ModificationTimestamp gt 2019-12-31T23:55:55-09:00``` |
 | **Section** | [2.5.9.4](#2594-greater-than) |
 | **Acceptance Test** | [Source](#scenario-filter-datetime-gt) |
-| **Notes** <img width=200px /> | [See OData 5.1.1.6.11](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
+| **Notes** | [See OData 5.1.1.6.11](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
 
 <br />
 
@@ -2673,7 +2675,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ModificationTimestamp&$filter=ModificationTimestamp ge 2019-12-31T23:55:55-09:00``` |
 | **Section** | [2.5.9.5](#2595-greater-than-or-equal) |
 | **Acceptance Test** | [Source](#scenario-filter-datetime-ge) |
-| **Notes** <img width=200px /> | [See OData 5.1.1.6.11](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
+| **Notes** | [See OData 5.1.1.6.11](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
 
 <br />
 
@@ -2685,7 +2687,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ModificationTimestamp&$filter=ModificationTimestamp lt 2020-12-31T23:55:55-09:00``` |
 | **Section** | [2.5.9.6](#2596-less-than) |
 | **Acceptance Test** | [Source](#scenario-filter-datetime-lt) |
-| **Notes** <img width=200px /> | [See OData 5.1.1.6.11](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
+| **Notes** | [See OData 5.1.1.6.11](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
 
 <br />
 
@@ -2697,7 +2699,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ModificationTimestamp&$filter=ModificationTimestamp le 2020-12-31T23:55:55-09:00``` |
 | **Section** | [2.5.9.7](#2597-less-than-or-equal) |
 | **Acceptance Test** | [Source](#scenario-filter-datetime-le) |
-| **Notes** <img width=200px /> | [See OData 5.1.1.6.11](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
+| **Notes** | [See OData 5.1.1.6.11](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
 
 <br />
 
@@ -2709,7 +2711,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ModificationTimestamp&$filter=ModificationTimestamp ne 2019-12-31T23:55:55-09:00``` |
 | **Section** | [2.5.9.3](#2593-not-equals) |
 | **Acceptance Test** | [Source](#scenario-filter-datetime-ne-now) |
-| **Notes** <img width=200px /> | [See OData 5.1.1.6.11](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
+| **Notes** | [See OData 5.1.1.6.11](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
 
 <br />
 
@@ -2722,7 +2724,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ModificationTimestamp&$filter=ModificationTimestamp lt now()``` |
 | **Section** | [2.5.9.6](#2596-less-than) |
 | **Acceptance Test** | [Source](#scenario-filter-datetime-lt-now) |
-| **Notes** <img width=200px /> | [See OData 5.1.1.8.9](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_now) <img width=1000px /> |
+| **Notes** | [See OData 5.1.1.8.9](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_now) |
 
 <br />
 
@@ -2734,7 +2736,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ModificationTimestamp&$filter=ModificationTimestamp lt now()``` |
 | **Section** | [2.5.9.7](#2597-less-than-or-equal) |
 | **Acceptance Test** | [Source](#scenario-filter-datetime-le-now) |
-| **Notes** <img width=200px /> | [See OData 5.1.1.8.9](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_now) <img width=1000px /> |
+| **Notes** | [See OData 5.1.1.8.9](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_now) |
 
 <br />
 
@@ -2746,7 +2748,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,PropertyType&$filter=PropertyType has PropertyEnums.PropertyType'Residential'``` |
 | **Section** | [2.5.9.8.1](#25981-edmenumtype-enumerations) |
 | **Acceptance Test** | [Source](#scenario-filter-enum-single-has) |
-| **Notes** <img width=200px /> | [More Information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752566) <img width=1000px /> |
+| **Notes** | [More Information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752566) |
 
 <br />
 
@@ -2758,7 +2760,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,PropertyType&$filter=PropertyType eq PropertyEnums.PropertyType'Residential'``` |
 | **Section** | [2.5.9.8.1](#25981-edmenumtype-enumerations) |
 | **Acceptance Test** | [Source](#scenario-filter-enum-single-eq) |
-| **Notes** <img width=200px /> | [More Information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752566) <img width=1000px /> |
+| **Notes** | [More Information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752566) |
 
 <br />
 
@@ -2770,7 +2772,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,PropertyType&$filter=PropertyType ne PropertyEnums.PropertyType'Residential'``` |
 | **Section** | [2.5.9.8.1](#25981-edmenumtype-enumerations) |
 | **Acceptance Test** | [Source](#scenario-filter-enum-ne) |
-| **Notes** <img width=200px /> | [More Information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752566) <img width=1000px /> |
+| **Notes** | [More Information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752566) |
 
 <br />
 
@@ -2782,7 +2784,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,Appliances&$filter=Appliances has PropertyEnums.Appliances'Refrigerator'``` |
 | **Section** | [2.5.9.9.1](#25991-odata-isflagstrue) |
 | **Acceptance Test** | [Source](#scenario-filter-enum-multi-has) |
-| **Notes** <img width=200px /> | [More Information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752566) <img width=1000px /> |
+| **Notes** | [More Information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752566) |
 
 <br />
 
@@ -2794,7 +2796,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,Appliances&$filter=Appliances has PropertyEnums.Appliances'Refrigerator' and Appliances has PropertyEnums.Appliances'Stacked'``` |
 | **Section** | [2.5.9.9.1](#25991-odata-isflagstrue) |
 | **Acceptance Test** | [Source](#scenario-filter-enum-multi-has-and) |
-| **Notes** <img width=200px /> | [More Information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752566) <img width=1000px /> |
+| **Notes** | [More Information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752566) |
 
 <br />
 
@@ -2806,7 +2808,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,Appliances&$filter=Appliances/any(enum:enum eq PropertyEnums.Appliances'Refrigerator')``` |
 | **Section** | [2.5.9.9.2](#25992-collection-of-edmenumtype) |
 | **Acceptance Test** | [Source](#scenario-filter-coll-enum-any) |
-| **Notes** <img width=200px /> | [See OData 5.1.1.10.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
+| **Notes** | [See OData 5.1.1.10.1](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
 
 <br />
 
@@ -2818,7 +2820,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,Appliances&$filter=Appliances/all(enum:enum eq PropertyEnums.Appliances'Refrigerator')``` |
 | **Section** | [2.5.9.9.2](#25992-collection-of-edmenumtype) |
 | **Acceptance Test** | [Source](#scenario-filter-coll-enum-all) |
-| **Notes** <img width=200px /> | [See OData 5.1.1.10.2](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) <img width=1000px /> |
+| **Notes** | [See OData 5.1.1.10.2](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
 
 <br />
 
@@ -2830,7 +2832,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$filter=BadField eq 'SoBad'``` |
 | **Section** | [2.6.1](#261-http-response-codes) |
 | **Acceptance Test** | [Source](#scenario-response-code-400) |
-| **Notes** <img width=200px /> | _None_ <img width=1000px /> |
+| **Notes** | _None_ |
 
 <br />
 
@@ -2842,7 +2844,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/ResourceNotFound``` |
 | **Section** | [2.6.1](#261-http-response-codes) |
 | **Acceptance Test** | [Source](#scenario-response-code-404) |
-| **Notes** <img width=200px /> | _None_ <img width=1000px /> |
+| **Notes** | _None_ |
 
 <br />
 
@@ -2856,7 +2858,7 @@ The following queries are new in Web API Core 2.1.0 (RCP-039).
 | **Sample Query** | ```GET https://api.reso.org/Property?$expand=Media``` |
 | **Section** | [Support for Expanded Data Elements](#support-for-expanded-data-elements) |
 | **Acceptance Test** | [Source](#scenario-expand) |
-| **Notes** <img width=200px /> | The provider specifies at least one navigation property to test. Keys collected from the first request also drive a `GET /Property('XXXXX')/Media` request. New in 2.1.0. <img width=1000px /> |
+| **Notes** | The provider specifies at least one navigation property to test. Keys collected from the first request also drive a `GET /Property('XXXXX')/Media` request. New in 2.1.0. |
 
 <br />
 
@@ -2868,7 +2870,7 @@ The following queries are new in Web API Core 2.1.0 (RCP-039).
 | **Sample Query** | ```GET https://api.reso.org/Lookup?$filter=LookupName eq 'StandardStatus'``` |
 | **Section** | [String Comparison Operators for Single- and Multi-Valued Enumerations](#string-comparison-operators-for-single--and-multi-valued-enumerations) |
 | **Acceptance Test** | [Source](#scenario-lookup-resource-validation) |
-| **Notes** <img width=200px /> | If the LookupName or its sample values are absent from the Lookup Resource, the dependent string-enumeration and `in` tests are skipped. New in 2.1.0. <img width=1000px /> |
+| **Notes** | If the LookupName or its sample values are absent from the Lookup Resource, the dependent string-enumeration and `in` tests are skipped. New in 2.1.0. |
 
 <br />
 
@@ -2880,7 +2882,7 @@ The following queries are new in Web API Core 2.1.0 (RCP-039).
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=1``` |
 | **Section** | [Providers MUST Support Server-Driven Paging](#providers-must-support-server-driven-paging) |
 | **Acceptance Test** | [Source](#scenario-server-driven-paging) |
-| **Notes** <img width=200px /> | A `$count` confirms records exist first. The majority of `@odata.nextLink` testing is performed in the Payloads 2.0 Specification. New in 2.1.0. <img width=1000px /> |
+| **Notes** | A `$count` confirms records exist first. The majority of `@odata.nextLink` testing is performed in the Payloads 2.0 Specification. New in 2.1.0. |
 
 <br />
 
@@ -2892,7 +2894,7 @@ The following queries are new in Web API Core 2.1.0 (RCP-039).
 | **Sample Query** | ```GET https://api.reso.org/Property?$filter=StandardStatus eq 'Active'``` |
 | **Section** | [String Comparison Operators for Single- and Multi-Valued Enumerations](#string-comparison-operators-for-single--and-multi-valued-enumerations) |
 | **Acceptance Test** | [Source](#scenario-filter-string-enum-single-eq) |
-| **Notes** <img width=200px /> | New in 2.1.0. <img width=1000px /> |
+| **Notes** | New in 2.1.0. |
 
 <br />
 
@@ -2904,7 +2906,7 @@ The following queries are new in Web API Core 2.1.0 (RCP-039).
 | **Sample Query** | ```GET https://api.reso.org/Property?$filter=StandardStatus ne 'Active'``` |
 | **Section** | [String Comparison Operators for Single- and Multi-Valued Enumerations](#string-comparison-operators-for-single--and-multi-valued-enumerations) |
 | **Acceptance Test** | [Source](#scenario-filter-string-enum-single-ne) |
-| **Notes** <img width=200px /> | New in 2.1.0. <img width=1000px /> |
+| **Notes** | New in 2.1.0. |
 
 <br />
 
@@ -2916,7 +2918,7 @@ The following queries are new in Web API Core 2.1.0 (RCP-039).
 | **Sample Query** | ```GET https://api.reso.org/Property?$filter=AccessibilityFeatures/any(enum:enum eq 'Accessible Entrance' or enum eq 'Visitable')``` |
 | **Section** | [String Comparison Operators for Single- and Multi-Valued Enumerations](#string-comparison-operators-for-single--and-multi-valued-enumerations) |
 | **Acceptance Test** | [Source](#scenario-filter-string-enum-multi-any) |
-| **Notes** <img width=200px /> | New in 2.1.0. <img width=1000px /> |
+| **Notes** | New in 2.1.0. |
 
 <br />
 
@@ -2928,7 +2930,7 @@ The following queries are new in Web API Core 2.1.0 (RCP-039).
 | **Sample Query** | ```GET https://api.reso.org/Property?$filter=AccessibilityFeatures/all(enum:enum eq 'Accessible Entrance' or enum eq 'Visitable')``` |
 | **Section** | [String Comparison Operators for Single- and Multi-Valued Enumerations](#string-comparison-operators-for-single--and-multi-valued-enumerations) |
 | **Acceptance Test** | [Source](#scenario-filter-string-enum-multi-all) |
-| **Notes** <img width=200px /> | New in 2.1.0. <img width=1000px /> |
+| **Notes** | New in 2.1.0. |
 
 <br />
 
@@ -2940,7 +2942,7 @@ The following queries are new in Web API Core 2.1.0 (RCP-039).
 | **Sample Query** | ```GET https://api.reso.org/Property?$filter=StandardStatus in ('Active', 'Pending', 'Sold')``` |
 | **Section** | [String Comparison Operators for Single- and Multi-Valued Enumerations](#string-comparison-operators-for-single--and-multi-valued-enumerations) |
 | **Acceptance Test** | [Source](#scenario-filter-string-enum-single-in) |
-| **Notes** <img width=200px /> | Gated on the response advertising `OData-Version: 4.01`; skipped for OData 4.0-only servers. New in 2.1.0. <img width=1000px /> |
+| **Notes** | Gated on the response advertising `OData-Version: 4.01`; skipped for OData 4.0-only servers. New in 2.1.0. |
 
 # Section 4: Contributors
 
