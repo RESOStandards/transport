@@ -3090,7 +3090,7 @@ This catalog is the canonical list of Web API Core test scenarios. Each Testing 
 | Scenario | Version | What it checks |
 | --- | --- | --- |
 | <a id="scenario-response-code-400"></a>**`response-code-400`** – 400 Bad Request | 2.0.0 · Required | A malformed query MUST return HTTP 400. |
-| <a id="scenario-response-code-404"></a>**`response-code-404`** – 404 Not Found | 2.0.0 · Required | A malformed query MUST return HTTP 404. |
+| <a id="scenario-response-code-404"></a>**`response-code-404`** – 404 Not Found | 2.0.0 · Required | A request for a resource that does not exist MUST return HTTP 404. |
 
 ### Lookup Resource (2.1.0)
 
