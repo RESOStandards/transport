@@ -2272,6 +2272,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Request and Validate OData XML Metadata
+
 | Item | Details |
 | -- | -- |
 | **Id**| metadata-validation |
@@ -2284,6 +2285,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Service Document Request
+
 | Item | Details |
 | -- | -- |
 | **Id** | service-document |
@@ -2296,6 +2298,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Fetch by Key
+
 | Item | Details |
 | -- | -- |
 | **Id** | fetch-by-key |
@@ -2308,6 +2311,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### `$select` Query Option
+
 | Item | Details |
 | -- | -- |
 | **Id** | select |
@@ -2320,6 +2324,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### `$top` Query Option
+
 | Item | Details |
 | -- | -- |
 | **Id** | top |
@@ -2332,6 +2337,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### `$count` Query Option
+
 | Item | Details |
 | -- | -- |
 | **Id** | count |
@@ -2344,6 +2350,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### `$skip` Query Option
+
 | Item | Details |
 | -- | -- |
 | **Id** | skip |
@@ -2356,6 +2363,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### `$orderby` ISO 8601 Timestamp Field Ascending
+
 | Item | Details |
 | -- | -- |
 | **Id** | orderby-timestamp-asc |
@@ -2368,6 +2376,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### `$orderby` ISO 8601 Timestamp Field Descending
+
 | Item | Details |
 | -- | -- |
 | **Id** | orderby-timestamp-desc |
@@ -2380,6 +2389,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### `$orderby` ISO 8601 Timestamp Field Ascending with Integer `gt` Filter
+
 | Item | Details |
 | -- | -- |
 | **Id** | orderby-timestamp-asc-filter-int-gt |
@@ -2392,6 +2402,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### `$orderby` ISO 8601 Timestamp Field Descending with Integer `gt` Filter
+
 | Item | Details |
 | -- | -- |
 | **Id** | orderby-timestamp-desc-filter-int-gt |
@@ -2404,6 +2415,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Integer Field Using `and` Logical Operator
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-int-and |
@@ -2416,6 +2428,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Integer Field Using `or` Logical Operator
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-int-or |
@@ -2428,6 +2441,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Integer Field Using `not ()` Logical Operator
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-int-not |
@@ -2440,6 +2454,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Integer Field Using `eq` Logical Operator
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-int-eq |
@@ -2452,6 +2467,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Integer Field Using `ne` Logical Operator
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-int-ne |
@@ -2464,6 +2480,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Integer Field Using `gt` Logical Operator
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-int-gt |
@@ -2476,6 +2493,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Integer Field Using `ge` Logical Operator
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-int-ge |
@@ -2488,6 +2506,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Integer Field Using `lt` Logical Operator
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-int-lt |
@@ -2500,6 +2519,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Integer Field Using `le` Logical Operator
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-int-le |
@@ -2512,6 +2532,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Decimal Field Using `ne` Logical Operator
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-decimal-ne |
@@ -2524,6 +2545,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Decimal Field Using `gt` Logical Operator
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-decimal-gt |
@@ -2536,6 +2558,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Decimal Field Using `ge` Logical Operator
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-decimal-ge |
@@ -2548,6 +2571,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Decimal Field Using `lt` Logical Operator
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-decimal-lt |
@@ -2560,6 +2584,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Decimal Field Using `le` Logical Operator
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-decimal-le |
@@ -2572,6 +2597,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter ISO 8601 Date Using `eq` Logical Operator
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-date-eq |
@@ -2584,6 +2610,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter ISO 8601 Date Using `ne` Logical Operator
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-date-ne |
@@ -2596,6 +2623,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter ISO 8601 Date Using `gt` Logical Operator
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-date-gt |
@@ -2608,6 +2636,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter ISO 8601 Date Using `ge` Logical Operator
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-date-ge |
@@ -2620,6 +2649,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter ISO 8601 Date Using `lt` Logical Operator
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-date-lt |
@@ -2632,6 +2662,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter ISO 8601 Date Using `le` Logical Operator
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-date-le |
@@ -2644,6 +2675,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter ISO 8601 Timestamp Using `ne` Logical Operator
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-datetime-ne |
@@ -2656,6 +2688,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter ISO 8601 Timestamp Using `gt` Logical Operator
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-datetime-gt |
@@ -2668,6 +2701,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter ISO 8601 Timestamp Using `ge` Logical Operator
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-datetime-ge |
@@ -2680,6 +2714,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter ISO 8601 Timestamp Using `lt` Logical Operator
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-datetime-lt |
@@ -2692,6 +2727,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter ISO 8601 Timestamp Using `le` Logical Operator
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-datetime-le |
@@ -2704,6 +2740,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter ISO 8601 Timestamp Using `ne` Logical Operator and `now()` 
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-datetime-ne-now |
@@ -2717,6 +2754,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 
 
 ### Filter ISO 8601 Timestamp Using `le` Logical Operator and `now()`
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-datetime-lt-now |
@@ -2729,6 +2767,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter ISO 8601 Timestamp Using LE Logical Operator and `now()`
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-datetime-le-now |
@@ -2741,6 +2780,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Single Enumeration Using `has` and OData `Edm.EnumType`
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-enum-single-has |
@@ -2753,6 +2793,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Single Enumeration Using `eq` and OData `Edm.EnumType`
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-enum-single-eq |
@@ -2765,6 +2806,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Single Enumeration Using `ne` and OData `Edm.EnumType`
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-enum-ne |
@@ -2777,6 +2819,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Multiple Enumeration Using `has` and OData `Edm.EnumType`
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-enum-multi-has |
@@ -2789,6 +2832,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Multiple Enumeration Using `has` and OData `Edm.EnumType` with `and` Logical Operator
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-enum-multi-has-and |
@@ -2801,6 +2845,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Multiple Enumeration Using `any` Lambda Operator and OData `Collection(Edm.EnumType)`
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-coll-enum-any |
@@ -2813,6 +2858,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### Filter Multiple Enumeration Using `all` Lambda Operator and OData `Collection(Edm.EnumType)`
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-coll-enum-all |
@@ -2825,6 +2871,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### HTTP 400 Response Code Test
+
 | Item | Details |
 | -- | -- |
 | **Id** | response-code-400 |
@@ -2837,6 +2884,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 ### HTTP 404 Response Code Test
+
 | Item | Details |
 | -- | -- |
 | **Id** | response-code-404 |
@@ -2851,6 +2899,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 The following queries are new in Web API Core 2.1.0 (RCP-039).
 
 ### `$expand` a Navigation Property
+
 | Item | Details |
 | -- | -- |
 | **Id** | expand |
@@ -2863,6 +2912,7 @@ The following queries are new in Web API Core 2.1.0 (RCP-039).
 <br />
 
 ### Lookup Resource Validation
+
 | Item | Details |
 | -- | -- |
 | **Id** | lookup-resource-validation |
@@ -2875,6 +2925,7 @@ The following queries are new in Web API Core 2.1.0 (RCP-039).
 <br />
 
 ### Server-Driven Paging (`@odata.nextLink`)
+
 | Item | Details |
 | -- | -- |
 | **Id** | server-driven-paging |
@@ -2887,6 +2938,7 @@ The following queries are new in Web API Core 2.1.0 (RCP-039).
 <br />
 
 ### Filter String Enumeration Using `eq`
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-string-enum-single-eq |
@@ -2899,6 +2951,7 @@ The following queries are new in Web API Core 2.1.0 (RCP-039).
 <br />
 
 ### Filter String Enumeration Using `ne`
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-string-enum-single-ne |
@@ -2911,6 +2964,7 @@ The following queries are new in Web API Core 2.1.0 (RCP-039).
 <br />
 
 ### Filter String Enumeration Collection Using `any()`
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-string-enum-multi-any |
@@ -2923,6 +2977,7 @@ The following queries are new in Web API Core 2.1.0 (RCP-039).
 <br />
 
 ### Filter String Enumeration Collection Using `all()`
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-string-enum-multi-all |
@@ -2935,6 +2990,7 @@ The following queries are new in Web API Core 2.1.0 (RCP-039).
 <br />
 
 ### Filter Single Enumeration Using the `in` Operator (OData 4.01)
+
 | Item | Details |
 | -- | -- |
 | **Id** | filter-string-enum-single-in |
