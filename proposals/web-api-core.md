@@ -461,6 +461,26 @@ _The query operators shown in this section are MUST requirements for the Web API
 ### 2.5.1 Metadata Request
 OData supports both XML and JSON metadata formats.
 
+[OData 4.0 — Part 1: Protocol §11.1.2 Metadata Document Request](https://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html)
+> An OData *Metadata Document* is a representation of the data model that describes the data and operations exposed by an OData service.
+>
+> **[OData-CSDL]** describes an XML representation for OData metadata documents and provides an XML schema to validate their contents. The media type of the XML representation of an OData metadata document is `application/xml`.
+>
+> OData services MUST expose a metadata document that describes the data model exposed by the service. The *Metadata Document URL* MUST be the root URL of the service with `$metadata` appended. To retrieve this document the client issues a `GET` request to the metadata document URL.
+>
+> If a request for metadata does not specify a format preference (via `Accept` header or `$format`) then the XML representation MUST be returned.
+
+[OData 4.01 — Part 1: Protocol §11.1.2 Metadata Document Request](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html)
+> An OData *metadata document* is a representation of the data model that describes the data and operations exposed by an OData service.
+>
+> **[OData-CSDLJSON]** describes a JSON representation for OData metadata documents and provides a JSON schema to validate their contents. The media type of the JSON representation of an OData metadata document is `application/json`.
+>
+> **[OData-CSDLXML]** describes an XML representation for OData metadata documents and provides an XML schema to validate their contents. The media type of the XML representation of an OData metadata document is `application/xml`.
+>
+> OData services can expose a metadata document that describes the data model exposed by the service. The *metadata document URL* MUST be the root URL of the service with `$metadata` appended. To retrieve this document the client issues a `GET` request to the metadata document URL.
+>
+> If a request for metadata does not specify a format preference (via `Accept` header or `$format`) then the XML representation MUST be returned.
+
 Servers MAY support JSON metadata, but RESO requires they MUST support the XML metadata format.
 
 The [OData format parameter](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#_Toc31361046) allows clients to request a specific format, such as `$format=application/xml` for XML Metadata.
@@ -509,7 +529,6 @@ HTTP/2 200 OK
 * _The above example does not demonstrate the use of annotations, which are outlined in the [reference XML Metadata document](https://raw.githubusercontent.com/RESOStandards/transport/main/references/dd/edmx/dd-1.7-enum.xml)._
 
 <br />
-
 ### 2.5.2 Service Document Request
 Servers MUST support a service document request, according to the OData Minimal Conformance Rules.
 
@@ -575,6 +594,15 @@ HTTP/2 200 OK
 <br />
 
 ### 2.5.3 Fetch by Key
+
+[OData 4.0 — Part 2: URL Conventions §4.3.1 Canonical URL](https://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html)
+[OData 4.01 — Part 2: URL Conventions §4.3.1 Canonical URL](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_CanonicalURL)
+> For OData services conformant with the addressing conventions in this section, the canonical form of an absolute URL identifying a non-contained entity is formed by adding a single path segment to the service root URL. The path segment is made up of the name of the entity set associated with the entity followed by the key predicate identifying the entity within the collection. No type-cast segment is added to the canonical URL, even if the entity is an instance of a type derived from the declared entity type of its entity set.
+>
+> The canonical key predicate for single-part keys consists only of the key property value without the key property name. For multi-part keys the key properties appear in the same order they appear in the key definition in the service metadata.
+
+_Applies to all supported OData versions (4.0, 4.01)._
+
 OData provides a way to access a single record by its key, called a singleton record.
 
 How the key is referenced depends on its type.
@@ -605,10 +633,31 @@ HTTP/2 200 OK
 ```
 
 <br />
-
 ### 2.5.4 `$select` Operator
 
 OData allows clients to specify which fields they would like returned in a given payload through the use of the [$select operator](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#_Toc31361040).
+
+[OData 4.0 — Part 1: Protocol §11.2.4.1 System Query Option `$select`](https://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html)
+> The `$select` system query option requests that the service return only the properties, dynamic properties, actions and functions explicitly requested by the client. The service returns the specified content, if available, along with any available expanded navigation properties, and MAY return additional information.
+>
+> The value of the `$select` query option is a comma-separated list of properties, qualified action names, qualified function names, the star operator (`*`), or the star operator prefixed with the namespace or alias of the schema in order to specify all operations defined in the schema. Only aliases defined in the metadata document of the service can be used in URLs.
+>
+> It is also possible to request all structural properties, including any dynamic properties, using the star operator. The star operator SHOULD NOT introduce navigation properties, actions or functions not otherwise requested.
+>
+> If the `$select` query option is not specified, the service returns the full set of properties or a default set of properties. The default set of properties MUST include all key properties.
+>
+> If the service returns less than the full set of properties, either because the client specified a select or because the service returned a subset of properties in the absence of a select, the context URL MUST reflect the set of selected properties and expanded navigation properties.
+
+[OData 4.01 — Part 1: Protocol §11.2.5.1 System Query Option `$select`](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html)
+> The `$select` system query option requests that the service return only the properties, dynamic properties, actions and functions explicitly requested by the client. The service returns the specified content, if available, along with any available expanded navigation or stream properties, and MAY return additional information.
+>
+> The value of the `$select` query option is a comma-separated list of properties, qualified action names, qualified function names, the star operator (`*`), or the star operator prefixed with the namespace or alias of the schema in order to specify all operations defined in the schema. Only aliases defined in the metadata document of the service can be used in URLs.
+>
+> It is also possible to request all structural properties, including any dynamic properties, using the star operator. The star operator SHOULD NOT introduce navigation properties, actions or functions not otherwise requested.
+>
+> If the `$select` query option is not specified, the service returns the full set of properties or a default set of properties. The default set of properties MUST include all key properties. Services may change the default set of properties returned. This includes returning new properties by default and omitting properties previously returned by default. Clients that rely on specific properties in the response MUST use `$select` with the required properties or with `*`.
+>
+> If the service returns less than the full set of properties, either because the client specified a select or because the service returned a subset of properties in the absence of a select, the context URL MUST reflect the set of selected properties and projected expanded navigation properties.
 
 ```
 GET https://api.reso.org/Property?$select=ListingKey,ModificationTimestamp
@@ -632,10 +681,17 @@ HTTP/2 200 OK
 RESO Web API Core servers MUST support the `$select` operator.
 
 <br />
-
 ### 2.5.5 `$top` Operator
 
 The [OData `$top` operator](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#_Toc31361042) allows clients to specify the number of records they would like to request from a given server.
+
+[OData 4.0 — Part 1: Protocol §11.2.5.3 System Query Option `$top`](https://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html)  
+[OData 4.01 — Part 1: Protocol §11.2.6.3 System Query Option `$top`](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html)
+> The `$top` system query option specifies a non-negative integer n that limits the number of items returned from a collection. The service returns the number of available items up to but not greater than the specified value n.
+>
+> If no unique ordering is imposed through an `$orderby` query option, the service MUST impose a stable ordering across requests that include `$top`.
+
+_Applies to all supported OData versions (4.0, 4.01)._
 
 Servers MAY respond with a page size different than the one requested, and clients should be prepared to respond accordingly.
 
@@ -658,7 +714,6 @@ HTTP/2 200 OK
 RESO Web API Core servers MUST support the `$top` operator.
 
 <br />
-
 ### 2.5.6 `$count` Operator
 
 The [`$count` system query option](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_SystemQueryOptioncount) allows clients to request a count of the matching resources included with the resources in the response.
@@ -666,6 +721,24 @@ The [`$count` system query option](https://docs.oasis-open.org/odata/odata/v4.01
 The `$count` query option has a Boolean value of `true` or `false`.
 
 The semantics of $count are covered in the [OData-Protocol](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#odata) document.
+
+[OData 4.0 — Part 1: Protocol §11.2.5.5 System Query Option $count](https://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html)
+[OData 4.01 — Part 1: Protocol §11.2.6.5 System Query Option $count](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html)
+> The `$count` system query option with a value of `true` specifies that the total count of items within a collection matching the request be returned along with the result.
+>
+> The count of related entities can be requested by specifying the `$count` query option within the `$expand` clause.
+>
+> A `$count` query option with a value of `false` (or not specified) hints that the service SHOULD NOT return a count.
+>
+> The service returns an HTTP Status code of 400 Bad Request if a value other than `true` or `false` is specified.
+>
+> The `$count` system query option ignores any `$top`, `$skip`, or `$expand` query options, and returns the total count of results across all pages including only those results matching any specified `$filter` and `$search`.
+>
+> Clients should be aware that the count returned inline may not exactly equal the actual number of items returned, due to latency between calculating the count and enumerating the last value or due to inexact calculations on the service.
+>
+> How the count is encoded in the response body is dependent upon the selected format.
+
+_Applies to all supported OData versions (4.0, 4.01)._
 
 ```
 GET https://api.reso.org/Property?$select=ListingKey,ModificationTimestamp&$top=1&$count=true
@@ -686,11 +759,20 @@ HTTP/2 200 OK
 RESO Web API Core servers MUST support the `$count` operator.
 
 <br />
-
 ### 2.5.7 `$skip` Operator
 The [`$skip` query option](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#_Toc31361042) requests the number of items in the queried collection that are to be skipped and not included in the result. A client can request a particular page of items by combining `$top` and `$skip`.
 
 The semantics of `$top` and `$skip` are covered in the [OData-Protocol](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#odata) document. The [OData-ABNF](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#ABNF) top and skip syntax rules define the formal grammar of the `$top` and `$skip` query options respectively.
+
+[OData 4.0 — Part 1: Protocol §11.2.5.4 System Query Option `$skip`](https://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html)
+[OData 4.01 — Part 1: Protocol §11.2.6.4 System Query Option `$skip`](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html)
+> The `$skip` system query option specifies a non-negative integer n that excludes the first n items of the queried collection from the result. The service returns items starting at position n+1.
+>
+> Where `$top` and `$skip` are used together, `$skip` MUST be applied before `$top`, regardless of the order in which they appear in the request.
+>
+> If no unique ordering is imposed through an `$orderby` query option, the service MUST impose a stable ordering across requests that include `$skip`.
+
+_Applies to all supported OData versions (4.0, 4.01)._
 
 ```
 GET https://api.reso.org/Property?$select=ListingKey,ModificationTimestamp&$count=true&$top=1&$skip=1
@@ -712,7 +794,6 @@ HTTP/2 200 OK
  RESO Web API Core servers MUST support the `$skip` operator but providers are allowed to decide for themselves how many records they want to allow skipping over.
 
 <br />
-
 ### 2.5.8 `$orderby` Operator
 
  The [`$orderby` system query option](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_SystemQueryOptionorderby) allows clients to request resources in a particular order.
@@ -720,6 +801,40 @@ HTTP/2 200 OK
 The semantics of `$orderby` are covered in the [OData-Protocol](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#odata) document.
 
 The [OData-ABNF](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#ABNF) orderby syntax rule defines the formal grammar of the `$orderby` query option.
+
+[OData 4.0 — Part 1: Protocol §11.2.5.2 System Query Option `$orderby`](https://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html)
+> The `$orderby` System Query option specifies the order in which items are returned from the service.
+>
+> The value of the `$orderby` System Query option contains a comma-separated list of expressions whose primitive result values are used to sort the items. A special case of such an expression is a property path terminating on a primitive property. A type cast using the qualified entity type name is required to order by a property defined on a derived type. Only aliases defined in the metadata document of the service can be used in URLs.
+>
+> The expression can include the suffix `asc` for ascending or `desc` for descending, separated from the property name by one or more spaces. If `asc` or `desc` is not specified, the service MUST order by the specified property in ascending order.
+>
+> Null values come before non-null values when sorting in ascending order and after non-null values when sorting in descending order.
+>
+> Items are sorted by the result values of the first expression, and then items with the same value for the first expression are sorted by the result value of the second expression, and so on.
+>
+> The Boolean value `false` comes before the value `true` in ascending order.
+>
+> Values of type `Edm.Stream` or any of the Geo types cannot be sorted.
+
+[OData 4.01 — Part 1: Protocol §11.2.6.2 System Query Option `$orderby`](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html)
+> The `$orderby` System Query option specifies the order in which items are returned from the service.
+>
+> The value of the `$orderby` System Query option contains a comma-separated list of expressions whose primitive result values are used to sort the items. A special case of such an expression is a property path terminating on a primitive property. A type cast using the qualified entity type name is required to order by a property defined on a derived type. Only aliases defined in the metadata document of the service can be used in URLs.
+>
+> The expression can include the suffix `asc` for ascending or `desc` for descending, separated from the property name by one or more spaces. If `asc` or `desc` is not specified, the service MUST order by the specified property in ascending order.
+>
+> 4.01 services MUST support case-insensitive values for `asc` and `desc`. Clients that want to work with 4.0 services MUST use lower case values.
+>
+> Null values come before non-null values when sorting in ascending order and after non-null values when sorting in descending order.
+>
+> Items are sorted by the result values of the first expression, and then items with the same value for the first expression are sorted by the result value of the second expression, and so on.
+>
+> The Boolean value `false` comes before the value `true` in ascending order.
+>
+> Services SHOULD order language-dependent strings according to the content-language of the response, and SHOULD annotate string properties with language-dependent order with the term `Core.IsLanguageDependent`, see [OData-VocCore].
+>
+> Values of type `Edm.Stream` or any of the Geo types cannot be sorted.
 
 ```
 GET https://api.reso.org/Property?$select=ListingKey,ModificationTimestamp&$orderby=ModificationTimestamp asc
@@ -744,8 +859,17 @@ HTTP/2 200 OK
 RESO Web API Core servers MUST support the `$orderby` operator.
 
 <br />
-
 ### 2.5.9 `$filter` Operator
+
+[OData 4.0 — Part 1: Protocol §11.2.5.1 System Query Option `$filter`](https://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html)
+[OData 4.01 — Part 1: Protocol §11.2.6.1 System Query Option `$filter`](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html)
+> The `$filter` system query option restricts the set of items returned.
+>
+> The `$count` segment may be used within a `$filter` expression to limit the items returned based on the exact count of related entities or items within a collection-valued property.
+>
+> The value of the `$filter` option is a Boolean expression as defined in [OData-ABNF].
+
+_Applies to all supported OData versions (4.0, 4.01)._
 
 OData `$filter` expressions provide query support for boolean search expressions.
 
@@ -770,7 +894,6 @@ At this document’s time of writing, most implementations use `Edm.EnumType` en
 _**Note**: support for `Edm.String` versions of enumerations, which use human-friendly display names as values, is available and is the preferred approach for new implementations. The RESO community is in the process of moving away from `Edm.EnumType` lookups to simplify implementations and improve user friendliness. See [RCP-032](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275152879) for information about string lookups._
 
 <br />
-
 #### 2.5.9.1 OData Primitive Types
 
 This section outlines logical operators and query expressions available in Web API Core for the following [OData Primitive Types](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752517):
@@ -1003,9 +1126,9 @@ HTTP/2 200 OK
 #### 2.5.9.7 Less Than or Equal
 
 [OData Documentation](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_LessThanorEqual)
-The `le` operator returns `true` if the left operand is less than or equal to the right operand, otherwise it returns `false`.
-
-See rules for [`lt`](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_LessThan) and [`eq`](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_Equals) for details.
+> The `le` operator returns `true` if the left operand is less than or equal to the right operand, otherwise it returns `false`.
+>
+> See rules for [`lt`](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_LessThan) and [`eq`](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_Equals) for details.
 
 **Example**
 
@@ -1034,7 +1157,6 @@ HTTP/2 200 OK
 ```
 
 <br />
-
 #### 2.5.9.8 Single Enumerations
 
 These are single-valued lookups, such as the [StandardStatus](https://dd.reso.org/DD1.7/Property/StandardStatus/) field.
@@ -1409,6 +1531,12 @@ Support for string-based enumerations was added in Web API Core through the use 
 ### 2.5.10 Expanded Data Elements
 Web API Core 2.1.0 also supports the use of OData `$expand`, which results in a nested data set from another defined resource. 
 
+[OData 4.0 — Part 1: Protocol §11.2.4.2 System Query Option $expand](https://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html)
+> The `$expand` system query option indicates the related entities that MUST be represented inline. The service MUST return the specified content, and MAY choose to return additional information. The value of the `$expand` query option is a comma-separated list of navigation property names, optionally followed by a `/$ref` path segment or a `/$count` path segment, and optionally a parenthesized set of expand options (for filtering, sorting, selecting, paging, or expanding the related entities). For a full description of the syntax used when building requests, see [OData-URL].
+
+[OData 4.01 — Part 1: Protocol §11.2.5.2 System Query Option $expand](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html)
+> The `$expand` system query option indicates the related entities and stream values that MUST be represented inline. The service MUST return the specified content, and MAY choose to return additional information. The value of the `$expand` query option is a comma-separated list of navigation property names, stream property names, or `$value` indicating the stream content of a media-entity. For navigation properties, the navigation property name is optionally followed by a `/$ref` path segment or a `/$count` path segment, and optionally a parenthesized set of expand options (for filtering, sorting, selecting, paging, or expanding the related entities). For a full description of the syntax used when building requests, see [OData-URL].
+
 **Example**
 Assume a given server defines a Property resource as follows, using the XML Metadata example from [section 2.3.3](#233-metadata-uri-conventions):
 
@@ -1570,8 +1698,6 @@ GET https://api.reso.org/Property('a1')/Media
 ```
 
 <br />
-
-
 ## 2.6 Response Codes and Error Message Bodies
 This section describes expected response codes and error message bodies.
 
