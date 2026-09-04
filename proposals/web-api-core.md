@@ -529,6 +529,7 @@ HTTP/2 200 OK
 * _The above example does not demonstrate the use of annotations, which are outlined in the [reference XML Metadata document](https://raw.githubusercontent.com/RESOStandards/transport/main/references/dd/edmx/dd-1.7-enum.xml)._
 
 <br />
+
 ### 2.5.2 Service Document Request
 Servers MUST support a service document request, according to the OData Minimal Conformance Rules.
 
@@ -633,6 +634,7 @@ HTTP/2 200 OK
 ```
 
 <br />
+
 ### 2.5.4 `$select` Operator
 
 OData allows clients to specify which fields they would like returned in a given payload through the use of the [$select operator](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#_Toc31361040).
@@ -681,6 +683,7 @@ HTTP/2 200 OK
 RESO Web API Core servers MUST support the `$select` operator.
 
 <br />
+
 ### 2.5.5 `$top` Operator
 
 The [OData `$top` operator](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#_Toc31361042) allows clients to specify the number of records they would like to request from a given server.
@@ -714,6 +717,7 @@ HTTP/2 200 OK
 RESO Web API Core servers MUST support the `$top` operator.
 
 <br />
+
 ### 2.5.6 `$count` Operator
 
 The [`$count` system query option](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_SystemQueryOptioncount) allows clients to request a count of the matching resources included with the resources in the response.
@@ -759,6 +763,7 @@ HTTP/2 200 OK
 RESO Web API Core servers MUST support the `$count` operator.
 
 <br />
+
 ### 2.5.7 `$skip` Operator
 The [`$skip` query option](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#_Toc31361042) requests the number of items in the queried collection that are to be skipped and not included in the result. A client can request a particular page of items by combining `$top` and `$skip`.
 
@@ -794,6 +799,7 @@ HTTP/2 200 OK
  RESO Web API Core servers MUST support the `$skip` operator but providers are allowed to decide for themselves how many records they want to allow skipping over.
 
 <br />
+
 ### 2.5.8 `$orderby` Operator
 
  The [`$orderby` system query option](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_SystemQueryOptionorderby) allows clients to request resources in a particular order.
@@ -859,6 +865,7 @@ HTTP/2 200 OK
 RESO Web API Core servers MUST support the `$orderby` operator.
 
 <br />
+
 ### 2.5.9 `$filter` Operator
 
 [OData 4.0 — Part 1: Protocol §11.2.5.1 System Query Option `$filter`](https://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html)
@@ -894,6 +901,7 @@ At this document’s time of writing, most implementations use `Edm.EnumType` en
 _**Note**: support for `Edm.String` versions of enumerations, which use human-friendly display names as values, is available and is the preferred approach for new implementations. The RESO community is in the process of moving away from `Edm.EnumType` lookups to simplify implementations and improve user friendliness. See [RCP-032](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275152879) for information about string lookups._
 
 <br />
+
 #### 2.5.9.1 OData Primitive Types
 
 This section outlines logical operators and query expressions available in Web API Core for the following [OData Primitive Types](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752517):
@@ -1157,6 +1165,7 @@ HTTP/2 200 OK
 ```
 
 <br />
+
 #### 2.5.9.8 Single Enumerations
 
 These are single-valued lookups, such as the [StandardStatus](https://dd.reso.org/DD1.7/Property/StandardStatus/) field.
@@ -1698,6 +1707,7 @@ GET https://api.reso.org/Property('a1')/Media
 ```
 
 <br />
+
 ## 2.6 Response Codes and Error Message Bodies
 This section describes expected response codes and error message bodies.
 
