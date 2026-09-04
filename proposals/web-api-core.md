@@ -436,8 +436,8 @@ The following mappings exist between the RESO Data Dictionary and OData data typ
 | Date | [Edm.Date](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752636) | MUST be in YYYY-MM-DD format according to the [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date format. |
 | Number | [Edm.Decimal](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752638) or [Edm.Double](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part3-csdl.html#_Toc453752517) for decimal values; [Edm.Int64](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part3-csdl.html#_Toc453752517) or [Edm.Int32](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part3-csdl.html#_Toc453752517) or [Edm.Int16](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part3-csdl.html#_Toc453752517) for integers. | Numbers that require decimal precision MUST use Edm.Decimal or Edm.Double, whose query and payload semantics are the same. Integers MAY be sized accordingly to support the data in a given field. |
 | String | [Edm.String](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752644) | String comparison MUST be case-sensitive, in accordance with the OData specification. Field names are also case-sensitive when used in the `$select`, `$filter`, and `$orderby` query options, and clients MUST respect the case defined in the resource metadata. |
-| String List, Single | [Edm.EnumType](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_8.1_The_edm:EnumType) or [Edm.String](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752644) with the [Lookup Resource (RCP-032)](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275152879/RCP+-+WEBAPI-032+Lookup+and+RelatedLookup+Resources+for+Lookup+Metadata) | RESO supports either `Edm.EnumType` or `Edm.String` lookups. The former MUST conform to OData SimpleIdentifier conventions, which essentially means they begin with a letter or underscore, followed by at most 127 letters, underscores or digits. Deprecation Notice applies. See Notes. |
-| String List, Multi | [Edm.EnumType](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_8.1_The_edm:EnumType) with `IsFlags=true` or [Collection(Edm.EnumType)](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_8.1_The_edm:EnumType) or [Collection(Edm.String)](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752644) with the [Lookup Resource (RCP-032)](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275152879/RCP+-+WEBAPI-032+Lookup+and+RelatedLookup+Resources+for+Lookup+Metadata) | RESO supports three kinds of multi-valued enumerations at the moment. Deprecation Notice applies. See Notes. |
+| String List, Single | [Edm.EnumType](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_8.1_The_edm:EnumType) or [Edm.String](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752644) with the [Lookup Resource](https://transport.reso.org/proposals/data-dictionary/#section-22-lookup-resource-for-enumeration-metadata) | RESO supports either `Edm.EnumType` or `Edm.String` lookups. The former MUST conform to OData SimpleIdentifier conventions, which essentially means they begin with a letter or underscore, followed by at most 127 letters, underscores or digits. Deprecation Notice applies. See Notes. |
+| String List, Multi | [Edm.EnumType](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_8.1_The_edm:EnumType) with `IsFlags=true` or [Collection(Edm.EnumType)](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_8.1_The_edm:EnumType) or [Collection(Edm.String)](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752644) with the [Lookup Resource](https://transport.reso.org/proposals/data-dictionary/#section-22-lookup-resource-for-enumeration-metadata) | RESO supports three kinds of multi-valued enumerations at the moment. Deprecation Notice applies. See Notes. |
 | Timestamp | [Edm.DateTimeOffset](http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/csprd02/odata-csdl-xml-v4.01-csprd02.html#sec_DateTimeOffset) | Timestamps also use the [ISO 8601 format](https://en.wikipedia.org/wiki/ISO_8601). Examples: `2021-05-21T16:43:43+00:00` and `2021-05-21T16:43:43Z`. Millisecond precision: `2021-05-21T16:43:43.108+00:00` and `2021-05-21T16:43:43.007Z` |
 
 **Notes**
@@ -898,7 +898,7 @@ The standard values used in transport are determined by a given lookup field’s
 
 At this document’s time of writing, most implementations use `Edm.EnumType` enumerations since they’ve historically been the only supported lookup data type. As such, the single and multiple enumeration examples contained in this document use `Edm.EnumType` and `Collection(Edm.EnumType)`, respectively.
 
-_**Note**: support for `Edm.String` versions of enumerations, which use human-friendly display names as values, is available and is the preferred approach for new implementations. The RESO community is in the process of moving away from `Edm.EnumType` lookups to simplify implementations and improve user friendliness. See [RCP-032](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275152879) for information about string lookups._
+_**Note**: support for `Edm.String` versions of enumerations, which use human-friendly display names as values, is available and is the preferred approach for new implementations. The RESO community is in the process of moving away from `Edm.EnumType` lookups to simplify implementations and improve user friendliness. See the [Lookup Resource](https://transport.reso.org/proposals/data-dictionary/#section-22-lookup-resource-for-enumeration-metadata) section of the Data Dictionary for information about string lookups._
 
 <br />
 
@@ -1172,7 +1172,7 @@ These are single-valued lookups, such as the [StandardStatus](https://dd.reso.or
 
 There are two ways to express single enumerations in the RESO Web API Core specification:
 * `Edm.EnumType`
-* `Edm.String`, as outlined in [RCP-032](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275152879)
+* `Edm.String`, as defined in the [Lookup Resource](https://transport.reso.org/proposals/data-dictionary/#section-22-lookup-resource-for-enumeration-metadata) section of the Data Dictionary
 
 `Edm.EnumType` enumerations are the most prevalent at the time of writing.
 
@@ -1323,7 +1323,7 @@ HTTP/2 200 OK
 
 ##### 2.5.9.8.2 `Edm.String` Enumerations
 
-Support for string-based enumerations was added in Web API Core through the use of the Lookup resource, [as outlined in RCP-032](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275152879).
+Support for string-based enumerations was added in Web API Core through the use of the [Lookup Resource](https://transport.reso.org/proposals/data-dictionary/#section-22-lookup-resource-for-enumeration-metadata).
 
 `Edm.String` lookups are certified as part of Web API Core 2.1.0. Please [contact RESO](mailto:dev@reso.org) with any questions about implementing them.
 
@@ -1340,7 +1340,7 @@ The `IsFlags=true` method is not recommended for current implementations due to 
 
 Currently, [RESO’s reference XML metadata](https://raw.githubusercontent.com/RESOStandards/transport/main/references/dd/edmx/dd-1.7-enum.xml) uses `Collection(Edm.EnumType)` for normative examples of multiple enumerations.
 
-RESO is in the process of transitioning to human-friendly string values using `Collection(Edm.String)` for multiple enumerations, [as outlined in RCP-032](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275152879). New implementations are encouraged to take this approach. Please [contact RESO](mailto:dev@reso.org) if you are interested in being certified using string lookups.
+RESO is in the process of transitioning to human-friendly string values using `Collection(Edm.String)` for multiple enumerations, as defined in the [Lookup Resource](https://transport.reso.org/proposals/data-dictionary/#section-22-lookup-resource-for-enumeration-metadata) section of the Data Dictionary. New implementations are encouraged to take this approach. Please [contact RESO](mailto:dev@reso.org) if you are interested in being certified using string lookups.
 
 <br />
 
@@ -1531,7 +1531,7 @@ HTTP/2 200 OK
 
 ##### 2.5.9.9.3 Collection of `Edm.String`
 
-Support for string-based enumerations was added in Web API Core through the use of the Lookup resource, [as outlined in RCP-032](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2275152879).
+Support for string-based enumerations was added in Web API Core through the use of the [Lookup Resource](https://transport.reso.org/proposals/data-dictionary/#section-22-lookup-resource-for-enumeration-metadata).
 
 `Edm.String` lookups are certified as part of Web API Core 2.1.0. Please [contact RESO](mailto:dev@reso.org) with any questions about implementing them.
 
