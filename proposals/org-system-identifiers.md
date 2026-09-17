@@ -3,7 +3,7 @@
 | **RCP** | 55 |
 | :--- | :--- |
 | **Version** | **1.0.0** |
-| **Authors** | [Josh Darnell (RESO)](mailto:josh@reso.org) |
+| **Authors** | [Josh Darnell (RESO)](mailto:josh@reso.org)<br />[Paul Stusiak (Falcon Technologies)](mailto:pstusiak@falcontechnologies.com) |
 | **Status** | IN PROGRESS |
 | **Date Ratified** | TBD |
 | **Dependencies** | [Data Dictionary 1.7+](https://ddwiki.reso.org/display/DDW17/Data+Dictionary+1.7+Wiki) |
@@ -127,7 +127,7 @@ Consumers SHOULD treat the identifier as opaque past its scheme: the `urn:reso:u
 
 **Local identifiers and migration.** Because `<unique-identifier>` is issuer-defined, an organization keeps its own identifiers until they enter RESO's registry. An existing local identifier is preserved unchanged as the tail of a URN issued under a RESO organization, so adopting the scheme changes how identifiers are formed at the transport layer without requiring the systems underneath to renumber. When an entity identified this way later receives its own RESO-issued UOI, the URN carrying the local identifier is superseded by that new UOI through the lifecycle below.
 
-> **Open item (Workgroup decision).** The internal format of the RESO-assigned token in the `<issuer>` and RESO-issued `<unique-identifier>` segments – whether to keep the current organization-type letter prefix (for example `T00000012`) or move to an opaque fixed-width token with a legacy mapping – is pending a Workgroup decision. The URN scheme accommodates either.
+**RESO-assigned tokens.** The identifiers RESO already issues are carried into the URN unchanged: a RESO-assigned `<issuer>` or RESO-issued `<unique-identifier>` segment keeps its existing form – the organization-type letter and digits for a UOI (for example `T00000012`) and the numeric form for a USI (for example `50001`) – as the examples in [Section 2.4](#section-24-authoritative-and-local-identifiers) show. Existing RESO UOIs and USIs therefore remain valid as issued, and adopting the URN form is not a breaking change for anyone already using them.
 
 **Lifecycle.** A UOI or USI is created, updated, deactivated, or superseded, and is never removed. `OrganizationStatus` and `SystemStatus` each take one of three values:
 
