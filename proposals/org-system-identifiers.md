@@ -35,7 +35,7 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 * Introduces the **System Resource** and the RESO **Unique System Identifier (USI)**, formalizing the system identifiers RESO already maintains. The identifier is distinct from the resource's primary key.
 * Defines **authoritative** (RESO-maintained) identifiers and a mechanism for providers to host **local** Organization and System resources when they use identifiers not yet issued by RESO.
 * Standardizes **`OriginatingUoi`/`OriginatingUsi`** and **`SourceUoi`/`SourceUsi`** as top-level identifiers. The existing `OriginatingSystem*` and `SourceSystem*` fields are deprecated in Data Dictionary v3.0; providers MAY continue to use them only if the UOI/USI analogues are also present.
-* Models organization and system **lifecycle status** as an enumeration (`Active`, `Inactive`, `Superseded`) with a `SupersededBy` reference for merges and reclassifications, and adds a typed **`RelatedOrganization`** expansion for relationships between organizations.
+* Models organization and system **lifecycle status** as an enumeration (`Active`, `Inactive`, `Superseded`) with a `ReplacedBy` reference for merges and reclassifications, and adds a typed **`RelatedOrganization`** expansion for relationships between organizations.
 * Standardizes UOIs and USIs as **URNs** – `urn:reso:uoi:1.0:<issuer>:<unique-identifier>` and the USI analogue – issued by RESO or by providers certified on this endorsement, so an organization's existing local identifiers are preserved and can be promoted to RESO-issued identifiers over time.
 
 <br />
@@ -65,21 +65,24 @@ This endorsement addresses both by defining standard, resolvable identifiers for
 
 ## Section 2.1: Organization Resource (UOI)
 
-Organizations are currently modeled by the [OUID Resource](https://ddwiki.reso.org/display/DDW20/OUID+Resource). This endorsement deprecates the OUID Resource in favor of a new **Organization Resource** and standardizes the **Unique Organization Identifier (UOI)** it carries. Most OUID properties port directly.
+Organizations are currently modeled by the [OUID Resource](https://ddwiki.reso.org/display/DDW20/OUID+Resource). This endorsement deprecates the OUID Resource in favor of a new **Organization Resource** and standardizes the **Unique Organization Identifier (UOI)** it carries. Most OUID properties port directly. The deprecation is advertised the way every RESO element deprecation is: the OUID Resource's Model record carries `ElementStatus` `Deprecated` and `ReplacedByModelKey` pointing to the Organization Resource, as defined in [RCP-45 Legacy and Deprecated Data Elements](https://github.com/RESOStandards/transport/pull/104).
 
 Once ratified, current implementations MAY continue to expose the OUID Resource, but MUST implement the Organization Resource and populate the UOI when present.
 
-The Organization Resource defines at least the following:
+The Organization Resource defines at least the following, plus any relevant OUID Resource attributes:
 
-* **OrganizationKey** – String, non-nullable. The unique local key of the organization.
-* **OrganizationId** – String, non-nullable. The Unique Organization Identifier (UOI).
-* **OrganizationName** – String, nullable. The organization name.
-* **OrganizationStatus** – String, non-nullable. The organization's lifecycle status: `Active`, `Inactive`, or `Superseded`. See [Section 2.3](#section-23-identifier-format-and-lifecycle).
-* **SupersededByUoi** – String, nullable. When `OrganizationStatus` is `Superseded`, the UOI that supersedes this one; otherwise null. See [Section 2.3](#section-23-identifier-format-and-lifecycle).
-* **OrganizationStatusChangeTimestamp** – Timestamp, nullable. When the organization's status last changed.
-* **OrganizationComments** – String, nullable. Free-text narrative about the organization, for example a merger or reclassification history. Informational only; see [Section 2.3](#section-23-identifier-format-and-lifecycle).
-* **ModificationTimestamp** – Timestamp, non-nullable. When the organization record was last updated.
-* Any relevant OUID Resource attributes.
+| Field | Type | Nullable | Definition |
+| :--- | :--- | :--- | :--- |
+| OrganizationKey | String | No | The unique local key of the organization. |
+| OrganizationId | String | No | The Unique Organization Identifier (UOI). |
+| OrganizationName | String | Yes | The organization name. |
+| OrganizationStatus | String List, Single | No | The organization's lifecycle status: Active, Inactive, or Superseded. |
+| ReplacedByUoi | String | Yes | When OrganizationStatus is Superseded, the UOI that supersedes this one; otherwise null. |
+| OrganizationStatusChangeTimestamp | Timestamp | Yes | When the organization's status last changed. |
+| OrganizationComments | String | Yes | Free-text narrative about the organization, for example a merger or reclassification history. |
+| ModificationTimestamp | Timestamp | No | When the organization record was last updated. |
+
+`OrganizationStatus` and `ReplacedByUoi` are defined in [Section 2.3](#section-23-identifier-format-and-lifecycle); `OrganizationComments` is informational only, and the machine-resolvable state is the status and `ReplacedByUoi` fields.
 
 `OrganizationKey` is the local key of the record; `OrganizationId` is the well-known RESO identifier, when applicable.
 
@@ -87,9 +90,13 @@ The Organization Resource defines at least the following:
 
 The `RelatedOrganization` expansion and its entries define at least the following:
 
-* **RelatedOrganization** – Expansion, nullable. A self-expansion on the Organization Resource, retrieved with `$expand=RelatedOrganization`. Each entry is a directed, typed edge from this organization to another. Null or absent when the organization references no other organizations.
-* **RelatedUoi** – String, non-nullable. On a `RelatedOrganization` entry, the UOI of the referenced organization.
-* **RelationshipType** – String, non-nullable. On a `RelatedOrganization` entry, the type of the relationship, for example `ParticipatesIn`, `ServedBy`, or `AffiliatedWith`. The edge is read from the hosting organization outward.
+| Resource | Field | Type | Nullable | Definition |
+| :--- | :--- | :--- | :--- | :--- |
+| Organization | RelatedOrganization | Expansion (RelatedOrganization) | No | A self-expansion on the Organization Resource; each entry is a directed, typed edge from this organization to another. |
+| RelatedOrganization | RelatedUoi | String | No | The UOI of the referenced organization. |
+| RelatedOrganization | RelationshipType | String List, Single | No | The type of the relationship, for example ParticipatesIn, ServedBy, or AffiliatedWith. |
+
+The expansion is retrieved with `$expand=RelatedOrganization`. When the organization references no other organizations it is the empty collection, `[]`, never null, as for every collection in the Data Dictionary. The edge is read from the hosting organization outward.
 
 ## Section 2.2: System Resource (USI)
 
@@ -99,13 +106,17 @@ A System Resource MAY model any relevant system properties, but MUST define at l
 
 The System Resource defines at least the following:
 
-* **SystemKey** – String, non-nullable. The unique local key of the system.
-* **SystemId** – String, non-nullable. The Unique System Identifier (USI).
-* **ProviderUoi** – String, non-nullable. The UOI of the organization that provides the system.
-* **SystemName** – String, nullable. The system name.
-* **SystemStatus** – String, non-nullable. The system's lifecycle status: `Active`, `Inactive`, or `Superseded`. See [Section 2.3](#section-23-identifier-format-and-lifecycle).
-* **SupersededByUsi** – String, nullable. When `SystemStatus` is `Superseded`, the USI that supersedes this one; otherwise null. See [Section 2.3](#section-23-identifier-format-and-lifecycle).
-* **ModificationTimestamp** – Timestamp, non-nullable. When the system record was last updated.
+| Field | Type | Nullable | Definition |
+| :--- | :--- | :--- | :--- |
+| SystemKey | String | No | The unique local key of the system. |
+| SystemId | String | No | The Unique System Identifier (USI). |
+| ProviderUoi | String | No | The UOI of the organization that provides the system. |
+| SystemName | String | Yes | The system name. |
+| SystemStatus | String List, Single | No | The system's lifecycle status: Active, Inactive, or Superseded. |
+| ReplacedByUsi | String | Yes | When SystemStatus is Superseded, the USI that supersedes this one; otherwise null. |
+| ModificationTimestamp | Timestamp | No | When the system record was last updated. |
+
+`SystemStatus` and `ReplacedByUsi` are defined in [Section 2.3](#section-23-identifier-format-and-lifecycle).
 
 Other attributes MAY be added through separate proposals.
 
@@ -123,6 +134,8 @@ and a USI the parallel form `urn:reso:usi:1.0:<issuer>:<unique-identifier>`, whe
 * **`<issuer>`** is a RESO-assigned identifier for the organization that issued this identifier. The issuer MUST be an organization in RESO's UOI service; a consumer confirms an identifier by confirming its issuer is a known RESO organization. RESO is the root issuer, so an organization's own UOI is one that RESO issues.
 * **`<unique-identifier>`** is the value the issuing organization assigns, in any format it chooses, percent-encoded per the URN rules so that reserved characters – notably the `:` segment delimiter – are carried safely.
 
+Because `<issuer>` is RESO-assigned and `<unique-identifier>` is percent-encoded, a UOI or USI always has exactly six colon-separated segments and can be carried whole inside another RESO URN; the Unique Licensee Identifier (RCP-54) carries the minting organization's UOI this way.
+
 Consumers SHOULD treat the identifier as opaque past its scheme: the `urn:reso:uoi` or `urn:reso:usi` prefix types it, and the `<unique-identifier>` carries no consumer-parseable meaning. The scheme aligns with the `urn:reso:` identifiers RESO already uses in the [RESO Common Format](https://transport.reso.org/proposals/reso-common-format/) (RCP-25).
 
 **Local identifiers and migration.** Because `<unique-identifier>` is issuer-defined, an organization keeps its own identifiers until they enter RESO's registry. An existing local identifier is preserved unchanged as the tail of a URN issued under a RESO organization, so adopting the scheme changes how identifiers are formed at the transport layer without requiring the systems underneath to renumber. When an entity identified this way later receives its own RESO-issued UOI, the URN carrying the local identifier is superseded by that new UOI through the lifecycle below.
@@ -131,15 +144,17 @@ Consumers SHOULD treat the identifier as opaque past its scheme: the `urn:reso:u
 
 **Lifecycle.** A UOI or USI is created, updated, deactivated, or superseded, and is never removed. `OrganizationStatus` and `SystemStatus` each take one of three values:
 
-* **`Active`** – current and in use.
-* **`Inactive`** – retired with no successor, for example dissolved or closed.
-* **`Superseded`** – replaced by another identifier, for example through a merger, acquisition, or reclassification.
+| Lookup Value | Definition |
+| :--- | :--- |
+| Active | Current and in use. |
+| Inactive | Retired with no successor, for example dissolved or closed. |
+| Superseded | Replaced by another identifier, for example through a merger, acquisition, or reclassification. |
 
-When the status is `Superseded`, `SupersededByUoi` or `SupersededByUsi` MUST be populated; when it is `Active` or `Inactive`, that field MUST be null.
+When the status is `Superseded`, `ReplacedByUoi` or `ReplacedByUsi` MUST be populated; when it is `Active` or `Inactive`, that field MUST be null.
 
-**Supersession and resolution.** A superseded record is retained, and its `SupersededBy` identifier points to the replacement, forming a redirect chain. A consumer holding a superseded identifier resolves to the current one by following the `SupersededBy` reference to the end of the chain. This mirrors the tombstone-and-redirect model of the Unique Licensee Identifier (ULI, RCP-54). Human narrative about a change, such as a merger history, MAY be carried in a free-text comment, but the machine-resolvable state is the status and `SupersededBy` fields.
+**Supersession and resolution.** A superseded record is retained, and its `ReplacedBy` identifier points to the replacement, forming a redirect chain. A consumer holding a superseded identifier resolves to the current one by following the `ReplacedBy` reference to the end of the chain. This mirrors the tombstone-and-redirect model of the Unique Licensee Identifier (ULI, RCP-54). Human narrative about a change, such as a merger history, MAY be carried in a free-text comment, but the machine-resolvable state is the status and `ReplacedBy` fields.
 
-**Demergers and splits.** `SupersededByUoi` and `SupersededByUsi` are single pointers: a superseded identifier resolves to exactly one successor, so a split never fans a `SupersededBy` reference out. When an organization divides, each resulting organization that is new receives its own identifier. If the original organization continues, its record stays `Active` and the new organizations reference it through `RelatedOrganization`. If the original ceases, its record becomes `Superseded` and `SupersededByUoi` MUST point to the one successor that carries its identity forward (the organization assuming its records and obligations); the other resulting organizations are reachable from that successor through `RelatedOrganization`. The same rule applies to systems and `SupersededByUsi`.
+**Demergers and splits.** `ReplacedByUoi` and `ReplacedByUsi` are single pointers: a superseded identifier resolves to exactly one successor, so a split never fans a `ReplacedBy` reference out. When an organization divides, each resulting organization that is new receives its own identifier. If the original organization continues, its record stays `Active` and the new organizations reference it through `RelatedOrganization`. If the original ceases, its record becomes `Superseded` and `ReplacedByUoi` MUST point to the one successor that carries its identity forward (the organization assuming its records and obligations); the other resulting organizations are reachable from that successor through `RelatedOrganization`. The same rule applies to systems and `ReplacedByUsi`.
 
 ## Section 2.4: Authoritative and Local Identifiers
 
@@ -160,7 +175,7 @@ HTTP/2
 **RESPONSE**
 ```json
 {
-  "@odata.context": "https://api.example.com/Organization?$select=OrganizationId,OrganizationName,ModificationTimestamp&$filter=OrganizationId eq 'urn:reso:uoi:1.0:T00000045:local-org-1'",
+  "@odata.context": "https://api.example.com/$metadata#Organization(OrganizationId,OrganizationName,ModificationTimestamp)",
   "value": [
     {
       "OrganizationId": "urn:reso:uoi:1.0:T00000045:local-org-1",
@@ -182,7 +197,7 @@ HTTP/2
 **RESPONSE**
 ```json
 {
-  "@odata.context": "https://api.example.com/System?$select=SystemId,SystemName,ModificationTimestamp&$filter=SystemId eq 'urn:reso:usi:1.0:T00000045:local-system-1'",
+  "@odata.context": "https://api.example.com/$metadata#System(SystemId,SystemName,ModificationTimestamp)",
   "value": [
     {
       "SystemId": "urn:reso:usi:1.0:T00000045:local-system-1",
@@ -199,16 +214,20 @@ End users may not have access to a provider's local Organization and System reso
 
 The Data Dictionary's `OriginatingSystem` and `SourceSystem` fields carry the organization and system a record came from and was obtained from. This endorsement standardizes those as UOI/USI pairs at the top level of each resource that supports them:
 
-* **OriginatingUoi** – String, nullable. The UOI of the organization where the record originated. Required when the originating organization is known.
-* **OriginatingUsi** – String, nullable. The USI of the system where the record originated. Null when the originating system is not known.
-* **SourceUoi** – String, nullable. The UOI of the organization the current provider obtained the record from. Required when the source organization is known.
-* **SourceUsi** – String, nullable. The USI of the system the record was obtained from. Null when that system is not known.
+| Field | Type | Nullable | Definition |
+| :--- | :--- | :--- | :--- |
+| OriginatingUoi | String | Yes | The UOI of the organization where the record originated. |
+| OriginatingUsi | String | Yes | The USI of the system where the record originated. |
+| SourceUoi | String | Yes | The UOI of the organization the current provider obtained the record from. |
+| SourceUsi | String | Yes | The USI of the system the record was obtained from. |
+
+`OriginatingUoi` and `SourceUoi` are required when the originating or source organization is known; `OriginatingUsi` and `SourceUsi` are null when the system is not known.
 
 An organization identifier MAY be present without its system identifier. Because `OriginatingSystemName` and `SourceSystemName` name an *organization* today, a provider migrating those values can populate the `*Uoi` fields even when the `*Usi` is unknown.
 
 These fields are usable on their own and do **not** require the Data Provenance endorsement (RCP-50); they carry the same originating- and source-identification that `OriginatingSystemName`/`ID` and `SourceSystemName`/`ID` carry today, using standard identifiers.
 
-**Deprecation.** `OriginatingSystemName`, `OriginatingSystemID`, `OriginatingSystemKey`, `SourceSystemName`, `SourceSystemID`, and `SourceSystemKey` are deprecated in Data Dictionary v3.0. A provider MAY continue to populate them on a record, but only if that record also carries the organization analogue: any populated `OriginatingSystem*` field requires `OriginatingUoi`, and any populated `SourceSystem*` field requires `SourceUoi`, with the matching `*Usi` when the system is known.
+**Deprecation.** `OriginatingSystemName`, `OriginatingSystemID`, `OriginatingSystemKey`, `SourceSystemName`, `SourceSystemID`, and `SourceSystemKey` are deprecated in Data Dictionary v3.0; each deprecated field's Field record carries `ElementStatus` `Deprecated` and `ReplacedByFieldKey` pointing to its `*Uoi` or `*Usi` replacement (RCP-45). A provider MAY continue to populate them on a record, but only if that record also carries the organization analogue: any populated `OriginatingSystem*` field requires `OriginatingUoi`, and any populated `SourceSystem*` field requires `SourceUoi`, with the matching `*Usi` when the system is known.
 
 **Consistency with Provenance.** When Provenance is present, the top-level identifiers MUST agree with the ends of the provenance chain: `OriginatingUoi`/`OriginatingUsi` MUST equal the `ProviderUoi`/`ProviderUsi` of the earliest (origin) Provenance record, and `SourceUoi`/`SourceUsi` MUST equal the `ProviderUoi`/`ProviderUsi` of the latest record – the hop the current provider obtained the record from. For a single-record chain the origin and source coincide. Provenance describes the full chain in between; its ends MUST NOT contradict the top-level fields.
 
@@ -223,9 +242,9 @@ RESO will validate the following during certification:
 * Identifier resolution keys off the `<issuer>` segment. A RESO-issued identifier resolves against the RESO authoritative registry described in Section 2.4. A provider-issued identifier resolves against that issuer's hosted Organization or System resource. When the issuer is a third party – neither RESO nor the endpoint under test – the identifier is validated against the RESO authoritative registry only, since the endpoint is not obligated to host another party's resources.
 * The `<issuer>` segment of any UOI or USI MUST identify RESO or an organization holding the UOI or USI endorsement in RESO's Organizations and Endorsements feed.
 * A provider that issues its own UOIs or USIs MUST host correctly implemented Organization and System resources for the identifiers it issues; RESO samples those resources during certification to confirm the issued identifiers resolve and the resources conform.
-* `OriginatingUoi`/`OriginatingUsi`, `SourceUoi`/`SourceUsi`, any `SupersededByUoi`/`SupersededByUsi`, and any `RelatedUoi`, when present, MUST resolve as above.
+* `OriginatingUoi`/`OriginatingUsi`, `SourceUoi`/`SourceUsi`, any `ReplacedByUoi`/`ReplacedByUsi`, and any `RelatedUoi`, when present, MUST resolve as above.
 * A `RelatedOrganization` entry, when present, MUST carry both `RelatedUoi` and `RelationshipType`.
-* When `OrganizationStatus` or `SystemStatus` is `Superseded`, the corresponding `SupersededByUoi` or `SupersededByUsi` MUST be present; when the status is `Active` or `Inactive`, it MUST be null.
+* When `OrganizationStatus` or `SystemStatus` is `Superseded`, the corresponding `ReplacedByUoi` or `ReplacedByUsi` MUST be present; when the status is `Active` or `Inactive`, it MUST be null.
 * On any record where a deprecated `OriginatingSystem*` field is populated, `OriginatingUoi` MUST be populated; likewise a populated `SourceSystem*` field requires `SourceUoi`.
 * When Provenance is present, the top-level `OriginatingUoi`/`OriginatingUsi` and `SourceUoi`/`SourceUsi` MUST match the ends of the provenance chain (the ends-match rule of Section 2.5).
 
@@ -245,6 +264,7 @@ Please see the following references for more information regarding topics covere
 * [RESO Certification and the Organizations and Endorsements feed](https://www.reso.org/certification/)
 * [RESO Common Format (RCP-25)](https://transport.reso.org/proposals/reso-common-format/)
 * [RESO Data Provenance Endorsement (RCP-50)](https://github.com/RESOStandards/transport/blob/rcp-50-data-provenance/proposals/data-provenance.md)
+* [RCP-45 Legacy and Deprecated Data Elements](https://github.com/RESOStandards/transport/pull/104)
 * [RESO Unique Licensee Identifier (ULI, RCP-54)](https://github.com/RESOStandards/transport/blob/221-uli-resolution-protocol/proposals/uli-resolution-protocol.md)
 
 <br />
@@ -257,7 +277,7 @@ Please see the following references for more information regarding topics covere
 
 **Top-level identifiers, not Tenant/Subtenant.** An earlier approach modeled multi-tenant filtering with `TenantUoi`/`SubtenantUoi`. Both uses that motivated it – de-multiplexing a combined feed by origin, and scoping to one organization within a grant – are served today by `OriginatingSystemName`, so they are served here by `OriginatingUoi`/`OriginatingUsi`. Originating is the more intuitive, 1:1 migration from the existing fields, is usable before Provenance is adopted, and avoids introducing tenancy vocabulary into the Data Dictionary. Tenancy as an access-and-partitioning concern is left to the layer that governs access.
 
-**Status as an enumeration, and relationships as neutral edges.** The authoritative registry historically carried organization status as a Boolean and recorded mergers and reclassifications only in free-text comments, which are not machine-resolvable. This endorsement models status as an enumeration – `Active`, `Inactive`, `Superseded` – paired with a `SupersededBy` reference, so a consumer can resolve a retired identifier to its current one without parsing prose. Relationships between organizations are modeled as directed, typed graph edges (`RelatedOrganization`) rather than ownership statements: an edge records that two organizations are related and how, not that one organization owns or controls another. The `RelationshipType` vocabulary is intentionally functional – `ParticipatesIn`, `ServedBy`, `AffiliatedWith` – to avoid language that could imply control in a real estate context.
+**Status as an enumeration, and relationships as neutral edges.** The authoritative registry historically carried organization status as a Boolean and recorded mergers and reclassifications only in free-text comments, which are not machine-resolvable. This endorsement models status as an enumeration – `Active`, `Inactive`, `Superseded` – paired with a `ReplacedBy` reference, so a consumer can resolve a retired identifier to its current one without parsing prose. Relationships between organizations are modeled as directed, typed graph edges (`RelatedOrganization`) rather than ownership statements: an edge records that two organizations are related and how, not that one organization owns or controls another. The `RelationshipType` vocabulary is intentionally functional – `ParticipatesIn`, `ServedBy`, `AffiliatedWith` – to avoid language that could imply control in a real estate context.
 
 ## Worked example
 
@@ -314,7 +334,7 @@ The following shows an Organization Resource response, a System Resource respons
 }
 ```
 
-**Organization mid-promotion** – a brokerage the technology provider first identified with a locally issued UOI, now superseded by a RESO-issued UOI after the brokerage entered the registry. A system promotes the same way, with a `SupersededByUsi` on the issuer's local System Resource.
+**Organization mid-promotion** – a brokerage the technology provider first identified with a locally issued UOI, now superseded by a RESO-issued UOI after the brokerage entered the registry. A system promotes the same way, with a `ReplacedByUsi` on the issuer's local System Resource.
 
 **RESPONSE**
 ```json
@@ -323,7 +343,7 @@ The following shows an Organization Resource response, a System Resource respons
   "OrganizationId": "urn:reso:uoi:1.0:T00000045:brokerage-7",
   "OrganizationName": "Example Brokerage",
   "OrganizationStatus": "Superseded",
-  "SupersededByUoi": "urn:reso:uoi:1.0:T00000012:B00000078",
+  "ReplacedByUoi": "urn:reso:uoi:1.0:T00000012:B00000078",
   "OrganizationStatusChangeTimestamp": "2024-06-01T00:00:00Z",
   "ModificationTimestamp": "2024-06-01T00:00:00Z"
 }
