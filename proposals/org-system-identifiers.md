@@ -139,6 +139,8 @@ When the status is `Superseded`, `SupersededByUoi` or `SupersededByUsi` MUST be 
 
 **Supersession and resolution.** A superseded record is retained, and its `SupersededBy` identifier points to the replacement, forming a redirect chain. A consumer holding a superseded identifier resolves to the current one by following the `SupersededBy` reference to the end of the chain. This mirrors the tombstone-and-redirect model of the Unique Licensee Identifier (ULI, RCP-54). Human narrative about a change, such as a merger history, MAY be carried in a free-text comment, but the machine-resolvable state is the status and `SupersededBy` fields.
 
+**Demergers and splits.** `SupersededByUoi` and `SupersededByUsi` are single pointers: a superseded identifier resolves to exactly one successor, so a split never fans a `SupersededBy` reference out. When an organization divides, each resulting organization that is new receives its own identifier. If the original organization continues, its record stays `Active` and the new organizations reference it through `RelatedOrganization`. If the original ceases, its record becomes `Superseded` and `SupersededByUoi` MUST point to the one successor that carries its identity forward (the organization assuming its records and obligations); the other resulting organizations are reachable from that successor through `RelatedOrganization`. The same rule applies to systems and `SupersededByUsi`.
+
 ## Section 2.4: Authoritative and Local Identifiers
 
 RESO maintains authoritative Unique Organization and System Identifiers – primarily real estate associations, MLSs, and their technology providers – in both spreadsheet and JSON formats, which are kept current and used in Certification and RESO Analytics. Records can be created, updated, deactivated, or superseded, but not removed. New authoritative identifiers can be created by [contacting RESO](mailto:support@reso.org?subject=UOI%20%2F%20USI%20Request&body=Organization%20or%20system%20name%3A%0D%0AWebsite%3A%0D%0AContact%20name%20and%20email%3A%0D%0AIdentifier%20requested%20%28UOI%2C%20USI%2C%20or%20both%29%3A%0D%0AExisting%20local%20identifier%2C%20if%20any%3A).
@@ -232,6 +234,8 @@ RESO will validate the following during certification:
 # Section 4: Contributors
 This document was written by [Joshua Darnell](mailto:josh@reso.org).
 
+The RESO Transport Identifiers Subgroup reviewed and shaped the proposal: Al McElmon, Eric Finlay, Eric Rolfe, Greg Sax, Jason Darrough, Joe Szurgyi, John Breault, Jon Druse, Kristy Solomon, Muhammad Yasir, Paul Stusiak, Sam DeBord, Steven Wiebmer, and Tao Portugal.
+
 <br />
 
 # Section 5: References
@@ -240,8 +244,8 @@ Please see the following references for more information regarding topics covere
 * [RESO Unique Organization Identifier (UOI)](https://www.reso.org/reso-unique-identifiers/)
 * [RESO Certification and the Organizations and Endorsements feed](https://www.reso.org/certification/)
 * [RESO Common Format (RCP-25)](https://transport.reso.org/proposals/reso-common-format/)
-* [RESO Data Provenance Endorsement (RCP-50)](./data-provenance.md)
-* [RESO Unique Licensee Identifier (ULI, RCP-54)](./uli-resolution-protocol.md)
+* [RESO Data Provenance Endorsement (RCP-50)](https://github.com/RESOStandards/transport/blob/rcp-50-data-provenance/proposals/data-provenance.md)
+* [RESO Unique Licensee Identifier (ULI, RCP-54)](https://github.com/RESOStandards/transport/blob/221-uli-resolution-protocol/proposals/uli-resolution-protocol.md)
 
 <br />
 
