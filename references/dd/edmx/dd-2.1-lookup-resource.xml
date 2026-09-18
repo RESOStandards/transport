@@ -817,29 +817,13 @@
         <Key>
           <PropertyRef Name="FieldKey"/>
         </Key>
-        <Property Name="CollectionYN" Type="Edm.Boolean"/>
-        <Property Name="Definition" Type="Edm.String" MaxLength="200"/>
-        <Property Name="ExpandableYN" Type="Edm.Boolean"/>
         <Property Name="FeedTypes" Type="Collection(Edm.String)" Nullable="false" MaxLength="100">
           <Annotation Term="RESO.OData.Metadata.LookupName" String="FeedTypes"/>
         </Property>
         <Property Name="FieldKey" Type="Edm.String" MaxLength="255"/>
         <Property Name="FieldName" Type="Edm.String" MaxLength="255"/>
-        <Property Name="Length" Type="Edm.Int64"/>
-        <Property Name="LookupName" Type="Edm.String" MaxLength="100"/>
-        <Property Name="ModelKey" Type="Edm.String" MaxLength="50"/>
         <Property Name="ModificationTimestamp" Type="Edm.DateTimeOffset"/>
-        <Property Name="NullableYN" Type="Edm.Boolean"/>
-        <Property Name="OrderableYN" Type="Edm.Boolean"/>
-        <Property Name="Precision" Type="Edm.Int64"/>
-        <Property Name="ReadableYN" Type="Edm.Boolean"/>
         <Property Name="ResourceName" Type="Edm.String" MaxLength="255"/>
-        <Property Name="Scale" Type="Edm.Int64"/>
-        <Property Name="SearchableYN" Type="Edm.Boolean"/>
-        <Property Name="Type" Type="Edm.String" MaxLength="100">
-          <Annotation Term="RESO.OData.Metadata.LookupName" String="FieldDataTypes"/>
-        </Property>
-        <Property Name="UpdatableYN" Type="Edm.Boolean"/>
       </EntityType>
       <EntityType Name="HistoryTransactional">
         <Key>
@@ -1064,9 +1048,6 @@
         <Key>
           <PropertyRef Name="LookupKey"/>
         </Key>
-        <Property Name="FeedTypes" Type="Collection(Edm.String)" Nullable="false" MaxLength="100">
-          <Annotation Term="RESO.OData.Metadata.LookupName" String="FeedTypes"/>
-        </Property>
         <Property Name="LegacyODataValue" Type="Edm.String" MaxLength="255"/>
         <Property Name="LookupKey" Type="Edm.String" MaxLength="255"/>
         <Property Name="LookupName" Type="Edm.String" MaxLength="255"/>
@@ -1335,25 +1316,6 @@
         <Property Name="ModificationTimestamp" Type="Edm.DateTimeOffset"/>
         <NavigationProperty Name="HistoryTransactional" Type="Collection(org.reso.metadata.HistoryTransactional)"/>
         <NavigationProperty Name="Member" Type="org.reso.metadata.Member"/>
-      </EntityType>
-      <EntityType Name="Model">
-        <Key>
-          <PropertyRef Name="ModelKey"/>
-        </Key>
-        <Property Name="Definition" Type="Edm.String" MaxLength="200"/>
-        <Property Name="DeletableYN" Type="Edm.Boolean"/>
-        <Property Name="HasStreamYN" Type="Edm.Boolean"/>
-        <Property Name="InsertableYN" Type="Edm.Boolean"/>
-        <Property Name="ModelKey" Type="Edm.String" MaxLength="50"/>
-        <Property Name="ModelName" Type="Edm.String" MaxLength="50"/>
-        <Property Name="ModelType" Type="Edm.String" MaxLength="100">
-          <Annotation Term="RESO.OData.Metadata.LookupName" String="ModelType"/>
-        </Property>
-        <Property Name="ModificationTimestamp" Type="Edm.DateTimeOffset"/>
-        <Property Name="ModificationTimestampFieldKey" Type="Edm.String" MaxLength="50"/>
-        <Property Name="PrimaryKeyFieldKey" Type="Edm.String" MaxLength="50"/>
-        <Property Name="ReadableYN" Type="Edm.Boolean"/>
-        <Property Name="UpdatableYN" Type="Edm.Boolean"/>
       </EntityType>
       <EntityType Name="OUID">
         <Key>
@@ -3480,7 +3442,6 @@
           <NavigationPropertyBinding Path="HistoryTransactional" Target="HistoryTransactional"/>
           <NavigationPropertyBinding Path="Member" Target="Member"/>
         </EntitySet>
-        <EntitySet Name="Model" EntityType="org.reso.metadata.Model"/>
         <EntitySet Name="OUID" EntityType="org.reso.metadata.OUID">
           <NavigationPropertyBinding Path="ChangedByMember" Target="Member"/>
           <NavigationPropertyBinding Path="HistoryTransactional" Target="HistoryTransactional"/>
