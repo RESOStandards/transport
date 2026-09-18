@@ -380,7 +380,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Property",
+  "@odata.context": "https://api.reso.org/$metadata#Property",
   "value": [
     {
       "ListingKey": "a1",
@@ -407,7 +407,7 @@ GET https://api.reso.org/Property?$filter=ListPrice gt 100000.00
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Property?$filter=ListPrice gt 100000.00",
+  "@odata.context": "https://api.reso.org/$metadata#Property",
   "value": [
     {
       "ListingKey": "b2",
@@ -621,7 +621,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Property('a1')",
+  "@odata.context": "https://api.reso.org/$metadata#Property/$entity",
   "ListingKey": "a1",
   "BedroomsTotal": 5,
   "ListPrice": 100000.00,
@@ -667,7 +667,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Property?$select=ListingKey,ModificationTimestamp",
+  "@odata.context": "https://api.reso.org/$metadata#Property(ListingKey,ModificationTimestamp)",
   "value": [
     {
       "ListingKey": "a1",
@@ -704,7 +704,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Property?$select=ListingKey,ModificationTimestamp&$top=1",
+  "@odata.context": "https://api.reso.org/$metadata#Property(ListingKey,ModificationTimestamp)",
   "value": [
     {
       "ListingKey": "a1",
@@ -750,7 +750,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Property?$select=ListingKey,ModificationTimestamp&$top=1&$count=true",
+  "@odata.context": "https://api.reso.org/$metadata#Property(ListingKey,ModificationTimestamp)",
   "@odata.count": 2,
   "value": [
     {
@@ -785,7 +785,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Property?$select=ListingKey,ModificationTimestamp&$count=true&$top=1&$skip=1",
+  "@odata.context": "https://api.reso.org/$metadata#Property(ListingKey,ModificationTimestamp)",
   "@odata.count": 2,
   "value": [
     {
@@ -848,7 +848,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Property?$select=ListingKey,ModificationTimestamp&$orderby=ModificationTimestamp asc",
+  "@odata.context": "https://api.reso.org/$metadata#Property(ListingKey,ModificationTimestamp)",
   "value": [
     {
       "ListingKey": "b2",
@@ -952,7 +952,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Property?$filter=BedroomsTotal eq 3",
+  "@odata.context": "https://api.reso.org/$metadata#Property",
   "value": [
     {
       "ListingKey": "a1",
@@ -999,7 +999,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Property?$filter=BedroomsTotal ne 3",
+  "@odata.context": "https://api.reso.org/$metadata#Property",
   "value": [
     {
       "ListingKey": "a2",
@@ -1039,7 +1039,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Property?$filter=ListPrice gt 100000.00",
+  "@odata.context": "https://api.reso.org/$metadata#Property",
   "value": [
     {
       "ListingKey": "a3",
@@ -1074,7 +1074,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Property?$filter=ModificationTimestamp ge 2021-05-22T00:00:00Z",
+  "@odata.context": "https://api.reso.org/$metadata#Property",
   "value": [
     {
       "ListingKey": "a4",
@@ -1113,7 +1113,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Property?$filter=ListingContractDate lt 2021-01-01",
+  "@odata.context": "https://api.reso.org/$metadata#Property",
   "value": [
     {
       "ListingKey": "a5",
@@ -1148,7 +1148,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Property?$filter=ListingContractDate le 2020-12-31",
+  "@odata.context": "https://api.reso.org/$metadata#Property",
   "value": [
     {
       "ListingKey": "a5",
@@ -1236,7 +1236,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Property?$filter=StandardStatus has org.reso.metadata.enums.StandardStatus'Active'",
+  "@odata.context": "https://api.reso.org/$metadata#Property",
   "value": [
     {
       "ListingKey": "a1",
@@ -1269,7 +1269,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Property?$filter=StandardStatus eq org.reso.metadata.enums.StandardStatus'Active'",
+  "@odata.context": "https://api.reso.org/$metadata#Property",
   "value": [
     {
       "ListingKey": "a1",
@@ -1303,7 +1303,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Property?$filter=StandardStatus ne org.reso.metadata.enums.StandardStatus'Active'",
+  "@odata.context": "https://api.reso.org/$metadata#Property",
   "value": [
     {
       "ListingKey": "a2",
@@ -1401,7 +1401,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Property?$filter=AccessibilityFeatures has org.reso.metadata.enums.AccessibilityFeatures'AccessibleEntrance'",
+  "@odata.context": "https://api.reso.org/$metadata#Property",
   "value": [
     {
       "ListingKey": "a1",
@@ -1477,7 +1477,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Property?$filter=AccessibilityFeatures/any(enum:enum eq org.reso.metadata.enums.AccessibilityFeatures'AccessibleEntrance')",
+  "@odata.context": "https://api.reso.org/$metadata#Property",
   "value": [
     {
       "ListingKey": "a1",
@@ -1511,7 +1511,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Property?$filter=AccessibilityFeatures/all(enum:enum eq org.reso.metadata.enums.AccessibilityFeatures'Visitable')",
+  "@odata.context": "https://api.reso.org/$metadata#Property",
   "value": [
     {
       "ListingKey": "a39",
@@ -1799,7 +1799,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Property?$filter=ListingContractDate ge 2020-12-01 and ListingContractDate lt 2021-01-01",
+  "@odata.context": "https://api.reso.org/$metadata#Property",
   "value": [
     {
       "ListingKey": "a1",
@@ -1824,7 +1824,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Property?$filter=ListingContractDate ge 2020-01-01 and ListingContractDate lt 2021-01-01",
+  "@odata.context": "https://api.reso.org/$metadata#Property",
   "value": [
     {
       "ListingKey": "b2",
@@ -1849,7 +1849,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Member?$filter=MemberStatus eq 'Active' and (MemberFirstName eq 'James' or MemberFirstName eq 'Adam')",
+  "@odata.context": "https://api.reso.org/$metadata#Member",
   "value": [
     {
       "MemberKey": "a1",
@@ -1878,7 +1878,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Property?$filter=ShortSale eq true",
+  "@odata.context": "https://api.reso.org/$metadata#Property",
   "value": [
     {
       "ListingKey": "a1",
@@ -1904,7 +1904,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Property?$filter=ListPrice gt 250000 and ListPrice lt 500000",
+  "@odata.context": "https://api.reso.org/$metadata#Property",
   "value": [
     {
       "ListingKey": "c3",
@@ -1929,7 +1929,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Property?$filter=ListPrice gt 300000",
+  "@odata.context": "https://api.reso.org/$metadata#Property",
   "value": [
     {
       "ListingKey": "c3",
@@ -1954,7 +1954,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Property?$filter=ListPrice eq 300000",
+  "@odata.context": "https://api.reso.org/$metadata#Property",
   "value": [
     {
       "ListingKey": "d4",
@@ -1979,7 +1979,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Property?$filter=ListPrice lt 500000&$orderby=ListPrice desc",
+  "@odata.context": "https://api.reso.org/$metadata#Property",
   "value": [
     {
       "ListingKey": "e5",
@@ -2012,7 +2012,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Property?$select=ListingKey,ModificationTimestamp&$top=1&$count=true",
+  "@odata.context": "https://api.reso.org/$metadata#Property(ListingKey,ModificationTimestamp)",
   "@odata.count": 2,
   "value": [
     {
@@ -2033,7 +2033,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Property?$filter=PropertyType eq 'Residential'&$top=5",
+  "@odata.context": "https://api.reso.org/$metadata#Property",
   "value": [
     {
       "ListingKey": "a1",
@@ -2095,7 +2095,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Member?$top=5&$skip=0",
+  "@odata.context": "https://api.reso.org/$metadata#Member",
   "value": [
     {
       "MemberKey": "a1",
@@ -2145,7 +2145,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Member?$top=5&$skip=5",
+  "@odata.context": "https://api.reso.org/$metadata#Member",
   "value": [
     {
       "MemberKey": "f6",
@@ -2196,7 +2196,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Property?$filter=ListPrice lt 300000",
+  "@odata.context": "https://api.reso.org/$metadata#Property",
   "value": [
     {
       "ListingKey": "a1",
@@ -2221,7 +2221,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Property?$filter=ListPrice gt 250000 and ListPrice lt 500000",
+  "@odata.context": "https://api.reso.org/$metadata#Property",
   "value": [
     {
       "ListingKey": "b2",
@@ -2245,7 +2245,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Member?$select=MemberLastName,MemberFirstName,MemberMlsId",
+  "@odata.context": "https://api.reso.org/$metadata#Member(MemberLastName,MemberFirstName,MemberMlsId)",
   "value": [
     {
       "MemberLastName": "Smith",
@@ -2266,7 +2266,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Property?$select=ListingKey,ModificationTimestamp&$orderby=ModificationTimestamp desc",
+  "@odata.context": "https://api.reso.org/$metadata#Property(ListingKey,ModificationTimestamp)",
   "value": [
     {
       "ListingKey": "b2",
@@ -2289,7 +2289,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Property('a3')",
+  "@odata.context": "https://api.reso.org/$metadata#Property/$entity",
   "ListingKey": "a3",
   "BedroomsTotal": 3,
   "ListPrice": 200000,
@@ -2311,7 +2311,7 @@ HTTP/2 200 OK
 ```
 ```json
 {
-  "@odata.context": "https://api.reso.org/Member?$filter=MemberFirstName eq 'Joe' and MemberLastName eq 'Smith'",
+  "@odata.context": "https://api.reso.org/$metadata#Member",
   "value": [
     {
       "MemberKey": "a1",
