@@ -403,7 +403,7 @@ Data Dictionary data types shown in the following table are contained in the *Si
 
 | Data Dictionary (1.7+) | Web API Core (2.0.0+)                                        |
 | ---------------------- | ------------------------------------------------------------ |
-| Boolean                | Edm.Bool                                                     |
+| Boolean                | Edm.Boolean                                                  |
 | Collection             | Related Resource Expansion, e.g. PropertyRooms or Units expanded into the Property resource. **Requires $expand Endorsement.** |
 | Date                   | Edm.Date                                                     |
 | Number                 | Edm.Decimal **OR** Edm.Double for decimal values; Edm.Int64 **OR** Edm.Int32 **OR** Edm.Int16 for integers. |
@@ -418,14 +418,14 @@ Each data type mapping has a corresponding Cucumber BDD acceptance test template
 
 #### Boolean
 
-Boolean values are mapped to the [Edm.Bool](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752635) data type and MUST contain a literal value of "true" or "false" when returned in a payload for a given Boolean field, which is enforced by the RESO Commander. Boolean fields MAY be null as any OData field is nullable. Null values are interpreted as "false."
+Boolean values are mapped to the [Edm.Boolean](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752635) data type and MUST contain a literal value of "true" or "false" when returned in a payload for a given Boolean field, which is enforced by the RESO Commander. Boolean fields MAY be null as any OData field is nullable. A null value means the provider has not stated the value; it is not interpreted as "false". OData treats null as unknown in comparisons ([OData 4.01 Part 2: URL Conventions, Section 5.1.1.1](https://docs.oasis-open.org/odata/odata/v4.01/os/part2-url-conventions/odata-v4.01-os-part2-url-conventions.html)).
 
 **Sample Test**
 
 ```gherkin
   Scenario: AdditionalParcelsYN
-    When "AvailabilityDate" exists in the "Property" metadata
-    Then "AvailabilityDate" MUST be "Date" data type
+    When "AdditionalParcelsYN" exists in the "Property" metadata
+    Then "AdditionalParcelsYN" MUST be "Boolean" data type
 ```
 
 #### Collection
