@@ -545,25 +545,11 @@
         <Key>
           <PropertyRef Name="FieldKey"/>
         </Key>
-        <Property Name="CollectionYN" Type="Edm.Boolean"/>
-        <Property Name="Definition" Type="Edm.String" MaxLength="200"/>
-        <Property Name="ExpandableYN" Type="Edm.Boolean"/>
         <Property Name="FeedTypes" Type="Collection(org.reso.metadata.enums.FeedTypes)" Nullable="false"/>
         <Property Name="FieldKey" Type="Edm.String" MaxLength="255"/>
         <Property Name="FieldName" Type="Edm.String" MaxLength="255"/>
-        <Property Name="Length" Type="Edm.Int64"/>
-        <Property Name="LookupName" Type="Edm.String" MaxLength="100"/>
-        <Property Name="ModelKey" Type="Edm.String" MaxLength="50"/>
         <Property Name="ModificationTimestamp" Type="Edm.DateTimeOffset"/>
-        <Property Name="NullableYN" Type="Edm.Boolean"/>
-        <Property Name="OrderableYN" Type="Edm.Boolean"/>
-        <Property Name="Precision" Type="Edm.Int64"/>
-        <Property Name="ReadableYN" Type="Edm.Boolean"/>
         <Property Name="ResourceName" Type="Edm.String" MaxLength="255"/>
-        <Property Name="Scale" Type="Edm.Int64"/>
-        <Property Name="SearchableYN" Type="Edm.Boolean"/>
-        <Property Name="Type" Type="org.reso.metadata.enums.FieldDataTypes"/>
-        <Property Name="UpdatableYN" Type="Edm.Boolean"/>
       </EntityType>
       <EntityType Name="HistoryTransactional">
         <Key>
@@ -746,7 +732,6 @@
         <Key>
           <PropertyRef Name="LookupKey"/>
         </Key>
-        <Property Name="FeedTypes" Type="Collection(org.reso.metadata.enums.FeedTypes)" Nullable="false"/>
         <Property Name="LegacyODataValue" Type="Edm.String" MaxLength="255"/>
         <Property Name="LookupKey" Type="Edm.String" MaxLength="255"/>
         <Property Name="LookupName" Type="Edm.String" MaxLength="255"/>
@@ -947,23 +932,6 @@
         <Property Name="ModificationTimestamp" Type="Edm.DateTimeOffset"/>
         <NavigationProperty Name="HistoryTransactional" Type="Collection(org.reso.metadata.HistoryTransactional)"/>
         <NavigationProperty Name="Member" Type="org.reso.metadata.Member"/>
-      </EntityType>
-      <EntityType Name="Model">
-        <Key>
-          <PropertyRef Name="ModelKey"/>
-        </Key>
-        <Property Name="Definition" Type="Edm.String" MaxLength="200"/>
-        <Property Name="DeletableYN" Type="Edm.Boolean"/>
-        <Property Name="HasStreamYN" Type="Edm.Boolean"/>
-        <Property Name="InsertableYN" Type="Edm.Boolean"/>
-        <Property Name="ModelKey" Type="Edm.String" MaxLength="50"/>
-        <Property Name="ModelName" Type="Edm.String" MaxLength="50"/>
-        <Property Name="ModelType" Type="org.reso.metadata.enums.ModelType"/>
-        <Property Name="ModificationTimestamp" Type="Edm.DateTimeOffset"/>
-        <Property Name="ModificationTimestampFieldKey" Type="Edm.String" MaxLength="50"/>
-        <Property Name="PrimaryKeyFieldKey" Type="Edm.String" MaxLength="50"/>
-        <Property Name="ReadableYN" Type="Edm.Boolean"/>
-        <Property Name="UpdatableYN" Type="Edm.Boolean"/>
       </EntityType>
       <EntityType Name="OUID">
         <Key>
@@ -2474,7 +2442,6 @@
           <NavigationPropertyBinding Path="HistoryTransactional" Target="HistoryTransactional"/>
           <NavigationPropertyBinding Path="Member" Target="Member"/>
         </EntitySet>
-        <EntitySet Name="Model" EntityType="org.reso.metadata.Model"/>
         <EntitySet Name="OUID" EntityType="org.reso.metadata.OUID">
           <NavigationPropertyBinding Path="ChangedByMember" Target="Member"/>
           <NavigationPropertyBinding Path="HistoryTransactional" Target="HistoryTransactional"/>
@@ -6599,35 +6566,6 @@
         </Member>
         <Member Name="Withdrawn" Value="4">
           <Annotation Term="RESO.OData.Metadata.StandardName" String="Withdrawn"/>
-        </Member>
-      </EnumType>
-      <EnumType Name="FieldDataTypes">
-        <Member Name="EdmBoolean" Value="0">
-          <Annotation Term="RESO.OData.Metadata.StandardName" String="Edm.Boolean"/>
-        </Member>
-        <Member Name="EdmDate" Value="1">
-          <Annotation Term="RESO.OData.Metadata.StandardName" String="Edm.Date"/>
-        </Member>
-        <Member Name="EdmDateTimeOffset" Value="2">
-          <Annotation Term="RESO.OData.Metadata.StandardName" String="Edm.DateTimeOffset"/>
-        </Member>
-        <Member Name="EdmDecimal" Value="3">
-          <Annotation Term="RESO.OData.Metadata.StandardName" String="Edm.Decimal"/>
-        </Member>
-        <Member Name="EdmDouble" Value="4">
-          <Annotation Term="RESO.OData.Metadata.StandardName" String="Edm.Double"/>
-        </Member>
-        <Member Name="EdmInt16" Value="5">
-          <Annotation Term="RESO.OData.Metadata.StandardName" String="Edm.Int16"/>
-        </Member>
-        <Member Name="EdmInt32" Value="6">
-          <Annotation Term="RESO.OData.Metadata.StandardName" String="Edm.Int32"/>
-        </Member>
-        <Member Name="EdmInt64" Value="7">
-          <Annotation Term="RESO.OData.Metadata.StandardName" String="Edm.Int64"/>
-        </Member>
-        <Member Name="EdmString" Value="8">
-          <Annotation Term="RESO.OData.Metadata.StandardName" String="Edm.String"/>
         </Member>
       </EnumType>
       <EnumType Name="FinancialDataSource">
@@ -11021,14 +10959,6 @@
         </Member>
         <Member Name="UnlicensedAssistant" Value="18">
           <Annotation Term="RESO.OData.Metadata.StandardName" String="Unlicensed Assistant"/>
-        </Member>
-      </EnumType>
-      <EnumType Name="ModelType">
-        <Member Name="Resource" Value="0">
-          <Annotation Term="RESO.OData.Metadata.StandardName" String="Resource"/>
-        </Member>
-        <Member Name="Shape" Value="1">
-          <Annotation Term="RESO.OData.Metadata.StandardName" String="Shape"/>
         </Member>
       </EnumType>
       <EnumType Name="MoveInCosts">
