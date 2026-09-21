@@ -35,7 +35,7 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 * Introduces the **System Resource** and the RESO **Unique System Identifier (USI)**, formalizing the system identifiers RESO already maintains. The identifier is distinct from the resource's primary key.
 * Defines **authoritative** (RESO-maintained) identifiers and a mechanism for providers to host **local** Organization and System resources when they use identifiers not yet issued by RESO.
 * Standardizes **`OriginatingUoi`/`OriginatingUsi`** and **`SourceUoi`/`SourceUsi`** as top-level identifiers. The existing `OriginatingSystem*` and `SourceSystem*` fields are deprecated in Data Dictionary v3.0; providers MAY continue to use them only if the UOI/USI analogues are also present.
-* Models organization and system **lifecycle status** as an enumeration (`Active`, `Inactive`, `Superseded`) with a `ReplacedBy` reference for merges and reclassifications, and adds a typed **`RelatedOrganization`** expansion for relationships between organizations.
+* Models organization and system **lifecycle status** as an enumeration (`Active`, `Inactive`, `Superseded`) with a `ReplacedBy` reference for merges and reclassifications, and adds a **`RelatedOrganizations`** expansion that returns the related organizations as records, each carrying how it relates (`RelationshipType`).
 * Standardizes UOIs and USIs as **URNs** – `urn:reso:uoi:1.0:<issuer>:<unique-identifier>` and the USI analogue – issued by RESO or by providers certified on this endorsement, so an organization's existing local identifiers are preserved and can be promoted to RESO-issued identifiers over time.
 
 <br />
@@ -86,17 +86,15 @@ The Organization Resource defines at least the following, plus any relevant OUID
 
 `OrganizationKey` is the local key of the record; `OrganizationId` is the well-known RESO identifier, when applicable.
 
-**Related organizations.** An Organization MAY reference other organizations through a **`RelatedOrganization`** self-expansion, retrieved with `$expand=RelatedOrganization`. These relationships are directed graph edges among peer organizations: they describe how organizations relate, not ownership or control. An edge is read from the hosting organization outward, so an edge whose `RelationshipType` is `ServedBy` and whose `RelatedUoi` is another organization states that this organization is served by that one. This replaces the single-purpose association-to-MLS reference carried in the current OUID data, and follows the same pattern as the RelatedLookup Resource (RCP-47).
-
-The `RelatedOrganization` expansion and its entries define at least the following:
+**Related organizations.** An Organization MAY reference other organizations through the **`RelatedOrganizations`** expansion. Nothing about the relationships is carried on the Organization record itself: a consumer that wants them expands, and gets the related organizations back as records, each carrying how it relates to the hosting organization in `RelationshipType`. The relationships are directed and read from the hosting organization outward – a returned record whose `RelationshipType` is `ServedBy` states that the hosting organization is served by that one – and they describe how organizations relate, not ownership or control. This replaces the single-purpose association-to-MLS reference carried in the current OUID data.
 
 | Resource | Field | Type | Nullable | Definition |
 | :--- | :--- | :--- | :--- | :--- |
-| Organization | RelatedOrganization | Expansion (RelatedOrganization) | No | A self-expansion on the Organization Resource; each entry is a directed, typed edge from this organization to another. |
-| RelatedOrganization | RelatedUoi | String | No | The UOI of the referenced organization. |
-| RelatedOrganization | RelationshipType | String List, Single | No | The type of the relationship, for example ParticipatesIn, ServedBy, or AffiliatedWith. |
+| Organization | RelatedOrganizations | Expansion (RelatedOrganization) | No | The organizations this organization is related to, as records; `[]` when none. |
+| RelatedOrganization | *every Organization field* | | | A RelatedOrganization is an Organization: it carries every field of Section 2.1's table with the same meaning, for the related organization. |
+| RelatedOrganization | RelationshipType | String List, Single | No | How the related organization relates to the hosting one, read outward: ParticipatesIn, ServedBy, or AffiliatedWith. |
 
-The expansion is retrieved with `$expand=RelatedOrganization`. When the organization references no other organizations it is the empty collection, `[]`, never null, as for every collection in the Data Dictionary. The edge is read from the hosting organization outward.
+In OData terms, `RelatedOrganization` is an entity type derived from `Organization` (`BaseType="Organization"`) that adds `RelationshipType`; the navigation property `RelatedOrganizations` is a `Collection(RelatedOrganization)`. There is no separate resource to host or a join to describe: how a provider produces the expansion is the provider's concern, as for every expansion in the Data Dictionary. The expansion is the empty collection, `[]`, never null, as for every collection in the Data Dictionary. A kind of relationship is selected within the expansion – `$expand=RelatedOrganizations($filter=RelationshipType eq 'ServedBy')` – and the reverse traversal of a kind, when it is needed, is another value of `RelationshipType`, not another element. The vocabulary is a lookup, so a new kind of relationship is a new value, not a new field; the three defined here are the functional relationships the registry records today.
 
 ## Section 2.2: System Resource (USI)
 
@@ -154,7 +152,7 @@ When the status is `Superseded`, `ReplacedByUoi` or `ReplacedByUsi` MUST be popu
 
 **Supersession and resolution.** A superseded record is retained, and its `ReplacedBy` identifier points to the replacement, forming a redirect chain. A consumer holding a superseded identifier resolves to the current one by following the `ReplacedBy` reference to the end of the chain. This mirrors the tombstone-and-redirect model of the Unique Licensee Identifier (ULI, RCP-54). Human narrative about a change, such as a merger history, MAY be carried in a free-text comment, but the machine-resolvable state is the status and `ReplacedBy` fields.
 
-**Demergers and splits.** `ReplacedByUoi` and `ReplacedByUsi` are single pointers: a superseded identifier resolves to exactly one successor, so a split never fans a `ReplacedBy` reference out. When an organization divides, each resulting organization that is new receives its own identifier. If the original organization continues, its record stays `Active` and the new organizations reference it through `RelatedOrganization`. If the original ceases, its record becomes `Superseded` and `ReplacedByUoi` MUST point to the one successor that carries its identity forward (the organization assuming its records and obligations); the other resulting organizations are reachable from that successor through `RelatedOrganization`. The same rule applies to systems and `ReplacedByUsi`.
+**Demergers and splits.** `ReplacedByUoi` and `ReplacedByUsi` are single pointers: a superseded identifier resolves to exactly one successor, so a split never fans a `ReplacedBy` reference out. When an organization divides, each resulting organization that is new receives its own identifier. If the original organization continues, its record stays `Active` and the new organizations reference it through `RelatedOrganizations` (`AffiliatedWith`). If the original ceases, its record becomes `Superseded` and `ReplacedByUoi` MUST point to the one successor that carries its identity forward (the organization assuming its records and obligations); the other resulting organizations are reachable from that successor through `RelatedOrganizations`. The same rule applies to systems and `ReplacedByUsi`.
 
 ## Section 2.4: Authoritative and Local Identifiers
 
@@ -242,8 +240,8 @@ RESO will validate the following during certification:
 * Identifier resolution keys off the `<issuer>` segment. A RESO-issued identifier resolves against the RESO authoritative registry described in Section 2.4. A provider-issued identifier resolves against that issuer's hosted Organization or System resource. When the issuer is a third party – neither RESO nor the endpoint under test – the identifier is validated against the RESO authoritative registry only, since the endpoint is not obligated to host another party's resources.
 * The `<issuer>` segment of any UOI or USI MUST identify RESO or an organization holding the UOI or USI endorsement in RESO's Organizations and Endorsements feed.
 * A provider that issues its own UOIs or USIs MUST host correctly implemented Organization and System resources for the identifiers it issues; RESO samples those resources during certification to confirm the issued identifiers resolve and the resources conform.
-* `OriginatingUoi`/`OriginatingUsi`, `SourceUoi`/`SourceUsi`, any `ReplacedByUoi`/`ReplacedByUsi`, and any `RelatedUoi`, when present, MUST resolve as above.
-* A `RelatedOrganization` entry, when present, MUST carry both `RelatedUoi` and `RelationshipType`.
+* `OriginatingUoi`/`OriginatingUsi`, `SourceUoi`/`SourceUsi`, any `ReplacedByUoi`/`ReplacedByUsi`, and the `OrganizationId` of every record in `RelatedOrganizations`, when present, MUST resolve as above.
+* Every record in `RelatedOrganizations` MUST carry `RelationshipType`, and MUST be a conforming Organization record for the organization it names.
 * When `OrganizationStatus` or `SystemStatus` is `Superseded`, the corresponding `ReplacedByUoi` or `ReplacedByUsi` MUST be present; when the status is `Active` or `Inactive`, it MUST be null.
 * On any record where a deprecated `OriginatingSystem*` field is populated, `OriginatingUoi` MUST be populated; likewise a populated `SourceSystem*` field requires `SourceUoi`.
 * When Provenance is present, the top-level `OriginatingUoi`/`OriginatingUsi` and `SourceUoi`/`SourceUsi` MUST match the ends of the provenance chain (the ends-match rule of Section 2.5).
@@ -273,17 +271,17 @@ Please see the following references for more information regarding topics covere
 
 ## Design rationale
 
-**Sub-organization granularity is handled by Originating at grain, not a dedicated field.** Some data sets bundle many sub-organizations under a single originating organization, and a provider may need to scope to one of them. This endorsement handles that case with `OriginatingUoi` at the appropriate grain – the identifier points at the actual creating organization, however specific – rather than adding a per-record sub-organization field. Organization parentage is separately expressible through the `RelatedOrganization` self-expansion (Section 2.1) as an `AffiliatedWith` edge, which keeps the hierarchy in one place and resolvable. A denormalized `OriginatingSubUoi`/`SourceSubUoi` field pair alongside the top-level identifiers was also considered – it matches how some providers filter today but adds a column to every record – and is held for a future revision; `OriginatingSubUoi` and `SourceSubUoi` are reserved as the names should the field pair be needed.
+**Sub-organization granularity is handled by Originating at grain, not a dedicated field.** Some data sets bundle many sub-organizations under a single originating organization, and a provider may need to scope to one of them. This endorsement handles that case with `OriginatingUoi` at the appropriate grain – the identifier points at the actual creating organization, however specific – rather than adding a per-record sub-organization field. Organization parentage is separately expressible through the `RelatedOrganizations` expansion (Section 2.1) as an `AffiliatedWith` record, which keeps the hierarchy in one place and resolvable. A denormalized `OriginatingSubUoi`/`SourceSubUoi` field pair alongside the top-level identifiers was also considered – it matches how some providers filter today but adds a column to every record – and is held for a future revision; `OriginatingSubUoi` and `SourceSubUoi` are reserved as the names should the field pair be needed.
 
 **Top-level identifiers, not Tenant/Subtenant.** An earlier approach modeled multi-tenant filtering with `TenantUoi`/`SubtenantUoi`. Both uses that motivated it – de-multiplexing a combined feed by origin, and scoping to one organization within a grant – are served today by `OriginatingSystemName`, so they are served here by `OriginatingUoi`/`OriginatingUsi`. Originating is the more intuitive, 1:1 migration from the existing fields, is usable before Provenance is adopted, and avoids introducing tenancy vocabulary into the Data Dictionary. Tenancy as an access-and-partitioning concern is left to the layer that governs access.
 
-**Status as an enumeration, and relationships as neutral edges.** The authoritative registry historically carried organization status as a Boolean and recorded mergers and reclassifications only in free-text comments, which are not machine-resolvable. This endorsement models status as an enumeration – `Active`, `Inactive`, `Superseded` – paired with a `ReplacedBy` reference, so a consumer can resolve a retired identifier to its current one without parsing prose. Relationships between organizations are modeled as directed, typed graph edges (`RelatedOrganization`) rather than ownership statements: an edge records that two organizations are related and how, not that one organization owns or controls another. The `RelationshipType` vocabulary is intentionally functional – `ParticipatesIn`, `ServedBy`, `AffiliatedWith` – to avoid language that could imply control in a real estate context.
+**Status as an enumeration, and relationships as neutral edges.** The authoritative registry historically carried organization status as a Boolean and recorded mergers and reclassifications only in free-text comments, which are not machine-resolvable. This endorsement models status as an enumeration – `Active`, `Inactive`, `Superseded` – paired with a `ReplacedBy` reference, so a consumer can resolve a retired identifier to its current one without parsing prose. Relationships between organizations are modeled as directed, typed relations rather than ownership statements: a related organization's record says that the two are related and how, not that one owns or controls the other. The relationships are reached through one expansion that returns the related organizations as records, with the kind of relationship as a value on each record, rather than as one field per kind of relationship: a vocabulary of kinds scales as values, and a consumer learns the related organizations and how they relate in a single expansion. The expansion is an interface, not an implementation: this proposal defines what a consumer receives, and says nothing about how a provider stores or resolves the relationships – a join table, a graph, a denormalized list on the organization, or a call to the registry are all conforming – so certification tests the response and nothing behind it. That is the same footing every expansion in the Data Dictionary stands on, and it is why no join resource is defined here. The `RelationshipType` vocabulary is intentionally functional – `ParticipatesIn`, `ServedBy`, `AffiliatedWith` – to avoid language that could imply control in a real estate context.
 
 ## Worked example
 
 The following shows an Organization Resource response, a System Resource response, a record whose top-level identifiers reconcile against a Provenance chain, and an organization mid-promotion from a locally issued identifier to a RESO-issued one. Identifiers are shown in their URN form; values are illustrative.
 
-**Organization Resource** – the technology provider that served the record, expanded (`$expand=RelatedOrganization`) to show an `AffiliatedWith` edge to its parent organization.
+**Organization Resource** – the technology provider that served the record, expanded (`$expand=RelatedOrganizations`) to show its parent organization and the MLS it participates in.
 
 **RESPONSE**
 ```json
@@ -294,10 +292,20 @@ The following shows an Organization Resource response, a System Resource respons
   "OrganizationStatus": "Active",
   "OrganizationStatusChangeTimestamp": "2019-03-11T00:00:00Z",
   "ModificationTimestamp": "2024-11-02T18:22:10Z",
-  "RelatedOrganization": [
+  "RelatedOrganizations": [
     {
-      "RelatedUoi": "urn:reso:uoi:1.0:T00000012:T00000009",
+      "OrganizationKey": "T00000009",
+      "OrganizationId": "urn:reso:uoi:1.0:T00000012:T00000009",
+      "OrganizationName": "Example Parent Organization",
+      "OrganizationStatus": "Active",
       "RelationshipType": "AffiliatedWith"
+    },
+    {
+      "OrganizationKey": "M00000001",
+      "OrganizationId": "urn:reso:uoi:1.0:T00000012:M00000001",
+      "OrganizationName": "Example MLS",
+      "OrganizationStatus": "Active",
+      "RelationshipType": "ParticipatesIn"
     }
   ]
 }
