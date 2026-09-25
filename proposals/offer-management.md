@@ -100,7 +100,9 @@ The offer is the unit of scope. What happens after acceptance – the executed c
 
 An offer is exchanged between named parties. Unlike a listing, an offer is not published to a network and is not discoverable. Participation is by being addressed: the buyer side addresses the listing side, and the listing side replies.
 
-**A participant MUST be resolvable to a Unique Organization Identifier.** An Offer Hub, and any party exchanging offers under this specification, MUST post under an actor that resolves to one. The identifier is the participant's own where the participant is an organization, and its affiliation otherwise: an agent is not an organization, but the brokerage the agent acts for is, and a product acting on behalf of a brokerage resolves to that brokerage.
+**A participant MUST be resolvable to a Unique Organization Identifier or a Unique System Identifier.** An Offer Hub, and any party exchanging offers under this specification, MUST post under an actor that resolves to one of the two.
+
+Which of the two depends on what the participant is. An organization resolves to its own organization identifier. A party acting on behalf of one resolves by affiliation, since an agent is not an organization but the brokerage the agent acts for is. A client system making offer requests against a hub resolves to a system identifier, which names the system rather than the organization running it, and is the finer of the two where an organization runs more than one.
 
 This is a requirement on who takes part, and it is separable from how a listing is identified. A participant is a party to the exchange and is therefore accountable within it, whereas a listing carries whatever provenance the system it originated in published ([Section 2.4](#section-24-the-offer-resource)).
 
@@ -623,7 +625,7 @@ RESO will validate the following during certification:
 * The candidate MUST NOT post an `Undo` for an activity another party posted ([Section 2.12.7](#section-2127-withdrawing)).
 
 **Participation**
-* The actor the candidate posts under MUST resolve to a Unique Organization Identifier, being the candidate's own or that of the organization it acts for ([Section 2.1](#section-21-participation-and-confidentiality)).
+* The actor the candidate posts under MUST resolve to a Unique Organization Identifier or a Unique System Identifier: its own, that of the organization it acts for, or that of the system making the requests ([Section 2.1](#section-21-participation-and-confidentiality)).
 * The candidate MUST accept a listing coordinate whose organization member is an originating system name or identifier, and MUST NOT reject an offer on the ground that no organization identifier was supplied for the listing ([Section 2.4](#section-24-the-offer-resource)).
 
 **Confidentiality**
