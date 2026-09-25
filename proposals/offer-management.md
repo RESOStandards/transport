@@ -33,6 +33,8 @@ This End User License Agreement (the "EULA") is entered into by and between the 
   - [Section 2.7: Offer States](#section-27-offer-states)
   - [Section 2.8: Activity Streams Mapping](#section-28-activity-streams-mapping)
   - [Section 2.9: Counter Offers](#section-29-counter-offers)
+    - [The Thread](#the-thread)
+    - [Ordering](#ordering)
   - [Section 2.10: Web API Conformance](#section-210-web-api-conformance)
   - [Section 2.11: Authentication and Authorization](#section-211-authentication-and-authorization)
   - [Section 2.12: Worked Examples](#section-212-worked-examples)
@@ -243,6 +245,7 @@ An `OfferSubmission` is one turn in the negotiation: an initial offer, a counter
 | OfferSubmissionNotes | String | Yes | | | The notes related to the offer being submitted. |
 | OfferSubmissionStatus | String List, Single | Yes | | OfferSubmissionStatus | The status of the offer as recorded by the submitting side. |
 | OfferReceivedStatus | String List, Single | Yes | | OfferReceivedStatus | The status of the offer as recorded by the receiving side. |
+| OfferSubmissionSequence | Number | No | | | The position of this submission in its offer, assigned as described in [Section 2.9](#section-29-counter-offers). |
 | OfferSubmissionTimestamp | Timestamp | Yes | | | The date and time the offer was submitted. |
 | CounterOfferSubmissionTimestamp | Timestamp | Yes | | | The date and time a counter offer was submitted. |
 | OfferAcceptedTimestamp | Timestamp | Yes | | | The date and time the offer was accepted. |
@@ -358,7 +361,31 @@ A counter offer is not a new kind of record and is not an edit. It is an `OfferS
 
 An implementation MUST NOT modify a prior submission when a counter is made. The sequence of submissions under one `OfferId`, ordered by timestamp, is the negotiation history, and destroying a prior turn destroys the record of what was agreed and when.
 
-In the thread, a counter is an `Offer` posted `inReplyTo` the activity it answers ([Section 2.8](#section-28-activity-streams-mapping)). Re-countering repeats this: each turn replies to the one before it, so the thread is the same sequence the `OfferSubmission` records hold.
+### The Thread
+
+**Publishing a listing is what makes it eligible for offers.** A listing is published to the network by its point of entry, usually the MLS, and that activity is the root of the thread. Until it exists there is nothing to reply to and no offer can be made. An offer is posted `inReplyTo` the root, by its identifier. A counter is posted `inReplyTo` the offer it answers, and a re-counter `inReplyTo` the counter. Every turn names its parent, so the negotiation is a single-rooted tree and its shape is recoverable from the thread alone.
+
+An implementation MUST NOT accept an offer that references no published listing activity, and an `Offer` MUST correspond to a listing that was published to the network.
+
+The root's host does not order what follows. An offer is addressed to the listing side, not to the system that published the listing, so that system does not see the offers made on it and cannot number them. Ordering is settled between the parties to each offer.
+
+### Ordering
+
+ActivityPub does not guarantee delivery order, so arrival order is not evidence of sequence. Each `OfferSubmission` therefore carries `OfferSubmissionSequence`, typed as the positive portion of int64, durable, immutable and monotonic.
+
+This is deliberately the same shape as `EntityEventSequence` in [EntityEvent](https://github.com/RESOStandards/transport/blob/main/proposals/entity-events.md), which carries those same properties for the same reason. An implementation that already maintains a logical clock for EntityEvent can use the same machinery here, and a consumer that already reasons about one will find the other familiar.
+
+The two differ in one respect, because the situations differ. `EntityEventSequence` orders the events of a single system, so a plain counter suffices and its producer is the only writer. An offer is written by two parties who may act without having seen each other, so assignment has to tolerate that.
+
+The two also compose. A system that emits EntityEvent records for its offer records lets a consumer track back to an `Offer` or an `OfferSubmission` through the event stream, by `ResourceName` and `ResourceRecordKey`, and replay from a known `EntityEventSequence`. Nothing here requires that, and an implementation that already runs an event feed gets it without further work. For it to be possible, `ResourceName` has to be able to name these resources, which is why this proposal adds them to that lookup.
+
+An implementation creating a submission MUST set `OfferSubmissionSequence` to one greater than the highest value it has seen for that `OfferId`, and MUST set it to 1 for the first submission of an offer. An implementation MUST NOT renumber a submission after creating it.
+
+Two submissions in one offer MAY carry the same sequence. That is not a defect to repair: it means both parties acted without having seen the other, which is a real event and the reason the number is worth carrying. Where it happens, an implementation MUST order the two by the Unique Organization Identifier of the submitting party, ascending, so that every party reaches the same ordering from the same facts. It MUST NOT resolve the tie by arrival time, which differs per recipient.
+
+A consumer MUST order the submissions of an offer by `OfferSubmissionSequence`, and MUST NOT rely on `OfferSubmissionTimestamp` for ordering. Timestamps come from different clocks and a counter may legitimately carry an earlier one than the submission it answers.
+
+Where a single system hosts a whole negotiation, this rule produces a plain counter: 1, 2, 3. The tie-break never fires, and nothing is lost by following the general rule.
 
 ## Section 2.10: Web API Conformance
 
@@ -481,6 +508,7 @@ The payload behind `url`:
   "AsIsCondition": false,
   "OfferExpirationDate": "2026-09-18",
   "OfferSubmissionStatus": "Submitted",
+  "OfferSubmissionSequence": 1,
   "OfferSubmissionTimestamp": "2026-09-15T14:02:00Z",
   "ModificationTimestamp": "2026-09-15T14:02:00Z",
   "OfferPropertyGroup": {
@@ -567,6 +595,7 @@ The payload is a second `OfferSubmission`, carrying the same `OfferId` and its o
   "Contingencies": ["Financing"],
   "OfferExpirationDate": "2026-09-17",
   "OfferSubmissionStatus": "Countered",
+  "OfferSubmissionSequence": 2,
   "CounterOfferSubmissionTimestamp": "2026-09-15T18:20:00Z",
   "ModificationTimestamp": "2026-09-15T18:20:00Z"
 }
@@ -703,13 +732,16 @@ RESO will validate the following during certification:
 * The candidate MUST serve the resources, fields, types and nullability of [Section 2.4](#section-24-the-offer-resource) through [Section 2.6](#section-26-the-offerpropertygroup-resource), and a payload it produces MUST validate as RESO Common Format against the declared Data Dictionary version.
 * The candidate MUST accept and serve the standard values of [Section 2.7](#section-27-offer-states) and MUST reject a multi-valued status on either side.
 * The candidate MUST use the existing standard values for `BuyerFinancing`, `Contingencies` and `BuyerBrokerageCompensation` and MUST NOT substitute offer-specific equivalents ([Section 2.5](#section-25-the-offersubmission-resource)).
+* The candidate MUST NOT accept an offer that references no published listing activity ([Section 2.9](#section-29-counter-offers)).
 * An `Offer` the candidate accepts MUST carry `ListingId` or `ListingKey`, and MUST carry at least one of `OfferUoi`, `OfferOriginatingSystemName` or `OfferOriginatingSystemId`. A candidate that accepts a listing identifier with no organization or system member fails ([Section 2.4](#section-24-the-offer-resource)).
 * An `OfferPropertyGroup` the candidate accepts MUST identify the property by one of the two permitted combinations ([Section 2.6](#section-26-the-offerpropertygroup-resource)).
 * Where the candidate publishes a hashed coordinate, it MUST be reproducible: the same listing MUST yield the same value on repeated construction ([Section 2.4](#section-24-the-offer-resource)).
 
 **History**
 * On a counter, the candidate MUST create a new `OfferSubmission` and MUST leave every prior submission byte-identical ([Section 2.9](#section-29-counter-offers)). A candidate that modifies a prior submission fails.
-* The submissions the candidate holds for one `OfferId`, ordered by timestamp, MUST reproduce the negotiation as it was conducted.
+* Every submission the candidate creates MUST carry `OfferSubmissionSequence` set to one greater than the highest it has seen for that `OfferId`, or to 1 for the first, and MUST keep that value unchanged thereafter ([Section 2.9](#section-29-counter-offers)).
+* Where two submissions of one offer carry the same sequence, the candidate MUST order them by the submitting party's Unique Organization Identifier ascending, and MUST NOT order them by arrival time ([Section 2.9](#section-29-counter-offers)).
+* Every submission created during the test MUST remain retrievable under its `OfferId` after later submissions are created, and MUST be returned in `OfferSubmissionSequence` order ([Section 2.9](#section-29-counter-offers)).
 
 **Protocol**
 * Every activity the candidate posts MUST use only Activity Streams 2.0 vocabulary and MUST NOT carry custom JSON-LD terms ([Section 2.2](#section-22-activitypub-usage)).
@@ -758,6 +790,7 @@ Please see the following references for more information regarding topics covere
 * [Feed Entitlements and Visibility (RCP-35)](https://github.com/RESOStandards/transport/pull/169)
 * [RESO Data Dictionary](https://dd.reso.org/)
 * [RESO Web API Add/Edit](https://github.com/RESOStandards/transport/blob/main/proposals/web-api-add-edit.md)
+* [RESO EntityEvent](https://github.com/RESOStandards/transport/blob/main/proposals/entity-events.md)
 * [RESO Universal Property Identifier](https://upi.reso.org/)
 * [RESO Organizations registry](https://services.reso.org/orgs)
 * [RESO Versioning](https://github.com/RESOStandards/transport/blob/main/versioning.md)
@@ -781,6 +814,14 @@ This proposal introduces three resources and two lookups. They are defined in [S
 | :--- | :--- | ---: |
 | OfferSubmissionStatus | [Section 2.7](#section-27-offer-states) | 13 |
 | OfferReceivedStatus | [Section 2.7](#section-27-offer-states) | 12 |
+
+This proposal also adds three values to the existing `ResourceName` lookup, whose standard values are currently `Association`, `Contacts`, `Member`, `Office` and `Property`. Without them no existing resource can name an offer record: `Media` cannot attach a contract document to a submission, and `EntityEvent` cannot carry a change to one.
+
+| Lookup | Lookup Value | Definition |
+| :--- | :--- | :--- |
+| ResourceName | Offer | The Offer resource. |
+| ResourceName | OfferSubmission | The OfferSubmission resource. |
+| ResourceName | OfferPropertyGroup | The OfferPropertyGroup resource. |
 
 The following existing elements are reused without change: `BuyerFinancing`, `Contingency`, `BuyerBrokerageCompensation`, `StreetNumber`, `StreetName`, `City`, `StateOrProvince`, `PostalCode`, `CountyOrParish`, `Country`, `ParcelNumber`, `UniversalPropertyId`, `ListingId`, `ListingKey` and the `Media` resource.
 
@@ -900,6 +941,16 @@ An implementation MAY use both models across different listings, or change betwe
 <br />
 
 ## Design rationale
+
+**Why ActivityPub rather than the Web API or an event feed.** An offer is a conversation with turns from both sides, and the transport has to carry that shape.
+
+The Web API is request and response against a provider's own data. It serves a record well and it does not carry a negotiation between two providers, each of whom holds part of it and neither of whom is the other's server.
+
+EntityEvent is one-directional by design, a stream of things that have happened. It can log a negotiation after the fact and it cannot conduct one, because there is no reply.
+
+ActivityPub is bidirectional and threaded, which is what an offer actually is: a turn, an answer, another turn, each naming what it responds to. It also already carries listings under the [Listing Advertisement proposal](https://github.com/RESOStandards/transport/discussions/162), so an offer replies into a thread that exists rather than opening a parallel channel alongside it.
+
+That division is why this specification requires nothing of an event feed. The negotiation must be complete from the thread and its payloads alone. Where a provider also runs EntityEvent, the record reaches the feed and `HistoryTransactional` carries the field-level detail behind it, which is useful and is not depended upon.
 
 **Why the data is not in the activity.** Putting offer terms in an ActivityPub object publishes them to every server the activity federates to, and federation is not revocable. An offer is confidential, so the activity carries a reference and the data stays behind an authenticated link the originator controls. This also keeps the vocabulary standard, since nothing offer-specific has to be expressed in JSON-LD.
 
