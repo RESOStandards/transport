@@ -296,7 +296,7 @@ An `OfferSubmission` is one turn in the negotiation: an initial offer, a counter
 | OfferInspectionDate | Date | Yes | | | The date requested for an inspection. |
 | OfferAppraisalDate | Date | Yes | | | The date requested for an appraisal. |
 | OfferEscrowCompany | String | Yes | 255 | | The name of the company that will hold escrow. |
-| BuyerBrokerageCompensation | String | Yes | 255 | | The buyer brokerage compensation proposed in the offer. |
+| BuyerBrokerageCompensation | String | Yes | 25 | | The buyer brokerage compensation proposed in the offer. |
 | OfferSubmissionNotes | String | Yes | | | The notes related to the offer being submitted. |
 | OfferSubmissionStatus | String List, Single | Yes | | OfferSubmissionStatus | The status of the offer as recorded by the submitting side. |
 | OfferReceivedStatus | String List, Single | Yes | | OfferReceivedStatus | The status of the offer as recorded by the receiving side. |
@@ -326,13 +326,13 @@ The `OfferPropertyGroup` identifies the subject property of a submission. It exi
 | ListingId | String | Yes | 255 | | The listing the offer is made against. |
 | StreetNumber | String | Yes | 25 | | The street number of the subject property. |
 | StreetName | String | Yes | 50 | | The street name of the subject property. |
-| City | String | Yes | 50 | | The city of the subject property. |
+| City | String List, Single | Yes | | City | The city of the subject property. |
 | StateOrProvince | String List, Single | Yes | | StateOrProvince | The state or province of the subject property. |
 | PostalCode | String | Yes | 10 | | The postal code of the subject property. |
 | CountyOrParish | String List, Single | Yes | | CountyOrParish | The county or parish of the subject property. |
 | Country | String List, Single | Yes | | Country | The country of the subject property. |
 | ParcelNumber | String | Yes | 50 | | The parcel number of the subject property. |
-| UniversalPropertyId | String | Yes | 255 | | The universal property identifier of the subject property. |
+| UniversalPropertyId | String | Yes | 128 | | The universal property identifier of the subject property. |
 
 Every field of this resource reuses an existing Data Dictionary element.
 
