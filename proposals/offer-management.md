@@ -28,6 +28,7 @@ This End User License Agreement (the "EULA") is entered into by and between the 
   - [Section 2.2: ActivityPub Usage](#section-22-activitypub-usage)
   - [Section 2.3: Offer Identity](#section-23-offer-identity)
   - [Section 2.4: The Offer Resource](#section-24-the-offer-resource)
+    - [How Many Offers a Buyer May Have on a Listing](#how-many-offers-a-buyer-may-have-on-a-listing)
   - [Section 2.5: The OfferSubmission Resource](#section-25-the-offersubmission-resource)
   - [Section 2.6: The OfferPropertyGroup Resource](#section-26-the-offerpropertygroup-resource)
   - [Section 2.7: Offer States](#section-27-offer-states)
@@ -158,7 +159,21 @@ The choice is the provider's. A provider publishing meaningful identifiers is ma
 
 ## Section 2.4: The Offer Resource
 
-The `Offer` resource is the top-level object. One `Offer` exists for one offer between two parties on one listing, and it persists for the life of that negotiation. The turns of the negotiation are `OfferSubmission` records ([Section 2.5](#section-25-the-offersubmission-resource)).
+The `Offer` resource is the top-level object. One `Offer` is one negotiation between two parties on one listing, and it persists for the life of that negotiation. The turns of the negotiation are `OfferSubmission` records ([Section 2.5](#section-25-the-offersubmission-resource)).
+
+### How Many Offers a Buyer May Have on a Listing
+
+More than one. The distinction that decides it is whether an act continues a negotiation or starts one. A new turn in a negotiation already under way is an `OfferSubmission` on the existing `Offer`. A new negotiation is a new `Offer` with its own `OfferId`.
+
+Countering, re-countering and answering a request for highest and best are all turns, so they are submissions and they MUST NOT create a second `Offer` ([Section 2.9](#section-29-counter-offers)).
+
+A negotiation that has ended does not reopen. Where an offer was withdrawn, rejected or expired and the same buyer offers again on the same listing, that is a new negotiation and MUST be a new `Offer`. An implementation MUST NOT append a submission to an ended offer.
+
+A buyer MAY also hold more than one live `Offer` on one listing at the same time, where the offers are genuine alternatives rather than successive turns. A cash offer at one price and a financed offer at a higher one is the ordinary case, and the seller is being asked to choose between them rather than to answer a revision.
+
+A consumer therefore MUST NOT assume at most one `Offer` per buyer on a listing, and MUST NOT key, deduplicate or match on the listing coordinate together with buyer identity. `OfferId` is what distinguishes one negotiation from another ([Section 2.3](#section-23-offer-identity)).
+
+What a buyer cannot do is counter another buyer's offer. No offering party learns another's terms ([Section 2.11](#section-211-authentication-and-authorization)), so there is nothing for such a party to answer. Competing offers are answered by the listing side, each on its own `Offer`.
 
 | Field | Type | Nullable | Max length | Lookup | Definition |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -755,6 +770,8 @@ RESO will validate the following during certification:
 * The candidate MUST use the existing standard values for `BuyerFinancing`, `Contingencies` and `BuyerBrokerageCompensation` and MUST NOT substitute offer-specific equivalents ([Section 2.5](#section-25-the-offersubmission-resource)).
 * The candidate MUST NOT accept an offer that references no published listing activity ([Section 2.9](#section-29-counter-offers)).
 * Every `OfferSubmission` the candidate accepts MUST correlate to an `Offer` it holds, by `OfferId`. A candidate that accepts a submission correlating to no offer fails ([Section 2.5](#section-25-the-offersubmission-resource)).
+* The candidate MUST accept a second `Offer` from the same buyer on the same listing, both where an earlier offer has ended and where both are live. A candidate that rejects it as a duplicate, or that merges it into the earlier offer, fails ([Section 2.4](#section-24-the-offer-resource)).
+* The candidate MUST NOT append a submission to an offer that has been withdrawn, rejected or has expired ([Section 2.4](#section-24-the-offer-resource)).
 * An `Offer` the candidate accepts MUST carry `ListingId` or `ListingKey`, and MUST carry at least one of `OfferUoi`, `OfferOriginatingSystemName` or `OfferOriginatingSystemId`. A candidate that accepts a listing identifier with no organization or system member fails ([Section 2.4](#section-24-the-offer-resource)).
 * An `OfferPropertyGroup` the candidate accepts MUST identify the property by one of the two permitted combinations ([Section 2.6](#section-26-the-offerpropertygroup-resource)).
 * Where the candidate publishes a hashed coordinate, it MUST be reproducible: the same listing MUST yield the same value on repeated construction ([Section 2.4](#section-24-the-offer-resource)).
