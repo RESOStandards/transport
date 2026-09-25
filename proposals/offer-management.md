@@ -36,6 +36,13 @@ This End User License Agreement (the "EULA") is entered into by and between the 
   - [Section 2.10: Web API Conformance](#section-210-web-api-conformance)
   - [Section 2.11: Authentication and Authorization](#section-211-authentication-and-authorization)
   - [Section 2.12: Worked Examples](#section-212-worked-examples)
+    - [Section 2.12.1: Submitting an Offer](#section-2121-submitting-an-offer)
+    - [Section 2.12.2: Acknowledging Receipt](#section-2122-acknowledging-receipt)
+    - [Section 2.12.3: Countering](#section-2123-countering)
+    - [Section 2.12.4: A State With No Activity Streams Verb](#section-2124-a-state-with-no-activity-streams-verb)
+    - [Section 2.12.5: Requesting Highest and Best](#section-2125-requesting-highest-and-best)
+    - [Section 2.12.6: Accepting](#section-2126-accepting)
+    - [Section 2.12.7: Withdrawing](#section-2127-withdrawing)
 - [Section 3: Certification](#section-3-certification)
 - [Section 4: Contributors](#section-4-contributors)
 - [Section 5: References](#section-5-references)
@@ -56,13 +63,13 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 
 # Introduction
 
-An offer is the point in a transaction where the most value and the most risk meet, and it is the point with the least standardization. Offers move as email attachments, as PDFs, and through portals that each model an offer differently. A listing agent receiving offers from several buyer agents commonly receives them in several shapes and reconciles them by hand.
+An offer is the point in a transaction where the most value and the most risk meet, and it is the point with the least standardization. Offers move as email attachments, as PDFs and through portals that each model an offer differently. A listing agent receiving offers from several buyer agents commonly receives them in several shapes and reconciles them by hand.
 
 The Data Dictionary has no Offer resource. Of its 43 resources, none models an offer, and the only place offers appear at all is two values of `TransactionType`, `PurchaseOffer` and `LeaseOffer`, which classify a transaction rather than describe an offer. There is nothing to extend, so this proposal defines the shape.
 
 Two things make an offer different from the records the Data Dictionary already carries, and both shape this specification.
 
-An offer is a **conversation**, not a record. It is submitted, acknowledged, countered, countered again, and finally accepted, rejected, withdrawn or expired. Each turn is a new statement by a different party, and the sequence is the substance. A single mutable row cannot represent it.
+An offer is a **conversation**, not a record. It is submitted, acknowledged, countered, countered again and finally accepted, rejected, withdrawn or expired. Each turn is a new statement by a different party, and the sequence is the substance. A single mutable row cannot represent it.
 
 An offer is **confidential**. It carries the legal name, address and telephone number of a buyer, the price that buyer will pay and the financing behind it. This is the most sensitive data in the proposal, and possibly in the Data Dictionary. The design assumes confidentiality rather than adding it later.
 
@@ -141,7 +148,7 @@ The four system fields overlap [Organization and System Identifiers (RCP-55)](ht
 
 ## Section 2.5: The OfferSubmission Resource
 
-An `OfferSubmission` is one turn in the negotiation: an initial offer, a counter, or a re-counter. Submissions are threaded onto one `Offer` by `OfferId`, and they are append-only. An implementation MUST NOT modify a submission to represent a counter; it MUST create a new one ([Section 2.9](#section-29-counter-offers)).
+An `OfferSubmission` is one turn in the negotiation: an initial offer, a counter or a re-counter. Submissions are threaded onto one `Offer` by `OfferId`, and they are append-only. An implementation MUST NOT modify a submission to represent a counter; it MUST create a new one ([Section 2.9](#section-29-counter-offers)).
 
 | Field | Type | Nullable | Max length | Lookup | Definition |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -297,13 +304,221 @@ The buyer and co-buyer fields of [Section 2.5](#section-25-the-offersubmission-r
 
 ## Section 2.12: Worked Examples
 
-Worked examples of each sequence – submission, acknowledgement, counter, re-counter, acceptance, rejection, withdrawal, expiry and a request for highest and best – will be added here, in the form used by the ULI Resolution Protocol's Section 2.12: the request and response of each activity, with the referenced payload alongside it.
+Each example shows the activity posted to the thread and the RESO Common Format payload the activity references. The activity carries identity and intent. The payload carries the offer. In every example the payload is retrieved from the `url` of the activity and requires authorization ([Section 2.11](#section-211-authentication-and-authorization)).
+
+The thread is the listing thread established by the Listing Advertisement proposal. An offer joins it by replying to the listing activity.
+
+### Section 2.12.1: Submitting an Offer
+
+The buyer agent's system posts an `Offer` in reply to the listing, addressed to the listing agent and not to the public collection.
+
+```json
+{
+  "@context": "https://www.w3.org/ns/activitystreams",
+  "type": "Offer",
+  "id": "https://my.offercloud.com/offer/XYZ999",
+  "published": "2026-09-15T14:02:00Z",
+  "actor": "https://listing.network/AmyAgent",
+  "attributedTo": ["https://listing.network/MyOfferApp"],
+  "inReplyTo": "https://listing.network/BobAgent/133",
+  "to": ["https://listing.network/BobAgent"],
+  "url": {
+    "type": "Link",
+    "href": "https://my.offercloud.com/payload/XYZ999",
+    "mediaType": "application/json"
+  }
+}
+```
+
+The identifier `XYZ999` is opaque. It is not the `OfferId` and cannot be parsed to recover one ([Section 2.3](#section-23-offer-identity)). Nothing in the activity states the price, the buyer or the terms.
+
+The payload behind `url`:
+
+```json
+{
+  "@reso.context": "urn:reso:metadata:2.1:resource:offersubmission",
+  "OfferSubmissionKey": "9f2c7a10-5b3e-4a1d-9c88-2e6b0d4f1a73",
+  "OfferId": "MRED-2026-0004412",
+  "OfferAgentId": "AG55021",
+  "OfferBuyerLegalName": "Dana R. Whitfield",
+  "OfferBuyerPhone": "+1-312-555-0147",
+  "PurchasePrice": 530000,
+  "EarnestMoney": 15000,
+  "ClosingDate": "2026-11-02",
+  "BuyerFinancing": "Conventional",
+  "Contingencies": ["Inspection", "Financing"],
+  "AsIsCondition": false,
+  "OfferExpirationDate": "2026-09-18",
+  "OfferSubmissionStatus": "Submitted",
+  "OfferSubmissionTimestamp": "2026-09-15T14:02:00Z",
+  "ModificationTimestamp": "2026-09-15T14:02:00Z",
+  "OfferPropertyGroup": {
+    "UniversalPropertyId": "US-17031-N-1234567890-R-N",
+    "StreetNumber": "1803",
+    "StreetName": "Bayshore Rd",
+    "City": "Chicago",
+    "StateOrProvince": "IL",
+    "PostalCode": "60614",
+    "CountyOrParish": "Cook",
+    "Country": "US"
+  }
+}
+```
+
+### Section 2.12.2: Acknowledging Receipt
+
+The listing agent's system acknowledges the offer. `Acknowledged` maps to `Read` ([Section 2.8](#section-28-activity-streams-mapping)).
+
+```json
+{
+  "@context": "https://www.w3.org/ns/activitystreams",
+  "type": "Read",
+  "id": "https://listing.network/BobAgent/133/ack/1",
+  "published": "2026-09-15T15:40:00Z",
+  "actor": "https://listing.network/BobAgent",
+  "object": "https://my.offercloud.com/offer/XYZ999",
+  "to": ["https://listing.network/AmyAgent"]
+}
+```
+
+The receiving side records `OfferReceivedStatus` as `Acknowledged` in its own payload. No offer content moves in either direction here.
+
+### Section 2.12.3: Countering
+
+A counter is an `Offer` posted `inReplyTo` the activity it answers, by the other party. It creates a new `OfferSubmission` under the same `OfferId`; it does not modify the first ([Section 2.9](#section-29-counter-offers)).
+
+```json
+{
+  "@context": "https://www.w3.org/ns/activitystreams",
+  "type": "Offer",
+  "id": "https://bobsbrokerage.example/counter/7731",
+  "published": "2026-09-15T18:20:00Z",
+  "actor": "https://listing.network/BobAgent",
+  "inReplyTo": "https://my.offercloud.com/offer/XYZ999",
+  "to": ["https://listing.network/AmyAgent"],
+  "url": {
+    "type": "Link",
+    "href": "https://bobsbrokerage.example/payload/7731",
+    "mediaType": "application/json"
+  }
+}
+```
+
+The payload is a second `OfferSubmission`, carrying the same `OfferId` and its own key:
+
+```json
+{
+  "@reso.context": "urn:reso:metadata:2.1:resource:offersubmission",
+  "OfferSubmissionKey": "b41d8e56-7c09-42fa-8d31-5a7e2c9b6f04",
+  "OfferId": "MRED-2026-0004412",
+  "PurchasePrice": 545000,
+  "EarnestMoney": 20000,
+  "ClosingDate": "2026-10-26",
+  "Contingencies": ["Financing"],
+  "OfferExpirationDate": "2026-09-17",
+  "OfferSubmissionStatus": "Countered",
+  "CounterOfferSubmissionTimestamp": "2026-09-15T18:20:00Z",
+  "ModificationTimestamp": "2026-09-15T18:20:00Z"
+}
+```
+
+Both submissions remain retrievable. Ordered by timestamp under `MRED-2026-0004412`, they are the negotiation.
+
+### Section 2.12.4: A State With No Activity Streams Verb
+
+`ScheduledToPresent` has no Activity Streams equivalent, so it is a `Note` and the state itself stays in the payload. An implementation MUST NOT invent a type for it.
+
+```json
+{
+  "@context": "https://www.w3.org/ns/activitystreams",
+  "type": "Note",
+  "id": "https://listing.network/BobAgent/133/note/4",
+  "published": "2026-09-15T16:05:00Z",
+  "actor": "https://listing.network/BobAgent",
+  "inReplyTo": "https://my.offercloud.com/offer/XYZ999",
+  "to": ["https://listing.network/AmyAgent"],
+  "url": {
+    "type": "Link",
+    "href": "https://bobsbrokerage.example/payload/7728",
+    "mediaType": "application/json"
+  }
+}
+```
+
+A provider that does not publish states at all posts no activity here. Its counterparty resolves the state by dereferencing the payload, and MUST NOT treat the silence as an error ([Section 2.8](#section-28-activity-streams-mapping)).
+
+### Section 2.12.5: Requesting Highest and Best
+
+`RequestHighestAndBest` maps to `Question`. The deadline is in the payload, not in the activity.
+
+```json
+{
+  "@context": "https://www.w3.org/ns/activitystreams",
+  "type": "Question",
+  "id": "https://listing.network/BobAgent/133/hb/1",
+  "published": "2026-09-16T09:00:00Z",
+  "actor": "https://listing.network/BobAgent",
+  "inReplyTo": "https://listing.network/BobAgent/133",
+  "to": [
+    "https://listing.network/AmyAgent",
+    "https://listing.network/CarlaAgent"
+  ],
+  "url": {
+    "type": "Link",
+    "href": "https://bobsbrokerage.example/payload/hb1",
+    "mediaType": "application/json"
+  }
+}
+```
+
+The request is addressed to each offering party individually. It MUST NOT be addressed to the public collection, and one offering party MUST NOT be able to learn the terms of another's offer from it ([Section 2.1](#section-21-participation-and-confidentiality)).
+
+### Section 2.12.6: Accepting
+
+```json
+{
+  "@context": "https://www.w3.org/ns/activitystreams",
+  "type": "Accept",
+  "id": "https://listing.network/BobAgent/133/accept/1",
+  "published": "2026-09-16T17:12:00Z",
+  "actor": "https://listing.network/BobAgent",
+  "object": "https://bobsbrokerage.example/counter/7731",
+  "to": ["https://listing.network/AmyAgent"],
+  "url": {
+    "type": "Link",
+    "href": "https://bobsbrokerage.example/payload/7740",
+    "mediaType": "application/json"
+  }
+}
+```
+
+The `object` is the submission being accepted, which in a negotiation that has countered is the most recent counter rather than the original offer. The payload records `OfferAcceptanceTimestamp` and sets the status on both sides.
+
+Acceptance ends the scope of this specification. What follows is transaction management.
+
+### Section 2.12.7: Withdrawing
+
+An actor withdraws its own offer with `Undo`. An actor MUST NOT `Undo` an activity posted by another party.
+
+```json
+{
+  "@context": "https://www.w3.org/ns/activitystreams",
+  "type": "Undo",
+  "id": "https://my.offercloud.com/offer/XYZ999/undo",
+  "published": "2026-09-15T17:55:00Z",
+  "actor": "https://listing.network/AmyAgent",
+  "object": "https://my.offercloud.com/offer/XYZ999",
+  "to": ["https://listing.network/BobAgent"]
+}
+```
+
+`Undo` withdraws the offer going forward. It does not delete the submission: the record of what was offered, and that it was withdrawn, remains ([Section 2.9](#section-29-counter-offers)).
 
 <br /><br />
 
 # Section 3: Certification
 
-Certification proves that an offer keeps its shape, its history and its confidentiality as it crosses systems. The rules derive from the Section 2 requirements. Certification is per-interface: an implementation may be certified for the Web API interface, the ActivityPub interface, or both.
+Certification proves that an offer keeps its shape, its history and its confidentiality as it crosses systems. The rules derive from the Section 2 requirements. Certification is per-interface: an implementation may be certified for the Web API interface, the ActivityPub interface or both.
 
 RESO will validate the following during certification:
 
@@ -389,7 +604,7 @@ This proposal deprecates no element.
 
 **Why the identifier need not be meaningful.** A provider that must expose `OfferId` in an activity identifier discloses, to anyone who can see the thread, how many offers it has issued and in what order. Allowing an opaque identifier removes that disclosure without weakening the reference, because the payload behind the link resolves the record.
 
-**Why submissions are append-only.** A negotiation is evidence. If a counter overwrites the offer it answers, the record of what was offered, when, and by whom is lost, and the parties have no common account of what happened. Append-only keeps the sequence, and the sequence is what an offer is.
+**Why submissions are append-only.** A negotiation is evidence. If a counter overwrites the offer it answers, the record of what was offered, when and by whom is lost, and the parties have no common account of what happened. Append-only keeps the sequence, and the sequence is what an offer is.
 
 **Why two status lookups.** The submitting side and the receiving side observe different events. `Delivered` is knowable by the sender's system before the recipient has done anything, and `Received` is the recipient's statement. Collapsing them into one field would force one side to assert what the other side knows. Their values are close today and may diverge.
 
