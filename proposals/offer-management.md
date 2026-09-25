@@ -377,6 +377,8 @@ This is deliberately the same shape as `EntityEventSequence` in [EntityEvent](ht
 
 The two differ in one respect, because the situations differ. `EntityEventSequence` orders the events of a single system, so a plain counter suffices and its producer is the only writer. An offer is written by two parties who may act without having seen each other, so assignment has to tolerate that.
 
+The two also compose. A system that emits EntityEvent records for its offer records lets a consumer track back to an `Offer` or an `OfferSubmission` through the event stream, by `ResourceName` and `ResourceRecordKey`, and replay from a known `EntityEventSequence`. Nothing here requires that, and an implementation that already runs an event feed gets it without further work. For it to be possible, `ResourceName` has to be able to name these resources, which is why this proposal adds them to that lookup.
+
 An implementation creating a submission MUST set `OfferSubmissionSequence` to one greater than the highest value it has seen for that `OfferId`, and MUST set it to 1 for the first submission of an offer. An implementation MUST NOT renumber a submission after creating it.
 
 Two submissions in one offer MAY carry the same sequence. That is not a defect to repair: it means both parties acted without having seen the other, which is a real event and the reason the number is worth carrying. Where it happens, an implementation MUST order the two by the Unique Organization Identifier of the submitting party, ascending, so that every party reaches the same ordering from the same facts. It MUST NOT resolve the tie by arrival time, which differs per recipient.
@@ -812,6 +814,14 @@ This proposal introduces three resources and two lookups. They are defined in [S
 | :--- | :--- | ---: |
 | OfferSubmissionStatus | [Section 2.7](#section-27-offer-states) | 13 |
 | OfferReceivedStatus | [Section 2.7](#section-27-offer-states) | 12 |
+
+This proposal also adds three values to the existing `ResourceName` lookup, whose standard values are currently `Association`, `Contacts`, `Member`, `Office` and `Property`. Without them no existing resource can name an offer record: `Media` cannot attach a contract document to a submission, and `EntityEvent` cannot carry a change to one.
+
+| Lookup | Lookup Value | Definition |
+| :--- | :--- | :--- |
+| ResourceName | Offer | The Offer resource. |
+| ResourceName | OfferSubmission | The OfferSubmission resource. |
+| ResourceName | OfferPropertyGroup | The OfferPropertyGroup resource. |
 
 The following existing elements are reused without change: `BuyerFinancing`, `Contingency`, `BuyerBrokerageCompensation`, `StreetNumber`, `StreetName`, `City`, `StateOrProvince`, `PostalCode`, `CountyOrParish`, `Country`, `ParcelNumber`, `UniversalPropertyId`, `ListingId`, `ListingKey` and the `Media` resource.
 
