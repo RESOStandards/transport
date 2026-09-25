@@ -942,6 +942,16 @@ An implementation MAY use both models across different listings, or change betwe
 
 ## Design rationale
 
+**Why ActivityPub rather than the Web API or an event feed.** An offer is a conversation with turns from both sides, and the transport has to carry that shape.
+
+The Web API is request and response against a provider's own data. It serves a record well and it does not carry a negotiation between two providers, each of whom holds part of it and neither of whom is the other's server.
+
+EntityEvent is one-directional by design, a stream of things that have happened. It can log a negotiation after the fact and it cannot conduct one, because there is no reply.
+
+ActivityPub is bidirectional and threaded, which is what an offer actually is: a turn, an answer, another turn, each naming what it responds to. It also already carries listings under the [Listing Advertisement proposal](https://github.com/RESOStandards/transport/discussions/162), so an offer replies into a thread that exists rather than opening a parallel channel alongside it.
+
+That division is why this specification requires nothing of an event feed. The negotiation must be complete from the thread and its payloads alone. Where a provider also runs EntityEvent, the record reaches the feed and `HistoryTransactional` carries the field-level detail behind it, which is useful and is not depended upon.
+
 **Why the data is not in the activity.** Putting offer terms in an ActivityPub object publishes them to every server the activity federates to, and federation is not revocable. An offer is confidential, so the activity carries a reference and the data stays behind an authenticated link the originator controls. This also keeps the vocabulary standard, since nothing offer-specific has to be expressed in JSON-LD.
 
 **Why the identifier need not be meaningful.** A provider that must expose `OfferId` in an activity identifier discloses, to anyone who can see the thread, how many offers it has issued and in what order. Allowing an opaque identifier removes that disclosure without weakening the reference, because the payload behind the link resolves the record.
