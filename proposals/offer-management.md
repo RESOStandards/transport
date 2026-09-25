@@ -228,6 +228,7 @@ What a buyer cannot do is counter another buyer's offer. No offering party learn
 | OfferUoi | String | Yes | 25 | | The Unique Organization Identifier of the organization the listing being offered on originated with. This is the provenance of the listing, not the identity of a participant. |
 | OfferUsi | String | Yes | 25 | | The Unique System Identifier of the system, within that organization, the listing being offered on was input in. |
 | ModificationTimestamp | Timestamp | No | | | The date and time the offer record was last modified. |
+| Submissions | Expansion, Multi | Yes | | OfferSubmission | The submissions of this offer, expanded into it ([Section 2.5](#section-25-the-offersubmission-resource)). Absent where they travel on their own. |
 
 An offer that identifies no listing cannot be routed to a listing agent, so an `Offer` MUST identify one. A listing identifier alone is not sufficient to do that unambiguously.
 
@@ -275,6 +276,12 @@ The members of a coordinate MAY be hashed together to produce a single opaque va
 
 An `OfferSubmission` is one turn in the negotiation: an initial offer, a counter or a re-counter. Every `OfferSubmission` MUST correlate to an `Offer`, by carrying that offer's `OfferId`, and an implementation MUST NOT accept a submission that correlates to no offer. `OfferId` is therefore required on both, and submissions are append-only. An implementation MUST NOT modify a submission to represent a counter. It MUST create a new one ([Section 2.9](#section-29-counter-offers)).
 
+A submission MAY travel on its own, and MAY travel expanded into its `Offer` under the property name `Submissions`. That is the expansion of the same relationship rather than a second resource. The property name follows the Data Dictionary's convention for a one-to-many relationship, which drops the prefix that the two resource names share. `Property` carries `Rooms` for `PropertyRooms` and `UnitTypes` for `PropertyUnitTypes`, and `Offer` carries `Submissions` for `OfferSubmission`. A consumer MUST accept either form, and MUST NOT require the expanded one.
+
+An expansion property is declared in the field tables like any other element, typed `Expansion` with the resource it targets named in the lookup column. A payload carrying one therefore validates against the declared model rather than against an undeclared member.
+
+The expansion is a projection for reading. An implementation MUST NOT create, alter or remove a submission through it. Submissions are append-only, and a write that replaced the expanded collection would rewrite a negotiation's history in a single request.
+
 | Field | Type | Nullable | Max length | Lookup | Definition |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | OfferSubmissionKey | String | No | 255 | | The unique system identifier for this submission. |
@@ -311,6 +318,7 @@ An `OfferSubmission` is one turn in the negotiation: an initial offer, a counter
 | CounterOfferSubmissionTimestamp | Timestamp | Yes | | | The date and time a counter offer was submitted. |
 | OfferAcceptedTimestamp | Timestamp | Yes | | | The date and time the offer was accepted. |
 | ModificationTimestamp | Timestamp | No | | | The date and time the submission was last modified. |
+| PropertyGroup | Expansion, Single | Yes | | OfferPropertyGroup | The property group of this submission, expanded into it ([Section 2.6](#section-26-the-offerpropertygroup-resource)). Absent where it travels by key alone. |
 
 `BuyerFinancing`, `Concessions`, `Contingency` and `BuyerBrokerageCompensation` reuse existing Data Dictionary elements rather than introducing offer-specific equivalents, and an implementation MUST use the existing standard values where the element carries an enumeration. `Contingency` carries none. It is free text in the Data Dictionary, so an implementation records contingencies as the Data Dictionary defines them today ([Section 6, Open Questions](#open-questions)).
 
@@ -326,7 +334,7 @@ The buyer and co-buyer fields are personal data. [Section 2.11](#section-211-aut
 
 The `OfferPropertyGroup` identifies the subject property of a submission. It exists because an offer may be made on a property that the receiving system does not hold a listing record for, so the address must travel with the offer.
 
-Every `OfferSubmission` MUST carry an `OfferPropertyGroupKey`, and an implementation MUST NOT accept a submission whose property group cannot be resolved. A payload MAY carry the group inline or by key alone. Inline, it appears under the property name `OfferPropertyGroup`, as [Section 2.12](#section-212-worked-examples) shows, which is the expansion of the same relationship rather than a second resource. A consumer MUST accept either form, and MUST NOT require the inline one.
+Every `OfferSubmission` MUST carry an `OfferPropertyGroupKey`, and an implementation MUST NOT accept a submission whose property group cannot be resolved. A payload MAY carry the group inline or by key alone. Inline, it appears under the property name `PropertyGroup`, as [Section 2.12](#section-212-worked-examples) shows, which is the expansion of the same relationship rather than a second resource. The property name drops the `Offer` prefix that the two names share, by the same convention that governs `Submissions` ([Section 2.5](#section-25-the-offersubmission-resource)). A consumer MUST accept either form, and MUST NOT require the inline one.
 
 | Field | Type | Nullable | Max length | Lookup | Definition |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -440,7 +448,7 @@ The remaining states have no Activity Streams equivalent whose intent matches, a
 
 A counter offer is not a new kind of record and is not an edit. It is an `OfferSubmission` ([Section 2.5](#section-25-the-offersubmission-resource)) carrying the same `OfferId` as the submission it answers, with its own `OfferSubmissionKey` and its own `CounterOfferSubmissionTimestamp`.
 
-An implementation MUST NOT modify a prior submission when a counter is made. The sequence of submissions under one `OfferId`, ordered by timestamp, is the negotiation history, and destroying a prior turn destroys the record of what was agreed and when.
+An implementation MUST NOT modify a prior submission when a counter is made. The sequence of submissions under one `OfferId`, ordered by `OfferSubmissionSequence`, is the negotiation history, and destroying a prior turn destroys the record of what was agreed and when.
 
 ### The Thread
 
@@ -593,7 +601,7 @@ The payload behind `url`:
   "OfferSubmissionSequence": 1,
   "OfferSubmissionTimestamp": "2026-09-15T14:02:00Z",
   "ModificationTimestamp": "2026-09-15T14:02:00Z",
-  "OfferPropertyGroup": {
+  "PropertyGroup": {
     "UniversalPropertyId": "US-17031-N-1234567890-R-N",
     "StreetNumber": "1803",
     "StreetName": "Bayshore Rd",
@@ -622,6 +630,27 @@ The submission belongs to an `Offer`, which carries the listing coordinate ([Sec
   "ModificationTimestamp": "2026-09-15T14:02:00Z"
 }
 ```
+
+The two MAY also travel as one document, with the submissions expanded under `Submissions` ([Section 2.5](#section-25-the-offersubmission-resource)). Each element carries the same members shown above:
+
+```json
+{
+  "@reso.context": "urn:reso:metadata:2.1:resource:offer",
+  "OfferKey": "3d51a08c-9f47-4c62-b0aa-71e5d2c84b19",
+  "OfferId": "MRED-2026-0004412",
+  "ListingId": "11284417",
+  "ListingKey": "MRED-L-11284417",
+  "OfferUoi": "M00000136",
+  "OfferOriginatingSystemName": "Midwest Real Estate Data",
+  "ModificationTimestamp": "2026-09-17T09:40:00Z",
+  "Submissions": [
+    { "OfferSubmissionSequence": 1, "OfferSubmissionStatus": "Submitted", "PurchasePrice": 530000 },
+    { "OfferSubmissionSequence": 2, "OfferSubmissionStatus": "Countered", "PurchasePrice": 545000 }
+  ]
+}
+```
+
+A consumer reads either form. The expanded one is a projection for reading, and a submission is still created only as a submission ([Section 2.9](#section-29-counter-offers)).
 
 `ListingId` alone would not identify this listing: another organization may issue `11284417` for something else entirely. `OfferUoi` supplies the organization and `OfferUsi` the system it was input in, and together with the listing identifier they form the coordinate. A provider that would rather not publish the parts may carry a single hashed value in their place.
 
@@ -817,6 +846,7 @@ RESO will validate the following during certification:
 * The candidate MUST NOT accept an offer that references no published listing activity ([Section 2.9](#section-29-counter-offers)).
 * Every `OfferSubmission` the candidate accepts MUST correlate to an `Offer` it holds, by `OfferId`. A candidate that accepts a submission correlating to no offer fails ([Section 2.5](#section-25-the-offersubmission-resource)).
 * Every `OfferSubmission` the candidate accepts MUST carry an `OfferPropertyGroupKey` that resolves, whether the group travels inline or by key ([Section 2.6](#section-26-the-offerpropertygroup-resource)).
+* The candidate MUST accept a submission both on its own and expanded into its `Offer` under `Submissions`, and MUST NOT require the expanded form ([Section 2.5](#section-25-the-offersubmission-resource)).
 * The candidate MUST accept a second `Offer` from the same buyer on the same listing, both where an earlier offer has ended and where both are live. A candidate that rejects it as a duplicate, or that merges it into the earlier offer, fails ([Section 2.4](#section-24-the-offer-resource)).
 * The candidate MUST NOT append a submission to an offer that has been withdrawn, rejected or has expired ([Section 2.4](#section-24-the-offer-resource)).
 * An `Offer` the candidate accepts MUST carry `ListingId` or `ListingKey`, and MUST carry at least one of `OfferOriginatingSystemName` or `OfferOriginatingSystemId`. An `Offer` carrying `OfferUoi` and neither of that pair fails. A candidate that accepts a listing identifier with no organization or system member fails ([Section 2.4](#section-24-the-offer-resource)).
@@ -825,6 +855,7 @@ RESO will validate the following during certification:
 
 **History**
 * On a counter, the candidate MUST create a new `OfferSubmission`, and every submission that was already superseded MUST remain byte-identical to what it held when the counter was created ([Section 2.9](#section-29-counter-offers)). A candidate that modifies a superseded submission fails.
+* The candidate MUST NOT create, alter or remove a submission through the `Submissions` expansion ([Section 2.5](#section-25-the-offersubmission-resource)).
 * The candidate MUST record an act that changes no terms by setting its own status field on the current submission, and MUST NOT create a submission for it. A candidate that emits a submission for an acknowledgement, acceptance, rejection or withdrawal fails ([Section 2.7](#section-27-offer-states)).
 * The current state the candidate reports for an offer MUST equal the pair of statuses on its highest-sequence submission, at every point in the exchange ([Section 2.7](#section-27-offer-states)).
 * The candidate MUST NOT set the counterparty's status field, and MUST NOT reject an offer whose two status fields disagree ([Section 2.7](#section-27-offer-states)).
