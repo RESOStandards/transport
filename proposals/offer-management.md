@@ -50,6 +50,7 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 - [Section 6: Appendices](#section-6-appendices)
   - [Open Questions](#open-questions)
   - [Adoption of the Reused Elements](#adoption-of-the-reused-elements)
+  - [Public Advertising, Side by Side](#public-advertising-side-by-side)
 - [Section 7: License](#section-7-license)
 
 <br /><br />
@@ -778,6 +779,72 @@ This proposal deprecates no existing element. It introduces two whose dispositio
 | :--- | :--- | :--- | :--- |
 | Offer | OfferOriginatingSystemName | Deprecated at Data Dictionary 3.0 | Providers may continue to use it. Added because a name is often all a listing carries today. |
 | Offer | OfferOriginatingSystemId | Deprecated at Data Dictionary 3.0 | As above. |
+
+## Public Advertising, Side by Side
+
+[Section 2.1](#section-21-participation-and-confidentiality) supports offers addressed to named parties and offers advertised publicly. This appendix shows what actually differs between the two, because the answer is narrower than it first appears.
+
+The same submission, addressed to named parties:
+
+```json
+{
+  "@context": "https://www.w3.org/ns/activitystreams",
+  "type": "Offer",
+  "id": "https://my.offercloud.example/offer/XYZ999",
+  "actor": "https://listing.example/AmyAgent",
+  "inReplyTo": "https://listing.example/BobAgent/133",
+  "to": ["https://listing.example/BobAgent"],
+  "url": { "type": "Link", "href": "https://my.offercloud.example/payload/XYZ999", "mediaType": "application/json" }
+}
+```
+
+And advertised publicly:
+
+```json
+{
+  "@context": "https://www.w3.org/ns/activitystreams",
+  "type": "Offer",
+  "id": "https://my.offercloud.example/offer/XYZ999",
+  "actor": "https://listing.example/AmyAgent",
+  "inReplyTo": "https://listing.example/BobAgent/133",
+  "to": ["https://www.w3.org/ns/activitystreams#Public"],
+  "url": { "type": "Link", "href": "https://my.offercloud.example/payload/XYZ999", "mediaType": "application/json" }
+}
+```
+
+One member differs. Everything else about the activity, and everything about the payload behind `url`, is identical.
+
+### What changes
+
+| | Addressed to named parties | Advertised publicly |
+| :--- | :--- | :--- |
+| Who can see the activity | The named parties | Anyone who can reach the server |
+| Who learns an offer exists on the listing | The named parties | Anyone |
+| Who learns which actor made it, and when | The named parties | Anyone |
+| Reaching the thread | Requires authorization to the network | No authorization required |
+| Discoverable by a crawler or aggregator | No | Yes |
+
+### What does not change
+
+| | Both models |
+| :--- | :--- |
+| The payload | Identical |
+| Reaching the payload | OAuth2, refuses an unauthenticated dereference |
+| Price, buyer, financing, contingencies, dates, status | Behind the payload link |
+| The listing coordinate and participant identity rules | [Section 2.3](#section-23-offer-identity), [Section 2.4](#section-24-the-offer-resource) |
+| Offer states and their Activity Streams mapping | [Section 2.7](#section-27-offer-states), [Section 2.8](#section-28-activity-streams-mapping) |
+| Append-only submissions | [Section 2.9](#section-29-counter-offers) |
+| Every certification check on offer content | [Section 3](#section-3-certification) |
+
+### The consequence worth weighing
+
+Public advertising discloses the **metadata of the negotiation** while protecting its **contents**. An observer learns that this actor made an offer on this listing at this time, that a counter followed an hour later, and that the thread went quiet after a third activity. The terms stay behind the token throughout.
+
+For some participants that is the point: an open record that a listing is receiving activity, without exposing what anyone bid. For others the timing and the identities are themselves competitive information. Neither reading is wrong, which is why the specification carries both and neither is nominated as correct.
+
+An implementation MAY use both models across different listings, or change between them, provided the rule in [Section 2.1](#section-21-participation-and-confidentiality) holds in each case: an activity carrying offer content is never addressed to the public collection.
+
+<br />
 
 ## Design rationale
 
