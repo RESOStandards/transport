@@ -975,7 +975,7 @@ The argument is the same in both cases, and it is the ordinary test. A change br
 
 | Element | The reading to test | Where it is argued |
 | :--- | :--- | :--- |
-| `OfferUoi` alongside `OfferOriginatingSystemName` and `OfferOriginatingSystemId` | Nothing is replaced. The originating system pair is required, not optional, and `OfferUoi` is additional, so a provider cannot drop the current elements in favour of the future one. Removing the pair is scheduled for Data Dictionary 3.0, a major boundary. | [Section 2.4](#section-24-the-offer-resource) |
+| `OfferUoi` alongside `OfferOriginatingSystemName` and `OfferOriginatingSystemId` | Nothing is replaced. The originating system pair is required, not optional, and `OfferUoi` is additional, so a provider cannot drop the current elements in favor of the future one. Removing the pair is scheduled for Data Dictionary 3.0, a major boundary. | [Section 2.4](#section-24-the-offer-resource) |
 | `RequestedClosingDate` alongside `CloseDate` | A proposed date and an actual date are different facts, so neither can stand for the other | [Section 2.5](#section-25-the-offersubmission-resource) |
 
 If the workgroups accept both arguments, an implementation already conformant to Data Dictionary 2.1 stays conformant and this is a minor change. If either is judged a duplicate, it is major.
