@@ -161,7 +161,7 @@ The `Offer` resource is the top-level object. One `Offer` exists for one offer b
 | Field | Type | Nullable | Max length | Lookup | Definition |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | OfferKey | String | No | 255 | | The unique system identifier for the offer. |
-| OfferId | String | Yes | 255 | | The well-known identifier assigned to an offer by the system it originated in. |
+| OfferId | String | No | 255 | | The well-known identifier assigned to an offer by the system it originated in. Every `OfferSubmission` correlates to its `Offer` by this value. |
 | ListingId | String | Yes | 255 | | The well-known identifier of the listing the offer is made against. |
 | ListingKey | String | Yes | 255 | | The system identifier of the listing the offer is made against. |
 | OfferNotes | String | Yes | | | Notes that apply to the offer as a whole rather than to one submission. |
@@ -213,7 +213,7 @@ The members of a coordinate MAY be hashed together to produce a single opaque va
 
 ## Section 2.5: The OfferSubmission Resource
 
-An `OfferSubmission` is one turn in the negotiation: an initial offer, a counter or a re-counter. Submissions are threaded onto one `Offer` by `OfferId`, and they are append-only. An implementation MUST NOT modify a submission to represent a counter; it MUST create a new one ([Section 2.9](#section-29-counter-offers)).
+An `OfferSubmission` is one turn in the negotiation: an initial offer, a counter or a re-counter. Every `OfferSubmission` MUST correlate to an `Offer`, by carrying that offer's `OfferId`, and an implementation MUST NOT accept a submission that correlates to no offer. `OfferId` is therefore required on both, and submissions are append-only. An implementation MUST NOT modify a submission to represent a counter; it MUST create a new one ([Section 2.9](#section-29-counter-offers)).
 
 | Field | Type | Nullable | Max length | Lookup | Definition |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -733,6 +733,7 @@ RESO will validate the following during certification:
 * The candidate MUST accept and serve the standard values of [Section 2.7](#section-27-offer-states) and MUST reject a multi-valued status on either side.
 * The candidate MUST use the existing standard values for `BuyerFinancing`, `Contingencies` and `BuyerBrokerageCompensation` and MUST NOT substitute offer-specific equivalents ([Section 2.5](#section-25-the-offersubmission-resource)).
 * The candidate MUST NOT accept an offer that references no published listing activity ([Section 2.9](#section-29-counter-offers)).
+* Every `OfferSubmission` the candidate accepts MUST correlate to an `Offer` it holds, by `OfferId`. A candidate that accepts a submission correlating to no offer fails ([Section 2.5](#section-25-the-offersubmission-resource)).
 * An `Offer` the candidate accepts MUST carry `ListingId` or `ListingKey`, and MUST carry at least one of `OfferUoi`, `OfferOriginatingSystemName` or `OfferOriginatingSystemId`. A candidate that accepts a listing identifier with no organization or system member fails ([Section 2.4](#section-24-the-offer-resource)).
 * An `OfferPropertyGroup` the candidate accepts MUST identify the property by one of the two permitted combinations ([Section 2.6](#section-26-the-offerpropertygroup-resource)).
 * Where the candidate publishes a hashed coordinate, it MUST be reproducible: the same listing MUST yield the same value on repeated construction ([Section 2.4](#section-24-the-offer-resource)).
