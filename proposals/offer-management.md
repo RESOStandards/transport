@@ -84,7 +84,7 @@ This specification gives an offer a standard shape and a standard set of states,
 * a buyer agent can submit an offer from the system of their choice and have it arrive intact in a listing agent's system;
 * a listing agent can compare offers from different sources side by side without rekeying them;
 * a counter offer is a new statement in a thread rather than an edit that destroys what came before;
-* the status of an offer is machine-readable on both sides, so that neither party has to telephone to ask; and
+* the status of an offer is machine-readable on both sides, so that neither party has to telephone to ask;
 * the parties to an offer, and only those parties, can read its contents; and
 * the exchange is platform agnostic, so that a party sees every offer regardless of which product or platform each one came from.
 
@@ -104,7 +104,7 @@ A public thread is a permitted alternative for a provider that wants one, under 
 
 Whether the industry wants the fact of an offer to be public while its contents stay private is an open question ([Section 6, Open Questions](#open-questions)).
 
-The network MUST NOT store offer content. Offer data lives behind the originator's protected link ([Section 2.2](#section-22-activitypub-usage)) and is read only by parties the originator has authorized ([Section 2.11](#section-211-authentication-and-authorization)).
+An Offer Hub and any intermediary relaying an activity MUST NOT store offer content. Offer data lives behind the originator's protected link ([Section 2.2](#section-22-activitypub-usage)) and is read only by parties the originator has authorized ([Section 2.11](#section-211-authentication-and-authorization)).
 
 A provider decides what it exposes. The state of an offer MAY be withheld from the thread entirely, in which case a consumer reads it from the payload ([Section 2.8](#section-28-activity-streams-mapping)). Withholding lowers what counterparties can see without dereferencing, and does not break the exchange.
 
@@ -112,7 +112,9 @@ A provider decides what it exposes. The state of an offer MAY be withheld from t
 
 Implementations MUST use the standard [Activity Streams 2.0 vocabulary](https://www.w3.org/TR/activitystreams-vocabulary/), for example [`Offer`](https://www.w3.org/TR/activitystreams-vocabulary/#dfn-offer), [`Accept`](https://www.w3.org/TR/activitystreams-vocabulary/#dfn-accept), [`Reject`](https://www.w3.org/TR/activitystreams-vocabulary/#dfn-reject) and [`Note`](https://www.w3.org/TR/activitystreams-vocabulary/#dfn-note). Implementations MUST NOT extend [ActivityPub](https://www.w3.org/TR/activitypub/)'s JSON-LD with custom terms.
 
-Offer content MUST be carried in the RESO Common Format payload that the activity references, and MUST NOT appear in the ActivityPub object. This applies to every element of [Section 2.4](#section-24-the-offer-resource) through [Section 2.6](#section-26-the-offerpropertygroup-resource): price, financing, contingencies, dates, buyer and co-buyer details, notes and media. An identifier is not content and MAY appear in the activity, as it does in a thread reference.
+Offer content MUST be carried in the RESO Common Format payload that the activity references, and MUST NOT appear in the ActivityPub object. Offer content is every element of [Section 2.4](#section-24-the-offer-resource) through [Section 2.6](#section-26-the-offerpropertygroup-resource) **other than an identifier**: price, financing, contingencies, dates, buyer and co-buyer details, notes, status and media.
+
+An identifier is not content. The identifiers of [Section 2.3](#section-23-offer-identity), and the members of the listing coordinate of [Section 2.4](#section-24-the-offer-resource), MAY appear in the activity, as an identifier does in a thread reference. A provider that would rather not publish them has the options in those sections: an opaque activity identifier, or a hashed coordinate.
 
 The payload MUST be expressed in RESO Common Format. The payload MUST be reachable through a link the activity references, and MUST NOT be embedded in the activity. That link is not required to be a RESO Web API endpoint: any endpoint that returns the payload in RESO Common Format satisfies this specification. The link MUST refuse an unauthenticated dereference ([Section 2.11](#section-211-authentication-and-authorization)).
 
@@ -130,7 +132,7 @@ The identifier MUST be unique. Where the identifier is visible, it MUST be immut
 
 The identifier is **not required to be** the `OfferKey`, the `OfferId` or any other element of [Section 2.4](#section-24-the-offer-resource). A provider that does not wish to expose a meaningful identifier in plain view MAY publish an opaque one and require a consumer to dereference the payload to resolve the underlying record. Implementations MUST NOT infer that the trailing segment of an identifier is an `OfferId`, and MUST NOT parse an identifier to recover offer data.
 
-The choice is the provider's, and it MUST be explicit rather than assumed. A provider publishing meaningful identifiers is making a disclosure decision, not a formatting one.
+The choice is the provider's. A provider publishing meaningful identifiers is making a disclosure decision rather than a formatting one, and should make it deliberately.
 
 ## Section 2.4: The Offer Resource
 
@@ -143,12 +145,12 @@ The `Offer` resource is the top-level object. One `Offer` exists for one offer b
 | ListingId | String | Yes | 255 | | The well-known identifier of the listing the offer is made against. |
 | ListingKey | String | Yes | 255 | | The system identifier of the listing the offer is made against. |
 | OfferNotes | String | Yes | | | Notes that apply to the offer as a whole rather than to one submission. |
-| OfferOriginatingSystemId | String | Yes | 255 | | The Organization Unique Identifier of the system with authoritative control over the listing being offered on. |
+| OfferOriginatingSystemId | String | Yes | 255 | | The originating system identifier of the listing being offered on, as carried in current practice. |
 | OfferOriginatingSystemName | String | Yes | 255 | | The name of the system with authoritative control over the listing being offered on. |
-| OfferSourceSystemId | String | Yes | 255 | | The Organization Unique Identifier of the system the listing record was directly received from, which may differ from the originating system. |
+| OfferSourceSystemId | String | Yes | 255 | | The source system identifier of the listing record, which may differ from the originating system. |
 | OfferSourceSystemName | String | Yes | 255 | | The name of the system the listing record was directly received from. |
 | OfferUoi | String | Yes | 25 | | The Unique Organization Identifier of the organization the listing being offered on originated with. |
-| OfferUsi | String | Yes | 25 | | The Unique System Identifier of the system the listing being offered on was input in. |
+| OfferUsi | String | Yes | 25 | | The Unique System Identifier of the system, within that organization, the listing being offered on was input in. |
 | ModificationTimestamp | Timestamp | No | | | The date and time the offer record was last modified. |
 
 An offer that identifies no listing cannot be routed to a listing agent, so an `Offer` MUST identify one. A listing identifier alone is not sufficient to do that unambiguously.
@@ -157,7 +159,9 @@ An offer that identifies no listing cannot be routed to a listing agent, so an `
 
 An `Offer` therefore carries a **coordinate** rather than a single identifier: a listing identifier, plus the organization or system that issued it. An `Offer` MUST carry `ListingId` or `ListingKey`, and MUST carry at least one of `OfferUoi`, `OfferOriginatingSystemName` or `OfferOriginatingSystemId`. More of them narrow the coordinate further, and `OfferUsi` narrows it to the system a listing was input on rather than to the organization alone.
 
-RESO is transitioning to Unique Organization Identifiers through [Organization and System Identifiers (RCP-55)](https://github.com/RESOStandards/transport/pull/243). `OfferUoi` and `OfferUsi` are the forward-looking members of the coordinate and SHOULD be populated where they are known. The originating-system name and identifier reflect current practice and remain valid. Where RCP-55 ratifies first, these fields adopt its definitions rather than restating them.
+`OfferUoi` and `OfferOriginatingSystemId` overlap deliberately. The Data Dictionary defines an originating system identifier as holding an organization identifier, so the element is named for a system and carries an organization, and it cannot express the system within that organization at all. `OfferUoi` names the organization explicitly and `OfferUsi` adds the system, which the legacy pair never distinguished.
+
+RESO is transitioning to Unique Organization Identifiers through [Organization and System Identifiers (RCP-55)](https://github.com/RESOStandards/transport/pull/243). `OfferUoi` and `OfferUsi` SHOULD be populated where they are known. The originating and source system fields are retained for continuity with current practice and remain valid. Where RCP-55 ratifies first, these fields adopt its definitions rather than restating them.
 
 The members of a coordinate MAY be hashed together to produce a single opaque value, where a provider does not wish to publish the parts. A party already holding the parts can verify such a value; a party that does not, cannot read them out of it.
 
@@ -180,7 +184,7 @@ An `OfferSubmission` is one turn in the negotiation: an initial offer, a counter
 | PurchasePrice | Number | Yes | | | The purchase price being offered. |
 | CreditAtClosing | Number | Yes | | | The credit being requested at closing. |
 | EarnestMoney | Number | Yes | | | The earnest money that will be submitted. |
-| ClosingDate | Date | Yes | | | The closing date proposed in the offer. |
+| RequestedClosingDate | Date | Yes | | | The closing date proposed in the offer. |
 | BuyerFinancing | String List, Single | Yes | | BuyerFinancing | The financing proposed in the offer. |
 | WaiverOfInspection | Boolean | Yes | | | Indicates whether or not the inspection is being waived. |
 | Contingencies | String List, Multi | Yes | | Contingency | The contingencies attached to the offer. |
@@ -201,6 +205,8 @@ An `OfferSubmission` is one turn in the negotiation: an initial offer, a counter
 | ModificationTimestamp | Timestamp | No | | | The date and time the submission was last modified. |
 
 `BuyerFinancing`, `Contingencies` and `BuyerBrokerageCompensation` reuse existing Data Dictionary elements and their lookups rather than introducing offer-specific equivalents. An implementation MUST use the existing standard values.
+
+`RequestedClosingDate` is a new element rather than a reuse of `CloseDate`. `CloseDate` records the date a transaction actually closed; this records the date an offer proposes. The two are different facts and one cannot stand for the other, so the offer element takes a name that says which it is.
 
 Some providers do not offer compensation information. `BuyerBrokerageCompensation` is therefore optional, and a consumer MUST NOT treat its absence as an error. Where compensation is not present and a party needs it, it is obtained by contacting the agent or brokerage directly.
 
@@ -226,7 +232,14 @@ The `OfferPropertyGroup` identifies the subject property of a submission. It exi
 | ParcelNumber | String | Yes | 50 | | The parcel number of the subject property. |
 | UniversalPropertyId | String | Yes | 255 | | The universal property identifier of the subject property. |
 
-Every field of this resource reuses an existing Data Dictionary element. An `OfferPropertyGroup` MUST carry enough to identify the property: `ParcelNumber` with `StateOrProvince` and `CountyOrParish`, or a complete street address.
+Every field of this resource reuses an existing Data Dictionary element.
+
+An `OfferPropertyGroup` MUST carry enough to identify the property, by one of two combinations:
+
+* `ParcelNumber` with `StateOrProvince` and `CountyOrParish`; or
+* `StreetNumber`, `StreetName`, `City`, `StateOrProvince` and `PostalCode`.
+
+`OfferPropertyGroupKey` identifies the property group within the system that issued it, and is resolved by dereferencing the payload that carries it, as the other keys this proposal introduces are ([Section 2.3](#section-23-offer-identity)).
 
 `UniversalPropertyId` is an optional additional discriminator. It identifies the property rather than the listing, and a property may carry many listings over time, so it does not replace the listing coordinate of [Section 2.4](#section-24-the-offer-resource). What it does is rule out two listings that could not be the same property, which is where offers most often go wrong across systems.
 
@@ -367,7 +380,7 @@ The payload behind `url`:
   "OfferBuyerPhone": "+1-312-555-0147",
   "PurchasePrice": 530000,
   "EarnestMoney": 15000,
-  "ClosingDate": "2026-11-02",
+  "RequestedClosingDate": "2026-11-02",
   "BuyerFinancing": "Conventional",
   "Contingencies": ["Inspection", "Financing"],
   "AsIsCondition": false,
@@ -387,6 +400,25 @@ The payload behind `url`:
   }
 }
 ```
+
+The submission belongs to an `Offer`, which carries the listing coordinate ([Section 2.4](#section-24-the-offer-resource)) and persists for the life of the negotiation:
+
+```json
+{
+  "@reso.context": "urn:reso:metadata:2.1:resource:offer",
+  "OfferKey": "3d51a08c-9f47-4c62-b0aa-71e5d2c84b19",
+  "OfferId": "MRED-2026-0004412",
+  "ListingId": "11284417",
+  "ListingKey": "MRED-L-11284417",
+  "OfferUoi": "M00000136",
+  "OfferUsi": "50039",
+  "OfferOriginatingSystemName": "Midwest Real Estate Data",
+  "OfferNotes": "Buyer is relocating and has asked for an early response.",
+  "ModificationTimestamp": "2026-09-15T14:02:00Z"
+}
+```
+
+`ListingId` alone would not identify this listing: another organization may issue `11284417` for something else entirely. `OfferUoi` supplies the organization and `OfferUsi` the system it was input in, and together with the listing identifier they form the coordinate. A provider that would rather not publish the parts may carry a single hashed value in their place.
 
 ### Section 2.12.2: Acknowledging Receipt
 
@@ -436,7 +468,7 @@ The payload is a second `OfferSubmission`, carrying the same `OfferId` and its o
   "OfferId": "MRED-2026-0004412",
   "PurchasePrice": 545000,
   "EarnestMoney": 20000,
-  "ClosingDate": "2026-10-26",
+  "RequestedClosingDate": "2026-10-26",
   "Contingencies": ["Financing"],
   "OfferExpirationDate": "2026-09-17",
   "OfferSubmissionStatus": "Countered",
@@ -549,7 +581,9 @@ RESO will validate the following during certification:
 * The candidate MUST serve the resources, fields, types and nullability of [Section 2.4](#section-24-the-offer-resource) through [Section 2.6](#section-26-the-offerpropertygroup-resource), and a payload it produces MUST validate as RESO Common Format against the declared Data Dictionary version.
 * The candidate MUST accept and serve the standard values of [Section 2.7](#section-27-offer-states) and MUST reject a multi-valued status on either side.
 * The candidate MUST use the existing standard values for `BuyerFinancing`, `Contingencies` and `BuyerBrokerageCompensation` and MUST NOT substitute offer-specific equivalents ([Section 2.5](#section-25-the-offersubmission-resource)).
-* An `Offer` the candidate accepts MUST carry either `ListingId` or `ListingKey`, and an `OfferPropertyGroup` MUST identify the property by one of the three permitted combinations ([Section 2.6](#section-26-the-offerpropertygroup-resource)).
+* An `Offer` the candidate accepts MUST carry `ListingId` or `ListingKey`, and MUST carry at least one of `OfferUoi`, `OfferOriginatingSystemName` or `OfferOriginatingSystemId`. A candidate that accepts a listing identifier with no organization or system member fails ([Section 2.4](#section-24-the-offer-resource)).
+* An `OfferPropertyGroup` the candidate accepts MUST identify the property by one of the two permitted combinations ([Section 2.6](#section-26-the-offerpropertygroup-resource)).
+* Where the candidate publishes a hashed coordinate, it MUST be reproducible: the same listing MUST yield the same value on repeated construction ([Section 2.4](#section-24-the-offer-resource)).
 
 **History**
 * On a counter, the candidate MUST create a new `OfferSubmission` and MUST leave every prior submission byte-identical ([Section 2.9](#section-29-counter-offers)). A candidate that modifies a prior submission fails.
@@ -562,6 +596,7 @@ RESO will validate the following during certification:
 * The candidate MUST NOT address an offer activity to the public collection ([Section 2.1](#section-21-participation-and-confidentiality)).
 * The candidate MUST NOT fail when a counterparty publishes no state in the thread, and MUST resolve the state from the payload instead ([Section 2.8](#section-28-activity-streams-mapping)).
 * The candidate MUST NOT parse an activity identifier to recover offer data, and MUST NOT require an identifier to contain an `OfferId` ([Section 2.3](#section-23-offer-identity)).
+* The candidate MUST NOT post an `Undo` for an activity another party posted ([Section 2.12.7](#section-2127-withdrawing)).
 
 **Confidentiality**
 * Every payload link the candidate publishes MUST refuse an unauthenticated dereference ([Section 2.11](#section-211-authentication-and-authorization)).
@@ -593,6 +628,9 @@ Please see the following references for more information regarding topics covere
 * [Organization and System Identifiers (RCP-55)](https://github.com/RESOStandards/transport/pull/243)
 * [Feed Entitlements and Visibility (RCP-35)](https://github.com/RESOStandards/transport/pull/169)
 * [RESO Data Dictionary](https://dd.reso.org/)
+* [RESO Web API Add/Edit](https://github.com/RESOStandards/transport/blob/main/proposals/web-api-add-edit.md)
+* [RESO Universal Property Identifier](https://upi.reso.org/)
+* [DocumentStatus, RESO Data Dictionary](https://dd.reso.org/DD2.0/Property/DocumentStatus/)
 
 <br /><br />
 
