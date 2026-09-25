@@ -43,12 +43,14 @@ This End User License Agreement (the "EULA") is entered into by and between the 
     - [Section 2.12.5: Requesting Highest and Best](#section-2125-requesting-highest-and-best)
     - [Section 2.12.6: Accepting](#section-2126-accepting)
     - [Section 2.12.7: Withdrawing](#section-2127-withdrawing)
+    - [Section 2.12.8: Public Addressing](#section-2128-public-addressing)
 - [Section 3: Certification](#section-3-certification)
 - [Section 4: Contributors](#section-4-contributors)
 - [Section 5: References](#section-5-references)
 - [Section 6: Appendices](#section-6-appendices)
   - [Open Questions](#open-questions)
   - [Adoption of the Reused Elements](#adoption-of-the-reused-elements)
+  - [Public Advertising, Side by Side](#public-advertising-side-by-side)
 - [Section 7: License](#section-7-license)
 
 <br /><br />
@@ -110,11 +112,15 @@ This is a requirement on who takes part, and it is separable from how a listing 
 
 There is no legacy to accommodate here. Offer exchange under this specification is new, so every participant is new to it, and requiring an identifier of each one costs nothing that already exists. An organization that does not hold one is issued one by RESO.
 
-Offers are **private by design**. An activity conveying an offer or a change to one MUST be addressed to the specific parties entitled to see it, and SHOULD NOT use the public collection `https://www.w3.org/ns/activitystreams#Public`.
+The examples in this specification show offers on a network assumed to require authorization to view. Public advertising is equally possible, with separate authorization still governing the underlying data. Which of the two an implementation chooses depends on its own business needs.
 
-A public thread is a permitted alternative for a provider that wants one, under one condition: the activity MUST carry **no offer information whatsoever**. Every element of [Section 2.4](#section-24-the-offer-resource) through [Section 2.6](#section-26-the-offerpropertygroup-resource), and the offer states of [Section 2.7](#section-27-offer-states), MUST be reachable only through the authenticated payload ([Section 2.2](#section-22-activitypub-usage)), whether that payload is served from a RESO Web API or any other endpoint. A public activity therefore announces that something happened and nothing about what it was.
+The two controls are independent. Addressing decides who learns that something happened. Authentication on the payload decides who learns what it was, and the payload is protected under either model ([Section 2.11](#section-211-authentication-and-authorization)).
 
-Whether the industry wants the fact of an offer to be public while its contents stay private is an open question ([Section 6, Open Questions](#open-questions)).
+**Addressed to named parties.** The form the examples use. An activity is addressed to the parties entitled to see it, and the thread is not discoverable.
+
+**Addressed publicly.** An activity MAY be addressed to the public collection `https://www.w3.org/ns/activitystreams#Public` on one condition: it MUST carry no offer information. Every element of [Section 2.4](#section-24-the-offer-resource) through [Section 2.6](#section-26-the-offerpropertygroup-resource), and the offer states of [Section 2.7](#section-27-offer-states), MUST remain reachable only through the authenticated payload. Such an activity announces that something happened and nothing about what it was. [Section 2.12.8](#section-2128-public-addressing) shows the form.
+
+Where an activity carries offer content, it MUST NOT be addressed to the public collection. That is the single rule that separates the two.
 
 An Offer Hub and any intermediary relaying an activity MUST NOT store offer content. Offer data lives behind the originator's protected link ([Section 2.2](#section-22-activitypub-usage)) and is read only by parties the originator has authorized ([Section 2.11](#section-211-authentication-and-authorization)).
 
@@ -564,7 +570,7 @@ A provider that does not publish states at all posts no activity here. Its count
 }
 ```
 
-The request is addressed to each offering party individually. It MUST NOT be addressed to the public collection, and one offering party MUST NOT be able to learn the terms of another's offer from it ([Section 2.1](#section-21-participation-and-confidentiality)).
+The request is addressed to each offering party separately, one activity per party, so that no offering party learns from it who else is bidding. An implementation MUST NOT include the terms of one offering party's offer in an activity addressed to another ([Section 2.11](#section-211-authentication-and-authorization)).
 
 ### Section 2.12.6: Accepting
 
@@ -607,6 +613,33 @@ An actor withdraws its own offer with `Undo`. An actor MUST NOT `Undo` an activi
 
 `Undo` withdraws the offer going forward. It does not delete the submission: the record of what was offered, and that it was withdrawn, remains ([Section 2.9](#section-29-counter-offers)).
 
+### Section 2.12.8: Public Addressing
+
+An implementation advertising offers publicly addresses the activity to the public collection and keeps every element of the offer behind the payload link. The activity below is conformant and discloses nothing about the offer itself.
+
+```json
+{
+  "@context": "https://www.w3.org/ns/activitystreams",
+  "type": "Offer",
+  "id": "https://my.offercloud.example/offer/QRS421",
+  "published": "2026-09-15T14:02:00Z",
+  "actor": "https://listing.example/AmyAgent",
+  "inReplyTo": "https://listing.example/BobAgent/133",
+  "to": ["https://www.w3.org/ns/activitystreams#Public"],
+  "url": {
+    "type": "Link",
+    "href": "https://my.offercloud.example/payload/QRS421",
+    "mediaType": "application/json"
+  }
+}
+```
+
+A reader of the thread learns that an offer was made on listing 133 and nothing else. The price, the buyer, the financing and the status are in the payload at `url`, which refuses an unauthenticated dereference exactly as it does under private addressing ([Section 2.11](#section-211-authentication-and-authorization)).
+
+The obligation is the same under both models, because the payload is OAuth2 protected in either case. The only difference is whether a token is also required to reach the thread. A provider that additionally chooses to serve its payload without authentication has left this specification, which requires the link to refuse an unauthenticated dereference.
+
+What a public activity does disclose is that this actor made an offer on this listing at this time. In a competitive situation that is itself information, and it is the trade an implementation weighs when choosing between the two.
+
 <br /><br />
 
 # Section 3: Certification
@@ -631,7 +664,8 @@ RESO will validate the following during certification:
 * Every activity the candidate posts MUST use only Activity Streams 2.0 vocabulary and MUST NOT carry custom JSON-LD terms ([Section 2.2](#section-22-activitypub-usage)).
 * An activity the candidate posts MUST NOT carry offer content; that content MUST be reachable only through the protected link the activity references ([Section 2.2](#section-22-activitypub-usage)).
 * The candidate MUST use the mapped Activity Streams type for every state that has one, and MUST use a `Note` rather than an invented type for every state that does not ([Section 2.8](#section-28-activity-streams-mapping)).
-* The candidate MUST NOT address an offer activity to the public collection ([Section 2.1](#section-21-participation-and-confidentiality)).
+* The candidate MUST NOT address an activity carrying offer content to the public collection, and an activity it addresses to the public collection MUST carry no element of [Section 2.4](#section-24-the-offer-resource) through [Section 2.7](#section-27-offer-states) ([Section 2.1](#section-21-participation-and-confidentiality)).
+* The candidate MUST NOT fail an inbound activity on the ground that it was addressed to the public collection, where that activity carries no offer content ([Section 2.1](#section-21-participation-and-confidentiality)).
 * The candidate MUST NOT fail when a counterparty publishes no state in the thread, and MUST resolve the state from the payload instead ([Section 2.8](#section-28-activity-streams-mapping)).
 * The candidate MUST NOT parse an activity identifier to recover offer data, and MUST NOT require an identifier to contain an `OfferId` ([Section 2.3](#section-23-offer-identity)).
 * The candidate MUST NOT post an `Undo` for an activity another party posted ([Section 2.12.7](#section-2127-withdrawing)).
@@ -701,7 +735,7 @@ The following existing elements are reused without change: `BuyerFinancing`, `Co
 
 These are recorded rather than settled, and are for the workgroups.
 
-**Should the fact of an offer be public?** [Section 2.1](#section-21-participation-and-confidentiality) makes offers private by design and permits a public thread only where the activity carries no offer information at all. Whether the industry wants more than that, for example publishing that a listing has received offers without publishing anything about them, was raised in the ActivityPub Subgroup in August 2025 and has not been decided. There is precedent for wanting it: buyers are commonly notified how many competing offers exist, and a status of this kind has been requested of the Data Dictionary before.
+**Should anything about an offer be public beyond its existence?** [Section 2.1](#section-21-participation-and-confidentiality) supports both addressing models and permits a public activity that carries no offer information, so the fact of an offer may already be published by a provider that wants to. What is not settled is whether the industry wants more than the bare fact, for example a count of offers received on a listing, or a status visible without authentication. That was raised in the ActivityPub Subgroup in August 2025 and has not been decided. There is precedent for wanting it: buyers are commonly notified how many competing offers exist, and a status of this kind has been requested of the Data Dictionary before.
 
 **Should a universal property identifier be required?** [Section 2.6](#section-26-the-offerpropertygroup-resource) makes it optional. Requiring it would strengthen cross-system matching and would exclude providers who cannot compose one.
 
@@ -745,6 +779,72 @@ This proposal deprecates no existing element. It introduces two whose dispositio
 | :--- | :--- | :--- | :--- |
 | Offer | OfferOriginatingSystemName | Deprecated at Data Dictionary 3.0 | Providers may continue to use it. Added because a name is often all a listing carries today. |
 | Offer | OfferOriginatingSystemId | Deprecated at Data Dictionary 3.0 | As above. |
+
+## Public Advertising, Side by Side
+
+[Section 2.1](#section-21-participation-and-confidentiality) supports offers addressed to named parties and offers advertised publicly. This appendix shows what actually differs between the two, because the answer is narrower than it first appears.
+
+The same submission, addressed to named parties:
+
+```json
+{
+  "@context": "https://www.w3.org/ns/activitystreams",
+  "type": "Offer",
+  "id": "https://my.offercloud.example/offer/XYZ999",
+  "actor": "https://listing.example/AmyAgent",
+  "inReplyTo": "https://listing.example/BobAgent/133",
+  "to": ["https://listing.example/BobAgent"],
+  "url": { "type": "Link", "href": "https://my.offercloud.example/payload/XYZ999", "mediaType": "application/json" }
+}
+```
+
+And advertised publicly:
+
+```json
+{
+  "@context": "https://www.w3.org/ns/activitystreams",
+  "type": "Offer",
+  "id": "https://my.offercloud.example/offer/XYZ999",
+  "actor": "https://listing.example/AmyAgent",
+  "inReplyTo": "https://listing.example/BobAgent/133",
+  "to": ["https://www.w3.org/ns/activitystreams#Public"],
+  "url": { "type": "Link", "href": "https://my.offercloud.example/payload/XYZ999", "mediaType": "application/json" }
+}
+```
+
+One member differs. Everything else about the activity, and everything about the payload behind `url`, is identical.
+
+### What changes
+
+| | Addressed to named parties | Advertised publicly |
+| :--- | :--- | :--- |
+| Who can see the activity | The named parties | Anyone who can reach the server |
+| Who learns an offer exists on the listing | The named parties | Anyone |
+| Who learns which actor made it, and when | The named parties | Anyone |
+| Reaching the thread | Requires authorization to the network | No authorization required |
+| Discoverable by a crawler or aggregator | No | Yes |
+
+### What does not change
+
+| | Both models |
+| :--- | :--- |
+| The payload | Identical |
+| Reaching the payload | OAuth2, refuses an unauthenticated dereference |
+| Price, buyer, financing, contingencies, dates, status | Behind the payload link |
+| The listing coordinate and participant identity rules | [Section 2.3](#section-23-offer-identity), [Section 2.4](#section-24-the-offer-resource) |
+| Offer states and their Activity Streams mapping | [Section 2.7](#section-27-offer-states), [Section 2.8](#section-28-activity-streams-mapping) |
+| Append-only submissions | [Section 2.9](#section-29-counter-offers) |
+| Every certification check on offer content | [Section 3](#section-3-certification) |
+
+### The consequence worth weighing
+
+Public advertising discloses the **metadata of the negotiation** while protecting its **contents**. An observer learns that this actor made an offer on this listing at this time, that a counter followed an hour later, and that the thread went quiet after a third activity. The terms stay behind the token throughout.
+
+For some participants that is the point: an open record that a listing is receiving activity, without exposing what anyone bid. For others the timing and the identities are themselves competitive information. Neither reading is wrong, which is why the specification carries both and neither is nominated as correct.
+
+An implementation MAY use both models across different listings, or change between them, provided the rule in [Section 2.1](#section-21-participation-and-confidentiality) holds in each case: an activity carrying offer content is never addressed to the public collection.
+
+<br />
 
 ## Design rationale
 
