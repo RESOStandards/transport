@@ -60,6 +60,7 @@ const bindings: readonly Binding[] = [
   { id: 'no-delegated-entitlement', kind: 'refuses', anchor: "another participant's assertion" },
   { id: 'non-party-refused', kind: 'refuses', anchor: 'requester outside the parties' },
   { id: 'withheld-buyer-fields-not-an-error', kind: 'present', anchor: 'absence of buyer or co-buyer fields' },
+  { id: 'refusal-does-not-disclose-existence', kind: 'refuses', anchor: 'the same status and the same body whether or not that offer exists' },
 ];
 
 const checks = extractChecks(await readFile(specPath, 'utf-8'));

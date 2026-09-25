@@ -254,10 +254,19 @@ export const scenarios: readonly Scenario[] = [
   },
   {
     id: "withheld-buyer-fields-not-an-error",
-    covers: "S3-38",
+    covers: "S3-39",
     kind: "present",
     coveredTextWas:
       "The candidate MUST NOT treat the absence of buyer or co-buyer fields as an error " +
       "(Section 2.11).",
+  },
+  {
+    id: "refusal-does-not-disclose-existence",
+    covers: "S3-38",
+    kind: "refuses",
+    coveredTextWas:
+      "The candidate MUST answer an unauthenticated request `401`, and MUST give a requester " +
+      "who is not entitled to an offer the same status and the same body whether or not that " +
+      "offer exists (Section 2.11).",
   },
 ];

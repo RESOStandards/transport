@@ -245,7 +245,7 @@ describe('withheld-buyer-fields-not-an-error — absent buyer fields are not an 
   });
 });
 
-describe('the refusal table of Section 2.11', () => {
+describe('refusal-does-not-disclose-existence — the refusal table of Section 2.11', () => {
   // Section 2.11 states these three answers, and no Section 3 check covers them.
   // Tested here anyway, because a stated rule nobody verifies is how a
   // specification acquires an unimplementable requirement. The gap is reported
@@ -255,6 +255,7 @@ describe('the refusal table of Section 2.11', () => {
   });
 
   it('answers a non-party 403 or 404, never 200, and 404 by default', async () => {
+    // Section 2.11 permits either, and requires the same one in both cases.
     expect((await get(payloadPath(), 'tok-stranger')).status).toBe(404);
     await stop();
     await start({ nonPartyAnswer: 403 });

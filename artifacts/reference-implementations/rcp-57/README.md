@@ -72,13 +72,13 @@ repository. Set `RCP57_SPEC` to point at a draft elsewhere.
 ## What Works, and What Does Not
 
 [`CERTIFICATION-LOG.md`](CERTIFICATION-LOG.md) is generated and reports the
-current answer. At the time of writing, **21 of the specification's 38
+current answer. At the time of writing, **22 of the specification's 39
 certification checks are verified**.
 
 | Section | Verified | Total | |
 | :--- | ---: | ---: | :--- |
 | 2.9 Counter offers | 5 | 5 | sequence, ordering, immutability |
-| 2.11 Authorization | 5 | 5 | over a real HTTP server |
+| 2.11 Authorization | 6 | 6 | over a real HTTP server |
 | 2.4 The Offer resource | 4 | 7 | |
 | 2.5 The OfferSubmission resource | 3 | 4 | |
 | 2.7 Offer states | 3 | 4 | |
@@ -93,10 +93,11 @@ candidate would fail a check, only that no scenario observes it yet. A
 certification tool that tests a subset without saying so reads as a passing
 grade, which is the failure this log exists to prevent.
 
-Seven rules stated in Section 2 have no check in Section 3 at all, so
-certification could never fail an implementation that ignored them. They are
-listed in the log rather than quietly fixed, because an unenforceable requirement
-is a finding about the specification.
+Six rules stated in Section 2 have no check in Section 3 at all, so certification
+could never fail an implementation that ignored them. They are listed in the log
+rather than quietly fixed, because an unenforceable requirement is a finding
+about the specification. A seventh, the refusal behavior of Section 2.11, was
+uncovered until building this surfaced it, and now has a check.
 
 ## The Specification Is the Source of Truth
 

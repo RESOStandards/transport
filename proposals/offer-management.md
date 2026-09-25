@@ -539,10 +539,11 @@ A refusal distinguishes the two decisions, so that a caller can tell a credentia
 | Condition | Response |
 | :--- | :--- |
 | No token, or a token that does not authenticate | `401 Unauthorized` |
-| Authenticated, but not a party to this offer | `403 Forbidden` |
-| Authenticated and a party, but no such offer | `404 Not Found` |
+| Authenticated, but not entitled to this offer | `403 Forbidden` or `404 Not Found` |
 
-An implementation MUST NOT answer `404` where the offer exists and the requester is simply not a party to it, and MUST NOT answer `403` in a way that confirms an offer exists to a requester with no entitlement to know. Where the distinction itself would disclose something, `404` is the safer answer and is permitted.
+There is no third case. Entitlement is decided before existence, and nobody is a party to an offer that does not exist, so a requester who is not a party and a requester asking after an offer that was never there are the same condition seen from outside. An implementation MUST answer them identically. Answering them differently is precisely what tells a requester with no entitlement to know that an offer exists.
+
+Which of the two an implementation returns is its own choice, and it MUST make the same choice in both cases. `404` is recommended, because `403` states that something is there to be forbidden.
 
 ### Withholding Fields
 
@@ -885,6 +886,7 @@ RESO will validate the following during certification:
 * The candidate MUST determine a requester's identifier from the presented token and MUST NOT infer it from a value carried in the request ([Section 2.11](#section-211-authentication-and-authorization)).
 * The candidate MUST NOT accept another participant's assertion that a requester is entitled to an offer in place of its own determination ([Section 2.11](#section-211-authentication-and-authorization)).
 * The candidate MUST refuse to serve offer content to a requester outside the parties to that offer ([Section 2.11](#section-211-authentication-and-authorization)).
+* The candidate MUST answer an unauthenticated request `401`, and MUST give a requester who is not entitled to an offer the same status and the same body whether or not that offer exists ([Section 2.11](#section-211-authentication-and-authorization)).
 * The candidate MUST NOT treat the absence of buyer or co-buyer fields as an error ([Section 2.11](#section-211-authentication-and-authorization)).
 
 <br /><br />
