@@ -166,6 +166,8 @@ RESO is transitioning to Unique Organization Identifiers through [Organization a
 
 An implementation new to offer exchange SHOULD support `OfferUoi` and `OfferUsi` from the outset. There is no legacy to preserve in a system that has not exchanged offers before, and starting on the identifier the standard is moving to avoids a migration later. A provider whose only available value today is an originating system name or identifier remains conformant and SHOULD continue to populate it. Where RCP-55 ratifies first, these fields adopt its definitions rather than restating them.
 
+An organization that hosts offers and does not already hold a Unique Organization Identifier can be issued one by RESO. This is what makes the coordinate work in practice rather than in principle: a locally issued identifier is collision-free once it is qualified by a centrally issued organization identifier, because no two organizations share one. A participant therefore does not have to change how it numbers its own records, and does not need to be an MLS to take part.
+
 The members of a coordinate MAY be hashed together to produce a single opaque value, where a provider does not wish to publish the parts. A party already holding the parts can verify such a value; a party that does not, cannot read them out of it.
 
 ## Section 2.5: The OfferSubmission Resource
