@@ -31,6 +31,8 @@ This End User License Agreement (the "EULA") is entered into by and between the 
   - [Section 2.5: The OfferSubmission Resource](#section-25-the-offersubmission-resource)
   - [Section 2.6: The OfferPropertyGroup Resource](#section-26-the-offerpropertygroup-resource)
   - [Section 2.7: Offer States](#section-27-offer-states)
+    - [Where the Current State Is](#where-the-current-state-is)
+    - [How a State Moves](#how-a-state-moves)
   - [Section 2.8: Activity Streams Mapping](#section-28-activity-streams-mapping)
   - [Section 2.9: Counter Offers](#section-29-counter-offers)
     - [The Thread](#the-thread)
@@ -296,7 +298,25 @@ A universal property identifier composed in the plain form embeds a parcel numbe
 
 An offer carries two states, one per side. `OfferSubmissionStatus` is what the submitting side records. `OfferReceivedStatus` is what the receiving side records. They are separate lookups because the two sides observe different things and their value sets may diverge.
 
-Each is single-valued. An offer holds one status at a time on each side; the history of an offer is the sequence of its submissions and their timestamps, not a list of statuses on one record.
+Both live on `OfferSubmission`, and neither lives on `Offer`. A state is a fact about a turn in the negotiation, so it is recorded on the turn it describes.
+
+### Where the Current State Is
+
+The current state of an offer is the pair of statuses carried by its highest-sequence submission ([Section 2.9](#section-29-counter-offers)). A consumer derives it by reading that submission. An implementation MUST NOT require a consumer to look anywhere else for it, and MUST NOT publish a separate current-state record that could disagree with the submissions.
+
+Each is single-valued, so an offer holds one status at a time on each side. The history of an offer is the sequence of its submissions, not a list of statuses on one record.
+
+### How a State Moves
+
+Two kinds of act change an offer, and they are recorded differently.
+
+An act that **changes the terms** is a new turn. The party MUST create a new `OfferSubmission` carrying the new terms and the status that act produces, and MUST NOT modify an existing one. Submitting, countering and re-countering are acts of this kind.
+
+An act that **changes no terms** is not a new turn. The party MUST record it by setting its own status field on the current submission, and MUST NOT create a submission for it. Acknowledgement, acceptance, rejection, withdrawal and expiry are acts of this kind.
+
+A submission is therefore writable for its status only while it is the current one. Once a later submission supersedes it, its statuses are the record of what the parties held at that point and MUST NOT be changed ([Section 2.9](#section-29-counter-offers)).
+
+Each side writes only its own field. The submitting side sets `OfferSubmissionStatus` and the receiving side sets `OfferReceivedStatus`. An implementation MUST NOT set the other side's field on that side's behalf, and MUST NOT treat a disagreement between the two as an error: the parties hold separate systems and act at different times, so the pair is expected to differ while an act is in flight. What each side holds is what that side observed.
 
 **OfferSubmissionStatus.** The lookup is open with enumerations; its standard values are:
 
@@ -373,11 +393,11 @@ The root's host does not order what follows. An offer is addressed to the listin
 
 ActivityPub does not guarantee delivery order, so arrival order is not evidence of sequence. Each `OfferSubmission` therefore carries `OfferSubmissionSequence`, typed as the positive portion of int64, durable, immutable and monotonic.
 
-This is deliberately the same shape as `EntityEventSequence` in [EntityEvent](https://github.com/RESOStandards/transport/blob/main/proposals/entity-events.md), which carries those same properties for the same reason. An implementation that already maintains a logical clock for EntityEvent can use the same machinery here, and a consumer that already reasons about one will find the other familiar.
+This is the same shape as `EntityEventSequence` in [EntityEvent](https://github.com/RESOStandards/transport/blob/main/proposals/entity-events.md), for the same reason, so an implementation that already maintains a logical clock can use the same machinery. The resemblance is a convenience and not a dependency: nothing here requires EntityEvent.
 
 The two differ in one respect, because the situations differ. `EntityEventSequence` orders the events of a single system, so a plain counter suffices and its producer is the only writer. An offer is written by two parties who may act without having seen each other, so assignment has to tolerate that.
 
-The two also compose. A system that emits EntityEvent records for its offer records lets a consumer track back to an `Offer` or an `OfferSubmission` through the event stream, by `ResourceName` and `ResourceRecordKey`, and replay from a known `EntityEventSequence`. Nothing here requires that, and an implementation that already runs an event feed gets it without further work. For it to be possible, `ResourceName` has to be able to name these resources, which is why this proposal adds them to that lookup.
+The two compose for an implementation that wants them to. A system emitting EntityEvent records for its offer records lets a consumer track back to an `Offer` or an `OfferSubmission` through the event stream, by `ResourceName` and `ResourceRecordKey`, and replay from a known `EntityEventSequence`. For that to be possible at all, `ResourceName` has to be able to name these resources, which is the one place this proposal touches EntityEvent and the reason it adds those values to that lookup ([Proposed Data Dictionary elements](#proposed-data-dictionary-elements)).
 
 An implementation creating a submission MUST set `OfferSubmissionSequence` to one greater than the highest value it has seen for that `OfferId`, and MUST set it to 1 for the first submission of an offer. An implementation MUST NOT renumber a submission after creating it.
 
@@ -396,6 +416,7 @@ An implementation MAY expose these resources over OData on the RESO Web API with
 * The resources and fields of [Section 2.4](#section-24-the-offer-resource) through [Section 2.6](#section-26-the-offerpropertygroup-resource), with the types and nullability given.
 * The lookups and standard values of [Section 2.7](#section-27-offer-states), single-valued on each side.
 * The append-only rule for submissions ([Section 2.9](#section-29-counter-offers)).
+* The rule that the current state of an offer is the pair of statuses on its highest-sequence submission ([Section 2.7](#section-27-offer-states)).
 * The identity rules of [Section 2.3](#section-23-offer-identity) as they apply to `OfferKey` and `OfferId`.
 * The authorization rules of [Section 2.11](#section-211-authentication-and-authorization).
 
@@ -671,7 +692,7 @@ The request is addressed to each offering party separately, one activity per par
 }
 ```
 
-The `object` is the submission being accepted, which in a negotiation that has countered is the most recent counter rather than the original offer. The payload records `OfferAcceptedTimestamp` and sets the status on both sides.
+The `object` is the submission being accepted, which in a negotiation that has countered is the most recent counter rather than the original offer. That submission is the current one, so acceptance changes no terms and creates nothing: the accepting side records `OfferAcceptedTimestamp` and sets `OfferReceivedStatus` to `Accepted` on it. The submitting side, on receiving the `Accept`, sets `OfferSubmissionStatus` to `Accepted` on its own copy. Each side writes its own field and the two then agree ([Section 2.7](#section-27-offer-states)).
 
 Acceptance ends the scope of this specification. What follows is transaction management.
 
@@ -739,7 +760,10 @@ RESO will validate the following during certification:
 * Where the candidate publishes a hashed coordinate, it MUST be reproducible: the same listing MUST yield the same value on repeated construction ([Section 2.4](#section-24-the-offer-resource)).
 
 **History**
-* On a counter, the candidate MUST create a new `OfferSubmission` and MUST leave every prior submission byte-identical ([Section 2.9](#section-29-counter-offers)). A candidate that modifies a prior submission fails.
+* On a counter, the candidate MUST create a new `OfferSubmission`, and every submission that was already superseded MUST remain byte-identical to what it held when the counter was created ([Section 2.9](#section-29-counter-offers)). A candidate that modifies a superseded submission fails.
+* The candidate MUST record an act that changes no terms by setting its own status field on the current submission, and MUST NOT create a submission for it. A candidate that emits a submission for an acknowledgement, acceptance, rejection or withdrawal fails ([Section 2.7](#section-27-offer-states)).
+* The current state the candidate reports for an offer MUST equal the pair of statuses on its highest-sequence submission, at every point in the exchange ([Section 2.7](#section-27-offer-states)).
+* The candidate MUST NOT set the counterparty's status field, and MUST NOT reject an offer whose two status fields disagree ([Section 2.7](#section-27-offer-states)).
 * Every submission the candidate creates MUST carry `OfferSubmissionSequence` set to one greater than the highest it has seen for that `OfferId`, or to 1 for the first, and MUST keep that value unchanged thereafter ([Section 2.9](#section-29-counter-offers)).
 * Where two submissions of one offer carry the same sequence, the candidate MUST order them by the submitting party's Unique Organization Identifier ascending, and MUST NOT order them by arrival time ([Section 2.9](#section-29-counter-offers)).
 * Every submission created during the test MUST remain retrievable under its `OfferId` after later submissions are created, and MUST be returned in `OfferSubmissionSequence` order ([Section 2.9](#section-29-counter-offers)).
@@ -951,13 +975,17 @@ EntityEvent is one-directional by design, a stream of things that have happened.
 
 ActivityPub is bidirectional and threaded, which is what an offer actually is: a turn, an answer, another turn, each naming what it responds to. It also already carries listings under the [Listing Advertisement proposal](https://github.com/RESOStandards/transport/discussions/162), so an offer replies into a thread that exists rather than opening a parallel channel alongside it.
 
-That division is why this specification requires nothing of an event feed. The negotiation must be complete from the thread and its payloads alone. Where a provider also runs EntityEvent, the record reaches the feed and `HistoryTransactional` carries the field-level detail behind it, which is useful and is not depended upon.
+That division is why this specification requires nothing of an event feed. The negotiation must be complete from the thread and its payloads alone.
+
+The two are complementary, in both directions. A provider already running an event stream MAY emit realtime notifications of offer events into it, or let a consumer subscribe to them there, and `HistoryTransactional` carries the field-level detail behind each record. That is a useful thing to have alongside the ActivityPub nodes and it is not a substitute for them, because an event feed cannot carry a reply. Equally, the nodes are not a substitute for the feed: an event feed serves a purpose this specification does not attempt, which is telling a subscriber quickly that something changed. Neither requires the other, and a provider MAY run either alone or both together.
 
 **Why the data is not in the activity.** Putting offer terms in an ActivityPub object publishes them to every server the activity federates to, and federation is not revocable. An offer is confidential, so the activity carries a reference and the data stays behind an authenticated link the originator controls. This also keeps the vocabulary standard, since nothing offer-specific has to be expressed in JSON-LD.
 
 **Why the identifier need not be meaningful.** A provider that must expose `OfferId` in an activity identifier discloses, to anyone who can see the thread, how many offers it has issued and in what order. Allowing an opaque identifier removes that disclosure without weakening the reference, because the payload behind the link resolves the record.
 
 **Why submissions are append-only.** A negotiation is evidence. If a counter overwrites the offer it answers, the record of what was offered, when and by whom is lost, and the parties have no common account of what happened. Append-only keeps the sequence, and the sequence is what an offer is.
+
+No party can verify that another party kept its own log intact, and this specification does not pretend otherwise. Append-only is a contract between the parties, resting on the same trust every RESO payload rests on. What certification can establish is that a candidate honors it in a controlled exchange, which is what [Section 3](#section-3-certification) tests. What a consumer can establish is that the submissions it holds are internally consistent. Neither is a guarantee about a counterparty, and an implementation SHOULD be built on the assumption that it is reading a record it did not write.
 
 **Why two status lookups.** The submitting side and the receiving side observe different events. `Delivered` is knowable by the sender's system before the recipient has done anything, and `Received` is the recipient's statement. Collapsing them into one field would force one side to assert what the other side knows. Their values are close today and may diverge.
 
