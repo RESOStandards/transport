@@ -99,6 +99,10 @@ This specification gives an offer a standard shape and a standard set of states,
 * the exchange is platform agnostic, so that a party sees every offer regardless of which product or platform each one came from; and
 * every participating organization holds a Unique Organization Identifier, so that it can issue its own local identifiers without collision.
 
+Lightweight and interoperable are the same requirement here, not two. A specification heavy enough to need a bespoke implementation does not get adopted widely, and an offer standard that is not adopted widely does not interoperate at all, because the whole value is in an offer arriving intact from a system its recipient did not choose. Weight is therefore not a matter of taste. It is the thing that decides whether the standard works.
+
+That is why this specification adds no vocabulary to ActivityPub, carries its data in RESO Common Format behind a referenced link rather than in the activity, reuses Data Dictionary elements wherever one already says the thing, and defines new elements only where nothing existing does. Each of those keeps the cost of implementing it low enough that implementing it is the straightforward choice rather than a project.
+
 The offer is the unit of scope. What happens after acceptance – the executed contract, escrow and title, contingency management, closing and archive – is transaction management, and is addressed separately. This specification may be referenced from that work but does not attempt it.
 
 <br /><br />
