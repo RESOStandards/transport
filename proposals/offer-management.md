@@ -240,7 +240,7 @@ Most participants already hold one. The RESO organization registry carries 1,977
 
 This is what makes the coordinate work in practice rather than in principle. A locally issued identifier becomes collision-free once it is qualified by a centrally issued organization identifier, because no two organizations share one. A participant therefore keeps numbering its own records however it already does, and does not need to be an MLS to take part. The organization member of a coordinate resolves against the registry.
 
-The coordinate members describe the listing, so they carry whatever the originating system published. A participant is required to hold an organization identifier ([Section 2.1](#section-21-participation-and-confidentiality)); a listing is not, because a listing is not a party to anything and the system that published it may predate the transition entirely.
+The coordinate members describe the listing, so they carry whatever the originating system published. A participant is required to hold an organization identifier ([Section 2.1](#section-21-participation-and-confidentiality)). A listing is not, because a listing is not a party to anything and the system that published it may predate the transition entirely.
 
 Holding an organization identifier does not mean every counterparty supplies one. A participant will receive coordinates from organizations that have not populated theirs, and an implementation MUST accept a coordinate whose organization member is an originating system name or identifier. It MUST NOT reject an offer on that ground.
 
@@ -250,11 +250,11 @@ Note that holding an identifier and publishing one are different things. Most or
 
 A crosswalk in which organizations declare the local names and identifiers they publish, and what each resolves to, is under consideration and is not specified here ([Section 6, Open Questions](#open-questions)).
 
-The members of a coordinate MAY be hashed together to produce a single opaque value, where a provider does not wish to publish the parts. A party already holding the parts can verify such a value; a party that does not, cannot read them out of it.
+The members of a coordinate MAY be hashed together to produce a single opaque value, where a provider does not wish to publish the parts. A party already holding the parts can verify such a value. A party that does not hold them cannot read them out of it.
 
 ## Section 2.5: The OfferSubmission Resource
 
-An `OfferSubmission` is one turn in the negotiation: an initial offer, a counter or a re-counter. Every `OfferSubmission` MUST correlate to an `Offer`, by carrying that offer's `OfferId`, and an implementation MUST NOT accept a submission that correlates to no offer. `OfferId` is therefore required on both, and submissions are append-only. An implementation MUST NOT modify a submission to represent a counter; it MUST create a new one ([Section 2.9](#section-29-counter-offers)).
+An `OfferSubmission` is one turn in the negotiation: an initial offer, a counter or a re-counter. Every `OfferSubmission` MUST correlate to an `Offer`, by carrying that offer's `OfferId`, and an implementation MUST NOT accept a submission that correlates to no offer. `OfferId` is therefore required on both, and submissions are append-only. An implementation MUST NOT modify a submission to represent a counter. It MUST create a new one ([Section 2.9](#section-29-counter-offers)).
 
 | Field | Type | Nullable | Max length | Lookup | Definition |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -294,7 +294,7 @@ An `OfferSubmission` is one turn in the negotiation: an initial offer, a counter
 
 `BuyerFinancing`, `Contingencies` and `BuyerBrokerageCompensation` reuse existing Data Dictionary elements and their lookups rather than introducing offer-specific equivalents. An implementation MUST use the existing standard values.
 
-`RequestedClosingDate` is a new element rather than a reuse of `CloseDate`. `CloseDate` records the date a transaction actually closed; this records the date an offer proposes. The two are different facts and one cannot stand for the other, so the offer element takes a name that says which it is.
+`RequestedClosingDate` is a new element rather than a reuse of `CloseDate`. `CloseDate` records the date a transaction actually closed. This element records the date an offer proposes. The two are different facts and one cannot stand for the other, so the offer element takes a name that says which it is.
 
 Some providers do not offer compensation information. `BuyerBrokerageCompensation` is therefore optional, and a consumer MUST NOT treat its absence as an error. Where compensation is not present and a party needs it, it is obtained by contacting the agent or brokerage directly.
 
@@ -357,7 +357,7 @@ A submission is therefore writable for its status only while it is the current o
 
 Each side writes only its own field. The submitting side sets `OfferSubmissionStatus` and the receiving side sets `OfferReceivedStatus`. An implementation MUST NOT set the other side's field on that side's behalf, and MUST NOT treat a disagreement between the two as an error: the parties hold separate systems and act at different times, so the pair is expected to differ while an act is in flight. What each side holds is what that side observed.
 
-**OfferSubmissionStatus.** The lookup is open with enumerations; its standard values are:
+**OfferSubmissionStatus.** The lookup is open with enumerations. Its standard values are:
 
 | Lookup Value | Definition |
 | :--- | :--- |
@@ -375,7 +375,7 @@ Each side writes only its own field. The submitting side sets `OfferSubmissionSt
 | Finalized | The offer has been finalized. |
 | Archived | The offer has been archived. |
 
-**OfferReceivedStatus.** The lookup is open with enumerations; its standard values are:
+**OfferReceivedStatus.** The lookup is open with enumerations. Its standard values are:
 
 | Lookup Value | Definition |
 | :--- | :--- |
@@ -473,9 +473,9 @@ Access is decided at two points, and they are independent.
 
 **Authentication federates. Authorization does not.** Accepting an identity another participant issued is a statement about who the requester is, and a network can agree to trust that in common. Whether that requester may read a particular offer is a statement about one offer, held by the implementation that holds it, and no other participant is in a position to make it. An implementation MUST NOT delegate the payload decision to the issuer of a requester's identity, and MUST NOT accept an assertion of entitlement from another participant in place of its own determination.
 
-The token is core to both. Single sign-on establishes and federates identity; it does not authorize a request. Every payload request carries a bearer token regardless of how the requester was admitted, and that token is what an implementation resolves and checks against its own record of who the parties are.
+The token is core to both. Single sign-on establishes and federates identity. It does not authorize a request. Every payload request carries a bearer token regardless of how the requester was admitted, and that token is what an implementation resolves and checks against its own record of who the parties are.
 
-Admission to the network MUST NOT be treated as entitlement to an offer. A participant who is on the network is on the network; it is a party to the offers it is a party to, and to no others. An implementation MUST make the payload decision on its own terms, for every request, regardless of how the requester reached the thread.
+Admission to the network MUST NOT be treated as entitlement to an offer. A participant who is on the network is on the network. It is a party to the offers it is a party to, and to no others. An implementation MUST make the payload decision on its own terms, for every request, regardless of how the requester reached the thread.
 
 ### Authenticating
 
@@ -518,7 +518,7 @@ An implementation MUST NOT answer `404` where the offer exists and the requester
 
 The buyer and co-buyer fields of [Section 2.5](#section-25-the-offersubmission-resource) are the most sensitive elements this specification defines. An implementation MAY omit them from a payload served to a party that does not require them, and a consumer MUST NOT treat their absence as an error.
 
-Omission is not the same as refusal. A payload served with those fields withheld is a successful response, and the requester is a party to the offer; it has simply been given the subset it needs.
+Omission is not the same as refusal. A payload served with those fields withheld is a successful response, and the requester is a party to the offer. It has simply been given the subset it needs.
 
 ## Section 2.12: Worked Examples
 
@@ -623,7 +623,7 @@ The receiving side records `OfferReceivedStatus` as `Acknowledged` in its own pa
 
 ### Section 2.12.3: Countering
 
-A counter is an `Offer` posted `inReplyTo` the activity it answers, by the other party. It creates a new `OfferSubmission` under the same `OfferId`; it does not modify the first ([Section 2.9](#section-29-counter-offers)).
+A counter is an `Offer` posted `inReplyTo` the activity it answers, by the other party. It creates a new `OfferSubmission` under the same `OfferId` and does not modify the first ([Section 2.9](#section-29-counter-offers)).
 
 ```json
 {
@@ -811,7 +811,7 @@ RESO will validate the following during certification:
 
 **Protocol**
 * Every activity the candidate posts MUST use only Activity Streams 2.0 vocabulary and MUST NOT carry custom JSON-LD terms ([Section 2.2](#section-22-activitypub-usage)).
-* An activity the candidate posts MUST NOT carry offer content; that content MUST be reachable only through the protected link the activity references ([Section 2.2](#section-22-activitypub-usage)).
+* An activity the candidate posts MUST NOT carry offer content. That content MUST be reachable only through the protected link the activity references ([Section 2.2](#section-22-activitypub-usage)).
 * The candidate MUST use the mapped Activity Streams type for every state that has one, and MUST use a `Note` rather than an invented type for every state that does not ([Section 2.8](#section-28-activity-streams-mapping)).
 * The candidate MUST NOT address an activity carrying offer content to the public collection, and an activity it addresses to the public collection MUST carry no element of [Section 2.4](#section-24-the-offer-resource) through [Section 2.7](#section-27-offer-states) ([Section 2.1](#section-21-participation-and-confidentiality)).
 * The candidate MUST NOT fail an inbound activity on the ground that it was addressed to the public collection, where that activity carries no offer content ([Section 2.1](#section-21-participation-and-confidentiality)).
