@@ -77,45 +77,33 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 
 An offer is the point in a transaction where the most value and the most risk meet, and it is the point with the least standardization. Offers move as email attachments, as PDFs and through portals that each model an offer differently. A listing agent receiving offers from several buyer agents commonly receives them in several shapes and reconciles them by hand.
 
-The Data Dictionary has no Offer resource. Of its 43 resources, none models an offer, and the only place offers appear at all is two values of `TransactionType`, `PurchaseOffer` and `LeaseOffer`, which classify a transaction rather than describe an offer. There is nothing to extend, so this proposal defines the shape.
+The Data Dictionary cannot describe an offer today. It defines 43 resources and none of them models an offer. Offers appear only as two values of the `TransactionType` field, `PurchaseOffer` and `LeaseOffer`, and neither says anything about what was offered. There is nothing to build on.
 
-Two things make an offer different from the records the Data Dictionary already carries, and both shape this specification.
+Two things make an offer different from the records the Data Dictionary already carries.
 
-An offer is a **conversation**, not a record. It is submitted, acknowledged, countered, countered again and finally accepted, rejected, withdrawn or expired. Each turn is a new statement by a different party, and the sequence is the substance. A single mutable row cannot represent it.
+An offer is a **conversation**, not a record. It is submitted, acknowledged, countered, countered again and finally accepted, rejected, withdrawn or expired. Each turn is a new statement by a different party, and the sequence is the substance. A single record that gets overwritten cannot represent it.
 
-An offer is **confidential**. It carries the legal name, address and telephone number of a buyer, the price that buyer will pay and the financing behind it. This is the most sensitive data in the proposal, and possibly in the Data Dictionary. The design assumes confidentiality rather than adding it later.
+An offer is **confidential**. It carries the legal name, address and telephone number of a buyer, the price that buyer will pay and the financing behind it. This is among the most sensitive data in a transaction, and would be among the most sensitive the Data Dictionary carries.
 
 <br /><br />
 
 # Section 1: Purpose
 
-This specification has one aim. Make a standardized conversation with a standardized payload easy to use, reusing the ecosystem that already exists, and reveal nothing to anyone the participants have not chosen to reveal it to.
+The goal of this proposal is a lightweight protocol that uses RESO Common Format to exchange offer data.
 
-Each part of that has a mechanism. The conversation is standard Activity Streams, so a turn stays legible to a general ActivityPub client and no offer-specific vocabulary is invented ([Section 2.8](#section-28-activity-streams-mapping), [Section 2.9](#section-29-counter-offers)). The payload is RESO Common Format, so an offer carries the same elements whoever sent it ([Section 2.2](#section-22-activitypub-usage)). The ecosystem is the one already in place rather than a parallel one. An offer replies into the listing thread that exists, the elements come from the Data Dictionary wherever one already says the thing, and an event feed stays complementary rather than required.
+What that buys:
 
-**RESO Common Format is the standard here, not an API.** What is standardized is the conversation, the reference an activity carries, and the RESO Common Format payload that reference resolves to. The endpoint serving that payload may be a RESO Web API service or any other HTTP host, so a participant conforms without adopting anyone else's API. That admits both sides of the ecosystem as it stands. A provider already serving a RESO Web API is conformant with the work it has, and so is any system that speaks the Data Dictionary vocabulary without running a RESO API at all ([Section 2.2](#section-22-activitypub-usage), [Section 2.10](#section-210-web-api-conformance)).
+* An offer arrives intact in the listing agent's system, whatever produced it.
+* Offers from different sources compare side by side, without rekeying.
+* A counter offer is a new statement, not an edit that erases the last one.
+* Both sides read the same status, so nobody telephones to ask.
+* No offer is missed because it came from a platform the recipient does not use.
+* Only the parties to an offer can read it.
+* Every participant has a RESO organization identifier, so records from two systems never clash.
 
-In practice the listing side is usually serving a RESO Web API already, so that work is reused rather than repeated, and [Section 2.10](#section-210-web-api-conformance) says what such an implementation owes. An offer management provider or a brokerage may serve its own API instead. What is required either way is following the protocol and answering in RESO Common Format.
+What is standardized is the protocol and the data format, not anyone's software. No participant has to adopt another company's system in order to take part.
 
-Nothing is revealed by default. The payload refuses an unauthenticated dereference under every addressing model, and whether the fact of an offer is visible at all is the participants' own choice ([Section 2.1](#section-21-participation-and-confidentiality), [Section 2.11](#section-211-authentication-and-authorization)).
-
-It gives an offer a standard shape and a standard set of states, so that:
-
-* a buyer agent can submit an offer from the system of their choice and have it arrive intact in a listing agent's system;
-* a listing agent can compare offers from different sources side by side without rekeying them;
-* a counter offer is a new statement in a thread rather than an edit that destroys what came before;
-* the status of an offer is machine-readable on both sides, so that neither party has to telephone to ask;
-* the parties to an offer, and only those parties, can read its contents;
-* the exchange is platform agnostic, so that a party sees every offer regardless of which product or platform each one came from; and
-* every participating organization holds a Unique Organization Identifier, so that it can issue its own local identifiers without collision.
-
-Lightweight and interoperable are the same requirement here, not two. A specification heavy enough to need a bespoke implementation does not get adopted widely, and an offer standard that is not adopted widely does not interoperate at all, because the whole value is in an offer arriving intact from a system its recipient did not choose. Weight is therefore not a matter of taste. It is the thing that decides whether the standard works.
-
-That is why this specification adds no vocabulary to ActivityPub, carries its data in RESO Common Format behind a referenced link rather than in the activity, reuses Data Dictionary elements wherever one already says the thing, and defines new elements only where nothing existing does. Each of those keeps the cost of implementing it low enough that implementing it is the straightforward choice rather than a project.
-
-The offer is the unit of scope. What happens after acceptance – the executed contract, escrow and title, contingency management, closing and archive – is transaction management, and is addressed separately. This specification may be referenced from that work but does not attempt it.
-
-The aim above is not particular to offers. It is the aim of the [RESO Listing Advertisement](https://github.com/RESOStandards/transport/discussions/162) proposal, which applies it across the whole transaction, and the offer is the first phase of it specified on its own. Because the primitives are shared ([Section 2.2](#section-22-activitypub-usage)), a later phase costs less to specify than the one before it. That compounding is itself part of keeping the standard light.
+This proposal covers the offer itself. What happens after acceptance is transaction management, and is addressed separately.
 
 <br /><br />
 
@@ -1060,6 +1048,8 @@ The two are complementary, in both directions. A provider already running an eve
 **Why the data is not in the activity.** Putting offer terms in an ActivityPub object publishes them to every server the activity federates to, and federation is not revocable. An offer is confidential, so the activity carries a reference and the data stays behind an authenticated link the originator controls. This also keeps the vocabulary standard, since nothing offer-specific has to be expressed in JSON-LD.
 
 **Why the identifier need not be meaningful.** A provider that must expose `OfferId` in an activity identifier discloses, to anyone who can see the thread, how many offers it has issued and in what order. Allowing an opaque identifier removes that disclosure without weakening the reference, because the payload behind the link resolves the record.
+
+**Why the specification is small.** Lightweight and interoperable are the same requirement here, not two. A specification heavy enough to need a bespoke implementation does not get adopted widely, and an offer standard that is not adopted widely does not interoperate at all, because the whole value is in an offer arriving intact from a system its recipient did not choose. That is why no vocabulary is added to ActivityPub, the data sits in RESO Common Format behind a referenced link, Data Dictionary elements are reused wherever one already says the thing, and new elements are defined only where nothing existing does.
 
 **Why submissions are append-only.** A negotiation is evidence. If a counter overwrites the offer it answers, the record of what was offered, when and by whom is lost, and the parties have no common account of what happened. Append-only keeps the sequence, and the sequence is what an offer is.
 
