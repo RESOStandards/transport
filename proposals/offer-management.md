@@ -100,6 +100,12 @@ The offer is the unit of scope. What happens after acceptance – the executed c
 
 An offer is exchanged between named parties. Unlike a listing, an offer is not published to a network and is not discoverable. Participation is by being addressed: the buyer side addresses the listing side, and the listing side replies.
 
+**A participant MUST be resolvable to a Unique Organization Identifier.** An Offer Hub, and any party exchanging offers under this specification, MUST post under an actor that resolves to one. The identifier is the participant's own where the participant is an organization, and its affiliation otherwise: an agent is not an organization, but the brokerage the agent acts for is, and a product acting on behalf of a brokerage resolves to that brokerage.
+
+This is a requirement on who takes part, and it is separable from how a listing is identified. A participant is a party to the exchange and is therefore accountable within it, whereas a listing carries whatever provenance the system it originated in published ([Section 2.4](#section-24-the-offer-resource)).
+
+There is no legacy to accommodate here. Offer exchange under this specification is new, so every participant is new to it, and requiring an identifier of each one costs nothing that already exists. An organization that does not hold one is issued one by RESO.
+
 Offers are **private by design**. An activity conveying an offer or a change to one MUST be addressed to the specific parties entitled to see it, and SHOULD NOT use the public collection `https://www.w3.org/ns/activitystreams#Public`.
 
 A public thread is a permitted alternative for a provider that wants one, under one condition: the activity MUST carry **no offer information whatsoever**. Every element of [Section 2.4](#section-24-the-offer-resource) through [Section 2.6](#section-26-the-offerpropertygroup-resource), and the offer states of [Section 2.7](#section-27-offer-states), MUST be reachable only through the authenticated payload ([Section 2.2](#section-22-activitypub-usage)), whether that payload is served from a RESO Web API or any other endpoint. A public activity therefore announces that something happened and nothing about what it was.
@@ -151,7 +157,7 @@ The `Offer` resource is the top-level object. One `Offer` exists for one offer b
 | OfferOriginatingSystemName | String | Yes | 255 | | The name of the system with authoritative control over the listing being offered on. |
 | OfferSourceSystemId | String | Yes | 255 | | The source system identifier of the listing record, which may differ from the originating system. |
 | OfferSourceSystemName | String | Yes | 255 | | The name of the system the listing record was directly received from. |
-| OfferUoi | String | Yes | 25 | | The Unique Organization Identifier of the organization the listing being offered on originated with. |
+| OfferUoi | String | Yes | 25 | | The Unique Organization Identifier of the organization the listing being offered on originated with. This is the provenance of the listing, not the identity of a participant. |
 | OfferUsi | String | Yes | 25 | | The Unique System Identifier of the system, within that organization, the listing being offered on was input in. |
 | ModificationTimestamp | Timestamp | No | | | The date and time the offer record was last modified. |
 
@@ -172,6 +178,8 @@ A goal of this specification is that every Offer Hub and participating organizat
 Most participants already hold one. The RESO organization registry carries 1,977 organizations as of September 2026, each with one. They are mostly MLSs and associations, but technology companies, brokerages, commercial organizations and pooled platforms are all represented, which covers the population likely to host offers. RESO issues an identifier to an organization that does not yet hold one.
 
 This is what makes the coordinate work in practice rather than in principle. A locally issued identifier becomes collision-free once it is qualified by a centrally issued organization identifier, because no two organizations share one. A participant therefore keeps numbering its own records however it already does, and does not need to be an MLS to take part. The organization member of a coordinate resolves against the registry.
+
+The coordinate members describe the listing, so they carry whatever the originating system published. A participant is required to hold an organization identifier ([Section 2.1](#section-21-participation-and-confidentiality)); a listing is not, because a listing is not a party to anything and the system that published it may predate the transition entirely.
 
 Holding an organization identifier does not mean every counterparty supplies one. A participant will receive coordinates from organizations that have not populated theirs, and an implementation MUST accept a coordinate whose organization member is an originating system name or identifier. It MUST NOT reject an offer on the ground that the counterparty supplied a name where an organization identifier was available.
 
@@ -613,6 +621,10 @@ RESO will validate the following during certification:
 * The candidate MUST NOT fail when a counterparty publishes no state in the thread, and MUST resolve the state from the payload instead ([Section 2.8](#section-28-activity-streams-mapping)).
 * The candidate MUST NOT parse an activity identifier to recover offer data, and MUST NOT require an identifier to contain an `OfferId` ([Section 2.3](#section-23-offer-identity)).
 * The candidate MUST NOT post an `Undo` for an activity another party posted ([Section 2.12.7](#section-2127-withdrawing)).
+
+**Participation**
+* The actor the candidate posts under MUST resolve to a Unique Organization Identifier, being the candidate's own or that of the organization it acts for ([Section 2.1](#section-21-participation-and-confidentiality)).
+* The candidate MUST accept a listing coordinate whose organization member is an originating system name or identifier, and MUST NOT reject an offer on the ground that no organization identifier was supplied for the listing ([Section 2.4](#section-24-the-offer-resource)).
 
 **Confidentiality**
 * Every payload link the candidate publishes MUST refuse an unauthenticated dereference ([Section 2.11](#section-211-authentication-and-authorization)).
