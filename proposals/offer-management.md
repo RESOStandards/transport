@@ -384,7 +384,9 @@ Access is decided at two points, and they are independent.
 
 **Payload authorization** governs who can read a particular offer. It applies identically under both addressing models, because the payload is protected either way.
 
-The token is core to both. Single sign-on governs admission and federates identity across the network; it does not authorize a request. Every payload request carries a bearer token regardless of how the requester was admitted, and that token is what an implementation resolves and checks.
+**Authentication federates. Authorization does not.** Accepting an identity another participant issued is a statement about who the requester is, and a network can agree to trust that in common. Whether that requester may read a particular offer is a statement about one offer, held by the implementation that holds it, and no other participant is in a position to make it. An implementation MUST NOT delegate the payload decision to the issuer of a requester's identity, and MUST NOT accept an assertion of entitlement from another participant in place of its own determination.
+
+The token is core to both. Single sign-on establishes and federates identity; it does not authorize a request. Every payload request carries a bearer token regardless of how the requester was admitted, and that token is what an implementation resolves and checks against its own record of who the parties are.
 
 Admission to the network MUST NOT be treated as entitlement to an offer. A participant who is on the network is on the network; it is a party to the offers it is a party to, and to no others. An implementation MUST make the payload decision on its own terms, for every request, regardless of how the requester reached the thread.
 
@@ -725,6 +727,8 @@ RESO will validate the following during certification:
 
 **Confidentiality**
 * Every payload link the candidate publishes MUST refuse an unauthenticated dereference ([Section 2.11](#section-211-authentication-and-authorization)).
+* The candidate MUST determine a requester's identifier from the presented token and MUST NOT infer it from a value carried in the request ([Section 2.11](#section-211-authentication-and-authorization)).
+* The candidate MUST NOT accept another participant's assertion that a requester is entitled to an offer in place of its own determination ([Section 2.11](#section-211-authentication-and-authorization)).
 * The candidate MUST refuse to serve offer content to a requester outside the parties to that offer ([Section 2.11](#section-211-authentication-and-authorization)).
 * The candidate MUST NOT treat the absence of buyer or co-buyer fields as an error ([Section 2.11](#section-211-authentication-and-authorization)).
 
