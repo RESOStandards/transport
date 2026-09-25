@@ -70,7 +70,7 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 * Introduces two lookups, `OfferSubmissionStatus` and `OfferReceivedStatus`, defined in [Section 2.7](#section-27-offer-states).
 * Recommends that an implementation new to offer exchange adopt Unique Organization and System Identifiers from the outset, ahead of the Data Dictionary carrying them and of Data Dictionary 3.0 requiring one in certification. A provider whose only available value today is an originating system name or identifier remains conformant. See [Section 2.4](#section-24-the-offer-resource).
 * Binds two kinds of implementer with one model: systems serving the resources over OData on the Web API, and systems exchanging offers over ActivityPub through offer management hubs.
-* **Introduces no major change, and is targeted for the next minor Data Dictionary release.** Every element it reuses is used exactly as Data Dictionary 2.1 defines it. Everything else is new, and adding a resource, a lookup or a lookup value is a minor change, so an implementation conformant to Data Dictionary 2.1 stays conformant. Which release carries it depends on how long it takes through the workgroups, which meet quarterly.
+* **Is intended as a minor change, targeted for the next minor Data Dictionary release.** Every element it reuses is used exactly as Data Dictionary 2.1 defines it, and its testing rules apply to new data elements, which RESO versioning makes minor. One question decides it: RESO versioning makes a new element that duplicates an existing one a major change, and this proposal adds one deliberate overlap and one element close to an existing name. Both are identified in [Section 6](#section-6-appendices) for the workgroup to confirm. Which release carries this depends on how long it takes through the workgroups, which meet quarterly.
 
 <br /><br />
 
@@ -959,7 +959,18 @@ These counts describe listing data as MLSs publish it. They do not describe what
 
 `Country` is the weakest component, present in 41.7% of markets and thinly populated where present, so it is defaulted rather than required.
 
-**This proposal introduces no breaking change.** Every element it reuses is used exactly as the Data Dictionary defines it today, in type, enumeration, collection and length. Everything else it adds is new: three resources, two lookups, and three values on the existing `ResourceName` lookup. Adding a resource, a lookup or a lookup value is a minor change under RESO versioning, so an implementation already conformant to Data Dictionary 2.1 stays conformant.
+**This proposal is intended as a minor change.** Two of the three things RESO versioning looks at are settled. Every element reused is used exactly as the Data Dictionary defines it today, in type, enumeration, collection and length, so no existing element changes. And the testing rules in [Section 3](#section-3-certification) apply to new data elements, which RESO versioning makes minor, rather than adding rules to elements that already exist, which would make it major.
+
+The third is a question for the workgroups rather than a claim this proposal can make. RESO versioning treats a new element that duplicates an existing one as a breaking change requiring a major version. Two additions could be read that way, and both are declared here rather than left for review to find:
+
+| Element | The reading to test | Where it is argued |
+| :--- | :--- | :--- |
+| `OfferUoi` alongside `OfferOriginatingSystemName` and `OfferOriginatingSystemId` | Nothing is replaced here. The legacy pair is carried because a name or a local identifier is often all a listing holds today, and its removal is already scheduled for Data Dictionary 3.0, which is a major boundary. A transition in which both forms are accepted is not a duplication. | [Section 2.4](#section-24-the-offer-resource) |
+| `RequestedClosingDate` alongside `CloseDate` | A proposed date and an actual date are different facts, so neither can stand for the other | [Section 2.5](#section-25-the-offersubmission-resource) |
+
+If the workgroups accept both arguments, an implementation already conformant to Data Dictionary 2.1 stays conformant and this is a minor change. If either is judged a duplicate, it is major.
+
+The first argument also sets when the major change does happen. Retiring `OfferOriginatingSystemName` and `OfferOriginatingSystemId` is the breaking step, and it is already placed at Data Dictionary 3.0 rather than taken here.
 
 This proposal deprecates no existing element. It introduces two whose disposition is already expected: `OfferOriginatingSystemName` and `OfferOriginatingSystemId` carry what a listing commonly holds today and are intended for deprecation at Data Dictionary 3.0, in the sense RESO versioning gives the term, where a deprecated element is removed from the specification and providers may continue to use it ([Section 2.4](#section-24-the-offer-resource)).
 
