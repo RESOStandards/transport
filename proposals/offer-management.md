@@ -89,7 +89,11 @@ An offer is **confidential**. It carries the legal name, address and telephone n
 
 # Section 1: Purpose
 
-This specification gives an offer a standard shape and a standard set of states, so that:
+This specification has one aim. Make a standardized conversation with a standardized payload easy to hold, reusing the ecosystem that already exists, and reveal nothing to anyone the participants have not chosen to reveal it to.
+
+Each part of that has a mechanism. The conversation is standard Activity Streams, so a turn stays legible to a general ActivityPub client and no offer-specific vocabulary is invented ([Section 2.8](#section-28-activity-streams-mapping), [Section 2.9](#section-29-counter-offers)). The payload is RESO Common Format, so an offer carries the same elements whoever sent it ([Section 2.2](#section-22-activitypub-usage)). The ecosystem is the one already in place rather than a parallel one: an offer replies into the listing thread that exists, the resources serve over the RESO Web API for an implementation that wants them there, the elements come from the Data Dictionary wherever one already says the thing, and an event feed stays complementary rather than required ([Section 2.10](#section-210-web-api-conformance)). And nothing is revealed by default. The payload refuses an unauthenticated dereference under every addressing model, and whether the fact of an offer is visible at all is the participants' own choice ([Section 2.1](#section-21-participation-and-confidentiality), [Section 2.11](#section-211-authentication-and-authorization)).
+
+It gives an offer a standard shape and a standard set of states, so that:
 
 * a buyer agent can submit an offer from the system of their choice and have it arrive intact in a listing agent's system;
 * a listing agent can compare offers from different sources side by side without rekeying them;
@@ -104,6 +108,8 @@ Lightweight and interoperable are the same requirement here, not two. A specific
 That is why this specification adds no vocabulary to ActivityPub, carries its data in RESO Common Format behind a referenced link rather than in the activity, reuses Data Dictionary elements wherever one already says the thing, and defines new elements only where nothing existing does. Each of those keeps the cost of implementing it low enough that implementing it is the straightforward choice rather than a project.
 
 The offer is the unit of scope. What happens after acceptance – the executed contract, escrow and title, contingency management, closing and archive – is transaction management, and is addressed separately. This specification may be referenced from that work but does not attempt it.
+
+The aim above is not particular to offers. It is the aim of the [RESO Listing Advertisement](https://github.com/RESOStandards/transport/discussions/162) proposal, which applies it across the whole transaction, and the offer is the first phase of it specified on its own. Because the primitives are shared ([Section 2.2](#section-22-activitypub-usage)), a later phase costs less to specify than the one before it. That compounding is itself part of keeping the standard light.
 
 <br /><br />
 
