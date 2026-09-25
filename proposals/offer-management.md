@@ -7,8 +7,8 @@
 | **Specification** | [**LINK TO RCP**](#) |
 | **Status** | IN PROGRESS |
 | **Date Ratified** | TBD |
-| **Dependencies** | [Data Dictionary 2.1](https://github.com/RESOStandards/transport/blob/main/proposals/data-dictionary.md)<br />[RESO Common Format](https://github.com/RESOStandards/transport/blob/main/proposals/reso-common-format.md)<br />[RESO Listing Advertisement (RCP-52)](https://github.com/RESOStandards/transport/discussions/162) |
-| **Related Links** | [ULI Resolution Protocol (RCP-54)](https://github.com/RESOStandards/transport/pull/222)<br />[Organization and System Identifiers (RCP-55)](https://github.com/RESOStandards/transport/pull/243)<br />[Feed Entitlements and Visibility (RCP-35)](https://github.com/RESOStandards/transport/pull/169)<br />[Web API Add/Edit](https://github.com/RESOStandards/transport/blob/main/proposals/web-api-add-edit.md) |
+| **Dependencies** | [Data Dictionary 2.1](https://github.com/RESOStandards/transport/blob/main/proposals/data-dictionary.md)<br />[RESO Common Format](https://github.com/RESOStandards/transport/blob/main/proposals/reso-common-format.md) |
+| **Related Links** | [RESO Listing Advertisement (RCP-52)](https://github.com/RESOStandards/transport/discussions/162)<br />[ULI Resolution Protocol (RCP-54)](https://github.com/RESOStandards/transport/pull/222)<br />[Organization and System Identifiers (RCP-55)](https://github.com/RESOStandards/transport/pull/243)<br />[Feed Entitlements and Visibility (RCP-35)](https://github.com/RESOStandards/transport/pull/169)<br />[Web API Add/Edit](https://github.com/RESOStandards/transport/blob/main/proposals/web-api-add-edit.md) |
 
 
 <br /><br />
@@ -22,10 +22,12 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 # Table of Contents
 - [Summary of Changes](#summary-of-changes)
 - [Introduction](#introduction)
+  - [Lineage](#lineage)
 - [Section 1: Purpose](#section-1-purpose)
 - [Section 2: Specification](#section-2-specification)
   - [Section 2.1: Participation and Confidentiality](#section-21-participation-and-confidentiality)
   - [Section 2.2: ActivityPub Usage](#section-22-activitypub-usage)
+    - [Primitives This Specification Reuses](#primitives-this-specification-reuses)
   - [Section 2.3: Offer Identity](#section-23-offer-identity)
   - [Section 2.4: The Offer Resource](#section-24-the-offer-resource)
     - [How Many Offers a Buyer May Have on a Listing](#how-many-offers-a-buyer-may-have-on-a-listing)
@@ -62,12 +64,12 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 
 # Summary of Changes
 
-* Moves offer handling out of the [RESO Listing Advertisement](https://github.com/RESOStandards/transport/discussions/162) proposal into its own endorsement. The Transport ActivityPub Subgroup directed the work to Interoperability in August 2025 and discussed a lightweight offer management specification in September 2025; Interoperability reported the specification back to the subgroup in October 2025 and voted in September 2026 to send its data elements to the Data Dictionary Workgroup.
+* Specifies offer exchange as a workgroup-approved subset of the [RESO Listing Advertisement](https://github.com/RESOStandards/transport/discussions/162) proposal, which is the genesis of this work and remains in discussion. The Transport ActivityPub Subgroup directed the work to Interoperability in August 2025 and discussed a lightweight offer management specification in September 2025. Interoperability reported the specification back to the subgroup in October 2025 and voted in September 2026 to send its data elements to the Data Dictionary Workgroup.
 * Introduces three Data Dictionary resources: `Offer`, `OfferSubmission` and `OfferPropertyGroup`, defined in [Section 2.4](#section-24-the-offer-resource) through [Section 2.6](#section-26-the-offerpropertygroup-resource).
 * Introduces two lookups, `OfferSubmissionStatus` and `OfferReceivedStatus`, defined in [Section 2.7](#section-27-offer-states).
 * Recommends that an implementation new to offer exchange adopt Unique Organization and System Identifiers from the outset, ahead of the Data Dictionary carrying them and of Data Dictionary 3.0 requiring one in certification. A provider whose only available value today is an originating system name or identifier remains conformant. See [Section 2.4](#section-24-the-offer-resource).
 * Binds two kinds of implementer with one model: systems serving the resources over OData on the Web API, and systems exchanging offers over ActivityPub through offer management hubs.
-* Amends [RCP-52](https://github.com/RESOStandards/transport/discussions/162) Section 2.3, whose worked example carries offer terms in the text of an activity. [Section 2.2](#section-22-activitypub-usage) places that content in the referenced payload instead.
+* Supersedes [RCP-52](https://github.com/RESOStandards/transport/discussions/162) Section 2.3 for offers. Its worked example carries offer terms in the text of an activity, and [Section 2.2](#section-22-activitypub-usage) places that content in the referenced payload instead.
 
 <br /><br />
 
@@ -82,6 +84,12 @@ Two things make an offer different from the records the Data Dictionary already 
 An offer is a **conversation**, not a record. It is submitted, acknowledged, countered, countered again and finally accepted, rejected, withdrawn or expired. Each turn is a new statement by a different party, and the sequence is the substance. A single mutable row cannot represent it.
 
 An offer is **confidential**. It carries the legal name, address and telephone number of a buyer, the price that buyer will pay and the financing behind it. This is the most sensitive data in the proposal, and possibly in the Data Dictionary. The design assumes confidentiality rather than adding it later.
+
+## Lineage
+
+This work did not start on its own. Offer exchange was first described in the [RESO Listing Advertisement](https://github.com/RESOStandards/transport/discussions/162) proposal, which models a whole listing lifecycle as an ActivityPub thread, from premarketing through marketing, showings and offers. That proposal is the genesis of this one and remains in discussion. Offers are the subset the workgroups approved first, so they are specified here on their own.
+
+Two things follow. The thread primitives an offer depends on are stated in [Section 2.2](#section-22-activitypub-usage) rather than cited, so this specification is readable and implementable by itself. And where the two documents differ on offers, this one governs.
 
 <br /><br />
 
@@ -142,6 +150,22 @@ An identifier is not content. The identifiers of [Section 2.3](#section-23-offer
 The payload MUST be expressed in RESO Common Format. The payload MUST be reachable through a link the activity references, and MUST NOT be embedded in the activity. That link is not required to be a RESO Web API endpoint: any endpoint that returns the payload in RESO Common Format satisfies this specification. The link MUST refuse an unauthenticated dereference ([Section 2.11](#section-211-authentication-and-authorization)).
 
 This rule is the same one adopted by the [ULI Resolution Protocol](https://github.com/RESOStandards/transport/pull/222) in its Section 2.2, and it is the reason this specification adds no vocabulary to ActivityPub. Where an offer concept has no Activity Streams equivalent, it is represented by the payload and not by a new term ([Section 2.8](#section-28-activity-streams-mapping)).
+
+### Primitives This Specification Reuses
+
+An offer does not invent a way to reach the network. It reuses the primitives the [Listing Advertisement](https://github.com/RESOStandards/transport/discussions/162) proposal establishes for a listing thread. That proposal is not yet promoted, and offer management is the first part of it to be specified on its own, so the primitives are stated here rather than cited. An implementation reading only this document has what it needs.
+
+**An activity is created through its actor's outbox.** A client POSTs the object it wants to publish to its own ActivityPub server. The server wraps it in the activity, assigns the `id`, and delivers it to the inboxes of the parties addressed. The worked examples of [Section 2.12](#section-212-worked-examples) show the resulting activity, which is what a recipient sees. They do not show the POST that produced it, and an implementation MUST NOT read them as requiring a client to author an `id`.
+
+**The server assigns the identifier.** This is why an `id` need not be meaningful and why an opaque one is available to any provider that wants it ([Section 2.3](#section-23-offer-identity)). A server MAY assign an identifier that embeds the actor and the thread, and a consumer MUST NOT depend on either shape.
+
+**A reply names its parent by `inReplyTo`.** Every turn in a negotiation is a reply, and the shape of the thread is recoverable from those references alone ([Section 2.9](#section-29-counter-offers)).
+
+**A payload is referenced, never embedded.** The activity carries a `Link` in `url` with a `mediaType`, and the payload behind it is RESO Common Format.
+
+**A listing reaches the hub in one of two forms.** The root activity's link MAY resolve to a listing served over the RESO Web API, or to RESO Common Format served by any HTTP host. Both satisfy this specification and an implementation MUST accept either. Dereferencing is the same in both cases, under the rules of [Section 2.11](#section-211-authentication-and-authorization), so a consumer needs no separate credential model for one or the other.
+
+**A listing is open to offers once it has been published to the hub for offers.** That act is what opens it, and the activity carrying it is the root of the thread an offer replies into ([Section 2.9](#section-29-counter-offers)). Eligibility does not follow from a listing's marketing phase. A listing being prepared for market is not open to offers merely by existing, and a provider that wants offers on a premarketed listing MAY publish it for offers before it goes to market. `ComingSoon` in `StandardStatus` is the ordinary case.
 
 ## Section 2.3: Offer Identity
 
@@ -398,7 +422,7 @@ An implementation MUST NOT modify a prior submission when a counter is made. The
 
 ### The Thread
 
-**Publishing a listing is what makes it eligible for offers.** A listing is published to the network by its point of entry, usually the MLS, and that activity is the root of the thread. Until it exists there is nothing to reply to and no offer can be made. An offer is posted `inReplyTo` the root, by its identifier. A counter is posted `inReplyTo` the offer it answers, and a re-counter `inReplyTo` the counter. Every turn names its parent, so the negotiation is a single-rooted tree and its shape is recoverable from the thread alone.
+**Publishing a listing is what makes it eligible for offers.** A listing is published to the network by its point of entry, usually the MLS, and that activity is the root of the thread. Until it exists there is nothing to reply to and no offer can be made. What opens a listing to offers is that publishing act rather than the listing's marketing phase, so a premarketed listing published for offers is eligible and a marketed listing never published to the hub is not ([Section 2.2](#section-22-activitypub-usage)). An offer is posted `inReplyTo` the root, by its identifier. A counter is posted `inReplyTo` the offer it answers, and a re-counter `inReplyTo` the counter. Every turn names its parent, so the negotiation is a single-rooted tree and its shape is recoverable from the thread alone.
 
 An implementation MUST NOT accept an offer that references no published listing activity, and an `Offer` MUST correspond to a listing that was published to the network.
 
