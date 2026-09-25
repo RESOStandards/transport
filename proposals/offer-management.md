@@ -376,11 +376,60 @@ Where an implementation supports [Web API Add/Edit](https://github.com/RESOStand
 
 ## Section 2.11: Authentication and Authorization
 
-Every link to an offer payload MUST be protected, and MUST refuse an unauthenticated dereference. An implementation MUST NOT publish an offer payload at an unauthenticated URL.
+### Two boundaries
 
-Authorization is by party. The parties to an offer are the submitting agent and their brokerage, the listing agent and their brokerage, and the systems acting on behalf of any of them. An implementation MUST NOT serve offer content to a requester outside that set, and MUST NOT include a party in one offer's authorization set on the strength of their involvement in another.
+Access is decided at two points, and they are independent.
+
+**Network admission** governs who can reach a thread at all. Where offers are addressed to named parties ([Section 2.1](#section-21-participation-and-confidentiality)), the network is closed and an implementation MAY admit participants through single sign-on using OpenID Connect. That admission MAY be federated, so that an identity issued by one participant is accepted across the network. Where offers are advertised publicly there is no admission step, because the thread is open by construction.
+
+**Payload authorization** governs who can read a particular offer. It applies identically under both addressing models, because the payload is protected either way.
+
+The token is core to both. Single sign-on governs admission and federates identity across the network; it does not authorize a request. Every payload request carries a bearer token regardless of how the requester was admitted, and that token is what an implementation resolves and checks.
+
+Admission to the network MUST NOT be treated as entitlement to an offer. A participant who is on the network is on the network; it is a party to the offers it is a party to, and to no others. An implementation MUST make the payload decision on its own terms, for every request, regardless of how the requester reached the thread.
+
+### Authenticating
+
+A payload link MUST be protected and MUST refuse an unauthenticated dereference. An implementation MUST NOT publish an offer payload at an unauthenticated URL.
+
+A client presents a bearer token:
+
+```
+Authorization: Bearer <token>
+```
+
+It obtains that token one of two ways, which are the same two RESO certification already uses:
+
+* **A token supplied directly.** The client is configured with the payload endpoint and a bearer token.
+* **A client credentials grant.** The client is configured with the payload endpoint, a client identifier, a client secret, a token endpoint and optionally a scope, and exchanges them for a bearer token at the token endpoint.
+
+An implementation MUST accept a bearer token presented this way. It MAY additionally accept other mechanisms, and MUST NOT require one in place of this.
+
+### Authorizing
+
+Authentication says which client is asking. Authorization says whether that client may read this particular offer, and the two are decided separately.
+
+A requester resolves to a Unique Organization Identifier or a Unique System Identifier, by the same rule that governs participants in [Section 2.1](#section-21-participation-and-confidentiality). An implementation MUST determine that identifier from the presented token, and MUST NOT infer it from any value carried in the request itself.
+
+The parties to an offer are the submitting agent and their brokerage, the listing agent and their brokerage, and the systems acting on behalf of any of them. An implementation MUST serve an offer payload only to a requester whose resolved identifier is a party to that offer, and MUST NOT treat involvement in one offer as involvement in another.
+
+### Refusing
+
+A refusal distinguishes the two decisions, so that a caller can tell a credential problem from an entitlement one:
+
+| Condition | Response |
+| :--- | :--- |
+| No token, or a token that does not authenticate | `401 Unauthorized` |
+| Authenticated, but not a party to this offer | `403 Forbidden` |
+| Authenticated and a party, but no such offer | `404 Not Found` |
+
+An implementation MUST NOT answer `404` where the offer exists and the requester is simply not a party to it, and MUST NOT answer `403` in a way that confirms an offer exists to a requester with no entitlement to know. Where the distinction itself would disclose something, `404` is the safer answer and is permitted.
+
+### Withholding fields
 
 The buyer and co-buyer fields of [Section 2.5](#section-25-the-offersubmission-resource) are the most sensitive elements this specification defines. An implementation MAY omit them from a payload served to a party that does not require them, and a consumer MUST NOT treat their absence as an error.
+
+Omission is not the same as refusal. A payload served with those fields withheld is a successful response, and the requester is a party to the offer; it has simply been given the subset it needs.
 
 ## Section 2.12: Worked Examples
 
