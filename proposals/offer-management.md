@@ -70,7 +70,6 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 * Introduces two lookups, `OfferSubmissionStatus` and `OfferReceivedStatus`, defined in [Section 2.7](#section-27-offer-states).
 * Recommends that an implementation new to offer exchange adopt Unique Organization and System Identifiers from the outset, ahead of the Data Dictionary carrying them and of Data Dictionary 3.0 requiring one in certification. A provider whose only available value today is an originating system name or identifier remains conformant. See [Section 2.4](#section-24-the-offer-resource).
 * Binds two kinds of implementer with one model: systems serving the resources over OData on the Web API, and systems exchanging offers over ActivityPub through offer management hubs.
-* Supersedes [RCP-52](https://github.com/RESOStandards/transport/discussions/162) Section 2.3 for offers. Its worked example carries offer terms in the text of an activity, and [Section 2.2](#section-22-activitypub-usage) places that content in the referenced payload instead.
 
 <br /><br />
 
