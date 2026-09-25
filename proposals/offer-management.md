@@ -70,6 +70,7 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 * Introduces two lookups, `OfferSubmissionStatus` and `OfferReceivedStatus`, defined in [Section 2.7](#section-27-offer-states).
 * Recommends that an implementation new to offer exchange adopt Unique Organization and System Identifiers from the outset, ahead of the Data Dictionary carrying them and of Data Dictionary 3.0 requiring one in certification. A provider whose only available value today is an originating system name or identifier remains conformant. See [Section 2.4](#section-24-the-offer-resource).
 * Binds two kinds of implementer with one model: systems serving the resources over OData on the Web API, and systems exchanging offers over ActivityPub through offer management hubs.
+* **Introduces no major change, and is targeted for the next minor Data Dictionary release.** Every element it reuses is used exactly as Data Dictionary 2.1 defines it. Everything else is new, and adding a resource, a lookup or a lookup value is a minor change, so an implementation conformant to Data Dictionary 2.1 stays conformant. Which release carries it depends on how long it takes through the workgroups, which meet quarterly.
 
 <br /><br />
 
@@ -286,12 +287,12 @@ An `OfferSubmission` is one turn in the negotiation: an initial offer, a counter
 | CreditAtClosing | Number | Yes | | | The credit being requested at closing. |
 | EarnestMoney | Number | Yes | | | The earnest money that will be submitted. |
 | RequestedClosingDate | Date | Yes | | | The closing date proposed in the offer. |
-| BuyerFinancing | String List, Single | Yes | | BuyerFinancing | The financing proposed in the offer. |
+| BuyerFinancing | String List, Multi | Yes | | BuyerFinancing | The financing proposed in the offer. |
 | WaiverOfInspection | Boolean | Yes | | | Indicates whether or not the inspection is being waived. |
-| Contingencies | String List, Multi | Yes | | Contingency | The contingencies attached to the offer. |
+| Contingency | String | Yes | 1024 | | The contingencies attached to the offer. |
 | AsIsCondition | Boolean | Yes | | | Indicates whether or not the offer includes taking the property in as-is condition. |
 | EscalationClause | Boolean | Yes | | | Indicates whether or not an escalation clause is included. |
-| Concessions | String | Yes | | | The concessions being submitted as part of the offer. |
+| Concessions | String List, Single | Yes | | Concessions | Whether concessions are part of the offer. |
 | OfferExpirationDate | Date | Yes | | | The date the submitted offer expires. |
 | OfferInspectionDate | Date | Yes | | | The date requested for an inspection. |
 | OfferAppraisalDate | Date | Yes | | | The date requested for an appraisal. |
@@ -306,7 +307,7 @@ An `OfferSubmission` is one turn in the negotiation: an initial offer, a counter
 | OfferAcceptedTimestamp | Timestamp | Yes | | | The date and time the offer was accepted. |
 | ModificationTimestamp | Timestamp | No | | | The date and time the submission was last modified. |
 
-`BuyerFinancing`, `Contingencies` and `BuyerBrokerageCompensation` reuse existing Data Dictionary elements and their lookups rather than introducing offer-specific equivalents. An implementation MUST use the existing standard values.
+`BuyerFinancing`, `Concessions`, `Contingency` and `BuyerBrokerageCompensation` reuse existing Data Dictionary elements rather than introducing offer-specific equivalents, and an implementation MUST use the existing standard values where the element carries an enumeration. `Contingency` carries none. It is free text in the Data Dictionary, so an implementation records contingencies as the Data Dictionary defines them today ([Section 6, Open Questions](#open-questions)).
 
 `RequestedClosingDate` is a new element rather than a reuse of `CloseDate`. `CloseDate` records the date a transaction actually closed. This element records the date an offer proposes. The two are different facts and one cannot stand for the other, so the offer element takes a name that says which it is.
 
@@ -577,8 +578,8 @@ The payload behind `url`:
   "PurchasePrice": 530000,
   "EarnestMoney": 15000,
   "RequestedClosingDate": "2026-11-02",
-  "BuyerFinancing": "Conventional",
-  "Contingencies": ["Inspection", "Financing"],
+  "BuyerFinancing": ["Conventional"],
+  "Contingency": "Inspection, Financing",
   "AsIsCondition": false,
   "OfferExpirationDate": "2026-09-18",
   "OfferSubmissionStatus": "Submitted",
@@ -666,7 +667,7 @@ The payload is a second `OfferSubmission`, carrying the same `OfferId` and its o
   "PurchasePrice": 545000,
   "EarnestMoney": 20000,
   "RequestedClosingDate": "2026-10-26",
-  "Contingencies": ["Financing"],
+  "Contingency": "Financing",
   "OfferExpirationDate": "2026-09-17",
   "OfferSubmissionStatus": "Countered",
   "OfferSubmissionSequence": 2,
@@ -805,7 +806,7 @@ RESO will validate the following during certification:
 **Model**
 * The candidate MUST serve the resources, fields, types and nullability of [Section 2.4](#section-24-the-offer-resource) through [Section 2.6](#section-26-the-offerpropertygroup-resource), and a payload it produces MUST validate as RESO Common Format against the declared Data Dictionary version.
 * The candidate MUST accept and serve the standard values of [Section 2.7](#section-27-offer-states) and MUST reject a multi-valued status on either side.
-* The candidate MUST use the existing standard values for `BuyerFinancing`, `Contingencies` and `BuyerBrokerageCompensation` and MUST NOT substitute offer-specific equivalents ([Section 2.5](#section-25-the-offersubmission-resource)).
+* The candidate MUST use the existing standard values for `BuyerFinancing` and `Concessions`, and MUST NOT substitute offer-specific equivalents ([Section 2.5](#section-25-the-offersubmission-resource)).
 * The candidate MUST NOT accept an offer that references no published listing activity ([Section 2.9](#section-29-counter-offers)).
 * Every `OfferSubmission` the candidate accepts MUST correlate to an `Offer` it holds, by `OfferId`. A candidate that accepts a submission correlating to no offer fails ([Section 2.5](#section-25-the-offersubmission-resource)).
 * The candidate MUST accept a second `Offer` from the same buyer on the same listing, both where an earlier offer has ended and where both are live. A candidate that rejects it as a duplicate, or that merges it into the earlier offer, fails ([Section 2.4](#section-24-the-offer-resource)).
@@ -906,7 +907,7 @@ This proposal also adds three values to the existing `ResourceName` lookup, whos
 | ResourceName | OfferSubmission | The OfferSubmission resource. |
 | ResourceName | OfferPropertyGroup | The OfferPropertyGroup resource. |
 
-The following existing elements are reused without change: `BuyerFinancing`, `Contingency`, `BuyerBrokerageCompensation`, `StreetNumber`, `StreetName`, `City`, `StateOrProvince`, `PostalCode`, `CountyOrParish`, `Country`, `ParcelNumber`, `UniversalPropertyId`, `ListingId`, `ListingKey` and the `Media` resource.
+The following existing elements are reused without change: `BuyerFinancing`, `Concessions`, `Contingency`, `BuyerBrokerageCompensation`, `StreetNumber`, `StreetName`, `City`, `StateOrProvince`, `PostalCode`, `CountyOrParish`, `Country`, `ParcelNumber`, `UniversalPropertyId`, `ListingId`, `ListingKey` and the `Media` resource.
 
 ## Open Questions
 
@@ -917,6 +918,12 @@ These are recorded rather than settled, and are for the workgroups.
 **Should a universal property identifier be required?** [Section 2.6](#section-26-the-offerpropertygroup-resource) makes it optional. Requiring it would strengthen cross-system matching and would exclude providers who cannot compose one.
 
 **Which offer elements should the endorsement require?** Several elements this proposal reuses are sparsely populated in the industry data, but that data is drawn almost entirely from MLSs and offers are not MLS domain. An offer management provider implementing this endorsement would populate them. Requiring a subset is therefore viable and is a question for the workgroup rather than an inference from current adoption.
+
+**Should contingencies be enumerated, and should that happen now?** [Section 2.5](#section-25-the-offersubmission-resource) reuses `Contingency` as the Data Dictionary defines it, which is free text of up to 1024 characters with no standard values. Reusing it is the conservative choice, because minting a parallel enumerated element beside an existing free-text one is how a vocabulary splits. The cost is that two offers can describe the same contingency in ways no consumer can compare, and comparing offers is most of the point of this proposal.
+
+So the question is not only whether to enumerate but whether to do it now. There is an evidence base to work from. Providers already publish `Contingency` as free text, and those values are collected in RESO Analytics, so a candidate enumeration can be derived from what the industry actually writes rather than proposed from scratch. Deriving it that way also shows how much of the real usage a given value set would cover.
+
+Whether `Contingency` should carry standard values is a Data Dictionary question rather than an offer question, since it changes the element everywhere it already appears. Adding an enumeration to an element that has none is a minor change, so it is targeted for a minor release, and which release depends on how long it takes through the workgroups, which meet quarterly. This proposal reuses the element as it stands and does not wait on it.
 
 **Which status values belong on which side?** [Section 2.7](#section-27-offer-states) gives the submitting side thirteen standard values and the receiving side twelve, on the principle that the two sides observe different events and their value sets may diverge. That principle is sound and the division has not been reviewed value by value. `ScheduledToPresent` is the clearest case. It appears only on the submitting side, yet presenting an offer to the seller is done by the listing side, which is the receiving side. `Delivered` and `Received` raise the same question from the other direction, since each is naturally observed by one side and asserted about the other. Whether each value belongs on one side, the other or both is a question for the workgroup.
 
@@ -951,6 +958,8 @@ Two consequences, both about what a listing can be identified by rather than abo
 These counts describe listing data as MLSs publish it. They do not describe what an Offer Hub or an offer management provider is required to carry, and they are not an argument against requiring more of an offer participant than an MLS happens to publish today. The recommendation in [Section 2.4](#section-24-the-offer-resource) that new implementations start with `OfferUoi` rests on where the standard is going, not on these figures.
 
 `Country` is the weakest component, present in 41.7% of markets and thinly populated where present, so it is defaulted rather than required.
+
+**This proposal introduces no breaking change.** Every element it reuses is used exactly as the Data Dictionary defines it today, in type, enumeration, collection and length. Everything else it adds is new: three resources, two lookups, and three values on the existing `ResourceName` lookup. Adding a resource, a lookup or a lookup value is a minor change under RESO versioning, so an implementation already conformant to Data Dictionary 2.1 stays conformant.
 
 This proposal deprecates no existing element. It introduces two whose disposition is already expected: `OfferOriginatingSystemName` and `OfferOriginatingSystemId` carry what a listing commonly holds today and are intended for deprecation at Data Dictionary 3.0, in the sense RESO versioning gives the term, where a deprecated element is removed from the specification and providers may continue to use it ([Section 2.4](#section-24-the-offer-resource)).
 
