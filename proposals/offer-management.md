@@ -26,6 +26,7 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 - [Section 2: Specification](#section-2-specification)
   - [Section 2.1: Participation and Confidentiality](#section-21-participation-and-confidentiality)
   - [Section 2.2: ActivityPub Usage](#section-22-activitypub-usage)
+    - [Primitives This Specification Reuses](#primitives-this-specification-reuses)
   - [Section 2.3: Offer Identity](#section-23-offer-identity)
   - [Section 2.4: The Offer Resource](#section-24-the-offer-resource)
     - [How Many Offers a Buyer May Have on a Listing](#how-many-offers-a-buyer-may-have-on-a-listing)
@@ -142,6 +143,22 @@ An identifier is not content. The identifiers of [Section 2.3](#section-23-offer
 The payload MUST be expressed in RESO Common Format. The payload MUST be reachable through a link the activity references, and MUST NOT be embedded in the activity. That link is not required to be a RESO Web API endpoint: any endpoint that returns the payload in RESO Common Format satisfies this specification. The link MUST refuse an unauthenticated dereference ([Section 2.11](#section-211-authentication-and-authorization)).
 
 This rule is the same one adopted by the [ULI Resolution Protocol](https://github.com/RESOStandards/transport/pull/222) in its Section 2.2, and it is the reason this specification adds no vocabulary to ActivityPub. Where an offer concept has no Activity Streams equivalent, it is represented by the payload and not by a new term ([Section 2.8](#section-28-activity-streams-mapping)).
+
+### Primitives This Specification Reuses
+
+An offer does not invent a way to reach the network. It reuses the primitives the [Listing Advertisement](https://github.com/RESOStandards/transport/discussions/162) proposal establishes for a listing thread. That proposal is not yet promoted, and offer management is the first part of it to be specified on its own, so the primitives are stated here rather than cited. An implementation reading only this document has what it needs.
+
+**An activity is created through its actor's outbox.** A client POSTs the object it wants to publish to its own ActivityPub server. The server wraps it in the activity, assigns the `id`, and delivers it to the inboxes of the parties addressed. The worked examples of [Section 2.12](#section-212-worked-examples) show the resulting activity, which is what a recipient sees. They do not show the POST that produced it, and an implementation MUST NOT read them as requiring a client to author an `id`.
+
+**The server assigns the identifier.** This is why an `id` need not be meaningful and why an opaque one is available to any provider that wants it ([Section 2.3](#section-23-offer-identity)). A server MAY assign an identifier that embeds the actor and the thread, and a consumer MUST NOT depend on either shape.
+
+**A reply names its parent by `inReplyTo`.** Every turn in a negotiation is a reply, and the shape of the thread is recoverable from those references alone ([Section 2.9](#section-29-counter-offers)).
+
+**A payload is referenced, never embedded.** The activity carries a `Link` in `url` with a `mediaType`, and the payload behind it is RESO Common Format.
+
+**A listing reaches the hub in one of two forms.** The root activity's link MAY resolve to a listing served over the RESO Web API, or to RESO Common Format served by any HTTP host. Both satisfy this specification and an implementation MUST accept either. Dereferencing is the same in both cases, under the rules of [Section 2.11](#section-211-authentication-and-authorization), so a consumer needs no separate credential model for one or the other.
+
+**A listing is open to offers once it has been published to the hub for offers.** That act is what opens it, and the activity carrying it is the root of the thread an offer replies into ([Section 2.9](#section-29-counter-offers)). Eligibility does not follow from a listing's marketing phase. A listing being prepared for market is not open to offers merely by existing, and a provider that wants offers on a premarketed listing MAY publish it for offers before it goes to market. `ComingSoon` in `StandardStatus` is the ordinary case.
 
 ## Section 2.3: Offer Identity
 
@@ -398,7 +415,7 @@ An implementation MUST NOT modify a prior submission when a counter is made. The
 
 ### The Thread
 
-**Publishing a listing is what makes it eligible for offers.** A listing is published to the network by its point of entry, usually the MLS, and that activity is the root of the thread. Until it exists there is nothing to reply to and no offer can be made. An offer is posted `inReplyTo` the root, by its identifier. A counter is posted `inReplyTo` the offer it answers, and a re-counter `inReplyTo` the counter. Every turn names its parent, so the negotiation is a single-rooted tree and its shape is recoverable from the thread alone.
+**Publishing a listing is what makes it eligible for offers.** A listing is published to the network by its point of entry, usually the MLS, and that activity is the root of the thread. Until it exists there is nothing to reply to and no offer can be made. What opens a listing to offers is that publishing act rather than the listing's marketing phase, so a premarketed listing published for offers is eligible and a marketed listing never published to the hub is not ([Section 2.2](#section-22-activitypub-usage)). An offer is posted `inReplyTo` the root, by its identifier. A counter is posted `inReplyTo` the offer it answers, and a re-counter `inReplyTo` the counter. Every turn names its parent, so the negotiation is a single-rooted tree and its shape is recoverable from the thread alone.
 
 An implementation MUST NOT accept an offer that references no published listing activity, and an `Offer` MUST correspond to a listing that was published to the network.
 
