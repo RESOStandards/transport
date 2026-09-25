@@ -161,7 +161,9 @@ An `Offer` therefore carries a **coordinate** rather than a single identifier: a
 
 `OfferUoi` and `OfferOriginatingSystemId` overlap deliberately. The Data Dictionary defines an originating system identifier as holding an organization identifier, so the element is named for a system and carries an organization, and it cannot express the system within that organization at all. `OfferUoi` names the organization explicitly and `OfferUsi` adds the system, which the legacy pair never distinguished.
 
-RESO is transitioning to Unique Organization Identifiers through [Organization and System Identifiers (RCP-55)](https://github.com/RESOStandards/transport/pull/243). `OfferUoi` and `OfferUsi` SHOULD be populated where they are known. The originating and source system fields are retained for continuity with current practice and remain valid. Where RCP-55 ratifies first, these fields adopt its definitions rather than restating them.
+RESO is transitioning to Unique Organization Identifiers through [Organization and System Identifiers (RCP-55)](https://github.com/RESOStandards/transport/pull/243). The expected path is that the Data Dictionary carries them in a minor version, and that Data Dictionary 3.0 requires a Unique Organization Identifier in certification where a provider would otherwise supply only an originating system name or identifier.
+
+An implementation new to offer exchange SHOULD support `OfferUoi` from the outset. There is no legacy to preserve in a system that has not exchanged offers before, and starting on the identifier the standard is moving to avoids a migration later. A provider whose only available value today is an originating system name or identifier remains conformant and SHOULD continue to populate it. Where RCP-55 ratifies first, these fields adopt its definitions rather than restating them.
 
 The members of a coordinate MAY be hashed together to produce a single opaque value, where a provider does not wish to publish the parts. A party already holding the parts can verify such a value; a party that does not, cannot read them out of it.
 
@@ -687,7 +689,9 @@ Meaningful for this proposal:
 | `Country` | 177 | 41.7% |
 | `UniversalPropertyId` | 90 | 21.2% |
 
-Two consequences. `OriginatingSystemName` is better populated than `OriginatingSystemId`, which is why the coordinate in [Section 2.4](#section-24-the-offer-resource) accepts either. And while only 21.2% publish a universal property identifier, 83.0% already publish the parts needed to compose one, which is why [Section 2.6](#section-26-the-offerpropertygroup-resource) treats it as an optional discriminator rather than a requirement.
+Two consequences, both about what a listing can be identified by rather than about what an offer participant must supply. `OriginatingSystemName` is better populated than `OriginatingSystemId`, which is why the coordinate in [Section 2.4](#section-24-the-offer-resource) accepts either. And while only 21.2% publish a universal property identifier, 83.0% already publish the parts needed to compose one, which is why [Section 2.6](#section-26-the-offerpropertygroup-resource) treats it as an optional discriminator rather than a requirement.
+
+These counts describe listing data as MLSs publish it. They do not describe what an Offer Hub or an offer management provider is required to carry, and they are not an argument against requiring more of an offer participant than an MLS happens to publish today. The recommendation in [Section 2.4](#section-24-the-offer-resource) that new implementations start with `OfferUoi` rests on where the standard is going, not on these figures.
 
 `Country` is the weakest component, present in 41.7% of markets and thinly populated where present, so it is defaulted rather than required.
 
