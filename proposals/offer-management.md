@@ -173,6 +173,12 @@ Most participants already hold one. The RESO organization registry carries 1,977
 
 This is what makes the coordinate work in practice rather than in principle. A locally issued identifier becomes collision-free once it is qualified by a centrally issued organization identifier, because no two organizations share one. A participant therefore keeps numbering its own records however it already does, and does not need to be an MLS to take part. The organization member of a coordinate resolves against the registry.
 
+Holding an organization identifier does not mean every counterparty supplies one. A participant will receive coordinates from organizations that have not populated theirs, and an implementation MUST accept a coordinate whose organization member is an originating system name or identifier. It MUST NOT reject an offer on the ground that the counterparty supplied a name where an organization identifier was available.
+
+Note that holding an identifier and publishing one are different things. Most organizations are in the registry, while a smaller share carry an organization identifier in the data they publish, so the name is often the only value a counterparty has to hand.
+
+A crosswalk in which organizations declare the local names and identifiers they publish, and what each resolves to, is under consideration and is not specified here ([Section 6, Open Questions](#open-questions)).
+
 The members of a coordinate MAY be hashed together to produce a single opaque value, where a provider does not wish to publish the parts. A party already holding the parts can verify such a value; a party that does not, cannot read them out of it.
 
 ## Section 2.5: The OfferSubmission Resource
@@ -673,6 +679,8 @@ These are recorded rather than settled, and are for the workgroups.
 **Should a universal property identifier be required?** [Section 2.6](#section-26-the-offerpropertygroup-resource) makes it optional. Requiring it would strengthen cross-system matching and would exclude providers who cannot compose one.
 
 **Which offer elements should the endorsement require?** Several elements this proposal reuses are sparsely populated in the industry data, but that data is drawn almost entirely from MLSs and offers are not MLS domain. An offer management provider implementing this endorsement would populate them. Requiring a subset is therefore viable and is a question for the workgroup rather than an inference from current adoption.
+
+**Should RESO maintain a crosswalk from local originating system values to organization and system identifiers?** A participant will regularly receive an originating system name or identifier where no organization identifier was published. Rather than inferring a mapping, RESO could carry a registry in which each organization declares the local names and identifiers it publishes and the organization or system identifier each one resolves to. That is authoritative rather than inexact, it handles an organization that publishes several spellings of its own name, and it can resolve to a system identifier where an organization runs more than one. Much of the mapping is likely already held in certification records, which capture the values a provider publishes against the organization being certified, so the exercise may be closer to verifying and exposing what RESO knows than to collecting it. That needs confirming. Whether RESO should offer this, and who maintains the entries once it exists, is open. [Section 2.4](#section-24-the-offer-resource) requires only that a name be accepted.
 
 **How is a hashed coordinate constructed?** [Section 2.4](#section-24-the-offer-resource) permits the members of a listing coordinate to be hashed together into a single opaque value, and [Section 2.6](#section-26-the-offerpropertygroup-resource) permits the same for a universal property identifier. A hash is only useful if it is comparable: two providers hashing the same listing must produce the same value, or neither can verify the other. That requires an agreed algorithm, an agreed order for the members, and agreed normalization of each member before hashing, none of which this proposal fixes. Whether the construction should be shared with the opaque universal property identifier, and whether hashing should be optional or the default, are open.
 
