@@ -22,7 +22,6 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 # Table of Contents
 - [Summary of Changes](#summary-of-changes)
 - [Introduction](#introduction)
-  - [Lineage](#lineage)
 - [Section 1: Purpose](#section-1-purpose)
 - [Section 2: Specification](#section-2-specification)
   - [Section 2.1: Participation and Confidentiality](#section-21-participation-and-confidentiality)
@@ -58,6 +57,7 @@ This End User License Agreement (the "EULA") is entered into by and between the 
   - [Open Questions](#open-questions)
   - [Adoption of the Reused Elements](#adoption-of-the-reused-elements)
   - [Public Advertising, Side by Side](#public-advertising-side-by-side)
+  - [Origin](#origin)
 - [Section 7: License](#section-7-license)
 
 <br /><br />
@@ -84,12 +84,6 @@ Two things make an offer different from the records the Data Dictionary already 
 An offer is a **conversation**, not a record. It is submitted, acknowledged, countered, countered again and finally accepted, rejected, withdrawn or expired. Each turn is a new statement by a different party, and the sequence is the substance. A single mutable row cannot represent it.
 
 An offer is **confidential**. It carries the legal name, address and telephone number of a buyer, the price that buyer will pay and the financing behind it. This is the most sensitive data in the proposal, and possibly in the Data Dictionary. The design assumes confidentiality rather than adding it later.
-
-## Lineage
-
-This work did not start on its own. Offer exchange was first described in the [RESO Listing Advertisement](https://github.com/RESOStandards/transport/discussions/162) proposal, which models a whole listing lifecycle as an ActivityPub thread, from premarketing through marketing, showings and offers. That proposal is the genesis of this one and remains in discussion. Offers are the subset the workgroups approved first, so they are specified here on their own.
-
-Two things follow. The thread primitives an offer depends on are stated in [Section 2.2](#section-22-activitypub-usage) rather than cited, so this specification is readable and implementable by itself. And where the two documents differ on offers, this one governs.
 
 <br /><br />
 
@@ -1007,6 +1001,12 @@ For some participants that is the point: an open record that a listing is receiv
 An implementation MAY use both models across different listings, or change between them, provided the rule in [Section 2.1](#section-21-participation-and-confidentiality) holds in each case: an activity carrying offer content is never addressed to the public collection.
 
 <br />
+
+## Origin
+
+This work did not start on its own. Offer exchange was first described in the [RESO Listing Advertisement](https://github.com/RESOStandards/transport/discussions/162) proposal, which models a whole listing lifecycle as an ActivityPub thread, from premarketing through marketing, showings and offers. That proposal is the genesis of this one and remains in discussion. Offers are the subset the workgroups approved first, so they are specified here on their own.
+
+Two things follow. The thread primitives an offer depends on are stated in [Section 2.2](#section-22-activitypub-usage) rather than cited, so this specification is readable and implementable by itself. And where the two documents differ on offers, this one governs.
 
 ## Design rationale
 
