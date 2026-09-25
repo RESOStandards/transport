@@ -87,7 +87,8 @@ This specification gives an offer a standard shape and a standard set of states,
 * a counter offer is a new statement in a thread rather than an edit that destroys what came before;
 * the status of an offer is machine-readable on both sides, so that neither party has to telephone to ask;
 * the parties to an offer, and only those parties, can read its contents; and
-* the exchange is platform agnostic, so that a party sees every offer regardless of which product or platform each one came from.
+* the exchange is platform agnostic, so that a party sees every offer regardless of which product or platform each one came from; and
+* every participating organization holds a Unique Organization Identifier, so that it can issue its own local identifiers without collision.
 
 The offer is the unit of scope. What happens after acceptance – the executed contract, escrow and title, contingency management, closing and archive – is transaction management, and is addressed separately. This specification may be referenced from that work but does not attempt it.
 
@@ -166,7 +167,9 @@ RESO is transitioning to Unique Organization Identifiers through [Organization a
 
 An implementation new to offer exchange SHOULD support `OfferUoi` and `OfferUsi` from the outset. There is no legacy to preserve in a system that has not exchanged offers before, and starting on the identifier the standard is moving to avoids a migration later. A provider whose only available value today is an originating system name or identifier remains conformant and SHOULD continue to populate it. Where RCP-55 ratifies first, these fields adopt its definitions rather than restating them.
 
-Most participants already hold a Unique Organization Identifier. The RESO organization registry carries 1,977 organizations as of September 2026, each with one. They are mostly MLSs and associations, but technology companies, brokerages, commercial organizations and pooled platforms are all represented, which covers the population likely to host offers. RESO issues an identifier to an organization that does not yet hold one.
+A goal of this specification is that every Offer Hub and participating organization holds a Unique Organization Identifier, so that each can issue its own local identifiers freely and without collision.
+
+Most participants already hold one. The RESO organization registry carries 1,977 organizations as of September 2026, each with one. They are mostly MLSs and associations, but technology companies, brokerages, commercial organizations and pooled platforms are all represented, which covers the population likely to host offers. RESO issues an identifier to an organization that does not yet hold one.
 
 This is what makes the coordinate work in practice rather than in principle. A locally issued identifier becomes collision-free once it is qualified by a centrally issued organization identifier, because no two organizations share one. A participant therefore keeps numbering its own records however it already does, and does not need to be an MLS to take part. The organization member of a coordinate resolves against the registry.
 
