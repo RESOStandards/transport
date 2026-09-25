@@ -625,6 +625,8 @@ These are recorded rather than settled, and are for the workgroups.
 
 **Which offer elements should the endorsement require?** Several elements this proposal reuses are sparsely populated in the industry data, but that data is drawn almost entirely from MLSs and offers are not MLS domain. An offer management provider implementing this endorsement would populate them. Requiring a subset is therefore viable and is a question for the workgroup rather than an inference from current adoption.
 
+**How is a hashed coordinate constructed?** [Section 2.4](#section-24-the-offer-resource) permits the members of a listing coordinate to be hashed together into a single opaque value, and [Section 2.6](#section-26-the-offerpropertygroup-resource) permits the same for a universal property identifier. A hash is only useful if it is comparable: two providers hashing the same listing must produce the same value, or neither can verify the other. That requires an agreed algorithm, an agreed order for the members, and agreed normalization of each member before hashing, none of which this proposal fixes. Whether the construction should be shared with the opaque universal property identifier, and whether hashing should be optional or the default, are open.
+
 **What becomes of `OfferIndication` and `OfferRevocation`?** Both appear in earlier working material. An offer indication signals that a signed offer exists, with the property, the irrevocability period and where it was submitted, and has a direct analogue in Canadian practice. A revocation is not a record but an unresolved question about how an offer is unwound and by whom.
 
 ## Adoption of the Reused Elements
