@@ -306,6 +306,7 @@ An `OfferSubmission` is one turn in the negotiation: an initial offer, a counter
 | OfferSubmissionStatus | String List, Single | Yes | | OfferSubmissionStatus | The status of the offer as recorded by the submitting side. |
 | OfferReceivedStatus | String List, Single | Yes | | OfferReceivedStatus | The status of the offer as recorded by the receiving side. |
 | OfferSubmissionSequence | Number | No | | | The position of this submission in its offer, assigned as described in [Section 2.9](#section-29-counter-offers). |
+| OfferPropertyGroupKey | String | No | 255 | | The property group identifying the subject property of this submission ([Section 2.6](#section-26-the-offerpropertygroup-resource)). |
 | OfferSubmissionTimestamp | Timestamp | Yes | | | The date and time the offer was submitted. |
 | CounterOfferSubmissionTimestamp | Timestamp | Yes | | | The date and time a counter offer was submitted. |
 | OfferAcceptedTimestamp | Timestamp | Yes | | | The date and time the offer was accepted. |
@@ -324,6 +325,8 @@ The buyer and co-buyer fields are personal data. [Section 2.11](#section-211-aut
 ## Section 2.6: The OfferPropertyGroup Resource
 
 The `OfferPropertyGroup` identifies the subject property of a submission. It exists because an offer may be made on a property that the receiving system does not hold a listing record for, so the address must travel with the offer.
+
+Every `OfferSubmission` MUST carry an `OfferPropertyGroupKey`, and an implementation MUST NOT accept a submission whose property group cannot be resolved. A payload MAY carry the group inline or by key alone. Inline, it appears under the property name `OfferPropertyGroup`, as [Section 2.12](#section-212-worked-examples) shows, which is the expansion of the same relationship rather than a second resource. A consumer MUST accept either form, and MUST NOT require the inline one.
 
 | Field | Type | Nullable | Max length | Lookup | Definition |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -813,6 +816,7 @@ RESO will validate the following during certification:
 * The candidate MUST use the existing standard values for `BuyerFinancing` and `Concessions`, and MUST NOT substitute offer-specific equivalents ([Section 2.5](#section-25-the-offersubmission-resource)).
 * The candidate MUST NOT accept an offer that references no published listing activity ([Section 2.9](#section-29-counter-offers)).
 * Every `OfferSubmission` the candidate accepts MUST correlate to an `Offer` it holds, by `OfferId`. A candidate that accepts a submission correlating to no offer fails ([Section 2.5](#section-25-the-offersubmission-resource)).
+* Every `OfferSubmission` the candidate accepts MUST carry an `OfferPropertyGroupKey` that resolves, whether the group travels inline or by key ([Section 2.6](#section-26-the-offerpropertygroup-resource)).
 * The candidate MUST accept a second `Offer` from the same buyer on the same listing, both where an earlier offer has ended and where both are live. A candidate that rejects it as a duplicate, or that merges it into the earlier offer, fails ([Section 2.4](#section-24-the-offer-resource)).
 * The candidate MUST NOT append a submission to an offer that has been withdrawn, rejected or has expired ([Section 2.4](#section-24-the-offer-resource)).
 * An `Offer` the candidate accepts MUST carry `ListingId` or `ListingKey`, and MUST carry at least one of `OfferOriginatingSystemName` or `OfferOriginatingSystemId`. An `Offer` carrying `OfferUoi` and neither of that pair fails. A candidate that accepts a listing identifier with no organization or system member fails ([Section 2.4](#section-24-the-offer-resource)).
