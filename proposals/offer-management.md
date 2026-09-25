@@ -102,7 +102,9 @@ An offer is exchanged between named parties. Unlike a listing, an offer is not p
 
 **A participant MUST be resolvable to a Unique Organization Identifier or a Unique System Identifier.** An Offer Hub, and any party exchanging offers under this specification, MUST post under an actor that resolves to one of the two.
 
-Which of the two depends on what the participant is. An organization resolves to its own organization identifier. A party acting on behalf of one resolves by affiliation, since an agent is not an organization but the brokerage the agent acts for is. A client system making offer requests against a hub resolves to a system identifier, which names the system rather than the organization running it, and is the finer of the two where an organization runs more than one.
+The rule applies per actor, not once per exchange. An Offer Hub is itself a system and resolves to its own identifier. A client posting from another system is a separate actor and resolves to that system's identifier. Both appear in the same thread, and they do not share an identity.
+
+Which of the two identifiers an actor resolves to depends on what that actor is. An organization resolves to its own organization identifier. A party acting on behalf of one resolves by affiliation, since an agent is not an organization but the brokerage the agent acts for is. A system resolves to its system identifier, which names the system rather than the organization running it, and is the finer of the two where an organization runs more than one.
 
 This is a requirement on who takes part, and it is separable from how a listing is identified. A participant is a party to the exchange and is therefore accountable within it, whereas a listing carries whatever provenance the system it originated in published ([Section 2.4](#section-24-the-offer-resource)).
 
