@@ -27,6 +27,7 @@ This End User License Agreement (the "EULA") is entered into by and between the 
   - [Section 2.1: Participation and Confidentiality](#section-21-participation-and-confidentiality)
   - [Section 2.2: ActivityPub Usage](#section-22-activitypub-usage)
     - [Primitives This Specification Reuses](#primitives-this-specification-reuses)
+    - [When a Payload Cannot Be Read](#when-a-payload-cannot-be-read)
   - [Section 2.3: Offer Identity](#section-23-offer-identity)
   - [Section 2.4: The Offer Resource](#section-24-the-offer-resource)
     - [How Many Offers a Buyer May Have on a Listing](#how-many-offers-a-buyer-may-have-on-a-listing)
@@ -176,6 +177,22 @@ An offer does not invent a way to reach the network. It reuses the primitives th
 **A listing reaches the hub in one of two forms.** The root activity's link MAY resolve to a listing served over the RESO Web API, or to RESO Common Format served by any HTTP host. Both satisfy this specification and an implementation MUST accept either. Dereferencing is the same in both cases, under the rules of [Section 2.11](#section-211-authentication-and-authorization), so a consumer needs no separate credential model for one or the other.
 
 **A listing is open to offers once it has been published to the hub for offers.** That act is what opens it, and the activity carrying it is the root of the thread an offer replies into ([Section 2.9](#section-29-counter-offers)). Eligibility does not follow from a listing's marketing phase. A listing being prepared for market is not open to offers merely by existing, and a provider that wants offers on a premarketed listing MAY publish it for offers before it goes to market. `ComingSoon` in `StandardStatus` is the ordinary case.
+
+### When a Payload Cannot Be Read
+
+Everything in this specification rests on a consumer being able to dereference a link, and that will sometimes fail. **A failed dereference is not information about the offer.**
+
+A consumer MUST NOT infer an offer's state, or a change to one, from a failure to read its payload. It MUST NOT read a failure as withdrawal, rejection, expiry or acceptance. A state change arrives as an activity in the thread ([Section 2.8](#section-28-activity-streams-mapping)), and silence from an endpoint is not one.
+
+**Refused and unavailable are different.** A `401` or `403` is a statement about the requester and is answered under [Section 2.11](#section-211-authentication-and-authorization). A timeout, a connection failure or a `5xx` is a statement about the endpoint. It says nothing about entitlement and nothing about the offer, and a consumer MUST NOT treat the two as the same condition.
+
+**A payload that has become unreachable does not undo what was read.** Where a consumer previously read a payload and a later dereference returns `404`, the offer has not been deleted. Submissions are append-only ([Section 2.9](#section-29-counter-offers)), so a consumer MUST continue to treat what it already holds as valid and MUST NOT discard it.
+
+**A partial read is not a read.** A consumer MUST reject a malformed or truncated payload whole. It MUST NOT apply the part it could parse, and MUST retain the last payload it read successfully.
+
+A consumer MAY retry a transient failure and SHOULD back off between attempts. It MUST NOT retry in a way that amounts to polling for a state change, because the thread is what carries a change and polling a payload discloses the consumer's interest without learning anything sooner.
+
+The obligation runs the other way as well. An originator MUST keep a payload reachable for as long as its offer is live, and MUST NOT rely on a counterparty having cached it. Because a negotiation is a record rather than a notification, an originator SHOULD keep it reachable after the offer concludes.
 
 ## Section 2.3: Offer Identity
 
@@ -835,6 +852,9 @@ RESO will validate the following during certification:
 
 **Confidentiality**
 * Every payload link the candidate publishes MUST refuse an unauthenticated dereference ([Section 2.11](#section-211-authentication-and-authorization)).
+* Where a payload dereference fails, the candidate MUST leave the offer's state unchanged. A candidate that records a withdrawal, rejection, expiry or acceptance in response to a timeout, a `5xx` or a `404` fails ([Section 2.2](#section-22-activitypub-usage)).
+* The candidate MUST reject a malformed or truncated payload whole, and MUST still hold the last payload it read successfully ([Section 2.2](#section-22-activitypub-usage)).
+* Every payload the candidate has served MUST remain reachable for as long as its offer is live ([Section 2.2](#section-22-activitypub-usage)).
 * The candidate MUST determine a requester's identifier from the presented token and MUST NOT infer it from a value carried in the request ([Section 2.11](#section-211-authentication-and-authorization)).
 * The candidate MUST NOT accept another participant's assertion that a requester is entitled to an offer in place of its own determination ([Section 2.11](#section-211-authentication-and-authorization)).
 * The candidate MUST refuse to serve offer content to a requester outside the parties to that offer ([Section 2.11](#section-211-authentication-and-authorization)).
