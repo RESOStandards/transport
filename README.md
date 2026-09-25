@@ -69,6 +69,7 @@ In progress proposals are ones that are in review by Transport and Certification
 | [**RCP-51**](https://github.com/RESOStandards/transport/pull/157) | **DOM Increment** | **1.0.0** | **May 2025** |
 | [**RCP-52**](https://github.com/RESOStandards/transport/discussions/162) | **Listing Advertisement** | **1.0.0** | **May 2025** |
 | [**RCP-54**](https://github.com/RESOStandards/transport/blob/221-uli-resolution-protocol/proposals/uli-resolution-protocol.md) | **ULI Resolution Protocol** | **0.1.0** | **June 2026** |
+| [**RCP-57**](https://github.com/RESOStandards/transport/blob/rcp-57-offer-management/proposals/offer-management.md) | **Offer Management** | **1.0.0** | **Sept 2026** |
 
 ---
 
