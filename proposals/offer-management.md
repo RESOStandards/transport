@@ -95,7 +95,7 @@ This specification gives an offer a standard shape and a standard set of states,
 * a listing agent can compare offers from different sources side by side without rekeying them;
 * a counter offer is a new statement in a thread rather than an edit that destroys what came before;
 * the status of an offer is machine-readable on both sides, so that neither party has to telephone to ask;
-* the parties to an offer, and only those parties, can read its contents; and
+* the parties to an offer, and only those parties, can read its contents;
 * the exchange is platform agnostic, so that a party sees every offer regardless of which product or platform each one came from; and
 * every participating organization holds a Unique Organization Identifier, so that it can issue its own local identifiers without collision.
 
