@@ -1,0 +1,39 @@
+{
+  "name": "@reso-standards/reso-offers",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "RCP-57 Offer Management reference implementation over ActivityPub.",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "tsc --noEmit -p tsconfig.test.json",
+    "test:report": "vitest run --reporter=json --outputFile=test-results.json",
+    "log": "npm run test:report; npm run build && node dist/write-log.js",
+    "gen:scenarios": "tsc && node dist/gen-scenarios.js"
+  },
+  "dependencies": {
+    "@fedify/fedify": "2.3.8",
+    "@js-temporal/polyfill": "0.5.1"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.2",
+    "typescript": "^5.7.0",
+    "vitest": "^4.1.9"
+  },
+  "overrides": {
+    "@opentelemetry/core": ">=2.8.0 <3"
+  }
+}

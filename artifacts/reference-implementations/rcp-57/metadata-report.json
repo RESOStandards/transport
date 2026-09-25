@@ -1,0 +1,954 @@
+{
+  "description": "RCP-57 Offer Management, generated from the specification",
+  "generatedOn": "2026-09-24",
+  "resources": [
+    {
+      "resourceName": "Offer"
+    },
+    {
+      "resourceName": "OfferSubmission"
+    },
+    {
+      "resourceName": "OfferPropertyGroup"
+    }
+  ],
+  "fields": [
+    {
+      "resourceName": "Offer",
+      "fieldName": "OfferKey",
+      "type": "Edm.String",
+      "isEnumeration": false,
+      "nullable": false,
+      "maxLength": 255,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/Offer/OfferKey/"
+        }
+      ]
+    },
+    {
+      "resourceName": "Offer",
+      "fieldName": "OfferId",
+      "type": "Edm.String",
+      "isEnumeration": false,
+      "nullable": false,
+      "maxLength": 255,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/Offer/OfferId/"
+        }
+      ]
+    },
+    {
+      "resourceName": "Offer",
+      "fieldName": "ListingId",
+      "type": "Edm.String",
+      "isEnumeration": false,
+      "nullable": true,
+      "maxLength": 255,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/Offer/ListingId/"
+        }
+      ]
+    },
+    {
+      "resourceName": "Offer",
+      "fieldName": "ListingKey",
+      "type": "Edm.String",
+      "isEnumeration": false,
+      "nullable": true,
+      "maxLength": 255,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/Offer/ListingKey/"
+        }
+      ]
+    },
+    {
+      "resourceName": "Offer",
+      "fieldName": "OfferNotes",
+      "type": "Edm.String",
+      "isEnumeration": false,
+      "nullable": true,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/Offer/OfferNotes/"
+        }
+      ]
+    },
+    {
+      "resourceName": "Offer",
+      "fieldName": "OfferOriginatingSystemId",
+      "type": "Edm.String",
+      "isEnumeration": false,
+      "nullable": true,
+      "maxLength": 255,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/Offer/OfferOriginatingSystemId/"
+        }
+      ]
+    },
+    {
+      "resourceName": "Offer",
+      "fieldName": "OfferOriginatingSystemName",
+      "type": "Edm.String",
+      "isEnumeration": false,
+      "nullable": true,
+      "maxLength": 255,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/Offer/OfferOriginatingSystemName/"
+        }
+      ]
+    },
+    {
+      "resourceName": "Offer",
+      "fieldName": "OfferSourceSystemId",
+      "type": "Edm.String",
+      "isEnumeration": false,
+      "nullable": true,
+      "maxLength": 255,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/Offer/OfferSourceSystemId/"
+        }
+      ]
+    },
+    {
+      "resourceName": "Offer",
+      "fieldName": "OfferSourceSystemName",
+      "type": "Edm.String",
+      "isEnumeration": false,
+      "nullable": true,
+      "maxLength": 255,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/Offer/OfferSourceSystemName/"
+        }
+      ]
+    },
+    {
+      "resourceName": "Offer",
+      "fieldName": "OfferUoi",
+      "type": "Edm.String",
+      "isEnumeration": false,
+      "nullable": true,
+      "maxLength": 25,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/Offer/OfferUoi/"
+        }
+      ]
+    },
+    {
+      "resourceName": "Offer",
+      "fieldName": "OfferUsi",
+      "type": "Edm.String",
+      "isEnumeration": false,
+      "nullable": true,
+      "maxLength": 25,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/Offer/OfferUsi/"
+        }
+      ]
+    },
+    {
+      "resourceName": "Offer",
+      "fieldName": "ModificationTimestamp",
+      "type": "Edm.DateTimeOffset",
+      "isEnumeration": false,
+      "nullable": false,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/Offer/ModificationTimestamp/"
+        }
+      ]
+    },
+    {
+      "resourceName": "Offer",
+      "fieldName": "Submissions",
+      "type": "org.reso.metadata.OfferSubmission",
+      "isEnumeration": false,
+      "isCollection": true,
+      "sourceResource": "OfferSubmission",
+      "nullable": true,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/Offer/Submissions/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferSubmission",
+      "fieldName": "OfferSubmissionKey",
+      "type": "Edm.String",
+      "isEnumeration": false,
+      "nullable": false,
+      "maxLength": 255,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferSubmission/OfferSubmissionKey/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferSubmission",
+      "fieldName": "OfferId",
+      "type": "Edm.String",
+      "isEnumeration": false,
+      "nullable": false,
+      "maxLength": 255,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferSubmission/OfferId/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferSubmission",
+      "fieldName": "OfferAgentId",
+      "type": "Edm.String",
+      "isEnumeration": false,
+      "nullable": true,
+      "maxLength": 255,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferSubmission/OfferAgentId/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferSubmission",
+      "fieldName": "OfferAgentKey",
+      "type": "Edm.String",
+      "isEnumeration": false,
+      "nullable": true,
+      "maxLength": 255,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferSubmission/OfferAgentKey/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferSubmission",
+      "fieldName": "OfferBuyerLegalName",
+      "type": "Edm.String",
+      "isEnumeration": false,
+      "nullable": true,
+      "maxLength": 255,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferSubmission/OfferBuyerLegalName/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferSubmission",
+      "fieldName": "OfferBuyerLegalAddress",
+      "type": "Edm.String",
+      "isEnumeration": false,
+      "nullable": true,
+      "maxLength": 255,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferSubmission/OfferBuyerLegalAddress/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferSubmission",
+      "fieldName": "OfferBuyerPhone",
+      "type": "Edm.String",
+      "isEnumeration": false,
+      "nullable": true,
+      "maxLength": 50,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferSubmission/OfferBuyerPhone/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferSubmission",
+      "fieldName": "OfferCoBuyerLegalName",
+      "type": "Edm.String",
+      "isEnumeration": false,
+      "nullable": true,
+      "maxLength": 255,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferSubmission/OfferCoBuyerLegalName/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferSubmission",
+      "fieldName": "OfferCoBuyerLegalAddress",
+      "type": "Edm.String",
+      "isEnumeration": false,
+      "nullable": true,
+      "maxLength": 255,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferSubmission/OfferCoBuyerLegalAddress/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferSubmission",
+      "fieldName": "OfferCoBuyerPhone",
+      "type": "Edm.String",
+      "isEnumeration": false,
+      "nullable": true,
+      "maxLength": 50,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferSubmission/OfferCoBuyerPhone/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferSubmission",
+      "fieldName": "PurchasePrice",
+      "type": "Edm.Int64",
+      "isEnumeration": false,
+      "nullable": true,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferSubmission/PurchasePrice/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferSubmission",
+      "fieldName": "CreditAtClosing",
+      "type": "Edm.Int64",
+      "isEnumeration": false,
+      "nullable": true,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferSubmission/CreditAtClosing/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferSubmission",
+      "fieldName": "EarnestMoney",
+      "type": "Edm.Int64",
+      "isEnumeration": false,
+      "nullable": true,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferSubmission/EarnestMoney/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferSubmission",
+      "fieldName": "RequestedClosingDate",
+      "type": "Edm.Date",
+      "isEnumeration": false,
+      "nullable": true,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferSubmission/RequestedClosingDate/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferSubmission",
+      "fieldName": "BuyerFinancing",
+      "type": "org.reso.metadata.enums.BuyerFinancing",
+      "isEnumeration": true,
+      "isCollection": true,
+      "nullable": true,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferSubmission/BuyerFinancing/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferSubmission",
+      "fieldName": "WaiverOfInspection",
+      "type": "Edm.Boolean",
+      "isEnumeration": false,
+      "nullable": true,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferSubmission/WaiverOfInspection/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferSubmission",
+      "fieldName": "Contingency",
+      "type": "Edm.String",
+      "isEnumeration": false,
+      "nullable": true,
+      "maxLength": 1024,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferSubmission/Contingency/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferSubmission",
+      "fieldName": "AsIsCondition",
+      "type": "Edm.Boolean",
+      "isEnumeration": false,
+      "nullable": true,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferSubmission/AsIsCondition/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferSubmission",
+      "fieldName": "EscalationClause",
+      "type": "Edm.Boolean",
+      "isEnumeration": false,
+      "nullable": true,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferSubmission/EscalationClause/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferSubmission",
+      "fieldName": "Concessions",
+      "type": "org.reso.metadata.enums.Concessions",
+      "isEnumeration": true,
+      "isCollection": false,
+      "nullable": true,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferSubmission/Concessions/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferSubmission",
+      "fieldName": "OfferExpirationDate",
+      "type": "Edm.Date",
+      "isEnumeration": false,
+      "nullable": true,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferSubmission/OfferExpirationDate/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferSubmission",
+      "fieldName": "OfferInspectionDate",
+      "type": "Edm.Date",
+      "isEnumeration": false,
+      "nullable": true,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferSubmission/OfferInspectionDate/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferSubmission",
+      "fieldName": "OfferAppraisalDate",
+      "type": "Edm.Date",
+      "isEnumeration": false,
+      "nullable": true,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferSubmission/OfferAppraisalDate/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferSubmission",
+      "fieldName": "OfferEscrowCompany",
+      "type": "Edm.String",
+      "isEnumeration": false,
+      "nullable": true,
+      "maxLength": 255,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferSubmission/OfferEscrowCompany/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferSubmission",
+      "fieldName": "BuyerBrokerageCompensation",
+      "type": "Edm.String",
+      "isEnumeration": false,
+      "nullable": true,
+      "maxLength": 25,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferSubmission/BuyerBrokerageCompensation/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferSubmission",
+      "fieldName": "OfferSubmissionNotes",
+      "type": "Edm.String",
+      "isEnumeration": false,
+      "nullable": true,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferSubmission/OfferSubmissionNotes/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferSubmission",
+      "fieldName": "OfferSubmissionStatus",
+      "type": "org.reso.metadata.enums.OfferSubmissionStatus",
+      "isEnumeration": true,
+      "isCollection": false,
+      "nullable": true,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferSubmission/OfferSubmissionStatus/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferSubmission",
+      "fieldName": "OfferReceivedStatus",
+      "type": "org.reso.metadata.enums.OfferReceivedStatus",
+      "isEnumeration": true,
+      "isCollection": false,
+      "nullable": true,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferSubmission/OfferReceivedStatus/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferSubmission",
+      "fieldName": "OfferSubmissionSequence",
+      "type": "Edm.Int64",
+      "isEnumeration": false,
+      "nullable": false,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferSubmission/OfferSubmissionSequence/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferSubmission",
+      "fieldName": "OfferPropertyGroupKey",
+      "type": "Edm.String",
+      "isEnumeration": false,
+      "nullable": false,
+      "maxLength": 255,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferSubmission/OfferPropertyGroupKey/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferSubmission",
+      "fieldName": "OfferSubmissionTimestamp",
+      "type": "Edm.DateTimeOffset",
+      "isEnumeration": false,
+      "nullable": true,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferSubmission/OfferSubmissionTimestamp/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferSubmission",
+      "fieldName": "CounterOfferSubmissionTimestamp",
+      "type": "Edm.DateTimeOffset",
+      "isEnumeration": false,
+      "nullable": true,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferSubmission/CounterOfferSubmissionTimestamp/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferSubmission",
+      "fieldName": "OfferAcceptedTimestamp",
+      "type": "Edm.DateTimeOffset",
+      "isEnumeration": false,
+      "nullable": true,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferSubmission/OfferAcceptedTimestamp/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferSubmission",
+      "fieldName": "ModificationTimestamp",
+      "type": "Edm.DateTimeOffset",
+      "isEnumeration": false,
+      "nullable": false,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferSubmission/ModificationTimestamp/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferSubmission",
+      "fieldName": "PropertyGroup",
+      "type": "org.reso.metadata.OfferPropertyGroup",
+      "isEnumeration": false,
+      "isCollection": false,
+      "sourceResource": "OfferPropertyGroup",
+      "nullable": true,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferSubmission/PropertyGroup/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferPropertyGroup",
+      "fieldName": "OfferPropertyGroupKey",
+      "type": "Edm.String",
+      "isEnumeration": false,
+      "nullable": false,
+      "maxLength": 255,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferPropertyGroup/OfferPropertyGroupKey/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferPropertyGroup",
+      "fieldName": "ListingId",
+      "type": "Edm.String",
+      "isEnumeration": false,
+      "nullable": true,
+      "maxLength": 255,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferPropertyGroup/ListingId/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferPropertyGroup",
+      "fieldName": "StreetNumber",
+      "type": "Edm.String",
+      "isEnumeration": false,
+      "nullable": true,
+      "maxLength": 25,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferPropertyGroup/StreetNumber/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferPropertyGroup",
+      "fieldName": "StreetName",
+      "type": "Edm.String",
+      "isEnumeration": false,
+      "nullable": true,
+      "maxLength": 50,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferPropertyGroup/StreetName/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferPropertyGroup",
+      "fieldName": "City",
+      "type": "org.reso.metadata.enums.City",
+      "isEnumeration": true,
+      "isCollection": false,
+      "nullable": true,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferPropertyGroup/City/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferPropertyGroup",
+      "fieldName": "StateOrProvince",
+      "type": "org.reso.metadata.enums.StateOrProvince",
+      "isEnumeration": true,
+      "isCollection": false,
+      "nullable": true,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferPropertyGroup/StateOrProvince/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferPropertyGroup",
+      "fieldName": "PostalCode",
+      "type": "Edm.String",
+      "isEnumeration": false,
+      "nullable": true,
+      "maxLength": 10,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferPropertyGroup/PostalCode/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferPropertyGroup",
+      "fieldName": "CountyOrParish",
+      "type": "org.reso.metadata.enums.CountyOrParish",
+      "isEnumeration": true,
+      "isCollection": false,
+      "nullable": true,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferPropertyGroup/CountyOrParish/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferPropertyGroup",
+      "fieldName": "Country",
+      "type": "org.reso.metadata.enums.Country",
+      "isEnumeration": true,
+      "isCollection": false,
+      "nullable": true,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferPropertyGroup/Country/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferPropertyGroup",
+      "fieldName": "ParcelNumber",
+      "type": "Edm.String",
+      "isEnumeration": false,
+      "nullable": true,
+      "maxLength": 50,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferPropertyGroup/ParcelNumber/"
+        }
+      ]
+    },
+    {
+      "resourceName": "OfferPropertyGroup",
+      "fieldName": "UniversalPropertyId",
+      "type": "Edm.String",
+      "isEnumeration": false,
+      "nullable": true,
+      "maxLength": 128,
+      "annotations": [
+        {
+          "term": "RESO.DDWikiUrl",
+          "value": "https://dd.reso.org/RCP-57/OfferPropertyGroup/UniversalPropertyId/"
+        }
+      ]
+    }
+  ],
+  "lookups": [
+    {
+      "lookupName": "org.reso.metadata.enums.OfferSubmissionStatus",
+      "lookupValue": "Submitted",
+      "type": "org.reso.metadata.enums.OfferSubmissionStatus"
+    },
+    {
+      "lookupName": "org.reso.metadata.enums.OfferSubmissionStatus",
+      "lookupValue": "Delivered",
+      "type": "org.reso.metadata.enums.OfferSubmissionStatus"
+    },
+    {
+      "lookupName": "org.reso.metadata.enums.OfferSubmissionStatus",
+      "lookupValue": "Received",
+      "type": "org.reso.metadata.enums.OfferSubmissionStatus"
+    },
+    {
+      "lookupName": "org.reso.metadata.enums.OfferSubmissionStatus",
+      "lookupValue": "Acknowledged",
+      "type": "org.reso.metadata.enums.OfferSubmissionStatus"
+    },
+    {
+      "lookupName": "org.reso.metadata.enums.OfferSubmissionStatus",
+      "lookupValue": "Countered",
+      "type": "org.reso.metadata.enums.OfferSubmissionStatus"
+    },
+    {
+      "lookupName": "org.reso.metadata.enums.OfferSubmissionStatus",
+      "lookupValue": "Accepted",
+      "type": "org.reso.metadata.enums.OfferSubmissionStatus"
+    },
+    {
+      "lookupName": "org.reso.metadata.enums.OfferSubmissionStatus",
+      "lookupValue": "Rejected",
+      "type": "org.reso.metadata.enums.OfferSubmissionStatus"
+    },
+    {
+      "lookupName": "org.reso.metadata.enums.OfferSubmissionStatus",
+      "lookupValue": "Withdrawn",
+      "type": "org.reso.metadata.enums.OfferSubmissionStatus"
+    },
+    {
+      "lookupName": "org.reso.metadata.enums.OfferSubmissionStatus",
+      "lookupValue": "Expired",
+      "type": "org.reso.metadata.enums.OfferSubmissionStatus"
+    },
+    {
+      "lookupName": "org.reso.metadata.enums.OfferSubmissionStatus",
+      "lookupValue": "RequestHighestAndBest",
+      "type": "org.reso.metadata.enums.OfferSubmissionStatus"
+    },
+    {
+      "lookupName": "org.reso.metadata.enums.OfferSubmissionStatus",
+      "lookupValue": "ScheduledToPresent",
+      "type": "org.reso.metadata.enums.OfferSubmissionStatus"
+    },
+    {
+      "lookupName": "org.reso.metadata.enums.OfferSubmissionStatus",
+      "lookupValue": "Finalized",
+      "type": "org.reso.metadata.enums.OfferSubmissionStatus"
+    },
+    {
+      "lookupName": "org.reso.metadata.enums.OfferSubmissionStatus",
+      "lookupValue": "Archived",
+      "type": "org.reso.metadata.enums.OfferSubmissionStatus"
+    },
+    {
+      "lookupName": "org.reso.metadata.enums.OfferReceivedStatus",
+      "lookupValue": "Submitted",
+      "type": "org.reso.metadata.enums.OfferReceivedStatus"
+    },
+    {
+      "lookupName": "org.reso.metadata.enums.OfferReceivedStatus",
+      "lookupValue": "Delivered",
+      "type": "org.reso.metadata.enums.OfferReceivedStatus"
+    },
+    {
+      "lookupName": "org.reso.metadata.enums.OfferReceivedStatus",
+      "lookupValue": "Received",
+      "type": "org.reso.metadata.enums.OfferReceivedStatus"
+    },
+    {
+      "lookupName": "org.reso.metadata.enums.OfferReceivedStatus",
+      "lookupValue": "Acknowledged",
+      "type": "org.reso.metadata.enums.OfferReceivedStatus"
+    },
+    {
+      "lookupName": "org.reso.metadata.enums.OfferReceivedStatus",
+      "lookupValue": "Countered",
+      "type": "org.reso.metadata.enums.OfferReceivedStatus"
+    },
+    {
+      "lookupName": "org.reso.metadata.enums.OfferReceivedStatus",
+      "lookupValue": "Accepted",
+      "type": "org.reso.metadata.enums.OfferReceivedStatus"
+    },
+    {
+      "lookupName": "org.reso.metadata.enums.OfferReceivedStatus",
+      "lookupValue": "Rejected",
+      "type": "org.reso.metadata.enums.OfferReceivedStatus"
+    },
+    {
+      "lookupName": "org.reso.metadata.enums.OfferReceivedStatus",
+      "lookupValue": "Withdrawn",
+      "type": "org.reso.metadata.enums.OfferReceivedStatus"
+    },
+    {
+      "lookupName": "org.reso.metadata.enums.OfferReceivedStatus",
+      "lookupValue": "Expired",
+      "type": "org.reso.metadata.enums.OfferReceivedStatus"
+    },
+    {
+      "lookupName": "org.reso.metadata.enums.OfferReceivedStatus",
+      "lookupValue": "RequestHighestAndBest",
+      "type": "org.reso.metadata.enums.OfferReceivedStatus"
+    },
+    {
+      "lookupName": "org.reso.metadata.enums.OfferReceivedStatus",
+      "lookupValue": "Finalized",
+      "type": "org.reso.metadata.enums.OfferReceivedStatus"
+    },
+    {
+      "lookupName": "org.reso.metadata.enums.OfferReceivedStatus",
+      "lookupValue": "Archived",
+      "type": "org.reso.metadata.enums.OfferReceivedStatus"
+    }
+  ]
+}

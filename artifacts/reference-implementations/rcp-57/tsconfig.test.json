@@ -1,0 +1,9 @@
+{
+  "//": "Typecheck only. The build config has rootDir src, so it cannot also contain tests; without this the seven test files sat outside every type gate in the project.",
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "rootDir": "."
+  },
+  "include": ["src/**/*", "tests/**/*"]
+}
