@@ -89,7 +89,7 @@ An offer is **confidential**. It carries the legal name, address and telephone n
 
 # Section 1: Purpose
 
-This specification has one aim. Make a standardized conversation with a standardized payload easy to hold, reusing the ecosystem that already exists, and reveal nothing to anyone the participants have not chosen to reveal it to.
+This specification has one aim. Make a standardized conversation with a standardized payload easy to use, reusing the ecosystem that already exists, and reveal nothing to anyone the participants have not chosen to reveal it to.
 
 Each part of that has a mechanism. The conversation is standard Activity Streams, so a turn stays legible to a general ActivityPub client and no offer-specific vocabulary is invented ([Section 2.8](#section-28-activity-streams-mapping), [Section 2.9](#section-29-counter-offers)). The payload is RESO Common Format, so an offer carries the same elements whoever sent it ([Section 2.2](#section-22-activitypub-usage)). The ecosystem is the one already in place rather than a parallel one. An offer replies into the listing thread that exists, the elements come from the Data Dictionary wherever one already says the thing, and an event feed stays complementary rather than required.
 
