@@ -493,7 +493,7 @@ Where an implementation supports [Web API Add/Edit](https://github.com/RESOStand
 
 ## Section 2.11: Authentication and Authorization
 
-### Two boundaries
+### Two Boundaries
 
 Access is decided at two points, and they are independent.
 
@@ -544,7 +544,7 @@ A refusal distinguishes the two decisions, so that a caller can tell a credentia
 
 An implementation MUST NOT answer `404` where the offer exists and the requester is simply not a party to it, and MUST NOT answer `403` in a way that confirms an offer exists to a requester with no entitlement to know. Where the distinction itself would disclose something, `404` is the safer answer and is permitted.
 
-### Withholding fields
+### Withholding Fields
 
 The buyer and co-buyer fields of [Section 2.5](#section-25-the-offersubmission-resource) are the most sensitive elements this specification defines. An implementation MAY omit them from a payload served to a party that does not require them, and a consumer MUST NOT treat their absence as an error.
 
@@ -923,7 +923,7 @@ Please see the following references for more information regarding topics covere
 
 # Section 6: Appendices
 
-## Proposed Data Dictionary elements
+## Proposed Data Dictionary Elements
 
 This proposal introduces three resources and two lookups. They are defined in [Section 2.4](#section-24-the-offer-resource) through [Section 2.7](#section-27-offer-states) rather than repeated here.
 
@@ -1058,7 +1058,7 @@ And advertised publicly:
 
 One member differs. Everything else about the activity, and everything about the payload behind `url`, is identical.
 
-### What changes
+### What Changes
 
 | | Addressed to named parties | Advertised publicly |
 | :--- | :--- | :--- |
@@ -1068,7 +1068,7 @@ One member differs. Everything else about the activity, and everything about the
 | Reaching the thread | Requires authorization to the network | No authorization required |
 | Discoverable by a crawler or aggregator | No | Yes |
 
-### What does not change
+### What Does Not Change
 
 | | Both models |
 | :--- | :--- |
@@ -1080,7 +1080,7 @@ One member differs. Everything else about the activity, and everything about the
 | Append-only submissions | [Section 2.9](#section-29-counter-offers) |
 | Every certification check on offer content | [Section 3](#section-3-certification) |
 
-### The consequence worth weighing
+### The Consequence Worth Weighing
 
 Public advertising discloses the **metadata of the negotiation** while protecting its **contents**. An observer learns that this actor made an offer on this listing at this time, that a counter followed an hour later, and that the thread went quiet after a third activity. The terms stay behind the token throughout.
 
@@ -1096,7 +1096,7 @@ This work did not start on its own. Offer exchange was first described in the [R
 
 Two things follow. The thread primitives an offer depends on are stated in [Section 2.2](#section-22-activitypub-usage) rather than cited, so this specification is readable and implementable by itself. And where the two documents differ on offers, this one governs.
 
-## Design rationale
+## Design Rationale
 
 **Why ActivityPub rather than the Web API or an event feed.** An offer is a conversation with turns from both sides, and the transport has to carry that shape.
 
