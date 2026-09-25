@@ -171,9 +171,17 @@ An offer that identifies no listing cannot be routed to a listing agent, so an `
 
 An `Offer` therefore carries a **coordinate** rather than a single identifier: a listing identifier, plus the organization or system that issued it. An `Offer` MUST carry `ListingId` or `ListingKey`, and MUST carry at least one of `OfferUoi`, `OfferOriginatingSystemName` or `OfferOriginatingSystemId`. More of them narrow the coordinate further, and `OfferUsi` narrows it to the system a listing was input on rather than to the organization alone.
 
+The three are permitted but not equivalent. `OfferUoi` is an identifier and the other two are not: a name varies in spelling, changes when an organization rebrands or merges, and nothing obliges two parties to write it the same way. A coordinate qualified only by an originating system name prevents most accidental collisions and guarantees nothing, so it is the weakest form this specification allows. Carry `OfferUoi` wherever it can be determined.
+
+**This narrows at Data Dictionary 3.0.** The expectation is that an `Offer` will then MUST carry `OfferUoi`, and MAY carry `OfferOriginatingSystemName` and `OfferOriginatingSystemId` alongside it. The legacy pair is expected to be deprecated at that point in the sense RESO versioning gives the term: removed from the specification while providers may continue to use them. It is not a forced deprecation, which would be a major change on its own terms.
+
+This is said here as a warning rather than as a footnote. An implementer starting now should build on `OfferUoi` and treat the originating system name and identifier as values it accepts from others rather than as the foundation of its own records. Building on the legacy pair means building on something expected to be deprecated.
+
 `OfferUoi` and `OfferOriginatingSystemId` overlap deliberately. The Data Dictionary defines an originating system identifier as holding an organization identifier, so the element is named for a system and carries an organization, and it cannot express the system within that organization at all. `OfferUoi` names the organization explicitly and `OfferUsi` adds the system, which the legacy pair never distinguished.
 
 RESO is transitioning to Unique Organization Identifiers through [Organization and System Identifiers (RCP-55)](https://github.com/RESOStandards/transport/pull/243). The expected path is that the Data Dictionary carries them in a minor version, and that Data Dictionary 3.0 requires a Unique Organization Identifier in certification where a provider would otherwise supply only an originating system name or identifier.
+
+A provider therefore needs both for a time: the organization identifier going forward, and the originating system name or identifier while that is what a counterparty has. `OfferOriginatingSystemName` and `OfferOriginatingSystemId` are added to this proposal in full knowledge that they are intended to be deprecated, because a listing today commonly carries nothing else.
 
 An implementation new to offer exchange SHOULD support `OfferUoi` and `OfferUsi` from the outset. There is no legacy to preserve in a system that has not exchanged offers before, and starting on the identifier the standard is moving to avoids a migration later. A provider whose only available value today is an originating system name or identifier remains conformant and SHOULD continue to populate it. Where RCP-55 ratifies first, these fields adopt its definitions rather than restating them.
 
@@ -185,7 +193,9 @@ This is what makes the coordinate work in practice rather than in principle. A l
 
 The coordinate members describe the listing, so they carry whatever the originating system published. A participant is required to hold an organization identifier ([Section 2.1](#section-21-participation-and-confidentiality)); a listing is not, because a listing is not a party to anything and the system that published it may predate the transition entirely.
 
-Holding an organization identifier does not mean every counterparty supplies one. A participant will receive coordinates from organizations that have not populated theirs, and an implementation MUST accept a coordinate whose organization member is an originating system name or identifier. It MUST NOT reject an offer on the ground that the counterparty supplied a name where an organization identifier was available.
+Holding an organization identifier does not mean every counterparty supplies one. A participant will receive coordinates from organizations that have not populated theirs, and an implementation MUST accept a coordinate whose organization member is an originating system name or identifier. It MUST NOT reject an offer on that ground.
+
+Where a participant can determine the organization identifier for a listing it received qualified only by a name, for example by resolving the name against the registry, it SHOULD record the identifier alongside what it was given. That is what makes the narrowing at Data Dictionary 3.0 reachable rather than abrupt.
 
 Note that holding an identifier and publishing one are different things. Most organizations are in the registry, while a smaller share carry an organization identifier in the data they publish, so the name is often the only value a counterparty has to hand.
 
@@ -663,6 +673,7 @@ Please see the following references for more information regarding topics covere
 * [RESO Web API Add/Edit](https://github.com/RESOStandards/transport/blob/main/proposals/web-api-add-edit.md)
 * [RESO Universal Property Identifier](https://upi.reso.org/)
 * [RESO Organizations registry](https://services.reso.org/orgs)
+* [RESO Versioning](https://github.com/RESOStandards/transport/blob/main/versioning.md)
 * [DocumentStatus, RESO Data Dictionary](https://dd.reso.org/DD2.0/Property/DocumentStatus/)
 
 <br /><br />
@@ -728,11 +739,12 @@ These counts describe listing data as MLSs publish it. They do not describe what
 
 `Country` is the weakest component, present in 41.7% of markets and thinly populated where present, so it is defaulted rather than required.
 
-This proposal deprecates no element.
+This proposal deprecates no existing element. It introduces two whose disposition is already expected: `OfferOriginatingSystemName` and `OfferOriginatingSystemId` carry what a listing commonly holds today and are intended for deprecation at Data Dictionary 3.0, in the sense RESO versioning gives the term, where a deprecated element is removed from the specification and providers may continue to use it ([Section 2.4](#section-24-the-offer-resource)).
 
-| Resource | Deprecated Field | Replaced by | Note |
+| Resource | Field | Expected disposition | Note |
 | :--- | :--- | :--- | :--- |
-| None | | | |
+| Offer | OfferOriginatingSystemName | Deprecated at Data Dictionary 3.0 | Providers may continue to use it. Added because a name is often all a listing carries today. |
+| Offer | OfferOriginatingSystemId | Deprecated at Data Dictionary 3.0 | As above. |
 
 ## Design rationale
 
