@@ -47,13 +47,15 @@ This End User License Agreement (the "EULA") is entered into by and between the 
 - [Section 4: Contributors](#section-4-contributors)
 - [Section 5: References](#section-5-references)
 - [Section 6: Appendices](#section-6-appendices)
+  - [Open Questions](#open-questions)
+  - [Adoption of the Reused Elements](#adoption-of-the-reused-elements)
 - [Section 7: License](#section-7-license)
 
 <br /><br />
 
 # Summary of Changes
 
-* Moves offer handling out of the [RESO Listing Advertisement](https://github.com/RESOStandards/transport/discussions/162) proposal into its own endorsement. The workgroups approved the separation and Interoperability has cleared it.
+* Moves offer handling out of the [RESO Listing Advertisement](https://github.com/RESOStandards/transport/discussions/162) proposal into its own endorsement. The Transport ActivityPub Subgroup directed the work to Interoperability in August 2025 and discussed a lightweight offer management specification in September 2025; Interoperability reported the specification back to the subgroup in October 2025 and voted in September 2026 to send its data elements to the Data Dictionary Workgroup.
 * Introduces three Data Dictionary resources: `Offer`, `OfferSubmission` and `OfferPropertyGroup`, defined in [Section 2.4](#section-24-the-offer-resource) through [Section 2.6](#section-26-the-offerpropertygroup-resource).
 * Introduces two lookups, `OfferSubmissionStatus` and `OfferReceivedStatus`, defined in [Section 2.7](#section-27-offer-states).
 * Binds two kinds of implementer with one model: systems serving the resources over OData on the Web API, and systems exchanging offers over ActivityPub through offer management hubs.
@@ -83,7 +85,8 @@ This specification gives an offer a standard shape and a standard set of states,
 * a listing agent can compare offers from different sources side by side without rekeying them;
 * a counter offer is a new statement in a thread rather than an edit that destroys what came before;
 * the status of an offer is machine-readable on both sides, so that neither party has to telephone to ask; and
-* the parties to an offer, and only those parties, can read its contents.
+* the parties to an offer, and only those parties, can read its contents; and
+* the exchange is platform agnostic, so that a party sees every offer regardless of which product or platform each one came from.
 
 The offer is the unit of scope. What happens after acceptance – the executed contract, escrow and title, contingency management, closing and archive – is transaction management, and is addressed separately. This specification may be referenced from that work but does not attempt it.
 
@@ -95,7 +98,11 @@ The offer is the unit of scope. What happens after acceptance – the executed c
 
 An offer is exchanged between named parties. Unlike a listing, an offer is not published to a network and is not discoverable. Participation is by being addressed: the buyer side addresses the listing side, and the listing side replies.
 
-Implementations MUST NOT publish offer content to a public audience. An activity conveying an offer or a change to one MUST be addressed to the specific parties entitled to see it, and MUST NOT use the public collection `https://www.w3.org/ns/activitystreams#Public`.
+Offers are **private by design**. An activity conveying an offer or a change to one MUST be addressed to the specific parties entitled to see it, and SHOULD NOT use the public collection `https://www.w3.org/ns/activitystreams#Public`.
+
+A public thread is a permitted alternative for a provider that wants one, under one condition: the activity MUST carry **no offer information whatsoever**. Every element of [Section 2.4](#section-24-the-offer-resource) through [Section 2.6](#section-26-the-offerpropertygroup-resource), and the offer states of [Section 2.7](#section-27-offer-states), MUST be reachable only through the authenticated payload ([Section 2.2](#section-22-activitypub-usage)), whether that payload is served from a RESO Web API or any other endpoint. A public activity therefore announces that something happened and nothing about what it was.
+
+Whether the industry wants the fact of an offer to be public while its contents stay private is an open question ([Section 6, Open Questions](#open-questions)).
 
 The network MUST NOT store offer content. Offer data lives behind the originator's protected link ([Section 2.2](#section-22-activitypub-usage)) and is read only by parties the originator has authorized ([Section 2.11](#section-211-authentication-and-authorization)).
 
@@ -140,11 +147,19 @@ The `Offer` resource is the top-level object. One `Offer` exists for one offer b
 | OfferOriginatingSystemName | String | Yes | 255 | | The name of the system with authoritative control over the listing being offered on. |
 | OfferSourceSystemId | String | Yes | 255 | | The Organization Unique Identifier of the system the listing record was directly received from, which may differ from the originating system. |
 | OfferSourceSystemName | String | Yes | 255 | | The name of the system the listing record was directly received from. |
+| OfferUoi | String | Yes | 25 | | The Unique Organization Identifier of the organization the listing being offered on originated with. |
+| OfferUsi | String | Yes | 25 | | The Unique System Identifier of the system the listing being offered on was input in. |
 | ModificationTimestamp | Timestamp | No | | | The date and time the offer record was last modified. |
 
-An `Offer` MUST carry either `ListingId` or `ListingKey`. An offer that identifies no listing cannot be routed to a listing agent.
+An offer that identifies no listing cannot be routed to a listing agent, so an `Offer` MUST identify one. A listing identifier alone is not sufficient to do that unambiguously.
 
-The four system fields overlap [Organization and System Identifiers (RCP-55)](https://github.com/RESOStandards/transport/pull/243). Where that proposal is ratified first, these fields adopt its definitions rather than restating them.
+`ListingId` is human-friendly, often short and often numeric, and two unrelated organizations can issue the same value. `ListingKey` has the same exposure, since a system numbering its listings from one collides with every other system that does. Neither is globally unique on its own.
+
+An `Offer` therefore carries a **coordinate** rather than a single identifier: a listing identifier, plus the organization or system that issued it. An `Offer` MUST carry `ListingId` or `ListingKey`, and MUST carry at least one of `OfferUoi`, `OfferOriginatingSystemName` or `OfferOriginatingSystemId`. More of them narrow the coordinate further, and `OfferUsi` narrows it to the system a listing was input on rather than to the organization alone.
+
+RESO is transitioning to Unique Organization Identifiers through [Organization and System Identifiers (RCP-55)](https://github.com/RESOStandards/transport/pull/243). `OfferUoi` and `OfferUsi` are the forward-looking members of the coordinate and SHOULD be populated where they are known. The originating-system name and identifier reflect current practice and remain valid. Where RCP-55 ratifies first, these fields adopt its definitions rather than restating them.
+
+The members of a coordinate MAY be hashed together to produce a single opaque value, where a provider does not wish to publish the parts. A party already holding the parts can verify such a value; a party that does not, cannot read them out of it.
 
 ## Section 2.5: The OfferSubmission Resource
 
@@ -182,10 +197,12 @@ An `OfferSubmission` is one turn in the negotiation: an initial offer, a counter
 | OfferReceivedStatus | String List, Single | Yes | | OfferReceivedStatus | The status of the offer as recorded by the receiving side. |
 | OfferSubmissionTimestamp | Timestamp | Yes | | | The date and time the offer was submitted. |
 | CounterOfferSubmissionTimestamp | Timestamp | Yes | | | The date and time a counter offer was submitted. |
-| OfferAcceptanceTimestamp | Timestamp | Yes | | | The date and time the offer was accepted. |
+| OfferAcceptedTimestamp | Timestamp | Yes | | | The date and time the offer was accepted. |
 | ModificationTimestamp | Timestamp | No | | | The date and time the submission was last modified. |
 
 `BuyerFinancing`, `Contingencies` and `BuyerBrokerageCompensation` reuse existing Data Dictionary elements and their lookups rather than introducing offer-specific equivalents. An implementation MUST use the existing standard values.
+
+Some providers do not offer compensation information. `BuyerBrokerageCompensation` is therefore optional, and a consumer MUST NOT treat its absence as an error. Where compensation is not present and a party needs it, it is obtained by contacting the agent or brokerage directly.
 
 Media and documents attached to a submission, including executed contract documents, are carried through the existing `Media` resource and are not duplicated here.
 
@@ -209,7 +226,11 @@ The `OfferPropertyGroup` identifies the subject property of a submission. It exi
 | ParcelNumber | String | Yes | 50 | | The parcel number of the subject property. |
 | UniversalPropertyId | String | Yes | 255 | | The universal property identifier of the subject property. |
 
-Every field of this resource reuses an existing Data Dictionary element. An `OfferPropertyGroup` MUST carry enough to identify the property unambiguously: either `UniversalPropertyId`, or `ParcelNumber` with `StateOrProvince` and `CountyOrParish`, or a complete street address.
+Every field of this resource reuses an existing Data Dictionary element. An `OfferPropertyGroup` MUST carry enough to identify the property: `ParcelNumber` with `StateOrProvince` and `CountyOrParish`, or a complete street address.
+
+`UniversalPropertyId` is an optional additional discriminator. It identifies the property rather than the listing, and a property may carry many listings over time, so it does not replace the listing coordinate of [Section 2.4](#section-24-the-offer-resource). What it does is rule out two listings that could not be the same property, which is where offers most often go wrong across systems.
+
+A universal property identifier composed in the plain form embeds a parcel number. Where a provider does not wish to publish one, the opaque form defined by the RESO universal property identifier work SHOULD be used instead: a party already holding the components can verify it, and a party that does not cannot recover them.
 
 ## Section 2.7: Offer States
 
@@ -283,6 +304,8 @@ An implementation MUST NOT modify a prior submission when a counter is made. The
 In the thread, a counter is an `Offer` posted `inReplyTo` the activity it answers ([Section 2.8](#section-28-activity-streams-mapping)). Re-countering repeats this: each turn replies to the one before it, so the thread is the same sequence the `OfferSubmission` records hold.
 
 ## Section 2.10: Web API Conformance
+
+A system that hosts offer threads on behalf of participants is an **Offer Hub**. The term is used throughout this specification for that role, whether the host is an offer management product, a brokerage or an MLS.
 
 An implementation MAY expose these resources over OData on the RESO Web API without participating in any ActivityPub exchange. Such an implementation MUST satisfy the following, which are the parts of this specification that do not depend on the transport:
 
@@ -492,7 +515,7 @@ The request is addressed to each offering party individually. It MUST NOT be add
 }
 ```
 
-The `object` is the submission being accepted, which in a negotiation that has countered is the most recent counter rather than the original offer. The payload records `OfferAcceptanceTimestamp` and sets the status on both sides.
+The `object` is the submission being accepted, which in a negotiation that has countered is the most recent counter rather than the original offer. The payload records `OfferAcceptedTimestamp` and sets the status on both sides.
 
 Acceptance ends the scope of this specification. What follows is transaction management.
 
@@ -581,7 +604,7 @@ This proposal introduces three resources and two lookups. They are defined in [S
 
 | Resource | Defined in | Fields |
 | :--- | :--- | ---: |
-| Offer | [Section 2.4](#section-24-the-offer-resource) | 10 |
+| Offer | [Section 2.4](#section-24-the-offer-resource) | 12 |
 | OfferSubmission | [Section 2.5](#section-25-the-offersubmission-resource) | 32 |
 | OfferPropertyGroup | [Section 2.6](#section-26-the-offerpropertygroup-resource) | 11 |
 
@@ -591,6 +614,42 @@ This proposal introduces three resources and two lookups. They are defined in [S
 | OfferReceivedStatus | [Section 2.7](#section-27-offer-states) | 12 |
 
 The following existing elements are reused without change: `BuyerFinancing`, `Contingency`, `BuyerBrokerageCompensation`, `StreetNumber`, `StreetName`, `City`, `StateOrProvince`, `PostalCode`, `CountyOrParish`, `Country`, `ParcelNumber`, `UniversalPropertyId`, `ListingId`, `ListingKey` and the `Media` resource.
+
+## Open Questions
+
+These are recorded rather than settled, and are for the workgroups.
+
+**Should the fact of an offer be public?** [Section 2.1](#section-21-participation-and-confidentiality) makes offers private by design and permits a public thread only where the activity carries no offer information at all. Whether the industry wants more than that, for example publishing that a listing has received offers without publishing anything about them, was raised in the ActivityPub Subgroup in August 2025 and has not been decided. There is precedent for wanting it: buyers are commonly notified how many competing offers exist, and a status of this kind has been requested of the Data Dictionary before.
+
+**Should a universal property identifier be required?** [Section 2.6](#section-26-the-offerpropertygroup-resource) makes it optional. Requiring it would strengthen cross-system matching and would exclude providers who cannot compose one.
+
+**Which offer elements should the endorsement require?** Several elements this proposal reuses are sparsely populated in the industry data, but that data is drawn almost entirely from MLSs and offers are not MLS domain. An offer management provider implementing this endorsement would populate them. Requiring a subset is therefore viable and is a question for the workgroup rather than an inference from current adoption.
+
+**What becomes of `OfferIndication` and `OfferRevocation`?** Both appear in earlier working material. An offer indication signals that a signed offer exists, with the property, the irrevocability period and where it was submitted, and has a direct analogue in Canadian practice. A revocation is not a record but an unresolved question about how an offer is unwound and by whom.
+
+## Adoption of the Reused Elements
+
+Element counts below are from the RESO Data Dictionary Industry Aggregates, June 2026, across 424 reporting markets.
+
+**Read the denominator first.** 95.3% of that population is MLSs. For listing identity, address and member elements, which are MLS domain, the counts are meaningful. For offer-specific elements they are not, because an MLS has no reason to carry them, and a low count there is evidence about the population measured rather than about the element.
+
+Meaningful for this proposal:
+
+| Element | Markets | Share |
+| :--- | ---: | ---: |
+| `ListingId` | 419 | 98.8% |
+| `ListingKey` | 416 | 98.1% |
+| `OriginatingSystemName` | 397 | 93.6% |
+| `OriginatingSystemId` | 311 | 73.3% |
+| `StateOrProvince` | 415 | 97.9% |
+| `CountyOrParish` | 394 | 92.9% |
+| `ParcelNumber` | 368 | 86.8% |
+| `Country` | 177 | 41.7% |
+| `UniversalPropertyId` | 90 | 21.2% |
+
+Two consequences. `OriginatingSystemName` is better populated than `OriginatingSystemId`, which is why the coordinate in [Section 2.4](#section-24-the-offer-resource) accepts either. And while only 21.2% publish a universal property identifier, 83.0% already publish the parts needed to compose one, which is why [Section 2.6](#section-26-the-offerpropertygroup-resource) treats it as an optional discriminator rather than a requirement.
+
+`Country` is the weakest component, present in 41.7% of markets and thinly populated where present, so it is defaulted rather than required.
 
 This proposal deprecates no element.
 
