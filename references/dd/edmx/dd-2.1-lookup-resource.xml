@@ -806,9 +806,6 @@
           <PropertyRef Name="EntityEventSequence"/>
         </Key>
         <Property Name="EntityEventSequence" Type="Edm.Int64"/>
-        <Property Name="FeedTypes" Type="Collection(Edm.String)" Nullable="false" MaxLength="100">
-          <Annotation Term="RESO.OData.Metadata.LookupName" String="FeedTypes"/>
-        </Property>
         <Property Name="ResourceName" Type="Edm.String" MaxLength="255"/>
         <Property Name="ResourceRecordKey" Type="Edm.String" MaxLength="255"/>
         <Property Name="ResourceRecordUrl" Type="Edm.String" MaxLength="8000"/>

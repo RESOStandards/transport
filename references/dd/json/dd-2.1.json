@@ -1,7 +1,7 @@
 {
   "description": "RESO Data Dictionary 2.1 Reference Metadata",
   "version": "2.1",
-  "generatedOn": "2026-09-18T15:13:47.000Z",
+  "generatedOn": "2026-10-07T14:55:22.000Z",
   "resources": [
     "Association",
     "Building",
@@ -30049,30 +30049,6 @@
       "maxLength": 64,
       "elementStatus": "Active",
       "payloads": "OM"
-    },
-    {
-      "resourceName": "EntityEvent",
-      "fieldName": "FeedTypes",
-      "type": "org.reso.metadata.enums.FeedTypes",
-      "nullable": true,
-      "isEnumeration": true,
-      "annotations": [
-        {
-          "term": "RESO.OData.Metadata.StandardName",
-          "value": "Feed Types"
-        },
-        {
-          "term": "RESO.DDWikiUrl",
-          "value": "https://dd.reso.org/DD2.1/EntityEvent/FeedTypes/"
-        },
-        {
-          "term": "Core.Description",
-          "value": "A list of feeds that the given record is included in."
-        }
-      ],
-      "maxLength": 100,
-      "isCollection": true,
-      "lookupStatus": "Open with Enumerations"
     },
     {
       "resourceName": "EntityEvent",

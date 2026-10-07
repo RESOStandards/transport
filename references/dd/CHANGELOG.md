@@ -6,6 +6,30 @@ Generated entries use [`diff-dd-sheet.py --changelog`](https://github.com/RESOSt
 
 ---
 
+## 2026-10-07 — DD 2.1: remove FeedTypes from the EntityEvent Resource
+
+`FeedTypes` annotates a data element with the feed types that element is available in: BBO, IDX,
+PDAP and VOW. The EntityEvent Resource is the change-notification envelope rather than a data
+resource, so a feed-type availability annotation on it does not describe anything a consumer can
+act on. A client does not subscribe to EntityEvent per feed type.
+
+`FeedTypes` is a DD 2.1 element. The 1.7 and 2.0 sheets carry no `FeedTypes` rows at all, so no
+other version is affected. After this change the Fields tab carries `FeedTypes` on 40 resources,
+down from 41; the `FeedTypes` lookup itself is unchanged at four values. The Lookup and
+RelatedLookup Resources already carried no `FeedTypes` row and are untouched.
+
+Closes [#255](https://github.com/RESOStandards/transport/issues/255).
+
+### DD 2.1
+
+**Ticket**: [#255](https://github.com/RESOStandards/transport/issues/255)
+**Tab changes** (added / removed / modified): Fields 0 / 1 / 0
+
+**Fields — removed (1)**:
+- `EntityEvent::FeedTypes`
+
+---
+
 ## 2026-06-04 — Lookup Resource StandardLookupValue Field + DD 1.7 reference integrity fixes
 
 Bundles Jason Darrough's [`#203`](https://github.com/RESOStandards/transport/issues/203) / [`#204`](https://github.com/RESOStandards/transport/issues/204) / [`#205`](https://github.com/RESOStandards/transport/issues/205) sheet updates for DD 1.7, 2.0, and 2.1. The 1.7 sheet additionally receives 17 `SourceResource` populations and one `LookupName` correction surfaced by the cert-backend dd-reference data-consistency tests.
