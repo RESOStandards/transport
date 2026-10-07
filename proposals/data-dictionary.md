@@ -122,7 +122,7 @@ Where:
 * `String` indicates the LookupName in the Lookup Resource in which the given field's lookups are defined. 
 
 Notes:
-* The referenced LookupName **MUST** be a standard lookup name for items currently defined by the RESO Data Dictionary. For example, for the `StandardStatus` field in the Data Dictionary, the `LookupName` **MUST** be `StandardStatus`.
+* The referenced `LookupName` **MUST** identify the `LookupName` in the `Lookup` resource under which the given field's values are advertised. It is the join between a field and its value set, so it need not match the field name, and more than one field **MAY** share a single `LookupName`, as the `CountyOrParish` lookup is shared by the `CountyOrParish` and `OfficeCountyOrParish` fields.
 * Data providers **MAY** add additional LookupName entries when not already defined by the Dictionary.
 * The underlying type for the lookup-based field **MUST** either be `Edm.String` or `Collection(Edm.String)`, depending on whether the given field is String List, Single or Multi in the Data Dictionary, respectively.
 
