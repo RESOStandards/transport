@@ -536,7 +536,6 @@
           <PropertyRef Name="EntityEventSequence"/>
         </Key>
         <Property Name="EntityEventSequence" Type="Edm.Int64"/>
-        <Property Name="FeedTypes" Type="Collection(org.reso.metadata.enums.FeedTypes)" Nullable="false"/>
         <Property Name="ResourceName" Type="Edm.String" MaxLength="255"/>
         <Property Name="ResourceRecordKey" Type="Edm.String" MaxLength="255"/>
         <Property Name="ResourceRecordUrl" Type="Edm.String" MaxLength="8000"/>
