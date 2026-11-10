@@ -7,7 +7,7 @@
 | **Status** | **RATIFIED** |
 | **Date Submitted** | February 2019 |
 | **Date Ratified** | November 2023 |
-| **Dependencies** | [Data Dictionary 1.7+](https://ddwiki.reso.org/display/DDW17/RESO+Data+Dictionary+1.7) |
+| **Dependencies** | [Data Dictionary 1.7+](https://dd.reso.org/DD1.7/) |
 | **Related Links** | [RESO Common Schema Open API Format](https://github.com/RESOStandards/web-api-commander/blob/main/src/main/resources/RESODataDictionary-1.7.openapi3.json) |
 
 # Synopsis

@@ -6,8 +6,8 @@
 | **Authors** | Sergio Del Rio ([T4Bi](mailto:Sergio.Del.Rio@t4bi.com))<br />[Joshua Darnell](https://github.com/darnjo) ([RESO](mailto:josh@reso.org)) |
 | **Status** | **RATIFIED** |
 | **Date Ratified** | December 2023 |
-| **Dependencies** | [Data Dictionary 1.7+](./data-dictionary.md)<br />[Web API 2.0.0+](./web-api-core.md) |
-| **Related Links** | [DD Wiki 1.7](https://ddwiki.reso.org/display/DDW17/RESO+Data+Dictionary+1.7)<br />[Data Dictionary Spreadsheet](https://docs.google.com/spreadsheets/d/1_59Iqr7AQ51rEFa7p0ND-YhJjEru8gY-D_HM1yy5c6w/edit?usp=sharing)<br /> |
+| **Dependencies** | [Data Dictionary 1.7+](https://transport.reso.org/proposals/data-dictionary/)<br />[Web API 2.0.0+](https://transport.reso.org/proposals/web-api-core/) |
+| **Related Links** | [DD Wiki 1.7](https://dd.reso.org/DD1.7/)<br />[Data Dictionary Spreadsheet](https://docs.google.com/spreadsheets/d/1_59Iqr7AQ51rEFa7p0ND-YhJjEru8gY-D_HM1yy5c6w/edit?usp=sharing)<br /> |
 
 The keywords "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC 2119](https://www.ietf.org/rfc/rfc2119.txt).
 
@@ -29,7 +29,7 @@ The keywords "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SH
 # Introduction
 The Web API Add/Edit Endorsement defines how to create, update, or delete data in the RESO Web API. It also includes standard error message responses so interactive clients may inform users how to correct issues with business rules, for example.
 
-This proposal does not provide formal business rule support. That is addressed in [Validation Expressions (RCP-019)](./web-api-validation-expression.md), which is compatible with this specification.
+This proposal does not provide formal business rule support. That is addressed in [Validation Expressions (RCP-019)](https://transport.reso.org/proposals/validation-expressions/), which is compatible with this specification.
 
 
 <br />
@@ -303,7 +303,7 @@ HTTP/2 400 Bad Request
 
 Note how the `target` field in the `details` array references the `ListPrice` in the Property Resource. It's important that providers follow this format in their error responses. Each item will be validated against the server metadata in order to make sure the item exists.
 
-When the error is with an item in a collection, for example the second media object in a nested payload, it would be referenced by `Media[1].Category` (assuming the error was with the Category field). The RESO Data Dictionary defines standard relationships so that [Property has a collection of Media items](https://ddwiki.reso.org/display/DDW17/Media+Field) associated with it.
+When the error is with an item in a collection, for example the second media object in a nested payload, it would be referenced by `Media[1].Category` (assuming the error was with the Category field). The RESO Data Dictionary defines standard relationships so that [Property has a collection of Media items](https://dd.reso.org/DD1.7/Property/Media/) associated with it.
 
 The `message` MUST be provided and SHOULD contain a user-friendly response that could be displayed in an application. 
 
@@ -831,7 +831,7 @@ Thanks to the Transport and Certification volunteers who contributed to this pro
 
 Please see the following references for more information regarding topics covered in this document:
 * [OData 4.01 Specifications](https://docs.oasis-open.org/odata/odata/v4.01/)
-* [RESO Data Dictionary](https://ddwiki.reso.org)
+* [RESO Data Dictionary](https://dd.reso.org/)
 * [Transport GitHub Discussions](https://github.com/RESOStandards/transport/discussions/41)
 
 This specification is based on the [original RCP-010 proposal](https://github.com/RESOStandards/reso-transport-specifications/files/8412594/RESOWebAPIRCP-RCP-WEBAPI-010AddFunctionalitytoWebAPISpecification-040422-1917.pdf) by Sergio Del Rio, which was previously adopted into DRAFT status by the Transport Workgroup for an earlier version of the RESO Web API.
