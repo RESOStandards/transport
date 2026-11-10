@@ -7,8 +7,8 @@
 | **Specification** | [View on GitHub](https://github.com/RESOStandards/transport/blob/main/proposals/validation-expressions.md) |
 | **Status** | **RATIFIED** |
 | **Date Ratified** | December 2023 |
-| **Dependencies** | [Validation Expression grammar](./artifacts/grammars/rcp-19) <br /> [Data Dictionary 1.7+](./proposals/data-dictionary.md)<br />[Web API 2.0.0+](./web-api-core.md)<br /> |
-| **Related Links** | [DD Wiki 1.7](https://ddwiki.reso.org/display/DDW17/RESO+Data+Dictionary+1.7)<br />[Data Dictionary Spreadsheet](https://docs.google.com/spreadsheets/d/1_59Iqr7AQ51rEFa7p0ND-YhJjEru8gY-D_HM1yy5c6w/edit?usp=sharing)<br /> |
+| **Dependencies** | [Validation Expression grammar](https://github.com/RESOStandards/transport/tree/main/artifacts/grammars/rcp-19) <br /> [Data Dictionary 1.7+](https://transport.reso.org/proposals/data-dictionary/)<br />[Web API 2.0.0+](https://transport.reso.org/proposals/web-api-core/)<br /> |
+| **Related Links** | [DD Wiki 1.7](https://dd.reso.org/DD1.7/)<br />[Data Dictionary Spreadsheet](https://docs.google.com/spreadsheets/d/1_59Iqr7AQ51rEFa7p0ND-YhJjEru8gY-D_HM1yy5c6w/edit?usp=sharing)<br /> |
 
 <br /><br />
 
@@ -55,18 +55,18 @@ While there is still more work to do, such as the addition of a scope resolution
 # Section 2: Specification
 This specification consists of the following:
 * [Rules grammar](#section-212-validation-expressions) expressed in [Backus-Naur Form (BNF)](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form)
-* [Rules Resource](https://ddwiki.reso.org/display/DDW17/Rules+Resource) to provide transport of business rules 
+* [Rules Resource](https://dd.reso.org/DD1.7/Rules/) to provide transport of business rules 
 
 
 ## Section 2.1: Validation Expression Language
 
-The [RESO Validation Expression Grammar](./artifacts/grammars/rcp-19/ValidationExpression.g4) is used in conjunction with a data structure of `FieldName`, `RuleAction`, `RuleExpression` tuples to provide an ordered list of instructions that can be used to convey business rules in a system independent way.
+The [RESO Validation Expression Grammar](https://github.com/RESOStandards/transport/blob/main/artifacts/grammars/rcp-19/ValidationExpression.g4) is used in conjunction with a data structure of `FieldName`, `RuleAction`, `RuleExpression` tuples to provide an ordered list of instructions that can be used to convey business rules in a system independent way.
 
-These rules are intended to be written from the perspective of the business object being validated, such as a listing record in the Property Resource, and would be run as-needed before the client sends the record back to the system using the [RESO Add/Edit](./proposals/web-api-add-edit.md) specification.
+These rules are intended to be written from the perspective of the business object being validated, such as a listing record in the Property Resource, and would be run as-needed before the client sends the record back to the system using the [RESO Add/Edit](https://transport.reso.org/proposals/web-api-add-edit/) specification.
 
 For a client running the rules locally, making a change to the StandardStatus field would trigger rules relevant for that field (along with any related rules). 
 
-Expressions for a given ruleset MUST be evaluated in the order that they appear in the [RuleOrder](https://ddwiki.reso.org/display/DDW17/RuleOrder+Field) field.
+Expressions for a given ruleset MUST be evaluated in the order that they appear in the [RuleOrder](https://dd.reso.org/DD1.7/Rules/RuleOrder/) field.
 
 While all rules may be executed each time data changes, clients SHOULD try and optimize execution so that only rules related to a given change are fired rather than all of them. There are a number of techniques that can be used to accomplish this, such as [instruction scheduling](https://en.wikipedia.org/wiki/Instruction_scheduling) or the [Rete algorithm](https://en.wikipedia.org/wiki/Rete_algorithm). 
 
@@ -91,7 +91,7 @@ The following actions are defined by this specification:
 
 ### Section 2.1.2: Validation Expressions
 
-For detailed information, please see the [Validation Expressions grammar](./artifacts/grammars/rcp-19/ValidationExpression.g4).
+For detailed information, please see the [Validation Expressions grammar](https://github.com/RESOStandards/transport/blob/main/artifacts/grammars/rcp-19/ValidationExpression.g4).
 
 This section contains examples to help illustrate how Validatine Expressions can be used.
 
@@ -171,12 +171,12 @@ These special functions require _at least two_ arguments of type `LIST()` or `SE
 ## Section 2.2: Rules Resource
 The Validation Expression grammar itself is not enough to compute rules. Additional information is needed.
 
-The [Rules Resource](https://ddwiki.reso.org/display/DDW17/Rules+Resource) has been created in Data Dictionary 1.7+ to transport business rules. 
+The [Rules Resource](https://dd.reso.org/DD1.7/Rules/) has been created in Data Dictionary 1.7+ to transport business rules. 
 
 At a minimum, these consist of the following:
-* [FieldName](https://ddwiki.reso.org/pages/viewpage.action?pageId=1130838) - a standard or local field to effect with the outcome of _expression_.
-* [RuleAction](https://ddwiki.reso.org/display/DDW17/RuleAction+Field) - one of the Actions in [Section 2.1.1](#section-211-actions).
-* [RuleExpression](https://ddwiki.reso.org/display/DDW17/RuleExpression+Field) - the Validation Expression using the grammar [defined in Section 2.1.2](#section-212-validation-expressions).
+* [FieldName](https://dd.reso.org/DD1.7/Rules/FieldName/) - a standard or local field to effect with the outcome of _expression_.
+* [RuleAction](https://dd.reso.org/DD1.7/Rules/RuleAction/) - one of the Actions in [Section 2.1.1](#section-211-actions).
+* [RuleExpression](https://dd.reso.org/DD1.7/Rules/RuleExpression/) - the Validation Expression using the grammar [defined in Section 2.1.2](#section-212-validation-expressions).
 
 ### Example: Update PurchaseContractDate when Listing is Closed
 
@@ -201,12 +201,12 @@ If `a = 1` isn't executed first, then the second instruction will throw an error
 
 However, if we had another expression `d = 0`, it could be executed in any order since there are no dependencies on any of the other items.
 
-The Rule Resource includes a [`RuleOrder`](https://ddwiki.reso.org/display/DDW17/RuleOrder+Field) property so ordering may be preserved.
+The Rule Resource includes a [`RuleOrder`](https://dd.reso.org/DD1.7/Rules/RuleOrder/) property so ordering may be preserved.
 
 ## Rule Versioning
 Sometimes it might be necessary to communicate that a given rule has changed.
 
-The Rules Resource providers the [Rule Version](https://ddwiki.reso.org/display/DDW17/RuleVersion+Field) for these scenarios.
+The Rules Resource providers the [Rule Version](https://dd.reso.org/DD1.7/Rules/RuleVersion/) for these scenarios.
 
 ## Filtering by FieldName and RuleAction
 Consider the case where a client is interested in rules that might reject changes to ListPrice.
@@ -237,8 +237,8 @@ GET /Rules?$select=RuleKey,FieldName,RuleAction,RuleExpression,RuleWarningText,R
 
 # Section 3: Certification
 Testing rules consists of the following steps:
-* Retrieve rules from the [Rules Resource](https://ddwiki.reso.org/display/DDW17/Rules+Resource) or have them provided in [RESO Common Format](./proposals/reso-common-format.md), and validate they're in the correct format.
-* Parse the [RESO Validation Expression grammar](./artifacts/grammars/rcp-19/ValidationExpression.g4) and make sure it's correct. A set of rules and test payloads will be provided in RESO Common Format during testing which will be used to validate the provider's rule implementation.
+* Retrieve rules from the [Rules Resource](https://dd.reso.org/DD1.7/Rules/) or have them provided in [RESO Common Format](https://transport.reso.org/proposals/reso-common-format/), and validate they're in the correct format.
+* Parse the [RESO Validation Expression grammar](https://github.com/RESOStandards/transport/blob/main/artifacts/grammars/rcp-19/ValidationExpression.g4) and make sure it's correct. A set of rules and test payloads will be provided in RESO Common Format during testing which will be used to validate the provider's rule implementation.
 * Make local changes to a record and validate both success and failure scenarios
   * Those being tested will provide several tests for both scenarios, along with the expected output
   * Testing tools will run the rule set and ensure the output matches
@@ -258,11 +258,11 @@ Parts of this proposal are based on the RETS Validation Expression language as e
 # Section 5: References
 
 Please see the following references for more information regarding topics covered in this document:
-* [Rules Resource [DD Wiki]](https://ddwiki.reso.org/display/DDW17/Rules+Resource)
+* [Rules Resource [DD Wiki]](https://dd.reso.org/DD1.7/Rules/)
 * [Original RCP-19 Proposal (Confluence Login Required)](https://reso.atlassian.net/wiki/spaces/RESOWebAPIRCP/pages/2250178749/RCP+-+WEBAPI-019+Validation+Expression+in+the+WebAPI)
 * [PDF of original RCP-19 Proposal](https://github.com/RESOStandards/reso-transport-specifications/files/8384860/RESOWebAPIRCP-RCP-WEBAPI-019ValidationExpressionintheWebAPI-300322-2353.pdf)
-* [RESO Validation Expression Grammar](./artifacts/grammars/rcp-19/ValidationExpression.g4)
-* [RESO Common Format](./proposals/reso-common-format.md)
+* [RESO Validation Expression Grammar](https://github.com/RESOStandards/transport/blob/main/artifacts/grammars/rcp-19/ValidationExpression.g4)
+* [RESO Common Format](https://transport.reso.org/proposals/reso-common-format/)
 * [Formal Grammar (Wikipedia)](https://en.wikipedia.org/wiki/Formal_grammar)
 * [Backus-Naur form (BNF) [Wikipedia]](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form)
 * [ANTLR 4 Documentation](https://www.antlr.org/)

@@ -3,12 +3,12 @@
 | **RCP** | 27 |
 | :--- |:--- |
 | **Version** | **1.0.0** |
-| **Authors** | Joshua Darnell ([RESO](mailto:josh@reso.org))<br />Paul Stusiak ([Falcon Technologies](pstusiak@falcontechnologies.com)) | 
+| **Authors** | Joshua Darnell ([RESO](mailto:josh@reso.org))<br />Paul Stusiak ([Falcon Technologies](mailto:pstusiak@falcontechnologies.com)) | 
 | **Status** | **RATIFIED** |
 | **Date Submitted** | January 2019 |
 | **Date Approved** | December 2023 |
-| **Dependencies** | [Data Dictionary 2.0 EntityEvent Resource](https://ddwiki.reso.org/display/DDW20/EntityEvent+Resource) |
-| **Related Links** | [Push Events using Webhooks](./webhooks-push.md) |
+| **Dependencies** | [Data Dictionary 2.0 EntityEvent Resource](https://dd.reso.org/DD2.0/EntityEvent/) |
+| **Related Links** | [Push Events using Webhooks](https://transport.reso.org/proposals/webhooks-push/) |
 
 # Synopsis
 The RESO EntityEvent Resource provides an efficient way to represent event streams and replicate data by using the interface of an append-only log.
@@ -20,9 +20,9 @@ The current state of the art is to use modification timestamps, long polling, an
 
 # Proposal
 
-A new Data Dictionary resource named [_EntityEvent_](https://ddwiki.reso.org/display/DDW20/EntityEvent+Resource) has been created.
+A new Data Dictionary resource named [_EntityEvent_](https://dd.reso.org/DD2.0/EntityEvent/) has been created.
 
-This resource provides a field called [_EntityEventSequence_](https://ddwiki.reso.org/display/DDW20/EntityEventSequence+Field), which is the logical timestamp of a given event, as well as the [_ResourceName_](https://ddwiki.reso.org/pages/viewpage.action?pageId=1135897) and [_ResourceRecordKey_](https://ddwiki.reso.org/display/DDW20/ResourceRecordKey+Field) of the item that was created, updated, or deleted. An optional field called [_ResourceRecordUrl_](https://ddwiki.reso.org/display/DDW20/ResourceRecordUrl+Field) allows systems to provide opaque URLs that can be used to fetch records for each EntityEvent.
+This resource provides a field called [_EntityEventSequence_](https://dd.reso.org/DD2.0/EntityEvent/EntityEventSequence/), which is the logical timestamp of a given event, as well as the [_ResourceName_](https://dd.reso.org/DD2.0/EntityEvent/ResourceName/) and [_ResourceRecordKey_](https://dd.reso.org/DD2.0/EntityEvent/ResourceRecordKey/) of the item that was created, updated, or deleted. An optional field called [_ResourceRecordUrl_](https://dd.reso.org/DD2.0/EntityEvent/ResourceRecordUrl/) allows systems to provide opaque URLs that can be used to fetch records for each EntityEvent.
 
 The logical timestamp is an event identifier that denotes that a business event occurred. Business events are rules or actions that represent the business logic of the resources of the system.
 

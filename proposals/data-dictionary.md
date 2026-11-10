@@ -7,8 +7,8 @@
 | **Status** | **RATIFIED** |
 | **Date Submitted** | December 2021 |
 | **Date Ratified** | December 2023 |
-| **Dependencies** | [Web API Core 2.0.0+](./web-api-core.md) |
-| **Related Links** | [DD Wiki 2.0](https://ddwiki.reso.org/display/DDW20/Data+Dictionary+2.0+Wiki)<br />[Data Dictionary 2.0 Spreadsheet](https://docs.google.com/spreadsheets/d/1eOB4Nv3wrAayB1av7n2AWPBRWDeB-UkiDa8h8cdsIEI/edit#gid=94181491) |
+| **Dependencies** | [Web API Core 2.0.0+](https://transport.reso.org/proposals/web-api-core/) |
+| **Related Links** | [DD Wiki 2.0](https://dd.reso.org/DD2.0/)<br />[Data Dictionary 2.0 Spreadsheet](https://docs.google.com/spreadsheets/d/1eOB4Nv3wrAayB1av7n2AWPBRWDeB-UkiDa8h8cdsIEI/edit#gid=94181491) |
 
 <br />
 
@@ -788,9 +788,9 @@ If you would like to contribute, please contact [RESO Development](mailto:dev@re
 # Section 5: References
 
 Please see the following references for more information regarding topics covered in this document:
-* [Data Dictionary 2.0 Wiki](https://ddwiki.reso.org/pages/viewpage.action?pageId=1123655)
+* [Data Dictionary 2.0 Wiki](https://dd.reso.org/DD2.0/)
 * [Data Dictionary 2.0 Reference Sheet](https://docs.google.com/spreadsheets/d/1eOB4Nv3wrAayB1av7n2AWPBRWDeB-UkiDa8h8cdsIEI/edit#gid=94181491)
-* [RESO Web API Core Specification](./web-api-core.md)
+* [RESO Web API Core Specification](https://transport.reso.org/proposals/web-api-core/)
 * [RESO Common Schema Reference Metadata](https://github.com/RESOStandards/web-api-commander/blob/main/src/main/resources/RESODataDictionary-2.0.xml)
 * [RESO Common Schema Open API Specification](https://github.com/RESOStandards/web-api-commander/blob/main/src/main/resources/RESODataDictionary-2.0.openapi3.json)
 

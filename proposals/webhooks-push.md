@@ -3,12 +3,12 @@
 | **RCP** | 28 |
 | :--- | :--- |
 | **Version** | **1.0.1** |
-| **Authors** | Joshua Darnell ([RESO](mailto:josh@reso.org))<br />Paul Stusiak ([Falcon Technologies](pstusiak@falcontechnologies.com)) | 
+| **Authors** | Joshua Darnell ([RESO](mailto:josh@reso.org))<br />Paul Stusiak ([Falcon Technologies](mailto:pstusiak@falcontechnologies.com)) | 
 | **Status** | **RATIFIED** |
 | **Date Submitted** | April 2019 |
 | **Date Approved** | December 2023 |
-| **Dependencies** | [Data Dictionary 2.0 EntityEvent Resource](https://ddwiki.reso.org/display/DDW20/EntityEvent+Resource) <br />[RESO Common Format](reso-common-format.md) |
-| **Related Links** | [RCP-027](./entity-events.md) <br />[Webhooks](https://en.wikipedia.org/wiki/Webhook) |
+| **Dependencies** | [Data Dictionary 2.0 EntityEvent Resource](https://dd.reso.org/DD2.0/EntityEvent/) <br />[RESO Common Format](https://transport.reso.org/proposals/reso-common-format/) |
+| **Related Links** | [RCP-027](https://transport.reso.org/proposals/entity-events/) <br />[Webhooks](https://en.wikipedia.org/wiki/Webhook) |
 
 # Synopsis
 The RESO _EntityEvent Resource_ provides an efficient and streamlined way to replicate data using the interface of an append-only log.
@@ -24,7 +24,7 @@ When an _EntityEventSequenceNumeric_, _ResourceName_, _ResourceRecordKey_ tuple 
 In doing so, the replication process becomes simpler for the consumer, as they only need to receive EntityEvents from the producer and pick up the corresponding records from provider APIs. In general, this is preferable to having to poll continuously for new records.
 
 # Examples
-The following examples show using the EntityEvent model along with [RESO Common Format](reso-common-format.md) , [OAuth2 bearer tokens](https://oauth.net/2/bearer-tokens/), and HTTP POST requests.
+The following examples show using the EntityEvent model along with [RESO Common Format](https://transport.reso.org/proposals/reso-common-format/) , [OAuth2 bearer tokens](https://oauth.net/2/bearer-tokens/), and HTTP POST requests.
 
 RESO Common Format supports both single and multi-valued payloads.
 
