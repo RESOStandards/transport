@@ -45,6 +45,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 * **Server-Driven Paging** - In order to improve the ease and ability for data consumers to retrieve data from RESO Web API servers, providers MUST support server-driven paging using `@odata.nextLink`. 
 * **String Comparison Operators** - Support for the Lookup Resource was added in Data Dictionary 1.7, meaning that single- and multi-enumerations may be `Edm.String` or `Collection(Edm.String)`, respectively. In order to provide parity with existing enumeration tests, string comparison operators have been added to Web API Core 2.1.0 in order to test those cases. 
 * **`in` Operator** - For servers advertising OData 4.01, the `in` operator is tested for single-valued enumerations. It provides a convenient shorthand for matching a value against a set, for example `StandardStatus in ('Active', 'Pending', 'Sold')`, in place of a chain of `eq` comparisons. 
+* **Resources and Type Coverage** - Testing covers every RESO Data Dictionary resource the server declares unless the applicant names a subset, and full type coverage is required for certification. See [Test Matrix](#test-matrix), [Full Type Coverage](#full-type-coverage) and [Parity with Core 2.0.0 Testing](#parity-with-core-200-testing).
 
 <br />
 
@@ -2394,9 +2395,40 @@ Another aspect of semantic checking is ensuring that all models have keys so the
 ### RESO Certification
 Certification of Web API servers consists mainly of ensuring that a core set of required query operations are supported in a manner adhering to the RESO and OData specifications, and that servers send the appropriate response for each query.
 
-Rather than being configured by hand, the fields, enumerations and values used in the tests are discovered from the server's own metadata and sampled from its data. For each data type, a field is selected to exercise, preferring RESO Data Dictionary standard fields over local extensions and ranking candidates by how densely they are populated so that the tests run against representative data. Real values are then sampled from the chosen field to build each query, so that the result is known in advance and an empty result is a genuine defect rather than an artifact of sparse data. When a prerequisite yields no usable sample, the scenarios that depend on it are reported as not tested rather than failed.
+Rather than being configured by hand, the fields, enumerations and values used in the tests are discovered from the server's own metadata and sampled from its data. For each data type, a field is selected to exercise, preferring RESO Data Dictionary standard fields over local extensions and ranking candidates by how densely they are populated so that the tests run against representative data. Real values are then sampled from the chosen field to build each query, so that the result is known in advance and an empty result is a genuine defect rather than an artifact of sparse data. When a prerequisite yields no usable sample on a resource, the scenarios that depend on it are reported as not tested on that resource rather than failed. Whether the run can still be certified is decided by [Full Type Coverage](#full-type-coverage).
 
 In addition to comparison operators, such as greater than and less than for types like Integers and Timestamps, the tests exercise OData query operators such as `$select`, which allows the consumer to specify the list of fields returned in the payload, and `$top`, which allows the consumer to specify the size of the result set. These are outlined in the next section.
+
+### Resources Tested
+Testing covers every resource the server declares as a top-level `EntitySet` in its metadata that the RESO Data Dictionary defines. An applicant MAY narrow testing to a subset by naming the resources to test, and only the resources named are then tested. Local resources are not tested unless the applicant names them. Which resources are tested is separate from the requirement in [Section 3.2](#32-background) that a server expose at least one Property, Member, Office, Media or InternetTracking resource in order to be certified.
+
+### Test Matrix
+The Core tests exercise six data types. On each resource tested, a field of each type is selected and sampled as described above. The result is a test matrix with one row per resource tested and one column per type. Each cell names the field tested, or records that the resource has no usable field of that type.
+
+| Type | Field Types | Met With |
+| --- | --- | --- |
+| Integer | `Edm.Int16`, `Edm.Int32` or `Edm.Int64` | A sampled value |
+| Decimal | `Edm.Decimal` or `Edm.Double` | A sampled value |
+| Date | `Edm.Date` | A sampled value |
+| Timestamp | `Edm.DateTimeOffset` | A sampled value |
+| Single Enumeration | Any form in [Single Enumerations](#2598-single-enumerations) | One sampled value |
+| Multiple Enumeration | Any form in [Multiple Enumerations](#2599-multiple-enumerations) | Two sampled values |
+
+A type is met when it is met on some field of some resource tested. The types need not be met on the same resource.
+
+### Full Type Coverage
+A run achieves full type coverage when every type in the test matrix is met. All data types are required for certification when the server has them, whether in standard or local fields:
+
+* A type the server declares in its metadata, in a standard or local field, MUST be met, and its tests MUST pass. When the tests cannot sample a field of a declared type on their own, the applicant names the field to use, and the failure lists the most populated fields of that type.
+* A type the server does not declare in any field is not required, and does not by itself prevent certification.
+* A test that does not apply to how the server represents a type, such as an `Edm.EnumType` test on a server whose enumerations are strings, is not counted against it.
+
+Every run records its test matrix and whether full type coverage was achieved.
+
+### Parity with Core 2.0.0 Testing
+Core 2.0.0 tested a single resource, Property or the resource the applicant named, and required every type to be met on that resource. To test as Core 2.0.0 did, name that one resource and require full type coverage on it. Every type MUST then be met on that resource, and no type is excused. In the RESO testing tools these are the `--resources` and `--full-coverage` options, or `coreOptions.resources` and `coreOptions.fullCoverage` in a configuration file.
+
+For full equivalence, an applicant MAY also name the fields their Core 2.0.0 report used as field overrides (`--field-overrides`, or `coreOptions.fieldOverrides`), so that the same fields are tested.
 
 ## 3.5 Web API Core Testing Queries
 The following queries are used during Web API Core testing. 
