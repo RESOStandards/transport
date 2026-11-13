@@ -2400,7 +2400,7 @@ Rather than being configured by hand, the fields, enumerations and values used i
 In addition to comparison operators, such as greater than and less than for types like Integers and Timestamps, the tests exercise OData query operators such as `$select`, which allows the consumer to specify the list of fields returned in the payload, and `$top`, which allows the consumer to specify the size of the result set. These are outlined in the next section.
 
 ### Resources Tested
-Testing covers every resource the server declares as a top-level `EntitySet` in its metadata that the RESO Data Dictionary defines. An applicant MAY narrow testing to a subset by naming the resources to test, and only the resources named are then tested. Local resources are not tested unless the applicant names them.
+Testing covers every resource the server declares as a top-level `EntitySet` in its metadata that the RESO Data Dictionary defines. An applicant MAY narrow testing to a subset by naming the resources to test, and only the resources named are then tested. Local resources are not tested unless the applicant names them. Which resources are tested is separate from the requirement in [Section 3.2](#32-background) that a server expose at least one Property, Member, Office, Media or InternetTracking resource in order to be certified.
 
 ### Test Matrix
 The Core tests exercise six data types. On each resource tested, a field of each type is selected and sampled as described above. The result is a test matrix with one row per resource tested and one column per type. Each cell names the field tested, or records that the resource has no usable field of that type.
