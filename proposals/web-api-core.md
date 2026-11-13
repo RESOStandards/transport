@@ -2417,10 +2417,11 @@ The Core tests exercise six data types. On each resource tested, a field of each
 A type is met when it is met on some field of some resource tested. The types need not be met on the same resource.
 
 ### Full Type Coverage
-A run achieves full type coverage when every type in the test matrix is met. Full type coverage is required for certification:
+A run achieves full type coverage when every type in the test matrix is met. All data types are required for certification when the server has them, whether in standard or local fields:
 
-* A type the server provides on a resource tested, through a standard or local field of that type that holds data in the records sampled, MUST be met.
-* A type that no resource tested provides is recorded as not achieved and does not by itself prevent certification.
+* A type the server declares in its metadata, in a standard or local field, MUST be met, and its tests MUST pass. When the tests cannot sample a field of a declared type on their own, the applicant names the field to use, and the failure lists the most populated fields of that type.
+* A type the server does not declare in any field is not required, and does not by itself prevent certification.
+* A test that does not apply to how the server represents a type, such as an `Edm.EnumType` test on a server whose enumerations are strings, is not counted against it.
 
 Every run records its test matrix and whether full type coverage was achieved.
 
