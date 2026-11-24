@@ -30,7 +30,7 @@ Proposals that require certification must have an adopted specification and test
 | [**RCP-10**](https://github.com/RESOStandards/transport/blob/a99fb6ca307208280ac51bca1f573e89cb67b202/proposals/web-api-add-edit.md) | **Web API Add/Edit** | **1.0.0** | **Dec 2023** |
 | [**RCP-19**](/proposals/validation-expressions.md) | **Web API Validation Expressions** | **1.0.0** | **Dec 2023** |
 | [**RCP-25**](https://github.com/RESOStandards/transport/blob/a99fb6ca307208280ac51bca1f573e89cb67b202/proposals/reso-common-format.md) | **RESO Common Format** | **1.0.0** | **Nov 2023** |
-| [**RCP-27**](https://github.com/RESOStandards/transport/blob/1091f1e82b2108c5a6712af65a417c8db6c76c4c/proposals/entity-events.md) | **EntityEvent Resource and Replication** | **1.0.0** | **Dec 2023** |
+| [**RCP-27**](https://github.com/RESOStandards/transport/blob/main/proposals/entity-events.md) | **EntityEvent Resource and Replication** | **1.0.0** | **Dec 2023** |
 | [**RCP-28**](https://github.com/RESOStandards/transport/blob/main/proposals/webhooks-push.md) | **Push Replication with EntityEvent and Webhooks** | **1.0.0** | **Dec 2023** |
 | [**RCP-36**](https://github.com/RESOStandards/transport/blob/e48bca32dbde6b82410629c826905a08387fa5e9/data-dictionary.md) | **Data Dictionary with Lookup Resource** | **1.7** | **Jan 2021** |
 | [**RCP-36**](https://github.com/RESOStandards/transport/blob/a99fb6ca307208280ac51bca1f573e89cb67b202/proposals/data-dictionary.md) | **Data Dictionary** | **2.0** | **Nov 2023** |
