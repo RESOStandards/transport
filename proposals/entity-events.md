@@ -131,7 +131,7 @@ The consumer has previously been in synchronization and needs to 'catch up' with
 #### Handling Record Visibility
 Based on business rules, EntityEvent records may change the availability and visibility for consumers based on the role of a consumer. 
 
-For example, a consumer who had a role to receive IDX listings may not be permitted to only view listings that have a status of 'Active'. 
+For example, a consumer with a role to receive IDX listings may be permitted to view only listings that have a status of 'Active'. 
 
 A consumer with this role would see an event that changes status and would then attempt to retrieve the record from the producer 
 only to receive no record. 
