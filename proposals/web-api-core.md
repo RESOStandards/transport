@@ -78,7 +78,7 @@ Providers MUST support server-driven paging using `@odata.nextLink`.
 
 This functionality is needed so that data consumers may reliably consume data when only a partial result is returned and it’s classified as a MUST within [OData Minimal Conformance Requirements](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_OData40MinimalConformanceLevel) (item 3) for version 4.0 and above.
 
-Basic tests are included in the Web API Core 2.1.0 tests, but the majority of nextLink testing is done in the Payloads 2.0 Specification, which could result in a failure of nextLink-based operations even if the provider passed Web API Core 2.1.0 testing. 
+Basic tests are included in the Web API Core 2.1.0 tests, but the majority of nextLink testing is done in [Data Dictionary testing](https://transport.reso.org/proposals/data-dictionary/#schema-validation), which could result in a failure of nextLink-based operations even if the provider passed Web API Core 2.1.0 testing. 
 
 * A count will be made on the given resource being tested to ensure there are records. 
 * A request will be made using `$top=1`. This should NOT contain `@odata.nextLink`, since one record should be available, and we’ve reached the end of the set.
@@ -3069,7 +3069,7 @@ The following queries are new in Web API Core 2.1.0 (RCP-039).
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=1``` |
 | **Section** | [Providers MUST Support Server-Driven Paging](#providers-must-support-server-driven-paging) |
 | **Acceptance Test** | [Source](#scenario-server-driven-paging) |
-| **Notes** | A `$count` confirms records exist first. The majority of `@odata.nextLink` testing is performed in the Payloads 2.0 Specification. New in 2.1.0. |
+| **Notes** | A `$count` confirms records exist first. The majority of `@odata.nextLink` testing is performed in [Data Dictionary testing](https://transport.reso.org/proposals/data-dictionary/#schema-validation). New in 2.1.0. |
 
 <br />
 
