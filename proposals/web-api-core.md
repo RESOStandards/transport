@@ -2689,7 +2689,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListPrice&$filter=ListPrice gt 0.00``` |
 | **Section** | [2.5.9.4](#2594-greater-than) |
 | **Acceptance Test** | [Source](#scenario-filter-decimal-gt) |
-| **Notes** | [See OData 5.1.1.1.4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
+| **Notes** | [See OData 5.1.1.1.3](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
 
 <br />
 
@@ -2702,7 +2702,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListPrice&$filter=ListPrice ge 0.00``` |
 | **Section** | [2.5.9.5](#2595-greater-than-or-equal) |
 | **Acceptance Test** | [Source](#scenario-filter-decimal-ge) |
-| **Notes** | [See OData 5.1.1.1.5](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
+| **Notes** | [See OData 5.1.1.1.4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
 
 <br />
 
@@ -2715,7 +2715,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListPrice&$filter=ListPrice lt 1234567.89``` |
 | **Section** | [2.5.9.6](#2596-less-than) |
 | **Acceptance Test** | [Source](#scenario-filter-decimal-lt) |
-| **Notes** | [See OData 5.1.1.1.3](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
+| **Notes** | [See OData 5.1.1.1.5](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
 
 <br />
 
@@ -2728,7 +2728,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListPrice&$filter=ListPrice le 1234567.89``` |
 | **Section** | [2.5.9.7](#2597-less-than-or-equal) |
 | **Acceptance Test** | [Source](#scenario-filter-decimal-le) |
-| **Notes** | [See OData 5.1.1.1.4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
+| **Notes** | [See OData 5.1.1.1.6](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
 
 <br />
 
