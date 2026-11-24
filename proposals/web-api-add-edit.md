@@ -792,7 +792,7 @@ Scenario: Delete operation succeeds using a given Url
     | 4.0 | 4.01 |
   And the response is valid JSON
   And the JSON response "MUST" be empty
-  When a "GET" request is made to the URL in response header "Location"
+  When a "GET" request is made to the URL the "DELETE" request was made to
   Then the server responds with a status code of 404
   And the response has header "OData-Version" with one of the following values
     | 4.0 | 4.01 |
