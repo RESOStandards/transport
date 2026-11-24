@@ -2880,8 +2880,8 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | Item | Details |
 | -- | -- |
 | **Id** | filter-datetime-ne-now |
-| **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `ne` logical operator. |
-| **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ModificationTimestamp&$filter=ModificationTimestamp ne 2019-12-31T23:55:55-09:00``` |
+| **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `ne` logical operator and the OData `now()` function. |
+| **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ModificationTimestamp&$filter=ModificationTimestamp ne now()``` |
 | **Section** | [2.5.9.3](#2593-not-equals) |
 | **Acceptance Test** | [Source](#scenario-filter-datetime-ne-now) |
 | **Notes** | [See OData 5.1.1.6.11](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
@@ -2889,12 +2889,12 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 
-### Filter ISO 8601 Timestamp Using `le` Logical Operator and `now()`
+### Filter ISO 8601 Timestamp Using `lt` Logical Operator and `now()`
 
 | Item | Details |
 | -- | -- |
 | **Id** | filter-datetime-lt-now |
-| **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `le` logical operator and the OData `now()` function. |
+| **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `lt` logical operator and the OData `now()` function. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ModificationTimestamp&$filter=ModificationTimestamp lt now()``` |
 | **Section** | [2.5.9.6](#2596-less-than) |
 | **Acceptance Test** | [Source](#scenario-filter-datetime-lt-now) |
@@ -2908,7 +2908,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | -- | -- |
 | **Id** | filter-datetime-le-now |
 | **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `le` logical operator and the OData `now()` function. |
-| **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ModificationTimestamp&$filter=ModificationTimestamp lt now()``` |
+| **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ModificationTimestamp&$filter=ModificationTimestamp le now()``` |
 | **Section** | [2.5.9.7](#2597-less-than-or-equal) |
 | **Acceptance Test** | [Source](#scenario-filter-datetime-le-now) |
 | **Notes** | [See OData 5.1.1.8.9](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_now) |
