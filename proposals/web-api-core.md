@@ -44,7 +44,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 * **Expanded Data Elements** - Support for expanded data elements using OData `$expand` has been added. The Property, Member, Office, Field, and Lookup Resources MUST be available at the top level. All other resources MAY be expanded. Data consumers should be prepared to support either. 
 * **Server-Driven Paging** - In order to improve the ease and ability for data consumers to retrieve data from RESO Web API servers, providers MUST support server-driven paging using `@odata.nextLink`. 
 * **String Comparison Operators** - Support for the Lookup Resource was added in Data Dictionary 1.7, meaning that single- and multi-enumerations may be `Edm.String` or `Collection(Edm.String)`, respectively. In order to provide parity with existing enumeration tests, string comparison operators have been added to Web API Core 2.1.0 in order to test those cases. 
-* **`in` Operator** - For servers advertising OData 4.01, the `in` operator is tested for single-valued enumerations. It provides a convenient shorthand for matching a value against a set, for example `StandardStatus in ('Active', 'Pending', 'Sold')`, in place of a chain of `eq` comparisons. 
+* **`in` Operator** - For servers advertising OData 4.01, the `in` operator is tested for single-valued enumerations. It provides a convenient shorthand for matching a value against a set, for example `StandardStatus in ('Active', 'Pending', 'Closed')`, in place of a chain of `eq` comparisons. 
 
 <br />
 
@@ -106,7 +106,7 @@ The following tests support this case:
   * `GET /Property?$filter=AccessibilityFeatures/any(enum:enum eq 'Accessible Entrance' or enum eq 'Visitable')` - returns records that contain at least one of the provided values.
   * `GET /Property?$filter=AccessibilityFeatures/all(enum:enum eq 'Accessible Entrance' or enum eq 'Visitable')` - returns records whose values are only within the provided set (a subset); a record with an empty collection satisfies this vacuously.
 * As of OData “4.01” the `in` operator was introduced to determine whether a given value is in a set of values. This is more convenient than writing `Field1 eq 'value1' or Field1 eq 'value2' or ...`. When the response header indicates that the OData version is "4.01", the `in` operator is tested using a query similar to the following:
-  * `GET /Property?$filter=StandardStatus in ('Active', 'Pending', 'Sold')`
+  * `GET /Property?$filter=StandardStatus in ('Active', 'Pending', 'Closed')`
   * The `in` operator is tested for single-valued enumerations only. Multi-valued enumerations use the `any` and `all` lambda operators shown above.
 
 <br />
@@ -1871,9 +1871,9 @@ HTTP/2 200 OK
 
 <br />
 
-### Query on Boolean Field to Find Short Sales
+### Query on Boolean Field to Find New Construction
 ```
-GET https://api.reso.org/Property?$filter=ShortSale eq true
+GET https://api.reso.org/Property?$filter=NewConstructionYN eq true
 HTTP/2 200 OK
 ```
 ```json
@@ -1887,7 +1887,7 @@ HTTP/2 200 OK
       "StreetName": "Main",
       "ModificationTimestamp": "2020-04-02T02:02:02.02Z",
       "ListingContractDate": "2020-04-02",
-      "ShortSale": true,
+      "NewConstructionYN": true,
       "StandardStatus": "ActiveUnderContract",
       "AccessibilityFeatures": ["AccessibleApproachWithRamp", "AccessibleEntrance", "Visitable"]
     }
@@ -2973,7 +2973,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | -- | -- |
 | **Id** | filter-enum-multi-has-and |
 | **Description**  | `has` operator for `Edm.EnumType` and `IsFlags=true` with `and` logical operator. |
-| **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,Appliances&$filter=Appliances has PropertyEnums.Appliances'Refrigerator' and Appliances has PropertyEnums.Appliances'Stacked'``` |
+| **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,Appliances&$filter=Appliances has PropertyEnums.Appliances'Refrigerator' and Appliances has PropertyEnums.Appliances'WasherDryerStacked'``` |
 | **Section** | [2.5.9.9.1](#25991-odata-isflagstrue) |
 | **Acceptance Test** | [Source](#scenario-filter-enum-multi-has-and) |
 | **Notes** | [More Information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752566) |
@@ -3131,7 +3131,7 @@ The following queries are new in Web API Core 2.1.0 (RCP-039).
 | -- | -- |
 | **Id** | filter-string-enum-single-in |
 | **Description** | `$filter` with the OData 4.01 `in` operator on a single-valued enumeration – tests whether a field's value is within a set of values. |
-| **Sample Query** | ```GET https://api.reso.org/Property?$filter=StandardStatus in ('Active', 'Pending', 'Sold')``` |
+| **Sample Query** | ```GET https://api.reso.org/Property?$filter=StandardStatus in ('Active', 'Pending', 'Closed')``` |
 | **Section** | [String Comparison Operators for Single- and Multi-Valued Enumerations](#string-comparison-operators-for-single--and-multi-valued-enumerations) |
 | **Acceptance Test** | [Source](#scenario-filter-string-enum-single-in) |
 | **Notes** | Gated on the response advertising `OData-Version: 4.01`; skipped for OData 4.0-only servers. New in 2.1.0. |
