@@ -44,7 +44,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 * **Expanded Data Elements** - Support for expanded data elements using OData `$expand` has been added. The Property, Member, Office, Field, and Lookup Resources MUST be available at the top level. All other resources MAY be expanded. Data consumers should be prepared to support either. 
 * **Server-Driven Paging** - In order to improve the ease and ability for data consumers to retrieve data from RESO Web API servers, providers MUST support server-driven paging using `@odata.nextLink`. 
 * **String Comparison Operators** - Support for the Lookup Resource was added in Data Dictionary 1.7, meaning that single- and multi-enumerations may be `Edm.String` or `Collection(Edm.String)`, respectively. In order to provide parity with existing enumeration tests, string comparison operators have been added to Web API Core 2.1.0 in order to test those cases. 
-* **`in` Operator** - For servers advertising OData 4.01, the `in` operator is tested for single-valued enumerations. It provides a convenient shorthand for matching a value against a set, for example `StandardStatus in ('Active', 'Pending', 'Sold')`, in place of a chain of `eq` comparisons. 
+* **`in` Operator** - For servers advertising OData 4.01, the `in` operator is tested for single-valued enumerations. It provides a convenient shorthand for matching a value against a set, for example `StandardStatus in ('Active', 'Pending', 'Closed')`, in place of a chain of `eq` comparisons. 
 
 <br />
 
@@ -78,7 +78,7 @@ Providers MUST support server-driven paging using `@odata.nextLink`.
 
 This functionality is needed so that data consumers may reliably consume data when only a partial result is returned and it’s classified as a MUST within [OData Minimal Conformance Requirements](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_OData40MinimalConformanceLevel) (item 3) for version 4.0 and above.
 
-Basic tests are included in the Web API Core 2.1.0 tests, but the majority of nextLink testing is done in the Payloads 2.0 Specification, which could result in a failure of nextLink-based operations even if the provider passed Web API Core 2.1.0 testing. 
+Basic tests are included in the Web API Core 2.1.0 tests, but the majority of nextLink testing is done in [Data Dictionary testing](https://transport.reso.org/proposals/data-dictionary/#schema-validation), which could result in a failure of nextLink-based operations even if the provider passed Web API Core 2.1.0 testing. 
 
 * A count will be made on the given resource being tested to ensure there are records. 
 * A request will be made using `$top=1`. This should NOT contain `@odata.nextLink`, since one record should be available, and we’ve reached the end of the set.
@@ -106,7 +106,7 @@ The following tests support this case:
   * `GET /Property?$filter=AccessibilityFeatures/any(enum:enum eq 'Accessible Entrance' or enum eq 'Visitable')` - returns records that contain at least one of the provided values.
   * `GET /Property?$filter=AccessibilityFeatures/all(enum:enum eq 'Accessible Entrance' or enum eq 'Visitable')` - returns records whose values are only within the provided set (a subset); a record with an empty collection satisfies this vacuously.
 * As of OData “4.01” the `in` operator was introduced to determine whether a given value is in a set of values. This is more convenient than writing `Field1 eq 'value1' or Field1 eq 'value2' or ...`. When the response header indicates that the OData version is "4.01", the `in` operator is tested using a query similar to the following:
-  * `GET /Property?$filter=StandardStatus in ('Active', 'Pending', 'Sold')`
+  * `GET /Property?$filter=StandardStatus in ('Active', 'Pending', 'Closed')`
   * The `in` operator is tested for single-valued enumerations only. Multi-valued enumerations use the `any` and `all` lambda operators shown above.
 
 <br />
@@ -1066,7 +1066,7 @@ HTTP/2 200 OK
 
 **Example**
 
-_Modification timestamp is greater than or equal to May 22 2022 at midnight in UTC time._
+_Modification timestamp is greater than or equal to May 22 2021 at midnight in UTC time._
 
 ```
 GET https://api.reso.org/Property?$filter=ModificationTimestamp ge 2021-05-22T00:00:00Z
@@ -1655,9 +1655,9 @@ HTTP/2 200 OK
       "Media": [
         {
           "ChangedByMemberKey": "ABC123",
-          "MediaKey": "AT23852983",
+          "MediaKey": "BT23852983",
           "MediaModificationTimestamp": "2022-04-02T03:02:02.02Z",
-          "MediaURL": "https://cdn.reso.org/media/AT23852983",
+          "MediaURL": "https://cdn.reso.org/media/BT23852983",
           "ModificationTimestamp": "2022-04-02T02:02:02.03Z",
           "Order": 1,
           "ResourceName": "Property",
@@ -1742,7 +1742,7 @@ Full details of this mechanism may be found in the [JSON Error Response](http://
 The following example includes a client request and a compliant server error response for reference:
 
 ```
-GET https://api.reso.org/reso/odata/Member?$orderby=ModificationTimestamp&$top=5&$skip=5
+GET https://api.reso.org/Member?$filter=contains(MemberLastName,'Smith')
 HTTP/2 501 Not Implemented
 ```
 ```json
@@ -1754,8 +1754,8 @@ HTTP/2 501 Not Implemented
     "details": [
       {
        "code": "501",
-       "target": "$skip", 
-       "message": "Resource does not support the $skip parameter"
+       "target": "$filter", 
+       "message": "Resource does not support the contains function"
       }
     ],
     "innererror": {
@@ -1806,8 +1806,8 @@ HTTP/2 200 OK
       "BedroomsTotal": 5,
       "ListPrice": 100000.0,
       "StreetName": "Main",
-      "ModificationTimestamp": "2020-04-02T02:02:02.02Z",
-      "ListingContractDate": "2020-04-02",
+      "ModificationTimestamp": "2020-12-15T02:02:02.02Z",
+      "ListingContractDate": "2020-12-15",
       "StandardStatus": "ActiveUnderContract",
       "AccessibilityFeatures": ["AccessibleApproachWithRamp", "AccessibleEntrance", "Visitable"]
     }
@@ -1871,9 +1871,9 @@ HTTP/2 200 OK
 
 <br />
 
-### Query on Boolean Field to Find Short Sales
+### Query on Boolean Field to Find New Construction
 ```
-GET https://api.reso.org/Property?$filter=ShortSale eq true
+GET https://api.reso.org/Property?$filter=NewConstructionYN eq true
 HTTP/2 200 OK
 ```
 ```json
@@ -1887,7 +1887,7 @@ HTTP/2 200 OK
       "StreetName": "Main",
       "ModificationTimestamp": "2020-04-02T02:02:02.02Z",
       "ListingContractDate": "2020-04-02",
-      "ShortSale": true,
+      "NewConstructionYN": true,
       "StandardStatus": "ActiveUnderContract",
       "AccessibilityFeatures": ["AccessibleApproachWithRamp", "AccessibleEntrance", "Visitable"]
     }
@@ -2689,7 +2689,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListPrice&$filter=ListPrice gt 0.00``` |
 | **Section** | [2.5.9.4](#2594-greater-than) |
 | **Acceptance Test** | [Source](#scenario-filter-decimal-gt) |
-| **Notes** | [See OData 5.1.1.1.4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
+| **Notes** | [See OData 5.1.1.1.3](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
 
 <br />
 
@@ -2702,7 +2702,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListPrice&$filter=ListPrice ge 0.00``` |
 | **Section** | [2.5.9.5](#2595-greater-than-or-equal) |
 | **Acceptance Test** | [Source](#scenario-filter-decimal-ge) |
-| **Notes** | [See OData 5.1.1.1.5](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
+| **Notes** | [See OData 5.1.1.1.4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
 
 <br />
 
@@ -2715,7 +2715,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListPrice&$filter=ListPrice lt 1234567.89``` |
 | **Section** | [2.5.9.6](#2596-less-than) |
 | **Acceptance Test** | [Source](#scenario-filter-decimal-lt) |
-| **Notes** | [See OData 5.1.1.1.3](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
+| **Notes** | [See OData 5.1.1.1.5](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
 
 <br />
 
@@ -2728,7 +2728,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ListPrice&$filter=ListPrice le 1234567.89``` |
 | **Section** | [2.5.9.7](#2597-less-than-or-equal) |
 | **Acceptance Test** | [Source](#scenario-filter-decimal-le) |
-| **Notes** | [See OData 5.1.1.1.4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
+| **Notes** | [See OData 5.1.1.1.6](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
 
 <br />
 
@@ -2880,8 +2880,8 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | Item | Details |
 | -- | -- |
 | **Id** | filter-datetime-ne-now |
-| **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `ne` logical operator. |
-| **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ModificationTimestamp&$filter=ModificationTimestamp ne 2019-12-31T23:55:55-09:00``` |
+| **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `ne` logical operator and the OData `now()` function. |
+| **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ModificationTimestamp&$filter=ModificationTimestamp ne now()``` |
 | **Section** | [2.5.9.3](#2593-not-equals) |
 | **Acceptance Test** | [Source](#scenario-filter-datetime-ne-now) |
 | **Notes** | [See OData 5.1.1.6.11](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752358) |
@@ -2889,12 +2889,12 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 <br />
 
 
-### Filter ISO 8601 Timestamp Using `le` Logical Operator and `now()`
+### Filter ISO 8601 Timestamp Using `lt` Logical Operator and `now()`
 
 | Item | Details |
 | -- | -- |
 | **Id** | filter-datetime-lt-now |
-| **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `le` logical operator and the OData `now()` function. |
+| **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `lt` logical operator and the OData `now()` function. |
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ModificationTimestamp&$filter=ModificationTimestamp lt now()``` |
 | **Section** | [2.5.9.6](#2596-less-than) |
 | **Acceptance Test** | [Source](#scenario-filter-datetime-lt-now) |
@@ -2908,7 +2908,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | -- | -- |
 | **Id** | filter-datetime-le-now |
 | **Description** | `$filter` [ISO 8601 timestamp](https://en.wikipedia.org/wiki/ISO_8601) in YYYY-MM-DD format with `le` logical operator and the OData `now()` function. |
-| **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ModificationTimestamp&$filter=ModificationTimestamp lt now()``` |
+| **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,ModificationTimestamp&$filter=ModificationTimestamp le now()``` |
 | **Section** | [2.5.9.7](#2597-less-than-or-equal) |
 | **Acceptance Test** | [Source](#scenario-filter-datetime-le-now) |
 | **Notes** | [See OData 5.1.1.8.9](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_now) |
@@ -2973,7 +2973,7 @@ Sample queries assume that `https://api.reso.org/` is being used as the OData se
 | -- | -- |
 | **Id** | filter-enum-multi-has-and |
 | **Description**  | `has` operator for `Edm.EnumType` and `IsFlags=true` with `and` logical operator. |
-| **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,Appliances&$filter=Appliances has PropertyEnums.Appliances'Refrigerator' and Appliances has PropertyEnums.Appliances'Stacked'``` |
+| **Sample Query** | ```GET https://api.reso.org/Property?$top=5&$select=ListingKey,Appliances&$filter=Appliances has PropertyEnums.Appliances'Refrigerator' and Appliances has PropertyEnums.Appliances'WasherDryerStacked'``` |
 | **Section** | [2.5.9.9.1](#25991-odata-isflagstrue) |
 | **Acceptance Test** | [Source](#scenario-filter-enum-multi-has-and) |
 | **Notes** | [More Information](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752566) |
@@ -3069,7 +3069,7 @@ The following queries are new in Web API Core 2.1.0 (RCP-039).
 | **Sample Query** | ```GET https://api.reso.org/Property?$top=1``` |
 | **Section** | [Providers MUST Support Server-Driven Paging](#providers-must-support-server-driven-paging) |
 | **Acceptance Test** | [Source](#scenario-server-driven-paging) |
-| **Notes** | A `$count` confirms records exist first. The majority of `@odata.nextLink` testing is performed in the Payloads 2.0 Specification. New in 2.1.0. |
+| **Notes** | A `$count` confirms records exist first. The majority of `@odata.nextLink` testing is performed in [Data Dictionary testing](https://transport.reso.org/proposals/data-dictionary/#schema-validation). New in 2.1.0. |
 
 <br />
 
@@ -3131,7 +3131,7 @@ The following queries are new in Web API Core 2.1.0 (RCP-039).
 | -- | -- |
 | **Id** | filter-string-enum-single-in |
 | **Description** | `$filter` with the OData 4.01 `in` operator on a single-valued enumeration – tests whether a field's value is within a set of values. |
-| **Sample Query** | ```GET https://api.reso.org/Property?$filter=StandardStatus in ('Active', 'Pending', 'Sold')``` |
+| **Sample Query** | ```GET https://api.reso.org/Property?$filter=StandardStatus in ('Active', 'Pending', 'Closed')``` |
 | **Section** | [String Comparison Operators for Single- and Multi-Valued Enumerations](#string-comparison-operators-for-single--and-multi-valued-enumerations) |
 | **Acceptance Test** | [Source](#scenario-filter-string-enum-single-in) |
 | **Notes** | Gated on the response advertising `OData-Version: 4.01`; skipped for OData 4.0-only servers. New in 2.1.0. |
