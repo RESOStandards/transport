@@ -780,7 +780,7 @@ DELETE https://api.reso.org/Property('12345')
 ```
 
 ```gherkin
-@delete @update-succeeds @add-edit-endorsement @rcp-010 @2.0.0
+@delete @delete-succeeds @add-edit-endorsement @rcp-010 @2.0.0
 Scenario: Delete operation succeeds using a given Url
   Given valid metadata have been retrieved
   And the request header "OData-Version" "equals" one of the following values
