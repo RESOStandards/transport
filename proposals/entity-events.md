@@ -152,9 +152,7 @@ and can infer that the record should be removed.
 
 When the consumer requests several records in one query, for example with the `in` operator, the response is `HTTP 200` and the records that are no longer available are not in the results. A record missing from the results is only known to be unavailable once every `@odata.nextLink` has been followed. 
 
-Based on earlier sections of this proposal, the child records should have appeared at a lower _EntityEventSequence_ value than the parent record. 
-
-This allows the consumer to remove references rather than deal with cascading deletes. 
+As described in the Producers section, any Office and Member records the Property refers to will have appeared at lower _EntityEventSequence_ values. Media may be added, changed or removed at any time. When the Property is no longer available, the consumer can remove its Media by the Property's key instead of waiting for an event for each Media record. 
 
 # Impact
 Producers should expose a new resource that implements the requirements of the proposal.
