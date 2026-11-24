@@ -1066,7 +1066,7 @@ HTTP/2 200 OK
 
 **Example**
 
-_Modification timestamp is greater than or equal to May 22 2022 at midnight in UTC time._
+_Modification timestamp is greater than or equal to May 22 2021 at midnight in UTC time._
 
 ```
 GET https://api.reso.org/Property?$filter=ModificationTimestamp ge 2021-05-22T00:00:00Z
@@ -1655,9 +1655,9 @@ HTTP/2 200 OK
       "Media": [
         {
           "ChangedByMemberKey": "ABC123",
-          "MediaKey": "AT23852983",
+          "MediaKey": "BT23852983",
           "MediaModificationTimestamp": "2022-04-02T03:02:02.02Z",
-          "MediaURL": "https://cdn.reso.org/media/AT23852983",
+          "MediaURL": "https://cdn.reso.org/media/BT23852983",
           "ModificationTimestamp": "2022-04-02T02:02:02.03Z",
           "Order": 1,
           "ResourceName": "Property",
@@ -1742,7 +1742,7 @@ Full details of this mechanism may be found in the [JSON Error Response](http://
 The following example includes a client request and a compliant server error response for reference:
 
 ```
-GET https://api.reso.org/reso/odata/Member?$orderby=ModificationTimestamp&$top=5&$skip=5
+GET https://api.reso.org/Member?$filter=contains(MemberLastName,'Smith')
 HTTP/2 501 Not Implemented
 ```
 ```json
@@ -1754,8 +1754,8 @@ HTTP/2 501 Not Implemented
     "details": [
       {
        "code": "501",
-       "target": "$skip", 
-       "message": "Resource does not support the $skip parameter"
+       "target": "$filter", 
+       "message": "Resource does not support the contains function"
       }
     ],
     "innererror": {
@@ -1806,8 +1806,8 @@ HTTP/2 200 OK
       "BedroomsTotal": 5,
       "ListPrice": 100000.0,
       "StreetName": "Main",
-      "ModificationTimestamp": "2020-04-02T02:02:02.02Z",
-      "ListingContractDate": "2020-04-02",
+      "ModificationTimestamp": "2020-12-15T02:02:02.02Z",
+      "ListingContractDate": "2020-12-15",
       "StandardStatus": "ActiveUnderContract",
       "AccessibilityFeatures": ["AccessibleApproachWithRamp", "AccessibleEntrance", "Visitable"]
     }
