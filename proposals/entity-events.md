@@ -62,7 +62,7 @@ When possible, providers should order events to simplify referential integrity f
 underlying business knowledge of internal system relationships. 
 
 For example, the addition of a Property Resource event should occur before any Media Resource events associated with the 
-Property appearing in the Events Resource.
+Property appearing in the EntityEvent Resource. A Media record holds the key of the record it belongs to in _ResourceName_ and _ResourceRecordKey_, so it can only refer to a Property that already exists. In the same way, any Office and Member records a Property refers to should appear before the Property.
 
 #### Consumers
 Consumers use standard workflows for replication.
@@ -131,7 +131,7 @@ The consumer has previously been in synchronization and needs to 'catch up' with
 #### Handling Record Visibility
 Based on business rules, EntityEvent records may change the availability and visibility for consumers based on the role of a consumer. 
 
-For example, a consumer who had a role to receive IDX listings may not be permitted to only view listings that have a status of 'Active'. 
+For example, a consumer with a role to receive IDX listings may be permitted to view only listings that have a status of 'Active'. 
 
 A consumer with this role would see an event that changes status and would then attempt to retrieve the record from the producer 
 only to receive no record. 
@@ -147,12 +147,12 @@ In this set is an event that changes a record that the consumer has from visible
 
 The consumer does not know what has happened to the record, only that the record has changed state. 
 
-When the consumer makes a normal query against the appropriate Resource, they will get a "No Record Found" (`HTTP 404`) response 
-and can infer that the record and the child resources should be deleted. 
+When the consumer requests the record by its key, for example `GET /Property('539')`, or by its _ResourceRecordUrl_, they will get a "No Record Found" (`HTTP 404`) response 
+and can infer that the record should be removed. 
 
-Based on earlier sections of this proposal, the child records should have appeared at a lower _EntityEventSequence_ value than the parent record. 
+When the consumer requests several records in one query, for example with the `in` operator, the response is `HTTP 200` and the records that are no longer available are not in the results. A record missing from the results is only known to be unavailable once every `@odata.nextLink` has been followed. 
 
-This allows the consumer to remove references rather than deal with cascading deletes. 
+As described in the Producers section, any Office and Member records the Property refers to will have appeared at lower _EntityEventSequence_ values. Media may be added, changed or removed at any time. When the Property is no longer available, the consumer can remove its Media by the Property's key instead of waiting for an event for each Media record. 
 
 # Impact
 Producers should expose a new resource that implements the requirements of the proposal.
@@ -168,7 +168,7 @@ Additional testing rules beyond those in the Data Dictionary:
 * Confirm that for a sample set that any two records have sequentially increasing _EntityEventSequence_ values.
 * Confirm that for a sample set of _EntityEvent_ records, that all records only contain _ResourceName_ items that are defined in the metadata.
 * Confirm that the _EntityEvent Resource_ response is well formed.
-* Confirm that for each record in a sample set of _EntityEvent_ records, that either a record with _ResourceName_ and _ResourceRecordKey_ is returned OR an `HTTP 400` response value indicating the records are no longer available.
+* Confirm that for each record in a sample set of _EntityEvent_ records, that either a record with _ResourceName_ and _ResourceRecordKey_ is returned OR an `HTTP 404` response indicating the record is no longer available.
 * Test sequence order.
 * Confirm that requesting the same _EntityEventSequence_ results in the same combination of _ResourceName_ and _ResourceRecordKey_.
 
