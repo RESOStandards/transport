@@ -147,8 +147,10 @@ In this set is an event that changes a record that the consumer has from visible
 
 The consumer does not know what has happened to the record, only that the record has changed state. 
 
-When the consumer makes a normal query against the appropriate Resource, they will get a "No Record Found" (`HTTP 404`) response 
-and can infer that the record and the child resources should be deleted. 
+When the consumer requests the record by its key, for example `GET /Property('539')`, or by its _ResourceRecordUrl_, they will get a "No Record Found" (`HTTP 404`) response 
+and can infer that the record should be removed. 
+
+When the consumer requests several records in one query, for example with the `in` operator, the response is `HTTP 200` and the records that are no longer available are not in the results. A record missing from the results is only known to be unavailable once every `@odata.nextLink` has been followed. 
 
 Based on earlier sections of this proposal, the child records should have appeared at a lower _EntityEventSequence_ value than the parent record. 
 
