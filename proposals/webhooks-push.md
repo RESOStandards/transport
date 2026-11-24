@@ -19,7 +19,7 @@ This proposal adds the ability to push events from the EntityEvent Resource usin
 Rather than polling on the EntityEvent Resource for updates, it's useful for data producers to push events to consumer APIs. 
 
 # Proposal
-When an _EntityEventSequenceNumeric_, _ResourceName_, _ResourceRecordKey_ tuple has been published to the EntityEvent resource, providers MAY "push" events to data consumers for replication or other event sourcing applications. 
+When an _EntityEventSequence_, _ResourceName_, _ResourceRecordKey_ tuple has been published to the EntityEvent resource, providers MAY "push" events to data consumers for replication or other event sourcing applications. 
 
 In doing so, the replication process becomes simpler for the consumer, as they only need to receive EntityEvents from the producer and pick up the corresponding records from provider APIs. In general, this is preferable to having to poll continuously for new records.
 
