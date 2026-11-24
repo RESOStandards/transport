@@ -504,6 +504,8 @@ Since Add/Edit potentially changes data, it is not required that providers be te
 
 Certification reports will show which actions and data elements were tested. Items matching the RESO Data Dictionary will be classified as such, but are not required. 
 
+The testing rules below name the `EntityId` response header, which is the OData 4.01 name. OData 4.0 named this header `OData-EntityId`. When the response header `OData-Version` is 4.0, the `OData-EntityId` response header satisfies each `EntityId` step.
+
 ## Create Action Succeeds with `return=representation`
 
 When the `Prefer: return=representation` request header is present, the testing rules are as follows:
