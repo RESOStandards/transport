@@ -62,7 +62,7 @@ When possible, providers should order events to simplify referential integrity f
 underlying business knowledge of internal system relationships. 
 
 For example, the addition of a Property Resource event should occur before any Media Resource events associated with the 
-Property appearing in the Events Resource.
+Property appearing in the EntityEvent Resource. A Media record holds the key of the record it belongs to in _ResourceName_ and _ResourceRecordKey_, so it can only refer to a Property that already exists. In the same way, any Office and Member records a Property refers to should appear before the Property.
 
 #### Consumers
 Consumers use standard workflows for replication.
