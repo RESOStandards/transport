@@ -245,8 +245,6 @@ HTTP/2 204 No Content
   OData-Version: 4.01
   EntityId: "12345"
   Location: https://api.reso.org/Property('12345')
-  Content-Length: N
-  Content-Type: application/json
   Preference-Applied: return=minimal
 ```
 
