@@ -35,7 +35,7 @@ Proposals that require certification must have an adopted specification and test
 | [**RCP-36**](https://github.com/RESOStandards/transport/blob/e48bca32dbde6b82410629c826905a08387fa5e9/data-dictionary.md) | **Data Dictionary with Lookup Resource** | **1.7** | **Jan 2021** |
 | [**RCP-36**](https://github.com/RESOStandards/transport/blob/a99fb6ca307208280ac51bca1f573e89cb67b202/proposals/data-dictionary.md) | **Data Dictionary** | **2.0** | **Nov 2023** |
 | [**RCP-37**](https://github.com/RESOStandards/transport/blob/a99fb6ca307208280ac51bca1f573e89cb67b202/proposals/web-api-core.md) | **Web API Core** | **2.0.0** | **Jan 2021** |
-| [**RCP-37**](https://github.com/RESOStandards/transport/blob/22-web-api-core-210-specification/web-api-core.md) | **Web API Core** | **2.1.0** | **Dec 2023** |
+| [**RCP-39**](/proposals/web-api-core.md) | **Web API Core** | **2.1.0** | **Dec 2023** |
 
 <br />
 
