@@ -168,7 +168,7 @@ Additional testing rules beyond those in the Data Dictionary:
 * Confirm that for a sample set that any two records have sequentially increasing _EntityEventSequence_ values.
 * Confirm that for a sample set of _EntityEvent_ records, that all records only contain _ResourceName_ items that are defined in the metadata.
 * Confirm that the _EntityEvent Resource_ response is well formed.
-* Confirm that for each record in a sample set of _EntityEvent_ records, that either a record with _ResourceName_ and _ResourceRecordKey_ is returned OR an `HTTP 400` response value indicating the records are no longer available.
+* Confirm that for each record in a sample set of _EntityEvent_ records, that either a record with _ResourceName_ and _ResourceRecordKey_ is returned OR an `HTTP 404` response indicating the record is no longer available.
 * Test sequence order.
 * Confirm that requesting the same _EntityEventSequence_ results in the same combination of _ResourceName_ and _ResourceRecordKey_.
 
