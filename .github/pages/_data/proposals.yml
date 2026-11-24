@@ -56,7 +56,7 @@ proposals:
     rcp: "RCP-27"
     slug: "entity-events"
     status: "ratified"
-    version: "2.0.2"
+    version: "1.0.0"
     date: "2023-12"
     summary: "An append-only event log that lets data producers publish create, update and delete events so consumers replicate listing and related data using a monotonic EntityEventSequence instead of modification timestamps and state inference."
     link: "/proposals/entity-events/"

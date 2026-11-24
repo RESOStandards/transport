@@ -30,7 +30,7 @@ jobs:
             ["web-api-core"]="Web API Core|RCP-37|2.1.0|Ratified"
             ["web-api-add-edit"]="Web API Add/Edit|RCP-10|2.0.0|Ratified"
             ["data-dictionary"]="Data Dictionary|RCP-36|2.0|Ratified"
-            ["entity-events"]="EntityEvent Resource and Replication|RCP-27|2.0.2|Ratified"
+            ["entity-events"]="EntityEvent Resource and Replication|RCP-27|1.0.0|Ratified"
             ["webhooks-push"]="Push Replication with Webhooks|RCP-28|1.0.1|Ratified"
             ["reso-common-format"]="RESO Common Format|RCP-25|1.7|Ratified"
             ["validation-expressions"]="Validation Expressions|RCP-19|1.0.0|Ratified"
