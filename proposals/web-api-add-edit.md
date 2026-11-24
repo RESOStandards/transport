@@ -539,15 +539,15 @@ Scenario: Create operation succeeds using a given payload
   And the response header "Location" "MUST" "be present"
   And the response header "Location" "is a valid URL"
   And the response header "Location" "MUST" reference the resource being edited
-  And the `Preference-Applied` response header is `return=representation`
-  And the response is valid JSON
-  And the JSON response "MAY" contain "@odata.context"
-  And the JSON response value "@odata.context" "is a valid URL"
-  And the JSON response "MAY" contain "@odata.id"
-  And the JSON response value "@odata.id" "is a valid URL"
-  And the JSON response "MUST" contain "@odata.editLink"
-  And the JSON response value "@odata.editLink" "is a valid URL"
-  And the JSON response "MUST" contain all JSON data in "create-succeeds.json"
+  And the `Preference-Applied` response header is `return=representation` if the response code was 201
+  And the response is valid JSON if the response code was 201
+  And the JSON response "MAY" contain "@odata.context" if the response code was 201
+  And the JSON response value "@odata.context" "is a valid URL" if the response code was 201
+  And the JSON response "MAY" contain "@odata.id" if the response code was 201
+  And the JSON response value "@odata.id" "is a valid URL" if the response code was 201
+  And the JSON response "MUST" contain "@odata.editLink" if the response code was 201
+  And the JSON response value "@odata.editLink" "is a valid URL" if the response code was 201
+  And the JSON response "MUST" contain all JSON data in "create-succeeds.json" if the response code was 201
   When a "GET" request is made to the URL in response header "Location"
   Then the server responds with a status code of "200"
   And the response has header "OData-Version" with one of the following values
@@ -668,21 +668,21 @@ Scenario: Update operation succeeds using a given payload
   And the response header "OData-Version" "equals" one of the following values
     | 4.0 | 4.01 |
   And the response header "EntityId" "MUST" "be present" if the response code was 204
-  And the response header "Location" "MUST" "be present"
-  And the response header "Location" "is a valid URL"
-  And the `Preference-Applied` response header is `return=representation`
-  And the response header "Location" "MUST" reference the resource being edited
+  And the response header "Location" "MUST" "be present" if the response code was 200
+  And the response header "Location" "is a valid URL" if the response code was 200
+  And the `Preference-Applied` response header is `return=representation` if the response code was 200
+  And the response header "Location" "MUST" reference the resource being edited if the response code was 200
   And the response is valid JSON if the response code was 200
-  And the JSON response "MUST" contain "@odata.etag"
-  And the JSON response value "@odata.etag" "starts with" "W/"
-  And the JSON response "MAY" contain "@odata.context"
-  And the JSON response value "@odata.context" "is a valid URL"
-  And the JSON response "MAY" contain "@odata.id"
-  And the JSON response value "@odata.id" "is a valid URL"
-  And the JSON response "MUST" contain "@odata.editLink"
-  And the JSON response value "@odata.editLink" "is a valid URL"
-  And the JSON response "MUST" contain all JSON data in "update-succeeds.json"
-  When a "GET" request is made to the URL in response header "Location"
+  And the JSON response "MUST" contain "@odata.etag" if the response code was 200
+  And the JSON response value "@odata.etag" "starts with" "W/" if the response code was 200
+  And the JSON response "MAY" contain "@odata.context" if the response code was 200
+  And the JSON response value "@odata.context" "is a valid URL" if the response code was 200
+  And the JSON response "MAY" contain "@odata.id" if the response code was 200
+  And the JSON response value "@odata.id" "is a valid URL" if the response code was 200
+  And the JSON response "MUST" contain "@odata.editLink" if the response code was 200
+  And the JSON response value "@odata.editLink" "is a valid URL" if the response code was 200
+  And the JSON response "MUST" contain all JSON data in "update-succeeds.json" if the response code was 200
+  When a "GET" request is made to the URL the "PATCH" request was made to
   Then the server responds with a status code of "200"
   And the response has header "OData-Version" with one of the following values
     | 4.0 | 4.01 |
@@ -723,10 +723,10 @@ Scenario: Update operation succeeds using a given payload with a minimal respons
   And the response header "OData-Version" "equals" one of the following values
     | 4.0 | 4.01 |
   And the response header "EntityId" "MUST" "be present" if the response code was 204
-  And the response header "Location" "MUST" "be present"
-  And the response header "Location" "is a valid URL"
-  And the response header "Location" "MUST" reference the resource being edited
-  When a "GET" request is made to the URL in response header "Location"
+  And the response header "Location" "MUST" "be present" if the response code was 200
+  And the response header "Location" "is a valid URL" if the response code was 200
+  And the response header "Location" "MUST" reference the resource being edited if the response code was 200
+  When a "GET" request is made to the URL the "PATCH" request was made to
   Then the server responds with a status code of "200"
   And the response has header "OData-Version" with one of the following values
     | 4.0 | 4.01 |
